@@ -24,7 +24,7 @@
 #' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}
 #' @export
 
-samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
+samp_pgls <- function(formula,data,times=99,breaks=seq(.1,.7,.1),lambda="ML")
 {
           ### Basic error checking:
           if(class(formula)!="formula") stop("Please formula must be
