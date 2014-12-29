@@ -5,28 +5,7 @@
 #' species and store the results of the model estimates. The percentage of
 #' species removed is specified with \code{breaks} and the number of simulations
 #' per break is defined by \code{times}.
-#' @aliases samp_pgls
-#' @inheritParams influ_pgls
-#' @param breaks Percentage intervals to remove species. For example:
-#'   \code{breaks = c(.1,.2,.3)},removes 10,20 and 30 percentage of species at
-#'   random in each simulation.
-#' @param times The number of times to repeat each simulation (per
-#'   \code{breaks}) interval.
-#' @details This functions only works for simple linear regression (y = bx + a).
-#'   Future implementation will deal with more complex models.
-#' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{[caper]pgls}}
-#' @return The function \code{influpgls} returns a list with the following
-#'   components:
-#' @return \code{errors} Species removal that showed erros during pgls fit
-#' @return \code{formula} The model formula
-#' @return \code{model_estimates} Full model estimates
-#' @return \code{beta95_IC} Full model beta 95 confidence interval
-#' @return \code{influential_species} Most influential species for beta and
-#'   intercept
-#' @return \code{results} A data frame with all simulation estimates. DFbeta and
-#'   DFintercept represent absolute difference between full model and simulation
-#'   estimate, beta and intercept respectively.
+#' @aliases sensi_plot
 #' @export
 
 ### Start:

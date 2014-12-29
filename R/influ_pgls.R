@@ -5,7 +5,7 @@
 #' a pgls model without the species and store the results of the model
 #' estimates. The function repeats this procedure for all species in the dataset
 #' and store all the results in a data.frame.
-#' @aliases influpgls
+#' @aliases influ_pgls
 #' @param formula A model formula
 #' @param data A 'comparative.data' object containing the covariance matrix and
 #'   data to be used in the model.

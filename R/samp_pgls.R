@@ -16,15 +16,10 @@
 #'   Future implementation will deal with more complex models.
 #' @return The function \code{samp_pgls} returns a list with the following
 #'   components:
-#' @return \code{errors} Species removal that showed erros during pgls fit
-#' @return \code{formula} The model formula
 #' @return \code{model_estimates} Full model estimates
 #' @return \code{beta95_IC} Full model beta 95 confidence interval
-#' @return \code{influential_species} Most influential species for beta and
-#'   intercept
-#' @return \code{results} A data frame with all simulation estimates. DFbeta and
-#'   DFintercept represent absolute difference of parameters estimates between
-#'   full model and simulations.
+#' @return \code{results} A data frame with all simulation estimates.
+#' @return \code{power_analysis} A data frame with power analysis for each
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}
 #' @export
