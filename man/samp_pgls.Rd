@@ -4,7 +4,7 @@
 \alias{samp_pgls}
 \title{Sampling effort analysis for pgls regression.}
 \usage{
-samp_pgls(formula, data, times = 20, breaks = seq(0.1, 0.7, 0.1),
+samp_pgls(formula, data, times = 99, breaks = seq(0.1, 0.7, 0.1),
   lambda = "ML")
 }
 \arguments{
