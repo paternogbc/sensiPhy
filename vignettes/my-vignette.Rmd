@@ -1,0 +1,76 @@
+---
+title: "sensiC: a quick tutorial"
+author: "Gustavo B. Paterno"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+## sensiC
+sensiC is a R package to perform sensitive analysis for comparative methods
+
+##Functions:
+1. samp_pgls - Simple sampling effort analysis for PGLS linear regression  
+2. influ_pgls - Simple (leave-one-out deletion) diagnostics for PGLS linear regression  
+3. sensi_plot - Plot results from sampling.pgls and influential.pgls   
+4. sensi_time - Estimate time to run simulations with (`samp_pgls` and `influ_pgls`)  
+
+## Requirede packages:
+This tutorial requires the instalation of the following R packages:
+1. `caper`  
+2. `phytools`  
+3. `phylolm` 
+
+```{r,echo=FALSE,message=FALSE}
+library(caper);library(phytools);library(phylolm);library(sensiC);library(knitr);library(xtable)
+```
+
+## Simulating data and phylogeny:
+```{r}
+### Simulating tree
+tree<-pbtree(n=30)    
+### Simulating response variable with phylogenetic signal
+Ly <- rTrait(n=1, tree, model=c("lambda"),parameters=list(lambda=.8))  
+### Simulating explanatory variable
+Lx <- Ly + rnorm(30,mean(Ly),1)     
+### Including Species names:
+sp <- tree$tip.label               
+regre <- data.frame(sp,Ly,Lx)   
+### Organizing comparative data for pgls:
+comp_data <- comparative.data(data=regre,phy=tree,vcv=T,vcv.dim=3,names.col="sp")
+```
+
+## Fitting pgls linear regression:
+```{r}
+### Linear regression (PGLS):
+mod0 <- pgls(Ly ~ Lx, data=comp_data,"ML")
+summary(mod0)
+```
+
+**Performing Sensitive Analysis:** `sampling.pgls`
+```{r}
+### Example: sampling.pgls
+samp1 <- sampling.pgls(Ly ~ Lx,data=comp.data)
+### You can specify the number of replicates and break intervals:
+samp2 <- sampling.pgls(Ly ~ Lx,data=comp.data,times=100,breaks=c(.1,.5,.9))
+```
+
+**Performing influential analysis:** `influence.pgls`
+```{r}
+### Example: influence.pgls
+influ1 <- influence.pgls(Ly ~ Lx,data=comp.data)
+names(influ1)
+### Estimated parameters:
+influ1$results
+### Most influential species:
+influ1[[4]]
+```
+
+**Visualizing Results:**
+```{r,fig.show='hold'}
+plot.power.pgls(samp1,method="sampling")
+plot.power.pgls(samp2,method="sampling")
+plot.power.pgls(influ1,method="influence")
