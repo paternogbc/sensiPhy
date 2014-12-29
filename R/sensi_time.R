@@ -3,7 +3,6 @@
 #' \code{sensi_time} Estimates simulation time to run \code{samp_pgls} and
 #' \code{influ_pgls}
 #' @aliases sensi_time
-#' @export
 
 sensi_time <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML"){
 

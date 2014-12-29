@@ -3,4 +3,3 @@
 export(influ_pgls)
 export(samp_pgls)
 export(sensi_plot)
-export(sensi_time)

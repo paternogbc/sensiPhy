@@ -104,12 +104,11 @@ influ_pgls <- function(formula,data,lambda="ML")
                         intercept=influ.sp.i),
                         results=estimates,data=c.data$data)
 
-        if (length(output$errors) >0){ print("Some species deletion
-                presented errors,please check: output$errors to see
-                which species deletion showed error")}
+        if (length(output$errors) >0){
+                warning("Some species deletion presented errors, please check: output$errors")}
           else {
-                print("No erros found. All single deletions were performed
-                      and stored successfully")
+                print("No erros found. All single deletions were performed and stored successfully")
+                output$errors <- "No erros found."
                 }
 
         return(output)

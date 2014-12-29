@@ -75,6 +75,7 @@ sensi_plot <- function(x, method="sampling"){
                     grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2)
           }
           if (method == "influence"){
+
                     .e <- environment()
                     result <- x[[6]]
                     vars <- all.vars(x[[2]])
@@ -99,7 +100,7 @@ sensi_plot <- function(x, method="sampling"){
                                               colour=abs(DFbetas)),environment=.e,)+
                               geom_point(size=3,alpha=.8)+
                               scale_colour_gradient( low="black",high="red",name="")+
-                              theme(legend.key.width = unit(.2,"cm"),
+                              theme(#legend.key.width = unit(.2,"cm"),
                                     panel.background=element_rect(fill="white",colour="black"),
                                     panel.grid.major = element_blank(),
                                     panel.grid.minor = element_blank())+
@@ -111,7 +112,7 @@ sensi_plot <- function(x, method="sampling"){
                                               colour=abs(DFintercepts)),environment=.e,)+
                               geom_point(size=3,alpha=.8)+
                               scale_colour_gradient( low="black", high="red",name="")  +
-                              theme(legend.key.width = unit(.2,"cm"),
+                              theme(#legend.key.width = unit(.2,"cm"),
                                     panel.background=element_rect(fill="white",colour="black"),
                                     panel.grid.major = element_blank(),
                                     panel.grid.minor = element_blank())+
