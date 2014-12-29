@@ -30,8 +30,7 @@ The function \code{influ_pgls} returns a list with the following
   intercept
 
 \code{results} A data frame with all simulation estimates. DFbeta and
-  DFintercept represent absolute difference between full model and simulation
-  estimate, beta and intercept respectively.
+  DFintercept represent absolute difference between full model and simulation.
 }
 \description{
 \code{influ_pgls} performs leave-one-out-deletion analysis for
@@ -48,6 +47,6 @@ This functions only works for simple linear regression \eqn{y = bx +
  This code is note fully checked. Please be aware.
 }
 \seealso{
-\code{\link{pgls}}
+\code{\link{pgls}}, \code{\link{samp_pgls}}
 }
 

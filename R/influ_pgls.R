@@ -21,10 +21,9 @@
 #' @return \code{influential_species} Most influential species for beta and
 #'   intercept
 #' @return \code{results} A data frame with all simulation estimates. DFbeta and
-#'   DFintercept represent absolute difference between full model and simulation
-#'   estimate, beta and intercept respectively.
+#'   DFintercept represent absolute difference between full model and simulation.
 #' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{pgls}}
+#' @seealso \code{\link{pgls}}, \code{\link{samp_pgls}}
 #' @export
 
 
@@ -102,8 +101,8 @@ influ_pgls <- function(formula,data,lambda="ML")
                         model_estimates=param0,
                         beta95_IC=beta_IC,
                         influential_species=rbind(beta=influ.sp.b,
-                                                        intercept=influ.sp.i),
-        results=estimates,data=c.data$data)
+                        intercept=influ.sp.i),
+                        results=estimates,data=c.data$data)
 
         if (length(output$errors) >0){ print("Some species deletion
                 presented errors,please check: output$errors to see
