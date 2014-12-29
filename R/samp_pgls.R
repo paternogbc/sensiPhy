@@ -12,8 +12,8 @@
 #'   random in each simulation.
 #' @param times The number of times to repeat each simulation (per
 #'   \code{breaks}) interval.
-#' @details This functions only works for simple linear regression \eqn{y = bx + a}.
-#'   Future implementation will deal with more complex models.
+#' @details This functions only works for simple linear regression \eqn{y = bx +
+#'   a}. Future implementation will deal with more complex models.
 #' @return The function \code{samp_pgls} returns a list with the following
 #'   components:
 #' @return \code{model_estimates} Full model estimates
@@ -27,9 +27,12 @@
 samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
 {
           ### Basic error checking:
-          if(class(formula)!="formula") stop("Please formula must be class 'forumla'")
-          if(class(data)!="comparative.data") stop("data data must be of class 'comparative.data'. See function `comparative.data`.")
-          if(length(breaks)<2) stop("please include more then one break (eg. breaks=c(.3,.5)")
+          if(class(formula)!="formula") stop("Please formula must be
+                                             class 'forumla'")
+          if(class(data)!="comparative.data") stop("data data must be of class
+                        'comparative.data'. See function `comparative.data`.")
+          if(length(breaks)<2) stop("please include more then one break
+                                    (eg. breaks=c(.3,.5)")
           else
 
           # FULL MODEL calculations:

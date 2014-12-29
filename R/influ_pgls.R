@@ -10,31 +10,31 @@
 #' @param data A 'comparative.data' object containing the covariance matrix and
 #'   data to be used in the model.
 #' @param lambda A value for the lambda transformation. If NULL, lambda= "ML
-#' @details This functions only works for simple linear regression
-#' \eqn{y = bx + a}.
-#' Future implementation will deal with more complex models.
+#' @details This functions only works for simple linear regression \eqn{y = bx +
+#'   a}. Future implementation will deal with more complex models.
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{[caper]pgls}}
 #' @return The function \code{influpgls} returns a list with the following
-#'  components:
+#'   components:
 #' @return \code{errors} Species removal that showed erros during pgls fit
 #' @return \code{formula} The model formula
 #' @return \code{model_estimates} Full model estimates
 #' @return \code{beta95_IC} Full model beta 95 confidence interval
 #' @return \code{influential_species} Most influential species for beta and
-#' intercept
+#'   intercept
 #' @return \code{results} A data frame with all simulation estimates. DFbeta and
-#' DFintercept represent absolute difference between full model and simulation
-#' estimate, beta and intercept respectively.
+#'   DFintercept represent absolute difference between full model and simulation
+#'   estimate, beta and intercept respectively.
 #' @export
 
 
 influ_pgls <- function(formula,data,lambda="ML")
 {
         # Basic error checking:
-        if(class(formula)!="formula") stop("Please formula must be class 'forumla'")
-        if(class(data)!="comparative.data") stop("data object must be of class 'comparative.data. See
-                        ?comparative.data, package (caper) for details")
+        if(class(formula)!="formula") stop("Please formula must be class
+                                           'forumla'")
+        if(class(data)!="comparative.data") stop("data object must be of class
+        'comparative.data. See ?comparative.data, package (caper) for details")
         else
 
         # FULL MODEL calculations:
@@ -92,7 +92,8 @@ influ_pgls <- function(formula,data,lambda="ML")
                 }
         }
         # Dataframe with results:
-        estimates <- data.frame(species,betas,DFbetas,intercepts,DFintercepts,p.values)
+        estimates <- data.frame(species,betas,DFbetas,intercepts,DFintercepts,
+                                p.values)
         param0 <- data.frame(intercept.0,beta.0)
         influ.sp.b <- as.character(estimates[order(estimates$DFbetas,decreasing=T)[1:5],]$species)
         influ.sp.i <- as.character(estimates[order(estimates$DFintercepts,decreasing=T)[1:5],]$species)
@@ -108,7 +109,8 @@ influ_pgls <- function(formula,data,lambda="ML")
                 presented errors,please check: output$errors to see
                 which species deletion showed error")}
           else {
-                print("No erros found. All single deletions were performed and stored successfully")
+                print("No erros found. All single deletions were performed
+                      and stored successfully")
                 output$errors <- c("No erros found")}
 
         return(output)
