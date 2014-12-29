@@ -111,7 +111,7 @@ influ_pgls <- function(formula,data,lambda="ML")
           else {
                 print("No erros found. All single deletions were performed
                       and stored successfully")
-                output$errors <- c("No erros found")}
+                }
 
         return(output)
 
