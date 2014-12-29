@@ -12,11 +12,9 @@
 #' @param lambda A value for the lambda transformation. If NULL, lambda= "ML
 #' @details This functions only works for simple linear regression \eqn{y = bx +
 #'   a}. Future implementation will deal with more complex models.
-#' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{[caper]pgls}}
-#' @return The function \code{influpgls} returns a list with the following
+#' @return The function \code{influ_pgls} returns a list with the following
 #'   components:
-#' @return \code{errors} Species removal that showed erros during pgls fit
+#' @return \code{errors} Species that showed erros during pgls fit
 #' @return \code{formula} The model formula
 #' @return \code{model_estimates} Full model estimates
 #' @return \code{beta95_IC} Full model beta 95 confidence interval
@@ -25,6 +23,8 @@
 #' @return \code{results} A data frame with all simulation estimates. DFbeta and
 #'   DFintercept represent absolute difference between full model and simulation
 #'   estimate, beta and intercept respectively.
+#' @section Warning: This code is note fully checked. Please be aware.
+#' @seealso \code{\link{pgls}}
 #' @export
 
 

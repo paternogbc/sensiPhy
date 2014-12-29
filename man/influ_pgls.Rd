@@ -15,10 +15,10 @@ data to be used in the model.}
 \item{lambda}{A value for the lambda transformation. If NULL, lambda= "ML}
 }
 \value{
-The function \code{influpgls} returns a list with the following
- components:
+The function \code{influ_pgls} returns a list with the following
+  components:
 
-\code{errors} Species removal that showed erros during pgls fit
+\code{errors} Species that showed erros during pgls fit
 
 \code{formula} The model formula
 
@@ -27,11 +27,11 @@ The function \code{influpgls} returns a list with the following
 \code{beta95_IC} Full model beta 95 confidence interval
 
 \code{influential_species} Most influential species for beta and
-intercept
+  intercept
 
 \code{results} A data frame with all simulation estimates. DFbeta and
-DFintercept represent absolute difference between full model and simulation
-estimate, beta and intercept respectively.
+  DFintercept represent absolute difference between full model and simulation
+  estimate, beta and intercept respectively.
 }
 \description{
 \code{influ_pgls} performs leave-one-out-deletion analysis for
@@ -41,14 +41,13 @@ estimates. The function repeats this procedure for all species in the dataset
 and store all the results in a data.frame.
 }
 \details{
-This functions only works for simple linear regression
-\eqn{y = bx + a}.
-Future implementation will deal with more complex models.
+This functions only works for simple linear regression \eqn{y = bx +
+  a}. Future implementation will deal with more complex models.
 }
 \section{Warning}{
  This code is note fully checked. Please be aware.
 }
 \seealso{
-\code{\link{[caper]pgls}}
+\code{\link{pgls}}
 }
 

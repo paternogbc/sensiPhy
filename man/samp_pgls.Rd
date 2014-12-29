@@ -42,8 +42,8 @@ species removed is specified with \code{breaks} and the number of simulations
 per break is defined by \code{times}.
 }
 \details{
-This functions only works for simple linear regression \eqn{y = bx + a}.
-  Future implementation will deal with more complex models.
+This functions only works for simple linear regression \eqn{y = bx +
+  a}. Future implementation will deal with more complex models.
 }
 \section{Warning}{
  This code is note fully checked. Please be aware.
