@@ -1,4 +1,8 @@
-### Example: sampling.pgls
+### Examples:
+
+### First install sensiC from Github:
+devtools::install_github("paternogbc/sensiC")
+
 ### Required packages:
 library(phylolm);library(phytools);library(sensiC)
 
@@ -24,7 +28,7 @@ summary(mod0)
 ### Example: samp_pgls
 samp1 <- samp_pgls(Ly ~ Lx,data=comp.data)
 ### You can specify the number of replicates and break intervals:
-samp2 <- samp_pgls(Ly ~ Lx,data=comp.data,times=50,breaks=c(.1,.3,.5))
+samp2 <- samp_pgls(Ly ~ Lx,data=comp.data,times=99,breaks=c(.1,.3,.5))
 
 ### Example: influ_pgls
 influ <- influ_pgls(Ly ~ Lx,data=comp.data)
@@ -40,4 +44,4 @@ sensi_plot(samp1,method="sampling")
 sensi_plot(samp2,method="sampling")
 sensi_plot(influ,method="influence")
 
-devtools::install_github("paternogbc/sensiC")
+
