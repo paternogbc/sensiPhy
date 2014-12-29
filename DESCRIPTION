@@ -14,5 +14,4 @@ Imports: caper,
     ggplot2,
     gridExtra
 Suggests: knitr
-Depends: ggplot2
 VignetteBuilder: knitr
