@@ -38,7 +38,7 @@ samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
           # FULL MODEL calculations:
           c.data <- data
           N <- nrow(c.data$data)             # Sample size
-          mod.0 <- pgls(formula, data=c.data,lambda=lambda)
+          mod.0 <- caper::pgls(formula, data=c.data,lambda=lambda)
           sumMod <- summary(mod.0)
           intercept.0 <-    sumMod[[c(5,1)]] # Intercept (full model)
           beta.0 <-    sumMod[[c(5,2)]]      # Beta (full model)
@@ -62,7 +62,7 @@ samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
                     for (j in 1:times){
                               exclude <- sample(1:N,i)
                               crop.data <- c.data[-exclude,]
-                              mod=try(pgls(formula, data=crop.data,lambda),TRUE)
+                              mod=try(caper::pgls(formula, data=crop.data,lambda),TRUE)
                               if(isTRUE(class(mod)=="try-error")) { next }
                               else {
                                         ### Calculating model estimates:

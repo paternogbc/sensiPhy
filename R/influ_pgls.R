@@ -39,7 +39,7 @@ influ_pgls <- function(formula,data,lambda="ML")
         # FULL MODEL calculations:
         c.data <- data
         N <- nrow(c.data$data)             # Sample size
-        mod.0 <- pgls(formula, data=c.data,lambda=lambda)
+        mod.0 <- caper::pgls(formula, data=c.data,lambda=lambda)
         sumMod <- summary(mod.0)
         intercept.0 <-    sumMod[[c(5,1)]]  # Intercept (full model)
         beta.0 <-    sumMod[[c(5,2)]]       # Beta (full model)
@@ -64,7 +64,7 @@ influ_pgls <- function(formula,data,lambda="ML")
                 exclude <- c(1:nrow(c.data$data))[-i]
                 crop.data <- c.data[exclude,]
 
-                mod=try(pgls(formula, data=crop.data,lambda),TRUE)
+                mod=try(caper::pgls(formula, data=crop.data,lambda),TRUE)
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
                         names(error) <- rownames(c.data$data)[i]
