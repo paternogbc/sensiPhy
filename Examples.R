@@ -4,7 +4,7 @@
 devtools::install_github("paternogbc/sensiC")
 
 ### Required packages:
-library(phylolm);library(phytools);library(sensiC)
+library(phylolm);library(phytools);library(caper)
 
 set.seed(111)
 N <- 50 # Number of species
