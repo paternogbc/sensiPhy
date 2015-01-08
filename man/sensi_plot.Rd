@@ -4,7 +4,7 @@
 \alias{sensi_plot}
 \title{Plot results from package `sensiC`}
 \usage{
-sensi_plot(x, method = "sampling")
+sensi_plot(x)
 }
 \arguments{
 \item{x}{output from \code{samp_pgls} or \code{influ_pgls}}
