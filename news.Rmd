@@ -1,0 +1,7 @@
+---
+title: "sensiC realease notes"
+output: pdf_document
+---
+
+sensiC v 0.1.0
+* Included function influ_gls
