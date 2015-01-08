@@ -1,7 +1,7 @@
 #' Estimates time of samp_pgls and influ_pgls
 #'
 #' \code{sensi_time} Estimates simulation time to run \code{samp_pgls} and
-#' \code{influ_pgls}
+#' \code{influ_pgls}.
 #' @aliases sensi_time
 
 sensi_time <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML"){
