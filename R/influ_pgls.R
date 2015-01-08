@@ -11,7 +11,8 @@
 #'   data to be used in the model.
 #' @param lambda A value for the lambda transformation. If NULL, lambda= "ML
 #' @details This functions only works for simple linear regression \eqn{y = bx +
-#'   a}. Future implementation will deal with more complex models.
+#'   a}. Future implementation will deal with more complex models. If any errors
+#'   occurs during simulation, check 'errors' to see which deletion showed error.
 #' @return The function \code{influ_pgls} returns a list with the following
 #'   components:
 #' @return \code{errors} Species that showed erros during pgls fit
