@@ -21,6 +21,9 @@ summary(mod0)
 samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 ### You can specify the number of replicates and break intervals:
 samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
+### Example? samp_gls,
+samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+
 
 ### Example: influ_pgls
 influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
@@ -42,5 +45,6 @@ influ2 <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebir
 ### Visualizing Results:
 sensi_plot(samp1)
 sensi_plot(samp2)
+sensi_plot(samp3)
 sensi_plot(influ1)
 sensi_plot(influ2)
