@@ -7,13 +7,13 @@
 #' and store all the results in a data.frame.
 #' @aliases influ_gls
 #' @param formula A model formula
-#' @param A data frame containing variables that can be attributed to the taxa
+#' @param data A data frame containing variables that can be attributed to the taxa
 #' at the tips of a phylogeny
 #' @param phy A phylogeny (class 'phylo') to be matched to the data above
 #' @details This functions only works for simple linear regression \eqn{y = bx +
 #'   a}. Future implementation will deal with more complex models. This functions only
-#'   works with Pagel correlation (see \code{corPagel}). If any errors occurs during simulation,
-#'   check 'errors' to see which deletion showed error.
+#'   works with Pagel correlation (see \code{corPagel}). If any error occur during simulation,
+#'   check 'output$errors' for details.
 #' @return The function \code{influ_gls} returns a list with the following
 #'   components:
 #' @return \code{errors} Species that showed erros during pgls fit
@@ -26,6 +26,21 @@
 #'   DFintercept represent absolute difference between full model and simulation.
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{samp_pgls}}
+#' @examples
+#' library(caper);library(ggplot2);library(gridExtra)
+#' data(shorebird)
+#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+#' # First we need to match tip.labels with rownames in data:
+#' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+#' shorebird.data <- shorebird.data[sp.ord,]
+#' # Now we can run the function influ_gls:
+#' influ <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+#' # Estimated parameters:
+#' head(influ$results)
+#' # Most influential species:
+#' influ[[5]]
+#' # Check for species with erros erros:
+#' influ$errors
 #' @export
 
 
@@ -72,7 +87,7 @@ influ_gls <- function(formula,data,phy)
         for (i in 1:nrow(c.data)){
                 exclude <- c(1:nrow(c.data))[-i]
                 crop.data <- c.data[exclude,]
-                crop.phy <-  ape::drop.tip(tree,tree$tip.label[i])
+                crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
                 crop.cor <- ape::corPagel(1,phy=crop.phy,fixed=F)
                 mod=try(nlme::gls(formula, data=crop.data,method="ML",correlation=crop.cor),TRUE)
 

@@ -9,10 +9,10 @@ influ_gls(formula, data, phy)
 \arguments{
 \item{formula}{A model formula}
 
-\item{phy}{A phylogeny (class 'phylo') to be matched to the data above}
-
-\item{A}{data frame containing variables that can be attributed to the taxa
+\item{data}{A data frame containing variables that can be attributed to the taxa
 at the tips of a phylogeny}
+
+\item{phy}{A phylogeny (class 'phylo') to be matched to the data above}
 }
 \value{
 The function \code{influ_gls} returns a list with the following
@@ -42,11 +42,27 @@ and store all the results in a data.frame.
 \details{
 This functions only works for simple linear regression \eqn{y = bx +
   a}. Future implementation will deal with more complex models. This functions only
-  works with Pagel correlation (see \code{corPagel}). If any errors occurs during simulation,
-  check 'errors' to see which deletion showed error.
+  works with Pagel correlation (see \code{corPagel}). If any error occur during simulation,
+  check 'output$errors' for details.
 }
 \section{Warning}{
  This code is note fully checked. Please be aware.
+}
+\examples{
+library(caper);library(ggplot2);library(gridExtra)
+data(shorebird)
+comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+# First we need to match tip.labels with rownames in data:
+sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+shorebird.data <- shorebird.data[sp.ord,]
+# Now we can run the function influ_gls:
+influ <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+# Estimated parameters:
+head(influ$results)
+# Most influential species:
+influ[[5]]
+# Check for species with erros erros:
+influ$errors
 }
 \seealso{
 \code{\link{pgls}}, \code{\link{samp_pgls}}

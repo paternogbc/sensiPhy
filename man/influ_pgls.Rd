@@ -47,6 +47,18 @@ This functions only works for simple linear regression \eqn{y = bx +
 \section{Warning}{
  This code is note fully checked. Please be aware.
 }
+\examples{
+library(caper);library(ggplot2);library(gridExtra)
+data(shorebird)
+comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+influ <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
+### Estimated parameters:
+head(influ$results)
+# Most influential species:
+influ[[5]]
+# Check for species with erros erros:
+influ$errors
+}
 \seealso{
 \code{\link{pgls}}, \code{\link{samp_pgls}}
 }

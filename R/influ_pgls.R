@@ -25,6 +25,17 @@
 #'   DFintercept represent absolute difference between full model and simulation.
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{samp_pgls}}
+#' @examples
+#' library(caper);library(ggplot2);library(gridExtra)
+#' data(shorebird)
+#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+#' influ <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
+#' ### Estimated parameters:
+#' head(influ$results)
+#' # Most influential species:
+#' influ[[5]]
+#' # Check for species with erros erros:
+#' influ$errors
 #' @export
 
 

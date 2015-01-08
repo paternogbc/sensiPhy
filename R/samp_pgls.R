@@ -22,9 +22,19 @@
 #' @return \code{power_analysis} A data frame with power analysis for each
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}
+#' @examples
+#' library(caper);library(ggplot2);library(gridExtra)
+#' data(shorebird)
+#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+#' samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
+#' # You can specify the number of replicates and break intervals:
+#' samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
+#' # Plot results
+#' sensi_plot(samp1)
+#' sensi_plot(samp2)
 #' @export
 
-samp_pgls <- function(formula,data,times=99,breaks=seq(.1,.7,.1),lambda="ML")
+samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
 {
           ### Basic error checking:
           if(class(formula)!="formula") stop("Please formula must be
