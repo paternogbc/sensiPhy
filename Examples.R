@@ -5,9 +5,9 @@ devtools::install_github("paternogbc/sensiC")
 
 ### Required packages:
 library(phylolm);library(phytools);library(caper);library(ggplot2);library(gridExtra)
-
+library(sensiC)
 set.seed(111)
-N <- 50 # Number of species
+N <- 30 # Number of species
 ### Simulating tree
 tree<-pbtree(n=N)
 ### Simulating response variable with phylogenetic signal
@@ -40,8 +40,8 @@ influ[[5]]
 influ$errors
 
 ### Visualizing Results:
-sensi_plot(samp1,method="sampling")
-sensi_plot(samp2,method="sampling")
-sensi_plot(influ,method="influence")
+sensi_plot(samp1)
+sensi_plot(samp2)
+sensi_plot(influ)
 
 
