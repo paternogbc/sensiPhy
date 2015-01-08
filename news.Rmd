@@ -1,7 +1,9 @@
 ---
 title: "sensiC realease notes"
-output: pdf_document
+output: html_document
 ---
 
-sensiC v 0.1.0
-* Included function influ_gls
+## sensiC v 0.1.0
+* Included function 'influ_gls'
+* Included function 'samp_gls'
+* Update 'sensi_plot' to plot results from 'samp_gls' and 'influ_gls'
