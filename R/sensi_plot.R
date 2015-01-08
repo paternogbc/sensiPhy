@@ -6,11 +6,12 @@
 #' species removed is specified with \code{breaks} and the number of simulations
 #' per break is defined by \code{times}.
 #' @aliases sensi_plot
+#' @param x output from \code{samp_pgls} or \code{influ_pgls}
 #' @export
 
 ### Start:
-sensi_plot <- function(x, method="sampling"){
-          if (method == "sampling"){
+sensi_plot <- function(x){
+          if (length(x) == 5){
                     result <- x[[3]]
                     beta.0 <- as.numeric(x[[1]][1])
                     beta.0.low <- as.numeric(x[[2]][1])
@@ -74,7 +75,7 @@ sensi_plot <- function(x, method="sampling"){
                               ylab("Power  [Beta]")
                     gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2)
           }
-          if (method == "influence"){
+          else      {
 
                     .e <- environment()
                     result <- x[[6]]
