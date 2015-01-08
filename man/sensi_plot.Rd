@@ -7,13 +7,11 @@
 sensi_plot(x)
 }
 \arguments{
-\item{x}{output from \code{samp_pgls} or \code{influ_pgls}}
+\item{x}{output from \code{samp_pgls}, \code{influ_pgls}, \code{samp_gls} and
+code{influ_gls}}
 }
 \description{
-\code{sensi_plot} Performs Sampling effort analysis for \code{pgls}
-regression. It removes species at random, fits a pgls model without the
-species and store the results of the model estimates. The percentage of
-species removed is specified with \code{breaks} and the number of simulations
-per break is defined by \code{times}.
+\code{sensi_plot} Plot results from \code{samp_pgls}, \code{samp_gls},
+\code{influ_pgls},\code{influ_gls}
 }
 
