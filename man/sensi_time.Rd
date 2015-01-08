@@ -9,6 +9,6 @@ sensi_time(formula, data, times = 20, breaks = seq(0.1, 0.7, 0.1),
 }
 \description{
 \code{sensi_time} Estimates simulation time to run \code{samp_pgls} and
-\code{influ_pgls}
+\code{influ_pgls}.
 }
 

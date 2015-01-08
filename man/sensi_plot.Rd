@@ -6,6 +6,9 @@
 \usage{
 sensi_plot(x, method = "sampling")
 }
+\arguments{
+\item{x}{output from \code{samp_pgls} or \code{influ_pgls}}
+}
 \description{
 \code{sensi_plot} Performs Sampling effort analysis for \code{pgls}
 regression. It removes species at random, fits a pgls model without the
