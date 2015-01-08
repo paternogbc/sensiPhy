@@ -1,6 +1,6 @@
 Package: sensiC
 Title: Sensitive  analysis for comparative methods
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: c(
     person("Gustavo", "Paterno","Brant", email = "paternogbc@gmail.com",
     role = c("cre","aut")),
