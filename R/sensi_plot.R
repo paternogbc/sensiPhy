@@ -1,12 +1,10 @@
 #' Plot results from package `sensiC`
 #'
-#' \code{sensi_plot} Performs Sampling effort analysis for \code{pgls}
-#' regression. It removes species at random, fits a pgls model without the
-#' species and store the results of the model estimates. The percentage of
-#' species removed is specified with \code{breaks} and the number of simulations
-#' per break is defined by \code{times}.
+#' \code{sensi_plot} Plot results from \code{samp_pgls}, \code{samp_gls},
+#' \code{influ_pgls},\code{influ_gls}
 #' @aliases sensi_plot
-#' @param x output from \code{samp_pgls} or \code{influ_pgls}
+#' @param x output from \code{samp_pgls}, \code{influ_pgls}, \code{samp_gls} and
+#' code{influ_gls}
 #' @export
 
 ### Start:
@@ -31,7 +29,7 @@ sensi_plot <- function(x){
                     ## Mean estimated Betas:
                     med <- with(result,tapply(betas,n.removs,mean))
                     Sdev <- with(result,tapply(betas,n.removs,sd))
-                    n.sp <- nrow(x[[5]]$data)-as.numeric(rownames(med))
+                    n.sp <- nrow(x[[5]])-as.numeric(rownames(med))
                     result.med <- data.frame(med,Sdev,n.sp,beta.0)
                     p1 <- ggplot2::ggplot(result.med,aes(y=med,x=n.sp),environment=.e)+
                               geom_point(size=3,alpha=.7)+
@@ -41,7 +39,7 @@ sensi_plot <- function(x){
                               geom_hline(yintercept=beta.0.low,linetype=2,color="red")+
                               geom_hline(yintercept=beta.0.up,linetype=2,color="red")+
                               xlab("Number of Species") + ylab("Mean Beta (+-SD)")+
-                              geom_point(aes(x=nrow(x[[5]]$data),y=beta.0,size=3,colour="red"))+
+                              geom_point(aes(x=nrow(x[[5]]),y=beta.0,size=3,colour="red"))+
                               theme(legend.position="none")+
                               xlab("Number of species")
 
