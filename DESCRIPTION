@@ -12,6 +12,8 @@ License: GPL-3
 LazyData: true
 Imports: caper,
     ggplot2,
-    gridExtra
+    gridExtra,
+    ape,
+    nlme
 Suggests: knitr
 VignetteBuilder: knitr
