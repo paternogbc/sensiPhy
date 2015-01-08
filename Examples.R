@@ -4,34 +4,26 @@
 devtools::install_github("paternogbc/sensiC")
 
 ### Required packages:
-library(phylolm);library(phytools);library(caper);library(ggplot2);library(gridExtra)
+library(caper);library(ggplot2);library(gridExtra)
 library(sensiC)
-set.seed(111233121)
-N <- 50 # Number of species
-### Simulating tree
-tree<-pbtree(n=N)
-### Simulating response variable with phylogenetic signal
-Ly <- rTrait(n=1, tree, model=c("lambda"),parameters=list(lambda=.8))
-### Simulating explanatory variable
-Lx <- Ly + rnorm(N,mean(Ly),1)
-### Including Species names:
-sp <- tree$tip.label
-regre <- data.frame(sp,Ly,Lx)
+
+### Loading data:
+data(shorebird)
 
 ### Organizing comparative data for pgls:
-comp.data <- comparative.data(data=regre,phy=tree,vcv=T,vcv.dim=3,names.col="sp")
+comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 
 ### Linear regression (PGLS):
-mod0 <- pgls(Ly ~Lx, data=comp.data,"ML")
+mod0 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=comp.data,"ML")
 summary(mod0)
 
 ### Example: samp_pgls
-samp1 <- samp_pgls(Ly ~ Lx,data=comp.data)
+samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 ### You can specify the number of replicates and break intervals:
-samp2 <- samp_pgls(Ly ~ Lx,data=comp.data,times=99,breaks=c(.1,.3,.5))
+samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
 
 ### Example: influ_pgls
-influ <- influ_pgls(Ly ~ Lx,data=comp.data)
+influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 ### Estimated parameters:
 head(influ$results)
 ### Most influential species:
@@ -40,13 +32,15 @@ influ[[5]]
 influ$errors
 
 ### Example influ_gls:
-influ2 <- influ_gls(Ly ~ Lx,data=regre,phy=tree)
-influ2
+### First we need to match tip.labels with rownames in data:
+sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+shorebird.data <- shorebird.data[sp.ord,]
+
+### Now we can run the function influ_gls:
+influ2 <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 
 ### Visualizing Results:
 sensi_plot(samp1)
 sensi_plot(samp2)
+sensi_plot(influ1)
 sensi_plot(influ2)
-
-influ$results == influ2$results
-
