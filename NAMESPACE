@@ -2,5 +2,6 @@
 
 export(influ_gls)
 export(influ_pgls)
+export(samp_gls)
 export(samp_pgls)
 export(sensi_plot)
