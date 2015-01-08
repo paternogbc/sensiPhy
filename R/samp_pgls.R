@@ -81,7 +81,7 @@ samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
                                         intercept <-    sum.Mod[[c(5,1)]]# Intercept
                                         pval <-    sum.Mod[[c(5,8)]] # p.value
                                         n.remov <- i
-                                        n.percent <- n.remov/N
+                                        n.percent <- round(n.remov/N,digits=1)*10
                                         rep <- j
 
                                         ### Storing values for each simulation
@@ -112,7 +112,7 @@ samp_pgls <- function(formula,data,times=20,breaks=seq(.1,.7,.1),lambda="ML")
           param0 <- data.frame(beta.0,intercept.0)
           beta_IC <- data.frame(beta.low=beta.0.low,beta.up=beta.0.up)
           return(list(model_estimates=param0,beta_95_IC=beta_IC,
-                      results=estimates,power_analysis=power.tab,data=c.data))
+                      results=estimates,power_analysis=power.tab,data=c.data$data))
 
 
 }
