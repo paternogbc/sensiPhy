@@ -49,6 +49,13 @@ This functions only works for simple linear regression \eqn{y = bx +
 \section{Warning}{
  This code is note fully checked. Please be aware.
 }
+\examples{
+library(caper);library(ggplot2);library(gridExtra)
+data(shorebird)
+comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+samp1 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+sensi_plot(samp1)
+}
 \seealso{
 \code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}
 }

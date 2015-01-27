@@ -23,7 +23,14 @@
 #' @return \code{data} Original dataset
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}
+#' @examples
+#' library(caper);library(ggplot2);library(gridExtra)
+#' data(shorebird)
+#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+#' samp1 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+#' sensi_plot(samp1)
 #' @export
+
 
 samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
 {
