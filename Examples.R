@@ -21,9 +21,12 @@ summary(mod0)
 samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 ### You can specify the number of replicates and break intervals:
 samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
-### Example? samp_gls,
-samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 
+### Example: samp_gls,
+# First we need to match tip.labels with rownames in data:
+sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+shorebird.data <- shorebird.data[sp.ord,]
+samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 
 ### Example: influ_pgls
 influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)

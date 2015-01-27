@@ -53,6 +53,8 @@ This functions only works for simple linear regression \eqn{y = bx +
 library(caper);library(ggplot2);library(gridExtra)
 data(shorebird)
 comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+shorebird.data <- shorebird.data[sp.ord,]
 samp1 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 sensi_plot(samp1)
 }
