@@ -28,6 +28,7 @@ sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
 shorebird.data <- shorebird.data[sp.ord,]
 samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 
+
 ### Example: influ_pgls
 influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 ### Estimated parameters:
