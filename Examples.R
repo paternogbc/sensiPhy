@@ -1,5 +1,3 @@
-### Examples
-
 ### First install sensiC from Github:
 devtools::install_github("paternogbc/sensiC")
 
