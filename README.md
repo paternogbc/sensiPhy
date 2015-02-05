@@ -29,14 +29,14 @@ mod0 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=comp.data,"ML")
 summary(mod0)
 ```
 
-Example: samp_pgls
+#### Example: samp_pgls
 ```{r}
 samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 
 # You can specify the number of replicates and break intervals:
 samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
 ```
-#### Example: samp_gls,
+
 ```{r}
 samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 ```
