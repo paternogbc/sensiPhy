@@ -49,11 +49,11 @@ samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.
 ```{r}
 influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
 # Estimated parameters:
-head(influ$results)
+head(influ1$results)
 # Most influential species:
-influ[[5]]
+influ1[[5]]
 # Check for species with erros erros:
-influ$errors
+influ1$errors
 ```
 #### Example influ_gls:
 ```{r}
