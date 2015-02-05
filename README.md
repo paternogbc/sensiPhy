@@ -38,6 +38,10 @@ samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(
 ```
 #### Example: samp_gls
 ```{r}
+# First we need to match tip.labels with rownames in data:
+sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
+shorebird.data <- shorebird.data[sp.ord,]
+
 samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 ```
 
