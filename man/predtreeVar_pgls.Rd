@@ -53,7 +53,30 @@ a}. Future implementation will deal with more complex models.
 If \code{ntree} and \code{npred} are set to 1, the function computes a classic pgls.
 }
 \examples{
-to do :)
+library(caper);library(phylolm);library(phytools)
+# Example with a single tree
+N <- 100 # Number of species in the tree
+tree<-pbtree(n=N)
+# Simulating response variable with phylogenetic signal
+Ly <- rTrait(n=1, tree, model=c("lambda"),parameters=list(lambda=.8))
+# Simulating explanatory variable and its standard error
+Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
+# Including Species names
+sp <- tree$tip.label
+# predtreeVar_pgls analysis
+predtreeVar_pgls(resp=Ly,pred=Lx$xmean,se.pred=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
+
+# Example with a set of trees of class multiphylo
+N <- 100 # Number of species in the trees
+multitree <- rmtree(N=50,n=100)
+# Simulating response variable with phylogenetic signal
+Ly <- rTrait(n=1, multitree[[1]], model=c("lambda"),parameters=list(lambda=.8))
+# Simulating explanatory variable and its standard error
+Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
+# Including Species names
+sp <- multitree[[1]]$tip.label
+# predtreeVar_pgls analysis
+predtreeVar.pgls(resp=Ly,pred=Lx$xmean,se.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 }
 \seealso{
 \code{\link{pgls}}, \code{\link{comparative.data}}, \code{\link{runif}}, \code{\link{rnorm}}
