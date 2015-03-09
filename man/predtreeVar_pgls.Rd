@@ -2,7 +2,7 @@
 % Please edit documentation in R/predtreeVar_pgls.R
 \name{predtreeVar_pgls}
 \alias{predtreeVar_pgls}
-\title{PGLS analysis accounting for variability in predictors and trees.}
+\title{pgls analysis accounting for variability in predictors and trees.}
 \usage{
 predtreeVar_pgls(resp, pred, se.pred = NA, tree, ntree = 1, npred = 1,
   method = c("normal", "uniform"), taxa.col, lambda = "ML")

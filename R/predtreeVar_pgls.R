@@ -1,11 +1,10 @@
-#' PGLS analysis accounting for variability in predictors and trees.
+#' pgls analysis accounting for variability in predictors and trees.
 #'
 #' \code{predtreeVar_pgls} performs \code{pgls} analysis accounting for variability in predictors and trees.
 #' It picks n times a random value within an interval for the predictor variable and 
 #' it repeats the analysis m times for m trees in a \code{multiPhylo} file. 
 #' The output gives a mean and sd of the model parameters.
 #' @aliases predtreeVar_pgls
-#' @inheritParams ??inheritParams
 #' @param resp Numeric vector containing the response variable
 #' @param pred Vector containing the predictor variable
 #' @param se.pred Vector containing the standard error of \code{pred}  
