@@ -2,7 +2,7 @@
 % Please edit documentation in R/variPgls.R
 \name{variPgls}
 \alias{variPgls}
-\title{pgls analysis accounting for intraspecific variability and phylogenetic uncertainty.}
+\title{Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty}
 \usage{
 variPgls(resp, pred, se.pred = NA, tree, ntree = 1, npred = 1,
   method = c("normal", "uniform"), taxa.col, lambda = "ML")
@@ -17,10 +17,10 @@ variPgls(resp, pred, se.pred = NA, tree, ntree = 1, npred = 1,
 \item{tree}{A tree or list of tree of class \code{Phylo} or \code{multiPhylo}}
 
 \item{ntree}{If TRUE or class(tree)=multiPhylo, the number of times to repeat the analysis with n different
-trees picked randomly in the multiPhylo file. If NULL, \code{ntree}=1}
+trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1}
 
 \item{npred}{If TRUE, the number of times to repeat the analysis generating a random value in the interval
-[\code{pred}-\code{se.pred},\code{pred}+\code{se.pred}]. If NULL, \code{npred}=1}
+[\code{pred}-\code{se.pred},\code{pred}+\code{se.pred}]. If NULL, \code{npred} = 1}
 
 \item{method}{A character string indicating which method to use to generate a random value in the interval
 [\code{pred} - \code{se.pred}, \code{pred} + \code{se.pred}]. Default is normal distribution: "normal"
@@ -39,8 +39,8 @@ components:
 parameters: intercept, beta, beta standard error, beta confidence interval, beta pvalue, AIC, lambda
 
 \code{stats} Mean and sd of each parameter of the model
-\code{min},\code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
-\code{sd_all} is the total standard deviation (sd),\code{sd_tree} is the sd due to phylogenetic uncertainty,
+\code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
+\code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
 \code{sd_pred} is the sd due to intraspecific variation
 }
 \description{
@@ -86,6 +86,6 @@ sp <- multitree[[1]]$tip.label
 variPgls(resp=Ly,pred=Lx$xmean,se.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 }
 \seealso{
-\code{\link{nlme:::gls}}, \code{\link{ape::corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
+\code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
 }
 

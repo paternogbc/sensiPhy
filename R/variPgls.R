@@ -1,4 +1,4 @@
-#' pgls analysis accounting for intraspecific variability and phylogenetic uncertainty.
+#' Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty
 #'
 #' \code{variPgls} performs phylogenetic \code{gls} analysis accounting for intraspecific variability and phylogenetic 
 #' uncertainty in trees topology. 
@@ -11,9 +11,9 @@
 #' @param se.pred Vector containing the standard error of \code{pred}  
 #' @param tree A tree or list of tree of class \code{Phylo} or \code{multiPhylo}
 #' @param ntree If TRUE or class(tree)=multiPhylo, the number of times to repeat the analysis with n different 
-#' trees picked randomly in the multiPhylo file. If NULL, \code{ntree}=1
+#' trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1
 #' @param npred If TRUE, the number of times to repeat the analysis generating a random value in the interval 
-#' [\code{pred}-\code{se.pred},\code{pred}+\code{se.pred}]. If NULL, \code{npred}=1
+#' [\code{pred}-\code{se.pred},\code{pred}+\code{se.pred}]. If NULL, \code{npred} = 1
 #' @param method A character string indicating which method to use to generate a random value in the interval 
 #' [\code{pred} - \code{se.pred}, \code{pred} + \code{se.pred}]. Default is normal distribution: "normal" 
 #' (function \code{\link{rnorm}}), uniform distribution is "uniform" (\code{\link{runif}})
@@ -27,12 +27,12 @@
 #' @return \code{model_results} Model parameters for each iteration
 #' parameters: intercept, beta, beta standard error, beta confidence interval, beta pvalue, AIC, lambda
 #' @return \code{stats} Mean and sd of each parameter of the model
-#' \code{min},\code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
-#' \code{sd_all} is the total standard deviation (sd),\code{sd_tree} is the sd due to phylogenetic uncertainty,
+#' \code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
+#' \code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
 #' \code{sd_pred} is the sd due to intraspecific variation
 #' @section Warning: This code is not fully checked. Please be aware.
 #' If \code{ntree} and \code{npred} are set to 1, the function computes a classic phylogenetic gls.
-#' @seealso \code{\link{nlme:::gls}}, \code{\link{ape::corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
+#' @seealso \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
 #' @examples
 #' library(caper);library(phylolm);library(phytools)
 #' 
