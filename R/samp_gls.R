@@ -39,7 +39,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
 {
         ### Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be
-                                           class 'forumla'")
+                                           class 'formula'")
         if(class(data)!="data.frame") stop("data data must be of class
                                                  'data.frame'. See function `comparative.data`.")
         if(length(breaks)<2) stop("please include more then one break
@@ -62,7 +62,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         beta.0 <-    sumMod[2,1]            # Beta (full model)
         pval.0 <-    sumMod[2,4]            # p.value (full model)
         sd.beta.0 <- sumMod[2,2]            # Standart Error (full model)
-        df.0 <- N-1                         # Degree if Freedon (full model))
+        df.0 <- mod.0$dims$N - mod.0$dims$p # Degrees of Freedon (full model))
         beta.IC <- qt(0.975,df.0)*sd.beta.0 # Beta CI (full model)
         beta.0.low <- beta.0 - beta.IC      # Low limit of beta CI (full model)
         beta.0.up <-  beta.0 + beta.IC      # Up limit of beta CI (full model)
