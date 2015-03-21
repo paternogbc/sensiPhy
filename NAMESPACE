@@ -2,7 +2,7 @@
 
 export(influ_gls)
 export(influ_pgls)
-export(predtreeVar_pgls)
 export(samp_gls)
 export(samp_pgls)
 export(sensi_plot)
+export(variPgls)
