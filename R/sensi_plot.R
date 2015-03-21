@@ -51,7 +51,7 @@ sensi_plot <- function(x){
                     power <- 1-(with(result,tapply(simu.sig,n.removs,sum)))/times
                     power.tab <- data.frame(breaks,power)
                     p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1))+
+                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
@@ -65,7 +65,7 @@ sensi_plot <- function(x){
                     power <- as.numeric(1-(with(result,tapply(beta.out.CI,n.removs,sum)))/times)
                     power.tab <- data.frame(breaks,power)
                     p4 <- ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1))+
+                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
@@ -80,11 +80,14 @@ sensi_plot <- function(x){
                     vars <- all.vars(x[[2]])
                     intercept.0 <-  as.numeric(x[[3]][1])
                     beta.0 <-  as.numeric(x[[3]][2])
+
+                    # Distribution of estimated betas:
                     p1 <- ggplot2::ggplot(result,aes(x=betas,y=..density..),environment=.e)+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = beta.0,color="red",linetype=2,size=.7)+
                               xlab("Estimated Betas")
+                    # Distribution of estimated intercepts:
                     p2 <- ggplot2::ggplot(result,aes(x=intercepts,y=..density..),environment=.e)+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
@@ -94,6 +97,8 @@ sensi_plot <- function(x){
                               x$data <- x$data[-as.numeric(x[[1]]),]
                     }
                     result.tab <- data.frame(x$results,x$data[vars])
+
+                    # Influential points for beta estimation:
                     p3<-ggplot2::ggplot(result.tab,aes(y=get(vars[1]),
                                               x=get(vars[2]),
                                               colour=abs(DFbetas)),environment=.e,)+
@@ -106,6 +111,8 @@ sensi_plot <- function(x){
                               ylab(vars[1])+
                               xlab(vars[2])+
                               ggtitle("Change in Beta estimate")
+
+                    # Influential points for intercept estimation
                     p4<-ggplot2::ggplot(result.tab,aes(y=get(vars[1]),
                                               x=get(vars[2]),
                                               colour=abs(DFintercepts)),environment=.e,)+
