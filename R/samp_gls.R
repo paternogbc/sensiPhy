@@ -51,6 +51,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         else
 
         # FULL MODEL calculations:
+
         c.data <- data
         N <- nrow(c.data)
         cor.0 <- ape::corPagel(1,phy=phy,fixed=F)
@@ -93,7 +94,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                 beta <-    sum.Mod[2,1]            # Beta (full model)
                                 pval <-    sum.Mod[2,4]            # p.value (full model)
                                 n.remov <- i
-                                n.percent <- round(n.remov/N,digits=1)*100
+                                n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
 
                                 ### Storing values for each simulation
