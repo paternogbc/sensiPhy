@@ -51,7 +51,7 @@ sensi_plot <- function(x){
                     power <- 1-(with(result,tapply(simu.sig,n.removs,sum)))/times
                     power.tab <- data.frame(breaks,power)
                     p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1))+
+                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
@@ -65,7 +65,7 @@ sensi_plot <- function(x){
                     power <- as.numeric(1-(with(result,tapply(beta.out.CI,n.removs,sum)))/times)
                     power.tab <- data.frame(breaks,power)
                     p4 <- ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1))+
+                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
