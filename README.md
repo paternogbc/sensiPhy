@@ -34,17 +34,20 @@ summary(mod0)
 #### Model diagnostics with sensiC package:
 
 ##### Example: Estimating sample size bias with `samp_gls`
+
 ```{r}
 samp <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
 
 # see results:
 head(samp$results)
 
-# You also can specify number of simulation and break intervals:
+# You can also specify number of simulation and break intervals:
 samp2 <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy,
                  times= 50, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
 ```
+
 ##### Example: Estimating influential points and parameter bias with `influ_gls`
+
 ```{r}
 influ <- influ_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
 # Estimated parameters:
