@@ -68,6 +68,22 @@ variPgls <- function(resp,pred,se.col=NA,tree,ntree=1,npred=1,method="normal",ta
   # Error check
   method <- match.arg(method)
 
+  #Match data and phylogeny
+  tiplabl<-c(do.call("cbind",tree$tip.label))
+  spnames<-as.data.frame(taxa.col)
+  mismatch<-union(setdiff(tiplabl,taxa.col),setdiff(taxa.col,tiplabl))
+  if (length(mismatch) != 0)   warning("Phylogeny tips not not match the species list,
+  species were dropped from phylogeny or species list")
+
+  #Drop species from tree
+  tree<-lapply(tree,drop.tip,tip=mismatch)
+  class(tree)<-"multiPhylo"
+
+  #Assemble the dataframe and drop species if needed
+  if(!inherits(pred, c("numeric","integer")) || is.na(se.col)) {data<-data.frame(taxa.col,resp,pred)}
+  else {data<-data.frame(taxa.col,resp,pred,se.col)
+        data<-data[!taxa.col %in% as.factor(mismatch), ]}
+
   #Function to pick a random value in the interval
   if (method=="uniform") funr <- function(a, b) {runif(1,a-b,a+b)}
   else funr <- function(a, b) {rnorm(1,a,b)}
@@ -80,10 +96,6 @@ variPgls <- function(resp,pred,se.col=NA,tree,ntree=1,npred=1,method="normal",ta
   resultados<-data.frame("n.pred"=numeric(),"n.tree"=numeric(),"intercept"=numeric(),
                          "beta"=numeric(),"beta.se"=numeric(),"beta.ic"=numeric(),
                          "pval"=numeric(),"AIC"=numeric(),"Lambda"=numeric())
-
-  #Assemble the dataframe
-  if(!inherits(pred, c("numeric","integer")) || is.na(se.col)) {data<-data.frame(taxa.col,resp,pred)}
-  else {data<-data.frame(taxa.col,resp,pred,se.col)}
 
   #Model calculation
   counter=1
