@@ -1,13 +1,11 @@
 sensiC
 ======
 
-R package to perform sensitive analysis for comparative methods
+R package to perform model diagnostic for comparative methods
 
-####Installing sensiC:
+####Installing sensiC from Github:
 
-First install sensiC from Github:
 ```{r}
-library(devtools)
 devtools::install_github("paternogbc/sensiC")
 
 # Required packages:
@@ -20,55 +18,43 @@ Loading and organizing data:
 data(shorebird)
 
 # Organizing comparative data for pgls:
-comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species, 
+        vcv=TRUE, vcv.dim=3)
 ```
 
 Original Linear regression (PGLS):
 ```{r}
-mod0 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=comp.data,"ML")
+mod0 <- pgls(Egg.Mass ~ M.Mass, data=bird.comp,"ML")
 summary(mod0)
 ```
 
-#### Example: samp_pgls
-```{r}
-samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
+### Model diagnostics with sensiC package:
 
-# You can specify the number of replicates and break intervals:
-samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data,times=20,breaks=c(.1,.3,.5))
+#### Example: Estimating sample size bias with `samp_pgls`
+```{r}
+samp <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
+
+# see results:
+head(samp$results)
+
+# You also can specify number of simulation and break intervals:
+samp2 <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy,
+                 times= 50, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
 ```
-#### Example: samp_gls
+#### Example: Estimating influential points and parameter bias with `influ_pgls`
 ```{r}
-# First we need to match tip.labels with rownames in data:
-sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-shorebird.data <- shorebird.data[sp.ord,]
-
-samp3 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
-```
-
-#### Example: influ_pgls
-```{r}
-influ1 <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=comp.data)
+influ <- influ_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
 # Estimated parameters:
-head(influ1$results)
+head(influ$results)
 # Most influential species:
-influ1[[5]]
+influ[[5]]
 # Check for species with erros erros:
-influ1$errors
+influ$errors
 ```
-#### Example influ_gls:
+### Visualizing Results with `sensi_plot`
 ```{r}
-# First we need to match tip.labels with rownames in data:
-sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-shorebird.data <- shorebird.data[sp.ord,]
-
-# Now we can run the function influ_gls:
-influ2 <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
-```
-#### Visualizing Results:
-```{r}
-sensi_plot(samp1)
+sensi_plot(samp)
 sensi_plot(samp2)
-sensi_plot(samp3)
-sensi_plot(influ1)
-sensi_plot(influ2)
+sensi_plot(influ)
+
 ```
