@@ -4,15 +4,15 @@
 \alias{variPgls}
 \title{Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty}
 \usage{
-variPgls(resp, pred, se.pred = NA, tree, ntree = 1, npred = 1,
-  method = c("normal", "uniform"), taxa.col, lambda = "ML")
+variPgls(resp, pred, se.col = NA, tree, ntree = 1, npred = 1,
+  method = "normal", taxa.col, lambda = "ML")
 }
 \arguments{
 \item{resp}{Numeric vector containing the response variable}
 
 \item{pred}{Vector containing the predictor variable}
 
-\item{se.pred}{Vector containing the standard error of \code{pred}}
+\item{se.col}{Vector containing the standard error of \code{pred}}
 
 \item{tree}{A tree or list of tree of class \code{Phylo} or \code{multiPhylo}}
 
@@ -20,10 +20,10 @@ variPgls(resp, pred, se.pred = NA, tree, ntree = 1, npred = 1,
 trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1}
 
 \item{npred}{If TRUE, the number of times to repeat the analysis generating a random value in the interval
-[\code{pred}-\code{se.pred},\code{pred}+\code{se.pred}]. If NULL, \code{npred} = 1}
+[\code{pred}-\code{se.col},\code{pred}+\code{se.col}]. If NULL, \code{npred} = 1}
 
 \item{method}{A character string indicating which method to use to generate a random value in the interval
-[\code{pred} - \code{se.pred}, \code{pred} + \code{se.pred}]. Default is normal distribution: "normal"
+[\code{pred} - \code{se.col}, \code{pred} + \code{se.col}]. Default is normal distribution: "normal"
 (function \code{\link{rnorm}}), uniform distribution is "uniform" (\code{\link{runif}})}
 
 \item{taxa.col}{A character vector of taxa names that will be used to match data rows to phylogeny tips.}
@@ -53,6 +53,8 @@ The output gives a minimum, maximum, mean and sd of the model parameters.
 \details{
 This functions only works for simple linear regression \eqn{y = bx +
 a}. Future implementation will deal with more complex models.
+If you log-transform your predictor variable, make sure that your standard errors are in a log-scale too or use ##### function
+to build your input data.
 }
 \section{Warning}{
  This code is not fully checked. Please be aware.
@@ -71,7 +73,7 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- tree$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,se.pred=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
+variPgls(resp=Ly,pred=Lx$xmean,se.col=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
 
 # Example with a set of trees of class multiphylo
 N <- 100 # Number of species in the trees
@@ -83,7 +85,7 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- multitree[[1]]$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,se.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
+variPgls(resp=Ly,pred=Lx$xmean,se.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 }
 \seealso{
 \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
