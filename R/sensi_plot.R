@@ -71,7 +71,7 @@ sensi_plot <- function(x){
                               geom_point(size=5,colour="red")+
                               geom_line(colour="red")+
                               ylab("Power  [Beta]")
-                    gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2)
+                    suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
           }
           else      {
 
