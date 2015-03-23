@@ -39,3 +39,4 @@ influ$errors
 sensi_plot(samp)
 sensi_plot(samp2)
 sensi_plot(influ)
+
