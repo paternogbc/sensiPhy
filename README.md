@@ -64,3 +64,9 @@ sensi_plot(samp2)
 sensi_plot(influ)
 
 ```
+
+### Output `samp_gls`:
+![Output samp_gls](http://i.imgur.com/E3xyvOE.jpg)
+
+### Output `influ_gls`:
+![Output samp_gls](http://i.imgur.com/PRXQlyk.jpg)
