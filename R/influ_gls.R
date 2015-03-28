@@ -59,7 +59,7 @@ influ_gls <- function(formula,data,phy)
 
         # FULL MODEL calculations:
         c.data <- data
-        N <- nrow(c.data$data)
+        N <- nrow(c.data)
         cor.0 <- ape::corPagel(1,phy=phy,fixed=F)
 
         mod.0 <- nlme::gls(formula, data=c.data,method="ML",correlation=cor.0)
@@ -79,6 +79,7 @@ influ_gls <- function(formula,data,phy)
         intercepts <- as.numeric()
         DFbetas <- as.numeric()
         DFintercepts <- as.numeric()
+        DFfits <- as.numeric()
         p.values <- as.numeric()
         species <- as.character()
         errors <- as.numeric()
@@ -117,18 +118,30 @@ influ_gls <- function(formula,data,phy)
                         print(i)
                 }
         }
+
+        sDFbetas <- DFbetas/sd(DFbetas)
+        sDFintercepts <- DFintercepts/sd(DFintercepts)
         # Dataframe with results:
-        estimates <- data.frame(species,betas,DFbetas,intercepts,DFintercepts,
+        estimates <- data.frame(species,betas,DFbetas,sDFbetas,intercepts,DFintercepts,sDFintercepts,
                                 p.values)
+
         param0 <- data.frame(intercept.0,beta.0)
-        influ.sp.b <- as.character(estimates[order(estimates$DFbetas,decreasing=T)[1:5],]$species)
+
+        ### Statistically Influential species for Beta (sDFbetas > 2)
+        sb.ord <- which(abs(estimates$sDFbetas) > 2)
+        influ.sp.b <- as.character(estimates$species[sb.ord])
+
+        ### Statistically Influential species for intercept (sDFintercepts > 2)
+        si.ord <- which(abs(estimates$sDFintercepts) > 2)
+        influ.sp.i <- as.character(estimates$species[si.ord])
+
+
         influ.sp.i <- as.character(estimates[order(estimates$DFintercepts,decreasing=T)[1:5],]$species)
         beta_IC <- data.frame(beta.low=beta.0.low,beta.up=beta.0.up)
         output <- list(errors=errors,formula=formula,
                        model_estimates=param0,
                        beta95_IC=beta_IC,
-                       influential_species=rbind(beta=influ.sp.b,
-                                                 intercept=influ.sp.i),
+                       influential_species= influ.sp.b,
                        results=estimates,data=c.data)
 
         if (length(output$errors) >0){
