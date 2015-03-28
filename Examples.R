@@ -15,7 +15,7 @@ bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE,
 mod0 <- pgls(Egg.Mass ~ M.Mass, data=bird.comp,"ML")
 summary(mod0)
 
-## Model diagnostics with sensiC package:
+## Sensitive analysis with sensiC package:
 
 ### Example: Estimating sample size bias with `samp_pgls`
 
@@ -35,8 +35,11 @@ influ[[5]]
 ### Check for species with erros erros:
 influ$errors
 
+
 ## Visualizing Results:
 sensi_plot(samp)
 sensi_plot(samp2)
 sensi_plot(influ)
 
+sb.ord <- which(abs(influ$results$sDFbetas) > 2)
+as.character(influ$results$species[sb.ord])
