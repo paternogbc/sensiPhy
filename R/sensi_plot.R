@@ -78,6 +78,7 @@ sensi_plot <- function(x){
                     .e <- environment()
                     result <- x[[6]]
                     vars <- all.vars(x[[2]])
+                    vars2 <- gsub("list","",attr(terms(influ$formula),"variables"))[-1]
                     intercept.0 <-  as.numeric(x[[3]][1])
                     beta.0 <-  as.numeric(x[[3]][2])
 
@@ -86,45 +87,49 @@ sensi_plot <- function(x){
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = beta.0,color="red",linetype=2,size=.7)+
-                              xlab("Estimated Betas")
+                              xlab("Estimated Betas")+
+                            theme(axis.text = element_text(size=14),
+                                  axis.title = element_text(size=16))
                     # Distribution of estimated intercepts:
                     p2 <- ggplot2::ggplot(result,aes(x=intercepts,y=..density..),environment=.e)+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
-                              xlab("Estimated Intercepts")
+                              xlab("Estimated Intercepts")+
+                            theme(axis.text = element_text(size=14),
+                                  axis.title = element_text(size=16))
                     if (isTRUE(class(x[[1]]) != "character" )){
                               x$data <- x$data[-as.numeric(x[[1]]),]
                     }
                     result.tab <- data.frame(x$results,x$data[vars])
 
                     # Influential points for beta estimation:
-                    p3<-ggplot2::ggplot(result.tab,aes(y=get(vars[1]),
-                                              x=get(vars[2]),
-                                              colour=abs(DFbetas)),environment=.e,)+
+                    p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[1])),
+                                              eval(parse(text=vars2[2])),
+                                              colour=abs(sDFbetas)),environment=.e)+
                               geom_point(size=3,alpha=.8)+
                               scale_colour_gradient( low="black",high="red",name="")+
                               theme(legend.key.width = unit(.2,"cm"),
                                     panel.background=element_rect(fill="white",colour="black"),
+                                    legend.text = element_text(size=14),
                                     panel.grid.major = element_blank(),
                                     panel.grid.minor = element_blank())+
-                              ylab(vars[1])+
-                              xlab(vars[2])+
-                              ggtitle("Change in Beta estimate")
+                              ylab(vars2[1])+
+                              xlab(vars2[2])+
+                              ggtitle("Standardized Difference in Beta")+
+                            theme(axis.text = element_text(size=14),
+                                  axis.title = element_text(size=16));p3
 
-                    # Influential points for intercept estimation
-                    p4<-ggplot2::ggplot(result.tab,aes(y=get(vars[1]),
-                                              x=get(vars[2]),
-                                              colour=abs(DFintercepts)),environment=.e,)+
-                              geom_point(size=3,alpha=.8)+
-                              scale_colour_gradient( low="black", high="red",name="")  +
-                              theme(legend.key.width = unit(.2,"cm"),
-                                    panel.background=element_rect(fill="white",colour="black"),
-                                    panel.grid.major = element_blank(),
-                                    panel.grid.minor = element_blank())+
-                              ylab(all.vars(x$formula)[1])+
-                              xlab(all.vars(x$formula)[2])+
-                              ggtitle("Change in Intercept estimate")
+                    # Statistically influential points for Beta estimate
+                    p4 <- ggplot2::ggplot(result,aes(x=sDFbetas),environment=.e)+
+                            geom_histogram(fill="red",color="black") +
+                            xlab("Standardized Difference in Beta")+
+                            geom_histogram(data=subset(influ$results,sDFbetas<2&sDFbetas>-2),
+                                           colour="black", fill="white")+
+                            theme(axis.text = element_text(size=14),
+                                  axis.title = element_text(size=16))
+
+
 
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2))
           }
