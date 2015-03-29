@@ -20,8 +20,7 @@
 #' @return \code{formula} The model formula
 #' @return \code{model_estimates} Full model estimates
 #' @return \code{beta95_IC} Full model beta 95 confidence interval
-#' @return \code{influential_species} Most influential species for beta and
-#'   intercept
+#' @return \code{influential_species} Most influential species for beta
 #' @return \code{results} A data frame with all simulation estimates. DFbeta and
 #'   DFintercept represent absolute difference between full model and simulation.
 #' @section Warning: This code is note fully checked. Please be aware.
