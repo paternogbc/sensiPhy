@@ -121,10 +121,10 @@ sensi_plot <- function(x){
 
                     # Statistically influential points for Beta estimate
                     p4 <- ggplot2::ggplot(result,aes(x=sDFbetas),environment=.e)+
-                            geom_histogram(fill="red",color="black") +
+                            geom_histogram(fill="red",color="black",binwidth=.5) +
                             xlab("Standardized Difference in Beta")+
                             geom_histogram(data=subset(result,sDFbetas<2&sDFbetas>-2),
-                                           colour="black", fill="white")+
+                                           colour="black", fill="white",binwidth=.5)+
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))+
                             geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
