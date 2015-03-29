@@ -127,7 +127,9 @@ sensi_plot <- function(x){
                             geom_histogram(data=subset(influ$results,sDFbetas<2&sDFbetas>-2),
                                            colour="black", fill="white")+
                             theme(axis.text = element_text(size=14),
-                                  axis.title = element_text(size=16))
+                                  axis.title = element_text(size=16))+
+                            geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
+                            geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
 
 
 

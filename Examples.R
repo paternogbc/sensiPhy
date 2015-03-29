@@ -27,7 +27,7 @@ samp2 <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy,
 
 
 ### Example: Estimating influential points and parameter bias with `influ_pgls`
-influ <- influ_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
+influ <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy)
 ### Estimated parameters:
 head(influ$results)
 ### Most influential species:
@@ -40,6 +40,3 @@ influ$errors
 sensi_plot(samp)
 sensi_plot(samp2)
 sensi_plot(influ)
-
-sb.ord <- which(abs(influ$results$sDFbetas) > 2)
-as.character(influ$results$species[sb.ord])
