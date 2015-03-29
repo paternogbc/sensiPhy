@@ -1,10 +1,9 @@
-#' Plot results from package `sensiC`
+#' Graphical sensitive analysis for comparative methods
 #'
-#' \code{sensi_plot} Plot results from \code{samp_pgls}, \code{samp_gls},
-#' \code{influ_pgls},\code{influ_gls}
+#' \code{sensi_plot} Plot results from \code{samp_gls},
+#' \code{influ_gls}
 #' @aliases sensi_plot
-#' @param x output from \code{samp_pgls}, \code{influ_pgls}, \code{samp_gls} and
-#' code{influ_gls}
+#' @param x output from \code{samp_gls}, \code{influ_gls}
 #' @export
 
 ### Start:
@@ -78,7 +77,7 @@ sensi_plot <- function(x){
                     .e <- environment()
                     result <- x[[6]]
                     vars <- all.vars(x[[2]])
-                    vars2 <- gsub("list","",attr(terms(influ$formula),"variables"))[-1]
+                    vars2 <- gsub("list","",attr(terms(x[[2]]),"variables"))[-1]
                     intercept.0 <-  as.numeric(x[[3]][1])
                     beta.0 <-  as.numeric(x[[3]][2])
 
@@ -124,7 +123,7 @@ sensi_plot <- function(x){
                     p4 <- ggplot2::ggplot(result,aes(x=sDFbetas),environment=.e)+
                             geom_histogram(fill="red",color="black") +
                             xlab("Standardized Difference in Beta")+
-                            geom_histogram(data=subset(influ$results,sDFbetas<2&sDFbetas>-2),
+                            geom_histogram(data=subset(result,sDFbetas<2&sDFbetas>-2),
                                            colour="black", fill="white")+
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))+

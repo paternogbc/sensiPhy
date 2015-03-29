@@ -2,16 +2,15 @@
 % Please edit documentation in R/sensi_plot.R
 \name{sensi_plot}
 \alias{sensi_plot}
-\title{Plot results from package `sensiC`}
+\title{Graphical sensitive analysis for comparative methods}
 \usage{
 sensi_plot(x)
 }
 \arguments{
-\item{x}{output from \code{samp_pgls}, \code{influ_pgls}, \code{samp_gls} and
-code{influ_gls}}
+\item{x}{output from \code{samp_gls}, \code{influ_gls}}
 }
 \description{
-\code{sensi_plot} Plot results from \code{samp_pgls}, \code{samp_gls},
-\code{influ_pgls},\code{influ_gls}
+\code{sensi_plot} Plot results from \code{samp_gls},
+\code{influ_gls}
 }
 
