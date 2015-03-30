@@ -103,8 +103,8 @@ sensi_plot <- function(x){
                     result.tab <- data.frame(x$results,x$data[vars])
 
                     # Influential points for beta estimation:
-                    p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[1])),
-                                              eval(parse(text=vars2[2])),
+                    p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
+                                              eval(parse(text=vars2[1])),
                                               colour=abs(sDFbetas)),environment=.e)+
                               geom_point(size=3,alpha=.8)+
                               scale_colour_gradient( low="black",high="red",name="")+
