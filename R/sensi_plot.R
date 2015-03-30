@@ -69,7 +69,7 @@ sensi_plot <- function(x){
                     beta.low <- result$betas < beta.0.low
                     result$beta.out.CI <- beta.high+beta.low
                     b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/times)
-                    power <- as.numeric(1-b.out)
+                    power <- as.numeric(b.out)
                     power.tab <- data.frame(breaks,power)
                     p4 <- ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
                               scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
@@ -77,7 +77,7 @@ sensi_plot <- function(x){
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
                               geom_line(colour="red")+
-                              ylab("% of correct estimated betas")+
+                              ylab("% biased estimated betas")+
                             theme(axis.title=element_text(size=16),
                                   axis.text = element_text(size=14))
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
