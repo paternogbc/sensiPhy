@@ -104,18 +104,18 @@ sensi_plot <- function(x){
 
                     # Influential points for beta estimation:
                     p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
-                                              eval(parse(text=vars2[1])),
-                                              colour=abs(sDFbetas)),environment=.e)+
-                              geom_point(size=3,alpha=.8)+
-                              scale_colour_gradient(low="black",high="red",name="")+
-                              theme(legend.key.width = unit(.2,"cm"),
-                                    panel.background=element_rect(fill="white",colour="black"),
-                                    legend.text = element_text(size=14),
-                                    panel.grid.major = element_blank(),
-                                    panel.grid.minor = element_blank())+
-                              ylab(vars2[1])+
-                              xlab(vars2[2])+
-                              ggtitle("Standardized Difference in Beta")+
+                                                       eval(parse(text=vars2[1])),
+                                                       colour=abs(sDFbetas)),environment=.e)+
+                            geom_point(size=3,alpha=.8)+
+                            scale_colour_gradient( low="black",high="red",name="")+
+                            theme(legend.key.width = unit(.2,"cm"),
+                                  panel.background=element_rect(fill="white",colour="black"),
+                                  legend.text = element_text(size=14),
+                                  panel.grid.major = element_blank(),
+                                  panel.grid.minor = element_blank())+
+                            ylab(vars2[1])+
+                            xlab(vars2[2])+
+                            ggtitle("Standardized Difference in Beta")+
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16));p3
 
