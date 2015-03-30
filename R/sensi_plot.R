@@ -51,7 +51,7 @@ sensi_plot <- function(x){
                     breaks <- unique(result$n.percents)
                     simu.sig <- result$p.values > .05
                     result$simu.sig <- simu.sig
-                    p.out <- (with(samp2$result,tapply(simu.sig,n.removs,sum))/times)
+                    p.out <- (with(result,tapply(simu.sig,n.removs,sum))/times)
                     power <- as.numeric(1-p.out)
                     power.tab <- data.frame(breaks,power)
                     p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
