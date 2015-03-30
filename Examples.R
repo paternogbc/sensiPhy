@@ -8,8 +8,9 @@ library(sensiC)
 ### Loading data:
 data(shorebird)
 
+
 ## Organizing comparative data for pgls:
-bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
+bird.comp <- comparative.data(shorebird.tree, shorebird.data[1:29,], Species, vcv=TRUE, vcv.dim=3)
 
 ### Original Linear regression (PGLS):
 mod0 <- pgls(Egg.Mass ~ M.Mass, data=bird.comp,"ML")

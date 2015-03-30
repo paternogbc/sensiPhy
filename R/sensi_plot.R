@@ -107,7 +107,7 @@ sensi_plot <- function(x){
                                               eval(parse(text=vars2[1])),
                                               colour=abs(sDFbetas)),environment=.e)+
                               geom_point(size=3,alpha=.8)+
-                              scale_colour_gradient( low="black",high="red",name="")+
+                              scale_colour_gradient(low="black",high="red",name="")+
                               theme(legend.key.width = unit(.2,"cm"),
                                     panel.background=element_rect(fill="white",colour="black"),
                                     legend.text = element_text(size=14),
