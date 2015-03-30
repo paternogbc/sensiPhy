@@ -64,7 +64,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         pval.0 <-    sumMod[2,4]            # p.value (full model)
         sd.beta.0 <- sumMod[2,2]            # Standart Error (full model)
         df.0 <- mod.0$dims$N - mod.0$dims$p # Degrees of Freedon (full model))
-        beta.IC <- qt(0.975,df.0-2)*sd.beta.0 # Beta CI (full model)
+        beta.IC <- qt(0.975,df.0)*sd.beta.0 # Beta CI (full model)
         beta.0.low <- beta.0 - beta.IC      # Low limit of beta CI (full model)
         beta.0.up <-  beta.0 + beta.IC      # Up limit of beta CI (full model)
 
