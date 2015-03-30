@@ -4,8 +4,8 @@
 \alias{variPgls}
 \title{Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty}
 \usage{
-variPgls(resp, pred, se.col = NA, tree, ntree = 1, npred = 1,
-  method = "normal", taxa.col, lambda = "ML")
+variPgls(resp, pred, se.col = NA, taxa.col, tree, ntree = 1, npred = 1,
+  method = normal, lambda = "ML")
 }
 \arguments{
 \item{resp}{Numeric vector containing the response variable}
@@ -13,6 +13,8 @@ variPgls(resp, pred, se.col = NA, tree, ntree = 1, npred = 1,
 \item{pred}{Vector containing the predictor variable}
 
 \item{se.col}{Vector containing the standard error of \code{pred}}
+
+\item{taxa.col}{A character vector of taxa names that will be used to match data rows to phylogeny tips.}
 
 \item{tree}{A tree or list of tree of class \code{Phylo} or \code{multiPhylo}}
 
@@ -25,8 +27,6 @@ trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1}
 \item{method}{A character string indicating which method to use to generate a random value in the interval
 [\code{pred} - \code{se.col}, \code{pred} + \code{se.col}]. Default is normal distribution: "normal"
 (function \code{\link{rnorm}}), uniform distribution is "uniform" (\code{\link{runif}})}
-
-\item{taxa.col}{A character vector of taxa names that will be used to match data rows to phylogeny tips.}
 
 \item{lambda}{A value for the lambda transformation. If NULL, \code{lambda}="ML"
 Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}}

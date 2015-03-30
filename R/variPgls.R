@@ -63,27 +63,64 @@
 #' variPgls(resp=Ly,pred=Lx$xmean,se.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 #' @export
 
-variPgls <- function(resp,pred,se.col=NA,tree,ntree=1,npred=1,method="normal",taxa.col,lambda="ML"){
+variPgls <- function(resp,pred,se.col=NA,taxa.col,tree,ntree=1,npred=1,method=normal,lambda="ML"){
 
-  # Error check
-  method <- match.arg(method)
+  #Error check
+  if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
+    stop("'", deparse(substitute(tree)), "' not of class 'phylo' or 'multiPhylo'")
+  
+  if(inherits(tree, "multiPhylo")){  
+  tree1<-tree[[1]]}
+  else
+  tree1<-tree
+  
+  #Error check for phylo
+    if (!is.rooted(tree1)) {
+    if (force.root) {
+      tree$root.edge <- 1
+    }
+    else {
+      stop("'", deparse(substitute(tree1)), "' is not rooted or has a basal polytomy.")
+    }
+  }
+  if (any(duplicated(tree1$tip.label))) 
+    stop("Duplicate tip labels present in phylogeny")
+  if (any(duplicated(c(tree1$tip.label, tree1$node.label)))) 
+    stop("Labels duplicated between tips and nodes in phylogeny")
 
-  #Match data and phylogeny
-  tiplabl<-c(do.call("cbind",tree$tip.label))
+
+  #Match data and phylogeny in comparative.data style
+  tiplabl<-tree1$tip.label
   spnames<-as.data.frame(taxa.col)
+  
+  in.both <- intersect(taxa.col, tiplabl)
+  if (length(in.both) == 0) 
+    stop("No tips are common to the dataset and phylogeny")
+  
   mismatch<-union(setdiff(tiplabl,taxa.col),setdiff(taxa.col,tiplabl))
   if (length(mismatch) != 0)   warning("Phylogeny tips not not match the species list,
   species were dropped from phylogeny or species list")
-
+  
   #Drop species from tree
-  tree<-lapply(tree,drop.tip,tip=mismatch)
+  tree<-lapply(tree,ape::drop.tip,tip=mismatch)
   class(tree)<-"multiPhylo"
 
   #Assemble the dataframe and drop species if needed
   if(!inherits(pred, c("numeric","integer")) || is.na(se.col)) {data<-data.frame(taxa.col,resp,pred)}
   else {data<-data.frame(taxa.col,resp,pred,se.col)
         data<-data[!taxa.col %in% as.factor(mismatch), ]}
-
+  
+  if(inherits(tree, "multiPhylo")){  
+    tree1<-tree[[1]]}
+  else
+    tree1<-tree  
+  rownames(data)<-data$taxa.col
+  tip.order <- match(tree1$tip.label, rownames(data))
+  if (any(is.na(tip.order))) 
+    stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")  
+  data <- data[tip.order, , drop = FALSE]
+  rownames(data) <- tree1$tip.label
+  
   #Function to pick a random value in the interval
   if (method=="uniform") funr <- function(a, b) {runif(1,a-b,a+b)}
   else funr <- function(a, b) {rnorm(1,a,b)}
@@ -112,12 +149,12 @@ variPgls <- function(resp,pred,se.col=NA,tree,ntree=1,npred=1,method="normal",ta
       #comparative data creation if tree is class=multiphylo
       if (inherits(tree, "multiPhylo")) {
         cor.0 <- ape::corPagel(1,phy=tree[[i]],fixed=F)
-        try(mod.0 <- nlme::gls(resp~variab, data=c.data[[i]],method="ML",correlation=cor.0),TRUE)
+        try(mod.0 <- nlme::gls(resp~variab, data=c.data[[i]],method="ML",correlation=cor.0),TRUE) #control=nlme::glsControl(singular.ok=TRUE)
       }
 
       else {
         cor.0 <- ape::corPagel(1,phy=tree,fixed=F)
-        try(mod.0 <- nlme::gls(resp~variab, data=c.data,method="ML",correlation=cor.0),TRUE)
+        try(mod.0 <- nlme::gls(resp~variab, data=c.data,method="ML",correlation=cor.0))
       }
 
 
