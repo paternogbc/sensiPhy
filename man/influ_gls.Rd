@@ -26,8 +26,7 @@ The function \code{influ_gls} returns a list with the following
 
 \code{beta95_IC} Full model beta 95 confidence interval
 
-\code{influential_species} Most influential species for beta and
-  intercept
+\code{influential_species} Most influential species for beta
 
 \code{results} A data frame with all simulation estimates. DFbeta and
   DFintercept represent absolute difference between full model and simulation.
