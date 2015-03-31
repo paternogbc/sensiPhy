@@ -17,7 +17,10 @@ sensi_plot <- function(x){
 
                     ## Graphs: Estimated betas ~ % species removed
                     p2 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents))+
-                              geom_point(size=3,alpha=.7)+
+                              geom_point(data=subset(result,betas  > beta.0.low & betas < beta.0.up),
+                                         size=3,colour="skyblue",position = "jitter")+
+                              geom_point(data=subset(result,betas < beta.0.low | betas > beta.0.up),
+                                         size=3,alpha=.7,colour="red",position = "jitter")+
                               scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
@@ -64,7 +67,8 @@ sensi_plot <- function(x){
                                    legend.text=element_text(size=14),
                                    legend.title = element_blank(),
                                    axis.text=element_text(size=14),
-                                   axis.title=element_text(size=16))+
+                                   axis.title=element_text(size=16),
+                                   legend.key.width=unit(.8,"line"))+
                             xlab("% of Species Removed")+
                             ylab("Proportion of estimated betas")
                     suppressWarnings(gridExtra::grid.arrange(p2,p4,p3,ncol=2,nrow=2))
