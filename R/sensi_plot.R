@@ -27,23 +27,6 @@ sensi_plot <- function(x){
                             theme(axis.text=element_text(size=14),
                                   axis.title=element_text(size=16))
 
-                    ## Mean estimated Betas:
-                    med <- with(result,tapply(betas,n.removs,mean))
-                    Sdev <- with(result,tapply(betas,n.removs,sd))
-                    n.sp <- nrow(x[[5]])-as.numeric(rownames(med))
-                    result.med <- data.frame(med,Sdev,n.sp,beta.0)
-                    p1 <- ggplot2::ggplot(result.med,aes(y=med,x=n.sp),environment=.e)+
-                              geom_point(size=3,alpha=.7)+
-                              scale_x_continuous(breaks=c(n.sp,nrow(x[[5]]$data)))+
-                              geom_errorbar(aes(ymin=med-Sdev, ymax=med+Sdev), width=.1)+
-                              geom_hline(yintercept= beta.0,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0.low,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0.up,linetype=2,color="red")+
-                              xlab("Number of Species") + ylab("Mean Beta (+-SD)")+
-                              geom_point(aes(x=nrow(x[[5]]),y=beta.0,size=3,colour="red"))+
-                              theme(legend.position="none")+
-                              xlab("Number of species")
-
                     ## Power Analysis: p.value
                     times <- table(result$n.removs)
                     breaks <- unique(result$n.percents)
@@ -72,15 +55,17 @@ sensi_plot <- function(x){
                     proportion <- c(p.b.in,p.b.out)
                     b.class <- rep(c("Within 95% CI" ,"Out of 95% CI"),each=length(breaks))
                     beta.tab <- data.frame(breaks,b.class,proportion)
+
                     p4 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
                             geom_bar(stat="identity")+
+                            scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
                                    legend.title = element_blank(),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16))+
-                            xlab("% of species removed")+
+                            xlab("% of Species Removed")+
                             ylab("Proportion of estimated betas")
                     suppressWarnings(gridExtra::grid.arrange(p2,p4,p3,ncol=2,nrow=2))
           }
