@@ -63,18 +63,22 @@ sensi_plot <- function(x){
                     beta.low <- result$betas < beta.0.low
                     result$beta.out.CI <- beta.high+beta.low
                     b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/times)
-                    power <- as.numeric(1-b.out)
-                    power.tab <- data.frame(breaks,power)
-                    p4 <- ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
-                              scale_x_continuous(breaks=breaks)+
-                              xlab("% Species removed")+
-                              geom_point(size=5,colour="red")+
-                              geom_line(colour="red")+
-                              ylab("% biased estimated betas")+
-                            theme(axis.title=element_text(size=16),
-                                  axis.text = element_text(size=14))
-                    suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
+                    p.b.out <- as.numeric(b.out)
+                    p.b.in <- 1 -p.b.out
+                    proportion <- c(p.b.in,p.b.out)
+                    b.class <- rep(c("Whithin 95% CI" ,"Out of 95% CI"),each=length(breaks))
+                    beta.tab <- data.frame(breaks,b.class,proportion)
+                    p4 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
+                            geom_bar(stat="identity")+
+                            theme( legend.position = "top",
+                                   legend.direction = "horizontal",
+                                   legend.text=element_text(size=14),
+                                   legend.title = element_blank(),
+                                   axis.text=element_text(size=14),
+                                   axis.title=element_text(size=16))+
+                            xlab("% of species removed")+
+                            ylab("Proportion of estimated betas")
+                    suppressWarnings(gridExtra::grid.arrange(p2,p4,p3,ncol=2,nrow=2))
           }
           else      {
 
