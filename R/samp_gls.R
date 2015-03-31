@@ -1,6 +1,6 @@
 #' Sampling effort analysis for gls phylogenetic regression.
 #'
-#' \code{samp_gls} performs sampling effort diagnostics for \code{pgls}
+#' \code{samp_gls} performs sample size sensitive analysis for \code{pgls}
 #' regressions. It removes species at random, fits a pgls model without the
 #' species and store the results of the model estimates. The percentage of
 #' species removed is specified with \code{breaks} and the number of simulations
@@ -76,6 +76,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         # Sampling effort analysis:
         intercepts <- as.numeric()
         betas <- as.numeric()
+        DFbetas <- as.numeric()
         p.values <- as.numeric()
         n.removs <- as.numeric()
         n.percents <- as.numeric()
@@ -95,9 +96,10 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                         else {
                                 ### Calculating model estimates:
                                 sum.Mod <- as.data.frame(summary(mod)$tTable)
-                                intercept <-    sum.Mod[1,1]       # Intercept (full model)
-                                beta <-    sum.Mod[2,1]            # Beta (full model)
-                                pval <-    sum.Mod[2,4]            # p.value (full model)
+                                intercept <-    sum.Mod[1,1]       # Intercept (crop model)
+                                beta <-    sum.Mod[2,1]            # Beta (crop model)
+                                DFbeta <- beta - beta.0
+                                pval <-    sum.Mod[2,4]            # p.value (crop model)
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
@@ -105,6 +107,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                 ### Storing values for each simulation
                                 intercepts <- c(intercepts,intercept)
                                 betas <- c(betas,beta)
+                                DFbetas <- c(DFbetas,DFbeta)
                                 p.values <- c( p.values,pval)
                                 n.removs <- c(n.removs,n.remov)
                                 n.percents <- c(n.percents,n.percent)
@@ -114,9 +117,8 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                 }
         }
 
-
         # Data frame with results:
-        estimates <- data.frame(intercepts,betas,p.values,n.removs,n.percents)
+        estimates <- data.frame(intercepts,betas,DFbetas,p.values,n.removs,n.percents)
 
         ## Power Analysis:
         times <- table(estimates$n.removs)[1]
