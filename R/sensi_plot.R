@@ -16,7 +16,7 @@ sensi_plot <- function(x){
                     .e <- environment()
 
                     ## Graphs: Estimated betas ~ % species removed
-                    p2 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents))+
+                    p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents))+
                               geom_point(data=subset(result,betas  > beta.0.low & betas < beta.0.up),
                                          size=3,colour="skyblue",position = "jitter")+
                               geom_point(data=subset(result,betas < beta.0.low | betas > beta.0.up),
@@ -38,7 +38,7 @@ sensi_plot <- function(x){
                     p.out <- (with(result,tapply(simu.sig,n.removs,sum))/times)
                     power <- as.numeric(1-p.out)
                     power.tab <- data.frame(breaks,power)
-                    p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
+                    p4 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
                               scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
@@ -59,7 +59,7 @@ sensi_plot <- function(x){
                     b.class <- rep(c("Within 95% CI" ,"Out of 95% CI"),each=length(breaks))
                     beta.tab <- data.frame(breaks,b.class,proportion)
 
-                    p4 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
+                    p2 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
                             geom_bar(stat="identity")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             theme( legend.position = "top",
@@ -76,7 +76,7 @@ sensi_plot <- function(x){
                     m.DFbetas <- summarise(group_by(result,n.percents),
                                             mDFbetas = mean(abs(DFbetas)),
                                             sd = as.numeric(sd(abs(DFbetas))))
-                    p5 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
+                    p3 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
                             geom_point(size=5,colour="red",alpha=.6)+
                             geom_errorbar(aes(ymin=mDFbetas-sd, ymax=mDFbetas+sd),
                                           colour="red", width=.8)+
@@ -84,7 +84,7 @@ sensi_plot <- function(x){
                                   axis.text = element_text(size=14))+
                             xlab("% of Species Removed")+
                             ylab("Mean DFbetas (+- SD)")
-                    suppressWarnings(gridExtra::grid.arrange(p2,p4,p5,p3,ncol=2,nrow=2))
+                    suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
           }
           else      {
 
@@ -130,7 +130,7 @@ sensi_plot <- function(x){
                             ylab(vars2[1])+
                             xlab(vars2[2])+
                             ggtitle("Standardized Difference in Beta")+
-                            theme(axis.text = element_text(size=14),
+                            theme(axis.text = element_text(size=14,colour="black"),
                                   axis.title = element_text(size=16));p3
 
                     # Statistically influential points for Beta estimate
@@ -143,8 +143,6 @@ sensi_plot <- function(x){
                                   axis.title = element_text(size=16))+
                             geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
                             geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
-
-
 
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2))
           }
