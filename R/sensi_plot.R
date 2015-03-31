@@ -43,11 +43,10 @@ sensi_plot <- function(x){
                               xlab("Number of species")
 
                     ## Power Analysis: p.value
-                    times <- table(result$n.removs)[1]
+                    times <- table(result$n.removs)
                     breaks <- unique(result$n.percents)
                     simu.sig <- result$p.values > .05
                     result$simu.sig <- simu.sig
-                    reps <- table(result$n.removs)
                     p.out <- (with(result,tapply(simu.sig,n.removs,sum))/reps)
                     power <- as.numeric(1-p.out)
                     power.tab <- data.frame(breaks,power)
@@ -72,7 +71,9 @@ sensi_plot <- function(x){
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
                               geom_line(colour="red")+
-                              ylab("Power  [Beta]")
+                              ylab("% biased estimated betas")+
+                            theme(axis.title=element_text(size=16),
+                                  axis.text = element_text(size=14))
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
           }
           else      {
