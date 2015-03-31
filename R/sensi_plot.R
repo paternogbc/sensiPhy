@@ -71,7 +71,20 @@ sensi_plot <- function(x){
                                    legend.key.width=unit(.8,"line"))+
                             xlab("% of Species Removed")+
                             ylab("Proportion of estimated betas")
-                    suppressWarnings(gridExtra::grid.arrange(p2,p4,p3,ncol=2,nrow=2))
+
+                    ### standardized Beta across % of species removed:
+                    m.DFbetas <- summarise(group_by(result,n.percents),
+                                            mDFbetas = mean(abs(DFbetas)),
+                                            sd = as.numeric(sd(abs(DFbetas))))
+                    p5 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
+                            geom_point(size=5,colour="red",alpha=.6)+
+                            geom_errorbar(aes(ymin=mDFbetas-sd, ymax=mDFbetas+sd),
+                                          colour="red", width=.8)+
+                            theme(axis.title=element_text(size=16),
+                                  axis.text = element_text(size=14))+
+                            xlab("% of Species Removed")+
+                            ylab("Mean DFbetas (+- SD)")
+                    suppressWarnings(gridExtra::grid.arrange(p2,p4,p5,p3,ncol=2,nrow=2))
           }
           else      {
 
