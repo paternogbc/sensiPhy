@@ -47,7 +47,7 @@ sensi_plot <- function(x){
                     breaks <- unique(result$n.percents)
                     simu.sig <- result$p.values > .05
                     result$simu.sig <- simu.sig
-                    p.out <- (with(result,tapply(simu.sig,n.removs,sum))/reps)
+                    p.out <- (with(result,tapply(simu.sig,n.removs,sum))/times)
                     power <- as.numeric(1-p.out)
                     power.tab <- data.frame(breaks,power)
                     p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
@@ -62,7 +62,7 @@ sensi_plot <- function(x){
                     beta.high <- result$betas > beta.0.up
                     beta.low <- result$betas < beta.0.low
                     result$beta.out.CI <- beta.high+beta.low
-                    b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/reps)
+                    b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/times)
                     power <- as.numeric(1-b.out)
                     power.tab <- data.frame(breaks,power)
                     p4 <- ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
