@@ -8,9 +8,8 @@ library(sensiC)
 ### Loading data:
 data(shorebird)
 
-
 ## Organizing comparative data for pgls:
-bird.comp <- comparative.data(shorebird.tree, shorebird.data[1:29,], Species, vcv=TRUE, vcv.dim=3)
+bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 
 ### Original Linear regression (PGLS):
 mod0 <- pgls(Egg.Mass ~ M.Mass, data=bird.comp,"ML")
@@ -20,15 +19,15 @@ summary(mod0)
 
 ### Example: Estimating sample size bias with `samp_pgls`
 
-samp <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
+samp <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy)
 
 ### You can specify number of simulation and break intervals:
-samp2 <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy,
-                 times= 10, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
+samp2 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy,
+                 times= 200, breaks=c(0.1,.2,.3,.4,.5))
 
 
 ### Example: Estimating influential points and parameter bias with `influ_pgls`
-influ2 <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy)
+influ <- influ_gls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy)
 ### Estimated parameters:
 head(influ$results)
 ### Most influential species:
@@ -40,4 +39,4 @@ influ$errors
 ## Visualizing Results:
 sensi_plot(samp)
 sensi_plot(samp2)
-sensi_plot(influ2)
+sensi_plot(influ)
