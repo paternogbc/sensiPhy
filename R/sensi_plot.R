@@ -23,7 +23,9 @@ sensi_plot <- function(x){
                               xlab("% of Species Removed ")+
                               geom_hline(yintercept=beta.0.low,linetype=2,color="red")+
                               geom_hline(yintercept=beta.0.up,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0,linetype=2,color="red",size=1.1)
+                              geom_hline(yintercept=beta.0,linetype=2,color="red",size=1.1)+
+                            theme(axis.text=element_text(size=14),
+                                  axis.title=element_text(size=16))
 
                     ## Mean estimated Betas:
                     med <- with(result,tapply(betas,n.removs,mean))
@@ -51,12 +53,14 @@ sensi_plot <- function(x){
                     power <- as.numeric(1-p.out)
                     power.tab <- data.frame(breaks,power)
                     p3 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
-                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.05))+
+                              scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                               scale_x_continuous(breaks=breaks)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
                               geom_line(colour="red")+
-                              ylab("Power  [p-value]")
+                              ylab("Power  [p-value]")+
+                            theme(axis.text=element_text(size=14),
+                                  axis.title=element_text(size=16))
 
                     ## Power Analysis: beta (percentage of betas > or < then CI)
                     beta.high <- result$betas > beta.0.up
@@ -66,7 +70,7 @@ sensi_plot <- function(x){
                     p.b.out <- as.numeric(b.out)
                     p.b.in <- 1 -p.b.out
                     proportion <- c(p.b.in,p.b.out)
-                    b.class <- rep(c("Whithin 95% CI" ,"Out of 95% CI"),each=length(breaks))
+                    b.class <- rep(c("Within 95% CI" ,"Out of 95% CI"),each=length(breaks))
                     beta.tab <- data.frame(breaks,b.class,proportion)
                     p4 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
                             geom_bar(stat="identity")+
