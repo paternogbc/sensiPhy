@@ -36,7 +36,7 @@ The function \code{samp_gls} returns a list with the following
 \code{data} Original dataset
 }
 \description{
-\code{samp_gls} performs sampling effort diagnostics for \code{pgls}
+\code{samp_gls} performs sample size sensitive analysis for \code{pgls}
 regressions. It removes species at random, fits a pgls model without the
 species and store the results of the model estimates. The percentage of
 species removed is specified with \code{breaks} and the number of simulations
