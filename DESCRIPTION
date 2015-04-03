@@ -1,17 +1,21 @@
 Package: sensiC
 Title: Sensitive  analysis for comparative methods
 Version: 0.1.1
-Authors@R:
-    person("Gustavo", "Paterno","Brant", email = "paternogbc@gmail.com",
-    role = c("cre","aut"))
+Date: 2015-03-03
+Authors@R: c(
+    person("Gustavo","Paterno","Brant", email = "paternogbc@gmail.com", role = c("cre","aut")),
+    person("Caterina", "Perone", email = "caterina.perone@gmail.com", role = "aut"))
 Description: This package performs sensitive analysis for comparative methods.
 Depends: R (>= 3.1.2)
 License: GPL-3
+URL: https://github.com/paternogbc/sensiC
+BugReports: https://github.com/paternogbc/sensiC/issues
 LazyData: true
-Imports: caper,
+Imports:
     ggplot2,
     gridExtra,
     ape,
-    nlme
+    nlme,
+    dplyr
 Suggests: knitr
 VignetteBuilder: knitr
