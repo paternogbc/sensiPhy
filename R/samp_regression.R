@@ -75,7 +75,7 @@ for (i in limit){
                         ### Calculating model estimates:
                         sum.Mod <- as.data.frame(summary(mod)$tTable)
                         n.remov <- i
-                        n.percent <- round((n.remov/N)*100,digits=-1)
+                        n.percent <- round((n.remov/N)*100,digits=0)
 
 
                         estim <- data.frame(n.remov,
@@ -110,7 +110,7 @@ power.tab <- data.frame(percent = rep(breaks,n.params),
                         power = power.values)
 
 ## Estimate differences:
-estimate.tab <- dplyr::summarise(group_by(results,rm.percent,parameter),
+estimate.tab <- dplyr::summarise(dplyr::group_by(results,rm.percent,parameter),
                                  Estimate = mean(estimate),
                                  sdEstimate = sd(estimate),
                                  mDFestimate = mean(abs(DFestimate)))
@@ -120,7 +120,7 @@ print(sumMod);
 print(paste("See $results; $summary_results and $power_analysis for details"))
 
 return(list(model_estimates=sumMod, intervals=intervals.0,
-            results,
+            results = results,
             summary_results = estimate.tab,
             power_analysis=power.tab,
             data= c.data)
