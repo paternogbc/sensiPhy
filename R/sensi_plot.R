@@ -17,16 +17,18 @@ sensi_plot <- function(x){
 
                     ## Graphs: Estimated betas ~ % species removed
                     p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents))+
-                              geom_point(data=subset(result,betas  > beta.0.low & betas < beta.0.up),
+                              geom_point(data=subset(result,betas  > beta.0 - .05*beta.0 &
+                                                            betas < beta.0 + .05*beta.0),
                                          size=3,colour="skyblue",position = "jitter")+
-                              geom_point(data=subset(result,betas < beta.0.low | betas > beta.0.up),
+                              geom_point(data=subset(result,betas < beta.0 - .05*beta.0
+                                                     | betas > beta.0 + .05*beta.0),
                                          size=3,alpha=.7,colour="red",position = "jitter")+
                               scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
-                              geom_hline(yintercept=beta.0.low,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0.up,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0,linetype=2,color="red",size=1.1)+
+                              geom_hline(yintercept=beta.0 - .05*beta.0,linetype=2,color="red")+
+                              geom_hline(yintercept=beta.0 + .05*beta.0,linetype=2,color="red")+
+                              geom_hline(yintercept=beta.0,linetype=2,color="black",size=1.1)+
                             theme(axis.text=element_text(size=14),
                                   axis.title=element_text(size=16))
 
@@ -49,14 +51,14 @@ sensi_plot <- function(x){
                                   axis.title=element_text(size=16))
 
                     ## Power Analysis: beta (percentage of betas > or < then CI)
-                    beta.high <- result$betas > beta.0.up
-                    beta.low <- result$betas < beta.0.low
+                    beta.high <- result$betas > beta.0 + .05*beta.0
+                    beta.low <- result$betas < beta.0 - .05*beta.0
                     result$beta.out.CI <- beta.high+beta.low
                     b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/times)
                     p.b.out <- as.numeric(b.out)
                     p.b.in <- 1 -p.b.out
                     proportion <- c(p.b.in,p.b.out)
-                    b.class <- rep(c("Within 95% CI" ,"Out of 95% CI"),each=length(breaks))
+                    b.class <- rep(c("DFbeta > 5%","DFbeta < 5%"),each=length(breaks))
                     beta.tab <- data.frame(breaks,b.class,proportion)
 
                     p2 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
