@@ -50,6 +50,9 @@ samp_regression <- function(formula,data,phy,times=50,breaks=seq(.1,.5,.1))
         ### Full model:
         mod.0 <- nlme::gls(formula, data=c.data,method="ML",correlation=cor.0)
         sumMod <- as.data.frame(summary(mod.0)$tTable)
+        intervals.0 <- nlme::intervals(mod.0)
+        params <- rownames(sumMod)
+        n.params <- length(rownames(sumMod))
 
 
 # Sampling effort analysis:
