@@ -77,6 +77,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         intercepts <- as.numeric()
         betas <- as.numeric()
         DFbetas <- as.numeric()
+        beta.change <- NULL
         p.values <- as.numeric()
         n.removs <- as.numeric()
         n.percents <- as.numeric()
@@ -99,6 +100,16 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                 intercept <-    sum.Mod[1,1]       # Intercept (crop model)
                                 beta <-    sum.Mod[2,1]            # Beta (crop model)
                                 DFbeta <- beta - beta.0
+                                if (abs(DFbeta) < 0.05*beta.0)
+                                        b.change = "within 5%"
+
+                                if (abs(DFbeta) > 0.05*beta.0)
+                                        b.change = "higher then 5%"
+                                if (abs(DFbeta) > 0.1*beta.0){
+                                        b.change = "higher then 10%"
+                                }
+                                else
+
                                 pval <-    sum.Mod[2,4]            # p.value (crop model)
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
@@ -108,6 +119,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                 intercepts <- c(intercepts,intercept)
                                 betas <- c(betas,beta)
                                 DFbetas <- c(DFbetas,DFbeta)
+                                beta.change <- c(beta.change,b.change)
                                 p.values <- c( p.values,pval)
                                 n.removs <- c(n.removs,n.remov)
                                 n.percents <- c(n.percents,n.percent)
@@ -118,7 +130,7 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         }
 
         # Data frame with results:
-        estimates <- data.frame(intercepts,betas,DFbetas,p.values,n.removs,n.percents)
+        estimates <- data.frame(intercepts,betas,DFbetas,beta.change,p.values,n.removs,n.percents)
 
         ## Power Analysis:
         times <- table(estimates$n.removs)[1]

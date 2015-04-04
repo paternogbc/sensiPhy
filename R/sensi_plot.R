@@ -13,37 +13,43 @@ sensi_plot <- function(x){
                     beta.0    <- as.numeric(x[[1]][1])
                     beta.5    <- .05*beta.0
                     beta.10   <- .1*beta.0
-                    result$beta.change <- ""
-                    result[ abs(result$DFbetas) < beta.5,]$beta.change <- "within 5%"
-                    result[ abs(result$DFbetas) > beta.5 &
-                                    abs(result$DFbetas) < beta.10,]$beta.change <- "5%"
-                    result[ abs(result$DFbetas) > beta.10,]$beta.change <- "10%"
+                    result$beta.change = with(result, factor(beta.change,
+                                        levels = rev(levels(beta.change))))
                     .e <- environment()
 
                     ## Graphs: Estimated betas ~ % species removed
+
                     p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
-                            geom_point(size=3,position = "jitter",alpha=.8)+
-                            scale_colour_manual(values=c("red","orange","skyblue"),
-                                                name="Deviation from original Beta")+
+                            geom_hline(yintercept=beta.0,linetype=1,color="red",
+                                       size=1,alpha=.6,name="Original Beta")+
+                            geom_point(size=3,position = "jitter")+
+                            scale_colour_brewer(palette="Reds",
+                                                name="Deviation from original beta")+
                               scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
-                              geom_hline(yintercept=beta.0,linetype=1,color="skyblue",
-                                         size=2)+
-                              geom_hline(yintercept=beta.0+beta.5,linetype=2,color="orange")+
-                              geom_hline(yintercept=beta.0-beta.5,linetype=2,color="orange")+
-                              geom_hline(yintercept=beta.0+beta.10,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0-beta.10,linetype=2,color="red")+
+
+                              geom_hline(yintercept=beta.0+beta.5,linetype=2,
+                                         alpha=.6)+
+                              geom_hline(yintercept=beta.0-beta.5,linetype=2,
+                                         alpha=.6)+
+                              geom_hline(yintercept=beta.0+beta.10,linetype=2,
+                                         alpha=.6)+
+                              geom_hline(yintercept=beta.0-beta.10,linetype=2,
+                                         alpha=.6)+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
                                    legend.title=element_text(size=16),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
-                                   legend.key.width=unit(.8,"line"))
+                                   legend.key.width=unit(1,"line"),
+                                   legend.key.size = unit(1,"cm"),
+                                   panel.background = element_rect(fill="white",
+                                                                   colour="black"))
 
                     ## Power Analysis: p.value
-                    times <- table(result$n.removs)
+                    times <- table(result$n.percents)
                     breaks <- unique(result$n.percents)
                     simu.sig <- result$p.values > .05
                     result$simu.sig <- simu.sig
@@ -58,32 +64,39 @@ sensi_plot <- function(x){
                               geom_line(colour="red")+
                               ylab("Power  [p-value]")+
                             theme(axis.text=element_text(size=14),
-                                  axis.title=element_text(size=16))
+                                  axis.title=element_text(size=16),
+                                  panel.background = element_rect(fill="white",
+                                                                  colour="black"))
 
                     ## Power Analysis: beta (percentage of betas > or < then 5% or 10%)
-                    times
-                    prop.tab <- with(result, tapply(beta.change,list(beta.change,n.percents),table))
-                    prop.tab[is.na(prop.tab)] <- 0
-                    prop.betas <- c(prop.tab[1,]/times,prop.tab[2,]/times,prop.tab[3,]/times)
-                    prop.betas.tab <- data.frame(
-                            Deviation = rep(rownames(prop.tab),each=length(breaks)),
-                            n.percents = as.numeric(names(prop.betas)),
-                            proportion=as.numeric(prop.betas))
 
-                    p2 <- ggplot(prop.betas.tab,
-                                 aes(y=proportion,x=as.factor(n.percents),fill=Deviation))+
-                            geom_bar(stat="identity",alph=.7)+
+                    beta.tab <- dplyr::summarise(dplyr::group_by(result,beta.change,n.percents),
+                                     proportion=n())
+                    ## Correcting for the number of replications per n.percent interval:
+                    attach(beta.tab)
+                    for (jj in 1:length(times)){
+                        a <- beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion
+                        a <- a/times[jj]
+                        beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion <- a
+
+                    }
+                    detach(beta.tab)
+                    p2 <- ggplot(beta.tab,
+                                 aes(y=proportion,x=n.percents,fill=factor(beta.change)))+
+                            geom_bar(stat="identity",alph=.5)+
+                            scale_fill_brewer(palette="Reds",
+                                              name="Deviation from original beta")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             scale_x_continuous(breaks=result$n.percents)+
-                            scale_fill_manual(values=c("red","orange","skyblue"),
-                                                name="Deviation from original Beta")+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
-                                   legend.title = element_blank(),
+                                   legend.title = element_text(size=16),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
-                                   legend.key.width=unit(.8,"line"))+
+                                   legend.key.width=unit(.8,"line"),
+                                   panel.background = element_rect(fill="white",
+                                                                   colour="black"))+
                             xlab("% of Species Removed")+
                             ylab("Proportion of estimated betas")
 
@@ -97,7 +110,9 @@ sensi_plot <- function(x){
                                           colour="red", width=.8)+
                             scale_x_continuous(breaks=result$n.percents)+
                             theme(axis.title=element_text(size=16),
-                                  axis.text = element_text(size=14))+
+                                  axis.text = element_text(size=14),
+                                  panel.background = element_rect(fill="white",
+                                                                  colour="black"))+
                             xlab("% of Species Removed")+
                             ylab("Mean DFbetas (+- SD)")
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
