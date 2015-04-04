@@ -22,7 +22,7 @@ sensi_plot <- function(x){
                     p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
                             geom_hline(yintercept=beta.0,linetype=1,color="red",
                                        size=1,alpha=.6,name="Original Beta")+
-                            geom_point(size=3,position = "jitter")+
+                            geom_point(size=2,position = "jitter")+
                             scale_colour_brewer(palette="Reds",
                                                 name="Deviation from original beta")+
                               scale_x_continuous(breaks=result$n.percents)+
@@ -39,8 +39,8 @@ sensi_plot <- function(x){
                                          alpha=.6)+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
-                                   legend.text=element_text(size=14),
-                                   legend.title=element_text(size=16),
+                                   legend.text=element_text(size=12),
+                                   legend.title=element_text(size=14),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
                                    legend.key.width=unit(1,"line"),
@@ -85,13 +85,13 @@ sensi_plot <- function(x){
                                  aes(y=proportion,x=n.percents,fill=factor(beta.change)))+
                             geom_bar(stat="identity",alph=.5)+
                             scale_fill_brewer(palette="Reds",
-                                              name="Deviation from original beta")+
+                                              name="")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             scale_x_continuous(breaks=result$n.percents)+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
-                                   legend.title = element_text(size=16),
+                                   legend.title = element_text(size=12),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
                                    legend.key.width=unit(.8,"line"),
