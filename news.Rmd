@@ -2,9 +2,11 @@
 title: "sensiC realease notes"
 output: html_document
 ---
-## sensiC v0.1.1
-* Excluded function `samp_pgls`
-* Excluded function `influ_gls`
+## sensiC v0.1.1 (04.04.15)
+* New function `variPgls` was added to perform Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty
+* `sensi_plot` was completed reformulated.
+* Excluded function `samp_pgls` (replaced by samp_gls)
+* Excluded function `influ_pgls` (replaced by influ_gls)
 
 ## sensiC v0.1.0
 * Included function 'influ_gls'
