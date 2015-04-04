@@ -52,7 +52,7 @@ sensi_plot <- function(x){
                     power.tab <- data.frame(breaks,power)
                     p4 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
                               scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
-                              scale_x_continuous(breaks=breaks)+
+                              scale_x_continuous(breaks=result$n.percents)+
                               xlab("% Species removed")+
                               geom_point(size=5,colour="red")+
                               geom_line(colour="red")+
@@ -74,6 +74,7 @@ sensi_plot <- function(x){
                                  aes(y=proportion,x=as.factor(n.percents),fill=Deviation))+
                             geom_bar(stat="identity",alph=.7)+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
+                            scale_x_continuous(breaks=result$n.percents)+
                             scale_fill_manual(values=c("red","orange","skyblue"),
                                                 name="Deviation from original Beta")+
                             theme( legend.position = "top",
@@ -94,6 +95,7 @@ sensi_plot <- function(x){
                             geom_point(size=5,colour="red",alpha=.6)+
                             geom_errorbar(aes(ymin=mDFbetas-sd, ymax=mDFbetas+sd),
                                           colour="red", width=.8)+
+                            scale_x_continuous(breaks=result$n.percents)+
                             theme(axis.title=element_text(size=16),
                                   axis.text = element_text(size=14))+
                             xlab("% of Species Removed")+
