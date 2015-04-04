@@ -39,12 +39,12 @@ sensi_plot <- function(x){
                                          alpha=.6)+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
-                                   legend.text=element_text(size=12),
+                                   legend.text=element_text(size=14),
                                    legend.title=element_text(size=14),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
-                                   legend.key.width=unit(1,"line"),
-                                   legend.key.size = unit(1,"cm"),
+                                   legend.key.width=unit(.5,"line"),
+                                   legend.key.size = unit(.5,"cm"),
                                    panel.background = element_rect(fill="white",
                                                                    colour="black"))
 
@@ -94,7 +94,8 @@ sensi_plot <- function(x){
                                    legend.title = element_text(size=12),
                                    axis.text=element_text(size=14),
                                    axis.title=element_text(size=16),
-                                   legend.key.width=unit(.8,"line"),
+                                   legend.key.width=unit(.5,"line"),
+                                   legend.key.size = unit(.5,"cm"),
                                    panel.background = element_rect(fill="white",
                                                                    colour="black"))+
                             xlab("% of Species Removed")+
