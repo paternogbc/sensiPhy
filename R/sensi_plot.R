@@ -9,28 +9,38 @@
 ### Start:
 sensi_plot <- function(x){
           if (length(x) == 5){
-                    result <- x[[3]]
-                    beta.0 <- as.numeric(x[[1]][1])
-                    beta.0.low <- as.numeric(x[[2]][1])
-                    beta.0.up <- as.numeric(x[[2]][2])
+                    result    <- x[[3]]
+                    beta.0    <- as.numeric(x[[1]][1])
+                    beta.5    <- .05*beta.0
+                    beta.10   <- .1*beta.0
+                    result$beta.change <- ""
+                    result[ abs(result$DFbetas) < beta.5,]$beta.change <- "within 5%"
+                    result[ abs(result$DFbetas) > beta.5 &
+                                    abs(result$DFbetas) < beta.10,]$beta.change <- "5%"
+                    result[ abs(result$DFbetas) > beta.10,]$beta.change <- "10%"
                     .e <- environment()
 
                     ## Graphs: Estimated betas ~ % species removed
-                    p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents))+
-                              geom_point(data=subset(result,betas  > beta.0 - .05*beta.0 &
-                                                            betas < beta.0 + .05*beta.0),
-                                         size=3,colour="skyblue",position = "jitter")+
-                              geom_point(data=subset(result,betas < beta.0 - .05*beta.0
-                                                     | betas > beta.0 + .05*beta.0),
-                                         size=3,alpha=.7,colour="red",position = "jitter")+
+                    p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
+                            geom_point(size=3,position = "jitter",alpha=.8)+
+                            scale_colour_manual(values=c("red","orange","skyblue"),
+                                                name="Deviation from original Beta")+
                               scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
-                              geom_hline(yintercept=beta.0 - .05*beta.0,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0 + .05*beta.0,linetype=2,color="red")+
-                              geom_hline(yintercept=beta.0,linetype=2,color="black",size=1.1)+
-                            theme(axis.text=element_text(size=14),
-                                  axis.title=element_text(size=16))
+                              geom_hline(yintercept=beta.0,linetype=1,color="skyblue",
+                                         size=2)+
+                              geom_hline(yintercept=beta.0+beta.5,linetype=2,color="orange")+
+                              geom_hline(yintercept=beta.0-beta.5,linetype=2,color="orange")+
+                              geom_hline(yintercept=beta.0+beta.10,linetype=2,color="red")+
+                              geom_hline(yintercept=beta.0-beta.10,linetype=2,color="red")+
+                            theme( legend.position = "top",
+                                   legend.direction = "horizontal",
+                                   legend.text=element_text(size=14),
+                                   legend.title=element_text(size=16),
+                                   axis.text=element_text(size=14),
+                                   axis.title=element_text(size=16),
+                                   legend.key.width=unit(.8,"line"))
 
                     ## Power Analysis: p.value
                     times <- table(result$n.removs)
@@ -50,20 +60,22 @@ sensi_plot <- function(x){
                             theme(axis.text=element_text(size=14),
                                   axis.title=element_text(size=16))
 
-                    ## Power Analysis: beta (percentage of betas > or < then CI)
-                    beta.high <- result$betas > beta.0 + .05*beta.0
-                    beta.low <- result$betas < beta.0 - .05*beta.0
-                    result$beta.out.CI <- beta.high+beta.low
-                    b.out <-(with(result,tapply(beta.out.CI,n.removs,sum))/times)
-                    p.b.out <- as.numeric(b.out)
-                    p.b.in <- 1 -p.b.out
-                    proportion <- c(p.b.in,p.b.out)
-                    b.class <- rep(c("DFbeta > 5%","DFbeta < 5%"),each=length(breaks))
-                    beta.tab <- data.frame(breaks,b.class,proportion)
+                    ## Power Analysis: beta (percentage of betas > or < then 5% or 10%)
+                    times
+                    prop.tab <- with(result, tapply(beta.change,list(beta.change,n.percents),table))
+                    prop.tab[is.na(prop.tab)] <- 0
+                    prop.betas <- c(prop.tab[1,]/times,prop.tab[2,]/times,prop.tab[3,]/times)
+                    prop.betas.tab <- data.frame(
+                            Deviation = rep(rownames(prop.tab),each=length(breaks)),
+                            n.percents = as.numeric(names(prop.betas)),
+                            proportion=as.numeric(prop.betas))
 
-                    p2 <- ggplot(beta.tab,aes(y=proportion,x=as.factor(breaks),fill=b.class))+
-                            geom_bar(stat="identity")+
+                    p2 <- ggplot(prop.betas.tab,
+                                 aes(y=proportion,x=as.factor(n.percents),fill=Deviation))+
+                            geom_bar(stat="identity",alph=.7)+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
+                            scale_fill_manual(values=c("red","orange","skyblue"),
+                                                name="Deviation from original Beta")+
                             theme( legend.position = "top",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
@@ -75,7 +87,7 @@ sensi_plot <- function(x){
                             ylab("Proportion of estimated betas")
 
                     ### standardized Beta across % of species removed:
-                    m.DFbetas <- summarise(group_by(result,n.percents),
+                    m.DFbetas <- dplyr::summarise(dplyr::group_by(result,n.percents),
                                             mDFbetas = mean(abs(DFbetas)),
                                             sd = as.numeric(sd(abs(DFbetas))))
                     p3 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
