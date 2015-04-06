@@ -104,9 +104,9 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                         b.change = "within 5%"
 
                                 if (abs(DFbeta) > 0.05*beta.0)
-                                        b.change = "higher then 5%"
+                                        b.change = "higher than 5%"
                                 if (abs(DFbeta) > 0.1*beta.0){
-                                        b.change = "higher then 10%"
+                                        b.change = "higher than 10%"
                                 }
                                 else
 

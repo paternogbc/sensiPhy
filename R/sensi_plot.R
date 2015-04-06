@@ -24,7 +24,7 @@ sensi_plot <- function(x){
                                        size=1,alpha=.6,name="Original Beta")+
                             geom_point(size=2,position = "jitter")+
                             scale_colour_brewer(palette="Reds",
-                                                name="Deviation from original beta")+
+                                                name="Beta deviation")+
                               scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
