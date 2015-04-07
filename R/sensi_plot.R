@@ -18,16 +18,25 @@ sensi_plot <- function(x){
                     .e <- environment()
 
                     ## Graphs: Estimated betas ~ % species removed
+                    if(length(levels(result$beta.change)) == 3){
+                            col = c("skyblue","orange","red")
+                    }
+                    if(length(levels(result$beta.change)) == 2){
+                            col = c("skyblue","orange")
+                    }
+                    if(length(levels(result$beta.change)) == 1){
+                            col = c("skyblue")
+                    }
 
                     p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
-                            geom_hline(yintercept=beta.0,linetype=1,color="red",
-                                       size=1,alpha=.6,name="Original Beta")+
+
                             geom_point(size=2,position = "jitter")+
-                            scale_colour_brewer(palette="Reds",
-                                                name="Beta deviation")+
-                              scale_x_continuous(breaks=result$n.percents)+
+                            scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
+                            scale_colour_manual(values=col)+
+                            geom_hline(yintercept=beta.0,linetype=1,color="red",
+                                       size=1,alpha=.6,name="Original Beta")+
 
                               geom_hline(yintercept=beta.0+beta.5,linetype=2,
                                          alpha=.6)+
@@ -51,7 +60,7 @@ sensi_plot <- function(x){
                     ## Power Analysis: p.value
                     times <- table(result$n.percents)
                     breaks <- unique(result$n.percents)
-                    simu.sig <- result$p.values > .05
+                    simu.sig <- result$p.values >= .05
                     result$simu.sig <- simu.sig
                     p.out <- (with(result,tapply(simu.sig,n.removs,sum))/times)
                     power <- as.numeric(1-p.out)
@@ -84,8 +93,7 @@ sensi_plot <- function(x){
                     p2 <- ggplot(beta.tab,
                                  aes(y=proportion,x=n.percents,fill=factor(beta.change)))+
                             geom_bar(stat="identity",alph=.5)+
-                            scale_fill_brewer(palette="Reds",
-                                              name="")+
+                            scale_fill_manual(values=col,name="Change in beta")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             scale_x_continuous(breaks=result$n.percents)+
                             theme( legend.position = "top",
