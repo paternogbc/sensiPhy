@@ -1,38 +1,43 @@
-#' Sampling effort analysis for gls phylogenetic regression.
+#' Sampling effort analysis for phylogenetic generalized linear models (logistic regression).
 #'
 #' \code{samp_phyloglm} performs sample size sensitive analysis for \code{phyloglm}
-#' regressions. It removes species at random, fits a phyloglm model without the
-#' species and store the results of the model estimates. The percentage of
+#' logistic regressions. It removes species at random, fits a phyloglm model without the
+#' species and stores the results of the model estimates. The percentage of
 #' species removed is specified with \code{breaks} and the number of simulations
 #' per break is defined by \code{times}.
 #' @aliases samp_phyloglm
-#' @inheritParams influ_gls
+#' @inheritParams influ_phyloglm
 #' @param breaks Percentage intervals to remove species. For example:
-#'   \code{breaks = c(.1,.2,.3)},removes 10,20 and 30 percentage of species at
+#'   \code{breaks = c(.1,.2,.3)},removes 10, 20 and 30 percent of species at
 #'   random in each simulation.
 #' @param times The number of times to repeat each simulation (per
 #'   \code{breaks}) interval.
-#' @details This functions only works for simple linear regression \eqn{y = bx +
-#'   a}. Future implementation will deal with more complex models.
+#' @param btol bound on the linear predictor to bound the searching space (see ?phyloglm)
+#' @details This functions currently only works for logistic regressions, Poisson regressions
+#' will be implemented later (see R-package phylolm, Ives and Garland 2002 and Ives and Garland 2010).
+#' Also it currently only uses logistic_MPLE as a method, and can only deal with simple logistic regression models.
 #' @return The function \code{samp_phyloglm} returns a list with the following
-#'   components:
+#'   components: GW: update this list.
 #' @return \code{model_estimates} Full model estimates
 #' @return \code{beta95_IC} Full model beta 95 confidence interval
 #' @return \code{results} A data frame with all simulation estimates.
 #' @return \code{power_analysis} A data frame with power analysis for each
 #' @return \code{data} Original dataset
-#' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}
+#' @section Warning: This code is not fully checked. Please be aware.
+#' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}, \code{\link{samp_phyloglm}}
 #' @examples
-#' Update this for phyloglm
-#' library(caper);library(ggplot2);library(gridExtra)
+#' #' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
 #' data(shorebird)
-#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 # # First we need to match tip.labels with rownames in data:
 #' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
 #' shorebird.data <- shorebird.data[sp.ord,]
-#' samp1 <- samp_gls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
-#' sensi_plot(samp1)
+#' #Create a binary variable (large egg / small egg), for illustration purposes.
+#' mean(shorebird.data$Egg.Mass)
+#' shorebird.data$Egg.Mass.binary<-ifelse(shorebird.data$Egg.Mass>30,1,0) #Turn egg mass into a binary variable
+#' table(shorebird.data$Egg.Mass.binary) #Mostly small eggs.
+#' #Run samp_phyloglm
+#' samp_phyloglm1<-samp_phyloglm(formula = Egg.Mass.binary~M.Mass,data = shorebird.data,phy=shorebird.tree,btol = 50)
+#' sensi_plot(samp_phyloglm1)
 #' @export
 
 
@@ -56,17 +61,25 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
         c.data <- data
         N <- nrow(c.data)
 
-        mod.0 <- phylolm::phyloglm(formula, data=c.data,method="logistic_MPLE",btol=btol)
+        mod.0 <- phylolm::phyloglm(formula, data=c.data,
+                                   phy=phy,method="logistic_MPLE",btol=btol)
+        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
+        #The above line checks if the null model converges, and if not terminates with a (somewhat unhelpful) suggsetion.
+        else
+        #Probably it useful to also write a line somewhere here that capture error messages from phyloglm and reports them to the user.
 
+        # @Gustavo: I am doing things somewhat different here than you, getting the parameters directly from the phyloglm-model. This shouldn't matter, I guess. We can make consistent later.
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
         beta.0 <-    mod.0$coefficients[[2]]            # Beta (full model)
         alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
-        aic.0 <-        mod.0$aic       #AIC-value for the model
+        #Currently not used in downstream, probably remove. Or, store + report also lamda in samp_gls?
+        pval.beta.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value beta (full model)
         sd.beta.0 <- mod.0$sd[[2]]            # Standart Deviation beta (full model)
         beta.IC <- 1.96*sd.beta.0           #Calculate Confidence Interval
         beta.0.low <- beta.0 - beta.IC      # Low limit of beta CI (full model)
         beta.0.up <-  beta.0 + beta.IC      # Up limit of beta CI (full model)
-        #Calculate for intercept too?
+        #Calculate CI for intercept too?
+        #Currently, for CI-calculation, now df not taken into account as Gustavo did. Why is it like that, there.
 
         # Sampling effort analysis:
         intercepts <- as.numeric()
@@ -84,17 +97,17 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
                         exclude <- sample(1:N,i)
                         crop.data <- c.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-                        crop.cor <- ape::corPagel(1,phy=crop.phy,fixed=F)
 
-                        mod=try(nlme::gls(formula, data=crop.data,
-                                          correlation=crop.cor,method="ML"),TRUE)
+                        mod=try(phylolm::phyloglm(formula, data=crop.data,
+                                                  phy=crop.phy,method="logistic_MPLE",btol=btol),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
                         else {
                                 ### Calculating model estimates:
-                                sum.Mod <- as.data.frame(summary(mod)$tTable)
-                                intercept <-    sum.Mod[1,1]       # Intercept (crop model)
-                                beta <-    sum.Mod[2,1]            # Beta (crop model)
+                                intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
+                                beta <-    mod$coefficients[[2]]            # Beta (crop model)
+                                alpha <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
                                 DFbeta <- beta - beta.0
+
                                 if (abs(DFbeta) < 0.05*beta.0)
                                         b.change = "within 5%"
 
@@ -105,7 +118,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
                                 }
                                 else
 
-                                pval <-    sum.Mod[2,4]            # p.value (crop model)
+                                pval <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
@@ -143,3 +156,5 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
 
 
 }
+
+
