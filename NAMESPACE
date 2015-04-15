@@ -2,6 +2,7 @@
 
 export(influ_gls)
 export(samp_gls)
+export(samp_phyloglm)
 export(samp_regression)
 export(sensi_plot)
 export(variPgls)
