@@ -19,7 +19,7 @@ sensi_plot <- function(x){
 
                     ## Graphs: Estimated betas ~ % species removed
                     if(length(levels(result$beta.change)) == 3){
-                            col = c("skyblue","orange","red")
+                            col = c("skyblue","orange","red2")
                     }
                     if(length(levels(result$beta.change)) == 2){
                             col = c("skyblue","orange")
@@ -30,7 +30,7 @@ sensi_plot <- function(x){
 
                     p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
 
-                            geom_point(size=2,position = "jitter")+
+                            geom_point(size=4,position = "jitter",alpha=.5)+
                             scale_x_continuous(breaks=result$n.percents)+
                               ylab("Estimated Betas")+
                               xlab("% of Species Removed ")+
@@ -92,7 +92,7 @@ sensi_plot <- function(x){
                     detach(beta.tab)
                     p2 <- ggplot(beta.tab,
                                  aes(y=proportion,x=n.percents,fill=factor(beta.change)))+
-                            geom_bar(stat="identity",alph=.5)+
+                            geom_bar(stat="identity",alpha=.5)+
                             scale_fill_manual(values=col,name="Change in beta")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                             scale_x_continuous(breaks=result$n.percents)+
