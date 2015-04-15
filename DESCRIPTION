@@ -16,6 +16,7 @@ Imports:
     gridExtra,
     ape,
     nlme,
-    dplyr
+    dplyr,
+	phylolm
 Suggests: knitr
 VignetteBuilder: knitr
