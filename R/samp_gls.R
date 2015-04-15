@@ -108,6 +108,10 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
                                 if (abs(DFbeta) > 0.1*beta.0){
                                         b.change = "higher than 10%"
                                 }
+                                if (abs(DFbeta) > 0.3*beta.0){
+                                        b.change = "higher than 30%"
+                                }
+
 
 
                                 pval <-    sum.Mod[2,4]            # p.value (crop model)
