@@ -1,34 +1,33 @@
 #' Sampling effort analysis for phylogenetic generalized linear models (logistic regression).
 #'
-#' \code{samp_phyloglm} performs sample size sensitive analysis for \code{phyloglm}
-#' logistic regressions. It removes species at random, fits a phyloglm model without the
+#' \code{samp_phyloglm} performs sample size sensitivity analysis for logistic regresssions using \code{phyloglm}.
+#' It removes species at random, fits a phyloglm model without the
 #' species and stores the results of the model estimates. The percentage of
 #' species removed is specified with \code{breaks} and the number of simulations
 #' per break is defined by \code{times}.
 #' @aliases samp_phyloglm
-#' @inheritParams influ_gls
+#' @inheritParams samp_gls
 #' @param breaks Percentage intervals to remove species. For example:
 #'   \code{breaks = c(.1,.2,.3)},removes 10, 20 and 30 percent of species at
 #'   random in each simulation.
 #' @param times The number of times to repeat each simulation (per
 #'   \code{breaks}) interval.
-#' @param btol bound on the linear predictor to bound the searching space (see ?phyloglm)
+#' @param btol Bound on the linear predictor to bound the searching space (see ?phyloglm)
 #' @details This functions currently only works for logistic regressions, Poisson regressions
 #' will be implemented later (see R-package phylolm, Ives and Garland 2002 and Ives and Garland 2010).
 #' Also it currently only uses logistic_MPLE as a method, and can only deal with simple logistic regression models.
 #' @return The function \code{samp_phyloglm} returns a list with the following
-#'   components: GW: update this list.
-#' @return \code{model_estimates} Full model estimates
-#' @return \code{beta95_IC} Full model beta 95 confidence interval
+#'   components:
+#' @return \code{model_estimates} Full model estimates. This contains beta and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
 #' @return \code{results} A data frame with all simulation estimates.
 #' @return \code{power_analysis} A data frame with power analysis for each
 #' @return \code{data} Original dataset
 #' @section Warning: This code is not fully checked. Please be aware.
 #' @seealso \code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}, \code{\link{samp_phyloglm}}
 #' @examples
-#' #' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
+#' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
 #' data(shorebird)
-# # First we need to match tip.labels with rownames in data:
+#  #First, we need to match tip.labels with rownames in data:
 #' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
 #' shorebird.data <- shorebird.data[sp.ord,]
 #' #Create a binary variable (large egg / small egg), for illustration purposes.
@@ -41,7 +40,7 @@
 #' @export
 
 
-samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10)
+samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50)
 {
         ### Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be
@@ -66,27 +65,21 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
         if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
         #The above line checks if the null model converges, and if not terminates with a (somewhat unhelpful) suggsetion.
         else
-        #Probably it useful to also write a line somewhere here that capture error messages from phyloglm and reports them to the user.
 
-        # @Gustavo: I am doing things somewhat different here than you, getting the parameters directly from the phyloglm-model. This shouldn't matter, I guess. We can make consistent later.
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
         beta.0 <-    mod.0$coefficients[[2]]            # Beta (full model)
         alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
-        #Currently not used in downstream, probably remove. Or, store + report also lamda in samp_gls?
+        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
         pval.beta.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value beta (full model)
-        sd.beta.0 <- mod.0$sd[[2]]            # Standart Deviation beta (full model)
-        beta.IC <- 1.96*sd.beta.0           #Calculate Confidence Interval
-        beta.0.low <- beta.0 - beta.IC      # Low limit of beta CI (full model)
-        beta.0.up <-  beta.0 + beta.IC      # Up limit of beta CI (full model)
-        #Calculate CI for intercept too?
-        #Currently, for CI-calculation, now df not taken into account as Gustavo did. Why is it like that, there.
 
         # Sampling effort analysis:
         intercepts <- as.numeric()
         betas <- as.numeric()
         DFbetas <- as.numeric()
         beta.change <- NULL
-        p.values <- as.numeric()
+        p.values.beta <- as.numeric()
+        p.values.intercept <- as.numeric()
+        alphas <- as.numeric()
         n.removs <- as.numeric()
         n.percents <- as.numeric()
 
@@ -118,7 +111,9 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
                                 }
                                 else
 
-                                pval <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                                pval.beta <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                                pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
+                                alpha<-mod$alpha
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
@@ -128,7 +123,9 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
                                 betas <- c(betas,beta)
                                 DFbetas <- c(DFbetas,DFbeta)
                                 beta.change <- c(beta.change,b.change)
-                                p.values <- c( p.values,pval)
+                                p.values.beta <- c( p.values.beta,pval.beta)
+                                p.values.intercept <- c(p.values.intercept,pval.intercept)
+                                alphas <- c(alphas,alpha)
                                 n.removs <- c(n.removs,n.remov)
                                 n.percents <- c(n.percents,n.percent)
                         }
@@ -138,20 +135,20 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=10
         }
 
         # Data frame with results:
-        estimates <- data.frame(intercepts,betas,DFbetas,beta.change,p.values,n.removs,n.percents)
+        estimates <- data.frame(intercepts,betas,DFbetas,beta.change,p.values.beta,
+                                p.values.intercept,alphas,n.removs,n.percents)
 
         ## Power Analysis:
         times <- table(estimates$n.removs)[1]
         breaks <- unique(estimates$n.percents)
-        simu.sig <- estimates$p.values > .05
+        simu.sig <- estimates$p.values.beta > .05
         estimates$simu.sig <- simu.sig
         power <- 1-(with(estimates,tapply(simu.sig,n.removs,sum)))/times
         power.tab <- data.frame(percent_sp_removed=breaks,power)
         estimates <- estimates[,-ncol(estimates)]
 
-        param0 <- data.frame(beta.0,intercept.0)
-        beta_IC <- data.frame(beta.low=beta.0.low,beta.up=beta.0.up)
-        return(list(model_estimates=param0,beta_95_IC=beta_IC,
+        param0 <- data.frame(beta.0,pval.beta.0,intercept.0,pval.intercept.0,alpha.0)
+        return(list(model_estimates=param0,
                     results=estimates,power_analysis=power.tab,data=c.data))
 
 
