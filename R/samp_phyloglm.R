@@ -150,7 +150,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         param0 <- data.frame(beta.0,pval.beta.0,intercept.0,pval.intercept.0,alpha.0)
         return(list(model_estimates=param0,
                     results=estimates,power_analysis=power.tab,data=c.data))
-
+#Consider: print also the fitted formula to the output, as a reminder for people.
 
 }
 
