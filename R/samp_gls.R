@@ -62,6 +62,16 @@ samp_gls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
         intercept.0 <-    sumMod[1,1]       # Intercept (full model)
         beta.0 <-    sumMod[2,1]            # Beta (full model)
         pval.0 <-    sumMod[2,4]            # p.value (full model)
+        sd.beta.0 <- sumMod[2,2]            # Standart Error (full model)
+        df.0 <- N-2                         # Degrees of Freedon (full model))
+        if (df.0 >= 30) {
+                beta.IC <- 1.96*sd.beta.0
+        }
+        else {
+        beta.IC <- qt(0.975,df.0)*sd.beta.0 # Beta CI (full model)
+        }
+        beta.0.low <- beta.0 - beta.IC      # Low limit of beta CI (full model)
+        beta.0.up <-  beta.0 + beta.IC      # Up limit of beta CI (full model)
 
         # Sampling effort analysis:
         intercepts <- as.numeric()
