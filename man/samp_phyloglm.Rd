@@ -5,7 +5,7 @@
 \title{Sampling effort analysis for phylogenetic generalized linear models (logistic regression).}
 \usage{
 samp_phyloglm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
-  btol = 10)
+  btol = 50)
 }
 \arguments{
 \item{formula}{A model formula}
@@ -22,15 +22,13 @@ at the tips of a phylogeny}
 \code{breaks = c(.1,.2,.3)},removes 10, 20 and 30 percent of species at
 random in each simulation.}
 
-\item{btol}{bound on the linear predictor to bound the searching space (see ?phyloglm)}
+\item{btol}{Bound on the linear predictor to bound the searching space (see ?phyloglm)}
 }
 \value{
 The function \code{samp_phyloglm} returns a list with the following
-  components: GW: update this list.
+  components:
 
-\code{model_estimates} Full model estimates
-
-\code{beta95_IC} Full model beta 95 confidence interval
+\code{model_estimates} Full model estimates. This contains beta and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
 
 \code{results} A data frame with all simulation estimates.
 
@@ -39,8 +37,8 @@ The function \code{samp_phyloglm} returns a list with the following
 \code{data} Original dataset
 }
 \description{
-\code{samp_phyloglm} performs sample size sensitive analysis for \code{phyloglm}
-logistic regressions. It removes species at random, fits a phyloglm model without the
+\code{samp_phyloglm} performs sample size sensitivity analysis for logistic regresssions using \code{phyloglm}.
+It removes species at random, fits a phyloglm model without the
 species and stores the results of the model estimates. The percentage of
 species removed is specified with \code{breaks} and the number of simulations
 per break is defined by \code{times}.
@@ -54,7 +52,7 @@ Also it currently only uses logistic_MPLE as a method, and can only deal with si
  This code is not fully checked. Please be aware.
 }
 \examples{
-#' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
+library(caper);library(ggplot2);library(gridExtra);library(phylolm)
 data(shorebird)
 sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
 shorebird.data <- shorebird.data[sp.ord,]
