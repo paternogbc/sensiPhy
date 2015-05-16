@@ -4,7 +4,7 @@
 \alias{variPgls}
 \title{Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty}
 \usage{
-variPgls(resp, pred, se.col = NA, taxa.col, tree, ntree = 1, npred = 1,
+variPgls(resp, pred, vari.col = NA, taxa.col, tree, ntree = 1, npred = 1,
   method = normal, lambda = "ML")
 }
 \arguments{
@@ -12,7 +12,7 @@ variPgls(resp, pred, se.col = NA, taxa.col, tree, ntree = 1, npred = 1,
 
 \item{pred}{Vector containing the predictor variable}
 
-\item{se.col}{Vector containing the standard error of \code{pred}}
+\item{vari.col}{Vector containing the standard error, the standard deviation or the min-max of \code{pred}}
 
 \item{taxa.col}{A character vector of taxa names that will be used to match data rows to phylogeny tips.}
 
@@ -22,10 +22,10 @@ variPgls(resp, pred, se.col = NA, taxa.col, tree, ntree = 1, npred = 1,
 trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1}
 
 \item{npred}{If TRUE, the number of times to repeat the analysis generating a random value in the interval
-[\code{pred}-\code{se.col},\code{pred}+\code{se.col}]. If NULL, \code{npred} = 1}
+[\code{pred}-\code{vari.col},\code{pred}+\code{vari.col}]. If NULL, \code{npred} = 1}
 
 \item{method}{A character string indicating which method to use to generate a random value in the interval
-[\code{pred} - \code{se.col}, \code{pred} + \code{se.col}]. Default is normal distribution: "normal"
+[\code{pred} - \code{vari.col}, \code{pred} + \code{vari.col}]. Default is normal distribution: "normal"
 (function \code{\link{rnorm}}), uniform distribution is "uniform" (\code{\link{runif}})}
 
 \item{lambda}{A value for the lambda transformation. If NULL, \code{lambda}="ML"
@@ -36,9 +36,9 @@ The function \code{variPgls} returns a list with the following
 components:
 
 \code{model_results} Model parameters for each iteration
-parameters: intercept, beta, beta standard error, beta confidence interval, beta pvalue, AIC, lambda
+parameters: intercept, intercept standard error and pvalue, beta, beta standard error and pvalue and confidence interval, AIC, lambda
 
-\code{stats} Mean and sd of each parameter of the model
+\code{stats} Statistics for model parameters.
 \code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
 \code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
 \code{sd_pred} is the sd due to intraspecific variation
@@ -53,7 +53,7 @@ The output gives a minimum, maximum, mean and sd of the model parameters.
 \details{
 This functions only works for simple linear regression \eqn{y = bx +
 a}. Future implementation will deal with more complex models.
-If you log-transform your predictor variable, make sure that your standard errors are in a log-scale too or use ##### function
+If you log-transform your predictor variable, make sure that your vari.col is in a log-scale too or use ##### function
 to build your input data.
 }
 \section{Warning}{
@@ -73,7 +73,7 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- tree$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,se.col=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
+variPgls(resp=Ly,pred=Lx$xmean,vari.col=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
 
 # Example with a set of trees of class multiphylo
 N <- 100 # Number of species in the trees
@@ -85,7 +85,7 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- multitree[[1]]$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,se.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
+variPgls(resp=Ly,pred=Lx$xmean,vari.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 }
 \seealso{
 \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
