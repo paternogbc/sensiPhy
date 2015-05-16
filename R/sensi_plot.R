@@ -8,27 +8,39 @@
 
 ### Start:
 sensi_plot <- function(x){
-          if (length(x) == 5){
+          if (samp$output == "samp_pgls"){
                     result    <- x[[3]]
-                    beta.0    <- as.numeric(x[[1]][1])
+                    power.tab <- x[[4]]
+
+                    # classes of beta.change:
+                    result$beta.class <- "class"
+                    result[result$beta.change <= 5,]$beta.class <- "within 5%"
+                    result[result$beta.change > 5
+                           & result$beta.change <= 10 ,]$beta.class <- "higher than 5%"
+                    result[result$beta.change > 10,]$beta.class <- "higher than 10%"
+                    result$beta.class <- as.factor(result$beta.class)
+                    beta.0    <- as.numeric(x[[2]][2])
                     beta.5    <- .05*beta.0
                     beta.10   <- .1*beta.0
-                    result$beta.change = with(result, factor(beta.change,
-                                        levels = rev(levels(beta.change))))
+
+                    # reverting the order of the levels
+                    result$beta.class =
+                            with(result, factor(beta.class,
+                                        levels = rev(levels(result$beta.class))))
                     .e <- environment()
 
                     ## Graphs: Estimated betas ~ % species removed
-                    if(length(levels(result$beta.change)) == 3){
+                    if(length(levels(result$beta.class)) == 3){
                             col = c("skyblue","orange","red2")
                     }
-                    if(length(levels(result$beta.change)) == 2){
+                    if(length(levels(result$beta.class)) == 2){
                             col = c("skyblue","orange")
                     }
-                    if(length(levels(result$beta.change)) == 1){
+                    if(length(levels(result$beta.class)) == 1){
                             col = c("skyblue")
                     }
 
-                    p1 <- ggplot2::ggplot(result,aes(y=betas,x=n.percents,colour=beta.change))+
+                    p1 <- ggplot2::ggplot(result,aes(y=beta,x=n.percents,colour=beta.class))+
 
                             geom_point(size=4,position = "jitter",alpha=.5)+
                             scale_x_continuous(breaks=result$n.percents)+
@@ -46,7 +58,7 @@ sensi_plot <- function(x){
                                          alpha=.6)+
                               geom_hline(yintercept=beta.0-beta.10,linetype=2,
                                          alpha=.6)+
-                            theme( legend.position = "top",
+                            theme( legend.position = "none",
                                    legend.direction = "horizontal",
                                    legend.text=element_text(size=14),
                                    legend.title=element_text(size=14),
@@ -58,14 +70,9 @@ sensi_plot <- function(x){
                                                                    colour="black"))
 
                     ## Power Analysis: p.value
-                    times <- table(result$n.percents)
-                    breaks <- unique(result$n.percents)
-                    simu.sig <- result$p.values >= .05
-                    result$simu.sig <- simu.sig
-                    p.out <- (with(result,tapply(simu.sig,n.removs,sum))/times)
-                    power <- as.numeric(1-p.out)
-                    power.tab <- data.frame(breaks,power)
-                    p4 <-ggplot2::ggplot(power.tab,aes(y=power,x=breaks))+
+
+                    p4 <-ggplot2::ggplot(power.tab,
+                                         aes(y=power.beta,x=percent_sp_removed))+
                               scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                               scale_x_continuous(breaks=result$n.percents)+
                               xlab("% Species removed")+
@@ -79,7 +86,7 @@ sensi_plot <- function(x){
 
                     ## Power Analysis: beta (percentage of betas > or < then 5% or 10%)
 
-                    beta.tab <- dplyr::summarise(dplyr::group_by(result,beta.change,n.percents),
+                    beta.tab <- dplyr::summarise(dplyr::group_by(result,beta.class,n.percents),
                                      proportion=n())
                     ## Correcting for the number of replications per n.percent interval:
                     attach(beta.tab)
@@ -91,7 +98,7 @@ sensi_plot <- function(x){
                     }
                     detach(beta.tab)
                     p2 <- ggplot(beta.tab,
-                                 aes(y=proportion,x=n.percents,fill=factor(beta.change)))+
+                                 aes(y=proportion,x=n.percents,fill=factor(beta.class)))+
                             geom_bar(stat="identity",alpha=.5)+
                             scale_fill_manual(values=col,name="Change in beta")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
@@ -111,8 +118,8 @@ sensi_plot <- function(x){
 
                     ### standardized Beta across % of species removed:
                     m.DFbetas <- dplyr::summarise(dplyr::group_by(result,n.percents),
-                                            mDFbetas = mean(abs(DFbetas)),
-                                            sd = as.numeric(sd(abs(DFbetas))))
+                                            mDFbetas = mean(abs(DFbeta)),
+                                            sd = as.numeric(sd(abs(DFbeta))))
                     p3 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
                             geom_point(size=5,colour="red",alpha=.6)+
                             geom_errorbar(aes(ymin=mDFbetas-sd, ymax=mDFbetas+sd),
