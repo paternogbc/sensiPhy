@@ -6,7 +6,7 @@
 #' species removed is specified with \code{breaks} and the number of simulations
 #' per break is defined by \code{times}.
 #' @aliases samp_phyloglm
-#' @inheritParams samp_gls
+#' @inheritParams samp_pgls
 #' @param breaks Percentage intervals to remove species. For example:
 #'   \code{breaks = c(.1,.2,.3)},removes 10, 20 and 30 percent of species at
 #'   random in each simulation.
