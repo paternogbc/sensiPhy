@@ -19,7 +19,7 @@ sensi_plot <- function(x){
                            & result$beta.change <= 10 ,]$beta.class <- "higher than 5%"
                     result[result$beta.change > 10,]$beta.class <- "higher than 10%"
                     result$beta.class <- as.factor(result$beta.class)
-                    beta.0    <- as.numeric(samp[[2]][2])
+                    beta.0    <- as.numeric(x[[2]][2])
                     beta.5    <- .05*beta.0
                     beta.10   <- .1*beta.0
 
