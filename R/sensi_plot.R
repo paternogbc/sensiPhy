@@ -8,7 +8,7 @@
 
 ### Start:
 sensi_plot <- function(x){
-          if (samp$output == "samp_pgls"){
+          if (x[[1]] == "samp_pgls"){
                     result    <- x[[3]]
                     power.tab <- x[[4]]
 
@@ -19,7 +19,7 @@ sensi_plot <- function(x){
                            & result$beta.change <= 10 ,]$beta.class <- "higher than 5%"
                     result[result$beta.change > 10,]$beta.class <- "higher than 10%"
                     result$beta.class <- as.factor(result$beta.class)
-                    beta.0    <- as.numeric(x[[2]][2])
+                    beta.0    <- as.numeric(samp[[2]][2])
                     beta.5    <- .05*beta.0
                     beta.10   <- .1*beta.0
 
@@ -89,14 +89,15 @@ sensi_plot <- function(x){
                     beta.tab <- dplyr::summarise(dplyr::group_by(result,beta.class,n.percents),
                                      proportion=n())
                     ## Correcting for the number of replications per n.percent interval:
-                    attach(beta.tab)
+
+                    times <- table(result$n.percents)
                     for (jj in 1:length(times)){
                         a <- beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion
                         a <- a/times[jj]
                         beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion <- a
 
                     }
-                    detach(beta.tab)
+
                     p2 <- ggplot(beta.tab,
                                  aes(y=proportion,x=n.percents,fill=factor(beta.class)))+
                             geom_bar(stat="identity",alpha=.5)+
