@@ -92,9 +92,9 @@ sensi_plot <- function(x){
 
                     times <- table(result$n.percents)
                     for (jj in 1:length(times)){
-                        a <- beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion
+                        a <- beta.tab[beta.tab$n.percents==unique(beta.tab$n.percent)[jj],]$proportion
                         a <- a/times[jj]
-                        beta.tab[n.percents==unique(beta.tab$n.percent)[jj],]$proportion <- a
+                        beta.tab[beta.tab$n.percents==unique(beta.tab$n.percent)[jj],]$proportion <- a
 
                     }
 
