@@ -10,7 +10,7 @@ sensi_plot(x)
 \item{x}{output from \code{samp_gls}, \code{influ_gls}}
 }
 \description{
-\code{sensi_plot} Plot results from \code{samp_gls},
-\code{influ_gls}
+\code{sensi_plot} Plot results from \code{samp_pgls},
+\code{influ_pgls}
 }
 

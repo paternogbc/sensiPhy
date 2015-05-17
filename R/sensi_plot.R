@@ -1,13 +1,16 @@
 #' Graphical sensitive analysis for comparative methods
 #'
-#' \code{sensi_plot} Plot results from \code{samp_gls},
-#' \code{influ_gls}
+#' \code{sensi_plot} Plot results from \code{samp_pgls},
+#' \code{influ_pgls}
 #' @aliases sensi_plot
 #' @param x output from \code{samp_gls}, \code{influ_gls}
 #' @export
 
 ### Start:
 sensi_plot <- function(x){
+
+########### samp_pgls graphs ##################
+
           if (x[[1]] == "samp_pgls"){
                     result    <- x[[3]]
                     power.tab <- x[[4]]
@@ -134,17 +137,20 @@ sensi_plot <- function(x){
                             ylab("Mean DFbetas (+- SD)")
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
           }
-          else      {
+
+########### influ_pgls graphs ##################
+
+          if  (x[[1]] == "influ_pgls")    {
 
                     .e <- environment()
-                    result <- x[[6]]
+                    result <- x[[5]]
                     vars <- all.vars(x[[2]])
                     vars2 <- gsub("list","",attr(terms(x[[2]]),"variables"))[-1]
                     intercept.0 <-  as.numeric(x[[3]][1])
                     beta.0 <-  as.numeric(x[[3]][2])
 
                     # Distribution of estimated betas:
-                    p1 <- ggplot2::ggplot(result,aes(x=betas,y=..density..),environment=.e)+
+                    p1 <- ggplot2::ggplot(result,aes(x=beta,y=..density..),environment=.e)+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = beta.0,color="red",linetype=2,size=.7)+
@@ -152,22 +158,24 @@ sensi_plot <- function(x){
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))
                     # Distribution of estimated intercepts:
-                    p2 <- ggplot2::ggplot(result,aes(x=intercepts,y=..density..),environment=.e)+
+                    p2 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..),environment=.e)+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
                               xlab("Estimated Intercepts")+
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))
-                    if (isTRUE(class(x[[1]]) != "character" )){
-                              x$data <- x$data[-as.numeric(x[[1]]),]
+
+                    ### Removing species with error:
+                    if (isTRUE(class(x[[7]]) != "character" )){
+                              x$data <- x$data[-as.numeric(x[[7]]),]
                     }
                     result.tab <- data.frame(x$results,x$data[vars])
 
                     # Influential points for beta estimation:
                     p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
                                                        eval(parse(text=vars2[1])),
-                                                       colour=abs(sDFbetas)),environment=.e)+
+                                                       colour=abs(sDFbeta)),environment=.e)+
                             geom_point(size=3,alpha=.8)+
                             scale_colour_gradient( low="black",high="red",name="")+
                             theme(legend.key.width = unit(.2,"cm"),
@@ -179,13 +187,13 @@ sensi_plot <- function(x){
                             xlab(vars2[2])+
                             ggtitle("Standardized Difference in Beta")+
                             theme(axis.text = element_text(size=14,colour="black"),
-                                  axis.title = element_text(size=16));p3
+                                  axis.title = element_text(size=16))
 
-                    # Statistically influential points for Beta estimate
-                    p4 <- ggplot2::ggplot(result,aes(x=sDFbetas),environment=.e)+
+                    # Statistically influential points for beta estimate
+                    p4 <- ggplot2::ggplot(result,aes(x=sDFbeta),environment=.e)+
                             geom_histogram(fill="red",color="black",binwidth=.5) +
                             xlab("Standardized Difference in Beta")+
-                            geom_histogram(data=subset(result,sDFbetas<2&sDFbetas>-2),
+                            geom_histogram(data=subset(result,sDFbeta<2&sDFbeta>-2),
                                            colour="black", fill="white",binwidth=.5)+
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))+

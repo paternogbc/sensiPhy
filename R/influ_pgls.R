@@ -61,7 +61,7 @@ influ_pgls <- function(formula,data,phy)
                             "DFintercept"=numeric(),"beta"=numeric(),
                             "DFbeta"=numeric(),"pval.intercept"=numeric(),
                             "pval.beta"=numeric(),"AIC"=numeric(),
-                            "Lambda"=numeric(),"errors"=numeric())
+                            "Lambda"=numeric())
         # Loop:
         counter <- 1
         errors <- NULL
@@ -121,16 +121,11 @@ influ_pgls <- function(formula,data,phy)
         results$sDFintercept <- sDFintercept
 
         ### Original model estimates:
-        param0 <- data.frame(a.0,b.0)
+        param0 <- data.frame(intercept=a.0,beta=b.0)
 
         ### Statistically Influential species for Beta (sDFbetas > 2)
         sb.ord <- which(abs(results$sDFbeta) > 2)
         influ.sp.b <- as.character(results$species[sb.ord])
-
-        ### Statistically Influential species for intercept (sDFintercepts > 2)
-        si.ord <- which(abs(results$sDFintercept) > 2)
-        influ.sp.i <- as.character(results$species[si.ord])
-        influ.sp.i <- as.character(results[order(results$DFintercept,decreasing=T)[1:5],]$species)
 
         ### Output:
         res <- list(output="influ_pgls",
