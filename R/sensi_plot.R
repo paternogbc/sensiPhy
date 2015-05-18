@@ -136,21 +136,24 @@ sensi_plot <- function(x,graphs="all"){
                                                                   colour="black"))+
                             xlab("% of Species Removed")+
                             ylab("Mean DFbetas (+- SD)")
+
                     if (graphs == "all"){
-                    suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
+                        gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2)
                     }
                     if (graphs == 1){
-                            suppressWarnings(print(p1))
+                        print(p1)
                     }
                     if (graphs == 2){
-                            suppressWarnings(print(p2))
+                        print(p2)
                     }
                     if (graphs == 3){
-                            suppressWarnings(print(p3))
+                        print(p3)
                     }
                     if (graphs == 4){
-                            suppressWarnings(print(p1))
+                        print(p4)
                     }
+
+
 
           }
 
@@ -217,19 +220,19 @@ sensi_plot <- function(x,graphs="all"){
                             geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
 
                     if (graphs == "all"){
-                            suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
+                            suppressMessages(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
                     }
                     if (graphs == 1){
-                            suppressWarnings(print(p1))
+                            suppressMessages(print(p1))
                     }
                     if (graphs == 2){
-                            suppressWarnings(print(p2))
+                            suppressMessages(print(p2))
                     }
                     if (graphs == 3){
-                            suppressWarnings(print(p3))
+                            suppressMessages(print(p3))
                     }
                     if (graphs == 4){
-                            suppressWarnings(print(p1))
+                            suppressMessages(print(p4))
                     }
           }
 
