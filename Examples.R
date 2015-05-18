@@ -23,7 +23,7 @@ samp <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$
 
 ### You can specify number of simulation and break intervals:
 samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy,
-                 times= 200, breaks=c(0.1,.2,.3,.4,.5,.6,.7))
+                 times= 100, breaks=c(0.1,.2,.3,.4,.5,.6,.7))
 
 
 ### Example: Estimating influential points and parameter bias with `influ_pgls`
@@ -40,5 +40,3 @@ influ$errors
 sensi_plot(samp)
 sensi_plot(samp2)
 sensi_plot(influ)
-
-
