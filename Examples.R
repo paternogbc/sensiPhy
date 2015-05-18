@@ -40,3 +40,8 @@ influ$errors
 sensi_plot(samp)
 sensi_plot(samp2)
 sensi_plot(influ)
+
+## To show only one graph:
+sensi_plot(samp2,graphs=1)
+sensi_plot(influ,graphs=3)
+

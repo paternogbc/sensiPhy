@@ -4,10 +4,12 @@
 \alias{sensi_plot}
 \title{Graphical sensitive analysis for comparative methods}
 \usage{
-sensi_plot(x)
+sensi_plot(x, graphs = "all")
 }
 \arguments{
 \item{x}{output from \code{samp_gls}, \code{influ_gls}}
+
+\item{graphs}{choose which graphs should be printed on the output ("all", 1,2,3 or 4)}
 }
 \description{
 \code{sensi_plot} Plot results from \code{samp_pgls},

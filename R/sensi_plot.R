@@ -4,10 +4,11 @@
 #' \code{influ_pgls}
 #' @aliases sensi_plot
 #' @param x output from \code{samp_gls}, \code{influ_gls}
+#' @param graphs choose which graphs should be printed on the output ("all", 1,2,3 or 4)
 #' @export
 
 ### Start:
-sensi_plot <- function(x){
+sensi_plot <- function(x,graphs="all"){
 
 ########### samp_pgls graphs ##################
 
@@ -135,7 +136,22 @@ sensi_plot <- function(x){
                                                                   colour="black"))+
                             xlab("% of Species Removed")+
                             ylab("Mean DFbetas (+- SD)")
+                    if (graphs == "all"){
                     suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
+                    }
+                    if (graphs == 1){
+                            suppressWarnings(print(p1))
+                    }
+                    if (graphs == 2){
+                            suppressWarnings(print(p2))
+                    }
+                    if (graphs == 3){
+                            suppressWarnings(print(p3))
+                    }
+                    if (graphs == 4){
+                            suppressWarnings(print(p1))
+                    }
+
           }
 
 ########### influ_pgls graphs ##################
@@ -200,7 +216,21 @@ sensi_plot <- function(x){
                             geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
                             geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
 
-                    suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,nrow=2,ncol=2))
+                    if (graphs == "all"){
+                            suppressWarnings(gridExtra::grid.arrange(p1,p2,p3,p4,ncol=2,nrow=2))
+                    }
+                    if (graphs == 1){
+                            suppressWarnings(print(p1))
+                    }
+                    if (graphs == 2){
+                            suppressWarnings(print(p2))
+                    }
+                    if (graphs == 3){
+                            suppressWarnings(print(p3))
+                    }
+                    if (graphs == 4){
+                            suppressWarnings(print(p1))
+                    }
           }
 
 
