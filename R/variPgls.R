@@ -117,8 +117,8 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
      warning("NA's in response or predictor were removed")}
   else
   
-#transform NA' into 0 from SE
-  
+    #transform NA's in SE column into zeros##############
+  data<-  
   
   if(inherits(tree, "multiPhylo")){  
     tree1<-tree[[1]]}
