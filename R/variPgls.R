@@ -24,11 +24,11 @@
 #' a}. Future implementation will deal with more complex models.
 #' If you log-transform your predictor variable, make sure that your vari.col is in a log-scale too or use ##### function
 #' to build your input data.
-#' @return The function \code{variPgls} returns a list with the following
-#' components:
+#' @return The function \code{variPgls} returns a list with the following components:
 #' @return \code{model_results} Model parameters for each iteration
 #' parameters: intercept, intercept standard error and pvalue, beta, beta standard error and pvalue and confidence interval, AIC, lambda
 #' @return \code{stats} Statistics for model parameters.
+#' @return Residual degrees of freedom and number of models that converged properly
 #' \code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
 #' \code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
 #' \code{sd_pred} is the sd due to intraspecific variation
@@ -63,7 +63,7 @@
 #' variPgls(resp=Ly,pred=Lx$xmean,vari.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
 #' @export
 
-variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=normal,lambda="ML"){
+variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method="normal",lambda="ML"){
 
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
@@ -110,6 +110,16 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
   else {data<-data.frame(taxa.col,resp,pred,vari.col)
         data<-data[!taxa.col %in% as.factor(mismatch), ]}
   
+    #NA's check
+  if (sum(is.na(resp))!=0 | sum(is.na(pred))!=0)
+    {data<-data[!is.na(data$resp,)]
+     data<-data[!is.na(data$pred,)]
+     warning("NA's in response or predictor were removed")}
+  else
+  
+#transform NA' into 0 from SE
+  
+  
   if(inherits(tree, "multiPhylo")){  
     tree1<-tree[[1]]}
   else
@@ -152,12 +162,12 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
       #comparative data creation if tree is class=multiphylo
       if (inherits(tree, "multiPhylo")) {
         cor.0 <- ape::corPagel(1,phy=tree[[j]],fixed=F)
-        mod.0 <- nlme::gls(resp~variab, data=c.data[[i]],method="ML",correlation=cor.0) #control=nlme::glsControl(singular.ok=TRUE)
+        mod.0 <- nlme::gls(resp~variab, data=c.data[[i]],method="ML",correlation=cor.0,na.action=na.omit) #control=nlme::glsControl(singular.ok=TRUE)
       }
 
       else {
         cor.0 <- ape::corPagel(1,phy=tree,fixed=F)
-        mod.0 <- nlme::gls(resp~variab, data=c.data,method="ML",correlation=cor.0)
+        mod.0 <- nlme::gls(resp~variab, data=c.data,method="ML",correlation=cor.0,na.action=na.omit)
       }
 
 
@@ -212,7 +222,7 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
                           sd_pred=apply(mean_by_randomval,2,sd))[-(1:2),]
 
 
-  output <- list(model_results=resultados,paste("Residual degrees of freedom:",df.0),
+  output <- list(output="variPgls",model_results=resultados,paste("Residual degrees of freedom:",df.0),
                  paste("Result based on ",nrow(resultados),"models that converged properly"),
                  stats=statresults)
 
