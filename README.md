@@ -27,34 +27,40 @@ bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species,
 
 Original Linear regression (PGLS):
 ```{r}
-mod0 <- pgls(Egg.Mass ~ M.Mass, data=bird.comp,"ML")
+mod0 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=bird.comp,"ML")
 summary(mod0)
 ```
 
 #### Model diagnostics with sensiC package:
 
-##### Example: Estimating sample size bias with `samp_gls`
+##### Example: Estimating sampling effort bias with `samp_pgls`
 
 ```{r}
-samp <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
+# First match the order of species in data and phy:
+ord <- match(shorebird.tree$tip.label,shorebird.data$Species)
+shorebird.data <- shorebird.data[ord,]
 
-# see results:
-head(samp$results)
+# Run sensitive analysis:
+samp <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
 
-# You can also specify number of simulation and break intervals:
-samp2 <- samp_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy,
+# To check the results:
+samp$results
+
+# You can also specify the number of simulation and break intervals:
+samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy,
                  times= 50, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
 ```
 
-##### Example: Estimating influential points and parameter bias with `influ_gls`
+##### Example: Estimating influential points and parameter bias with `influ_pgls`
 
 ```{r}
-influ <- influ_gls(Egg.Mass ~ M.Mass,data=bird.comp$data,phy=bird.comp$phy)
-# Estimated parameters:
-head(influ$results)
-# Most influential species:
-influ[[5]]
-# Check for species with erros erros:
+# Run influential analysis:
+influ <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+# Check the results
+influ$results
+# Check the most influential species:
+influ[[4]]
+# Check for species that presented errors during simulations:
 influ$errors
 ```
 ### Visualizing Results with `sensi_plot`
@@ -66,7 +72,7 @@ sensi_plot(influ)
 ```
 
 ### Output `samp_gls`:
-![Output samp_gls](http://i.imgur.com/E3xyvOE.jpg)
+![Output samp_gls](http://i.imgur.com/zp5JXIJ.jpg)
 
 ### Output `influ_gls`:
-![Output samp_gls](http://i.imgur.com/PRXQlyk.jpg)
+![Output samp_gls](http://i.imgur.com/gF6GuEH.jpg)
