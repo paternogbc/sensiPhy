@@ -6,9 +6,10 @@ R package to perform model diagnostic for comparative methods
 ####Installing sensiC from Github:
 
 ```{r}
-# First install package `devtools` (you should skip this with you have `devtools`)
+# First install the package `devtools` (you should skip this if you have `devtools`)
 install.packages("devtools")
 
+# Install `sensiC` from github: 
 devtools::install_github("paternogbc/sensiC")
 
 # Required packages:
