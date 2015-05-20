@@ -8,13 +8,18 @@
 #' @aliases variPgls
 #' @param resp Numeric vector containing the response variable
 #' @param pred Vector containing the predictor variable
-#' @param vari.pred Vector containing the standard error, the standard deviation or the minimum and maximum (list(min,max)) of \code{pred}
+#' @param vari.resp Vector containing the standard error, the standard deviation or the minimum and maximum (cbind(min,max)) of \code{resp}
+#' When information is not available for one species, the value can be 0 or \code{NA}
+#' @param vari.pred Vector containing the standard error, the standard deviation or the minimum and maximum (cbind(min,max)) of \code{pred}
 #' When information is not available for one species, the value can be 0 or \code{NA}
 #' @param tree A tree or list of tree of class \code{Phylo} or \code{multiPhylo}
 #' @param ntree If TRUE or class(tree)=multiPhylo, the number of times to repeat the analysis with n different
 #' trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1
-#' @param npred If TRUE, the number of times to repeat the analysis generating a random value in the interval
-#' [\code{pred}-\code{vari.pred},\code{pred}+\code{vari.pred}]. If NULL, \code{npred} = 1
+#' @param nvari If TRUE, the number of times to repeat the analysis generating a random value in the interval
+#' [\code{pred}-\code{vari.pred},\code{pred}+\code{vari.pred}] or in the interval [min,max] (if vari.pred=(cbind(min,max)))
+#' and a random value in the interval
+#' [\code{resp}-\code{vari.resp},\code{resp}+\code{vari.resp}] or in the interval [min,max] (if vari.resp=(cbind(min,max))).
+#' If NULL, \code{nvari} = 1
 #' @param method A character string indicating which method to use to generate a random value in the interval
 #' [\code{pred} - \code{vari.pred}, \code{pred} + \code{vari.pred}]. Default is uniform distribution: "uniform"
 #' (function \code{\link{rnorm}}), normal distribution is "normal" (\code{\link{runif}})
@@ -22,8 +27,8 @@
 #' @param taxa.nam A character vector of taxa names that will be used to match data rows to phylogeny tips.
 #' @param lambda A value for the lambda transformation. If NULL, \code{lambda}="ML"
 #' Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}
-#' @details This functions only works for simple linear regression \eqn{y = bx +
-#' a}. Future implementation will deal with more complex models.
+#' @details This functions only works for simple linear regression \eqn{y = bx +a}. 
+#' Future implementation will deal with more complex models.
 #' If you log-transform your predictor variable, make sure that your vari.pred is in a log-scale too or use ##### function
 #' to build your input data.
 #' @return The function \code{variPgls} returns a list with the following components:
@@ -35,7 +40,7 @@
 #' \code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
 #' \code{sd_pred} is the sd due to intraspecific variation
 #' @section Warning: This code is not fully checked. Please be aware.
-#' If \code{ntree} and \code{npred} are set to 1, the function computes a classic phylogenetic gls.
+#' If \code{ntree} and \code{nvari} are set to 1, the function computes a classic phylogenetic gls.
 #' @seealso \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
 #' @examples
 #' library(caper);library(phylolm);library(phytools)
@@ -50,7 +55,7 @@
 #' # Including Species names
 #' sp <- tree$tip.label
 #' # variPgls analysis
-#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree,npred=2,method="normal",taxa.nam=sp)
+#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree,nvari=2,method="normal",taxa.nam=sp)
 #'
 #' # Example with a set of trees of class multiphylo
 #' N <- 100 # Number of species in the trees
@@ -62,10 +67,10 @@
 #' # Including Species names
 #' sp <- multitree[[1]]$tip.label
 #' # variPgls analysis
-#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.nam=sp)
+#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,nvari=2,method="normal",taxa.nam=sp)
 #' @export
 
-variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method="normal",lambda="ML"){
+variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,nvari=1,method="normal",lambda="ML"){
 
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
@@ -145,7 +150,7 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
   #Function to pick a random value in the interval
   if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)}
       warning("With method=normal vari.pred must be the standard deviation of pred")
-  else  funr <- function(a,b,c) {runif(1,a-b,a+c)}
+  else  funr <- function(a,b) {runif(1,a-b,a+b)}
 
   # If the class of tree is multiphylo pick n=ntree random trees
   if(inherits(tree, "multiPhylo")){trees<-sample(length(tree),ntree,replace=F)}
@@ -160,34 +165,47 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
   #Model calculation
   counter=1
   c.data<-list()
-  for (i in 1:npred) {
+  for (i in 1:nvari) {
     for (j in trees){
       tryCatch({
-
-      #choose a random value in [mean-se,mean+se] if vari.resp is provided
-      if(!inherits(pred, c("numeric","integer")) || !exists("vari.resp")) {data$variab<-data$pred}
-      
-      ####################HERE change
-      if(is.list(vari.pred){data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"][1],x["vari.pred"][2]))}
-      else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
-
-      #choose a random value in [mean-se,mean+se] if vari.pred is provided
-      if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred")) {data$variab<-data$pred}
-      if(is.list(vari.pred){data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"][1],x["vari.pred"][2]))}
-         else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
-         
+        
+      ##Set response and predictor variables
+        #vari.resp and vari.resp are not provided
+        if(!inherits(resp, c("numeric","integer")) || !exists("vari.resp") || !exists("vari.resp")) {data$respV<-data$resp}
+        
+        #choose a random value in min/max if vari.resp is provided
+        if(exists("vari.resp") && !is.null(dim(vari.resp)))      
+          {data$respV<-apply(data[,c("resp.min","resp.max")],1,function(x)runif(1,x[1],x[2]))}
+        
+        #choose a random value in [mean-se,mean+se] if vari.resp is provided
+        if(exists("vari.resp") && !is.null(dim(vari.resp)))
+          {data$respV<-apply(data[,c("resp","vari.resp")],1,function(x)funr(x[1],x[2]))}
+        
+        else
+        #vari.pred and vari.pred are not provided
+        if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred") || !exists("vari.pred")) {data$predV<-data$pred}
+        
+        #choose a random value in min/max if vari.pred is provided
+        if(exists("vari.pred") && !is.null(dim(vari.pred)))      
+          {data$predV<-apply(data[,c("pred.min","pred.max")],1,function(x)runif(1,x[1],x[2]))}
+        
+        #choose a random value in [mean-se,mean+se] if vari.pred is provided
+        if(exists("vari.pred") && !is.null(dim(vari.pred)))
+          {data$predV<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x[1],x[2]))}       
+          
+        else
       
       c.data[[i]]<-data.frame(data)
 
       #comparative data creation if tree is class=multiphylo
       if (inherits(tree, "multiPhylo")) {
         cor.0 <- ape::corPagel(1,phy=tree[[j]],fixed=F)
-        mod.0 <- nlme::gls(resp~variab, data=c.data[[i]],method="ML",correlation=cor.0,na.action=na.omit) #control=nlme::glsControl(singular.ok=TRUE)
+        mod.0 <- nlme::gls(respV~predV, data=c.data[[i]],method="ML",correlation=cor.0,na.action=na.omit) #control=nlme::glsControl(singular.ok=TRUE)
       }
 
       else {
         cor.0 <- ape::corPagel(1,phy=tree,fixed=F)
-        mod.0 <- nlme::gls(resp~variab, data=c.data,method="ML",correlation=cor.0,na.action=na.omit)
+        mod.0 <- nlme::gls(respV~predV, data=c.data,method="ML",correlation=cor.0,na.action=na.omit)
       }
 
 
