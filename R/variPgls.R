@@ -8,21 +8,23 @@
 #' @aliases variPgls
 #' @param resp Numeric vector containing the response variable
 #' @param pred Vector containing the predictor variable
-#' @param vari.col Vector containing the standard error, the standard deviation or the min-max of \code{pred}
+#' @param vari.pred Vector containing the standard error, the standard deviation or the minimum and maximum (list(min,max)) of \code{pred}
+#' When information is not available for one species, the value can be 0 or \code{NA}
 #' @param tree A tree or list of tree of class \code{Phylo} or \code{multiPhylo}
 #' @param ntree If TRUE or class(tree)=multiPhylo, the number of times to repeat the analysis with n different
 #' trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1
 #' @param npred If TRUE, the number of times to repeat the analysis generating a random value in the interval
-#' [\code{pred}-\code{vari.col},\code{pred}+\code{vari.col}]. If NULL, \code{npred} = 1
+#' [\code{pred}-\code{vari.pred},\code{pred}+\code{vari.pred}]. If NULL, \code{npred} = 1
 #' @param method A character string indicating which method to use to generate a random value in the interval
-#' [\code{pred} - \code{vari.col}, \code{pred} + \code{vari.col}]. Default is normal distribution: "normal"
-#' (function \code{\link{rnorm}}), uniform distribution is "uniform" (\code{\link{runif}})
-#' @param taxa.col A character vector of taxa names that will be used to match data rows to phylogeny tips.
+#' [\code{pred} - \code{vari.pred}, \code{pred} + \code{vari.pred}]. Default is uniform distribution: "uniform"
+#' (function \code{\link{rnorm}}), normal distribution is "normal" (\code{\link{runif}})
+#' Warning: normal distribution can be used oly if vari.pred is the standard deviation of the mean.
+#' @param taxa.nam A character vector of taxa names that will be used to match data rows to phylogeny tips.
 #' @param lambda A value for the lambda transformation. If NULL, \code{lambda}="ML"
 #' Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}
 #' @details This functions only works for simple linear regression \eqn{y = bx +
 #' a}. Future implementation will deal with more complex models.
-#' If you log-transform your predictor variable, make sure that your vari.col is in a log-scale too or use ##### function
+#' If you log-transform your predictor variable, make sure that your vari.pred is in a log-scale too or use ##### function
 #' to build your input data.
 #' @return The function \code{variPgls} returns a list with the following components:
 #' @return \code{model_results} Model parameters for each iteration
@@ -48,7 +50,7 @@
 #' # Including Species names
 #' sp <- tree$tip.label
 #' # variPgls analysis
-#' variPgls(resp=Ly,pred=Lx$xmean,vari.col=Lx$xse,tree,npred=2,method="normal",taxa.col=sp)
+#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree,npred=2,method="normal",taxa.nam=sp)
 #'
 #' # Example with a set of trees of class multiphylo
 #' N <- 100 # Number of species in the trees
@@ -60,10 +62,10 @@
 #' # Including Species names
 #' sp <- multitree[[1]]$tip.label
 #' # variPgls analysis
-#' variPgls(resp=Ly,pred=Lx$xmean,vari.col=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.col=sp)
+#' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.nam=sp)
 #' @export
 
-variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method="normal",lambda="ML"){
+variPgls <- function(resp,pred,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method="normal",lambda="ML"){
 
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
@@ -91,13 +93,13 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
 
   #Match data and phylogeny in comparative.data style
   tiplabl<-tree1$tip.label
-  spnames<-as.data.frame(taxa.col)
+  spnames<-as.data.frame(taxa.nam)
   
-  in.both <- intersect(taxa.col, tiplabl)
+  in.both <- intersect(taxa.nam, tiplabl)
   if (length(in.both) == 0) 
     stop("No tips are common to the dataset and phylogeny")
   
-  mismatch<-union(setdiff(tiplabl,taxa.col),setdiff(taxa.col,tiplabl))
+  mismatch<-union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
   if (length(mismatch) != 0)   warning("Phylogeny tips not not match the species list,
   species were dropped from phylogeny or species list")
   
@@ -106,9 +108,9 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
   class(tree)<-"multiPhylo"
 
   #Assemble the dataframe and drop species if needed
-  if(!inherits(pred, c("numeric","integer")) || !exists("vari.col")) {data<-data.frame(taxa.col,resp,pred)}
-  else {data<-data.frame(taxa.col,resp,pred,vari.col)
-        data<-data[!taxa.col %in% as.factor(mismatch), ]}
+  if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred")) {data<-data.frame(taxa.nam,resp,pred)}
+  else {data<-data.frame(taxa.nam,resp,pred,vari.pred)
+        data<-data[!taxa.nam %in% as.factor(mismatch), ]}
   
     #NA's check
   if (sum(is.na(resp))!=0 | sum(is.na(pred))!=0)
@@ -117,15 +119,15 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
      warning("NA's in response or predictor were removed")}
   else
   
-    #transform NA's in SE column into zeros##############
-  data<-  
+    #transform NA's in SE column into zeros
+  data[is.na(data)] <- 0
   
   if(inherits(tree, "multiPhylo")){  
     tree1<-tree[[1]]}
   else
     tree1<-tree
   
-  rownames(data)<-data$taxa.col
+  rownames(data)<-data$taxa.nam
   tip.order <- match(tree1$tip.label, rownames(data))
   if (any(is.na(tip.order))) 
     stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")  
@@ -133,8 +135,9 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
   rownames(data) <- tree1$tip.label
   
   #Function to pick a random value in the interval
-  if (method=="uniform") funr <- function(a, b) {runif(1,a-b,a+b)}
-  else funr <- function(a, b) {rnorm(1,a,b)}
+  if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)}
+      warning("With method=normal vari.pred must be the standard deviation of pred")
+  else  funr <- function(a,b,c) {runif(1,a-b,a+c)}
 
   # If the class of tree is multiphylo pick n=ntree random trees
   if(inherits(tree, "multiPhylo")){trees<-sample(length(tree),ntree,replace=F)}
@@ -153,10 +156,10 @@ variPgls <- function(resp,pred,vari.col=NA,taxa.col,tree,ntree=1,npred=1,method=
     for (j in trees){
       tryCatch({
 
-      #choose a random value in [mean-sd,mean+sd]
-      if(!inherits(pred, c("numeric","integer")) || !exists("vari.col")) {data$variab<-data$pred}
-      else {data$variab<-apply(data[,c("pred","vari.col")],1,function(x)funr(x["pred"],x["vari.col"]))}
-
+      #choose a random value in [mean-se,mean+se] if vari.pred is provided
+      if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred")) {data$variab<-data$pred}
+      if(is.list(vari.pred){data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"][1],x["vari.pred"][2]))}
+      else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
       c.data[[i]]<-data.frame(data)
 
       #comparative data creation if tree is class=multiphylo
