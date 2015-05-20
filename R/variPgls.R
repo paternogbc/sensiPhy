@@ -65,7 +65,7 @@
 #' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,npred=2,method="normal",taxa.nam=sp)
 #' @export
 
-variPgls <- function(resp,pred,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method="normal",lambda="ML"){
+variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method="normal",lambda="ML"){
 
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
@@ -108,18 +108,26 @@ variPgls <- function(resp,pred,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method
   class(tree)<-"multiPhylo"
 
   #Assemble the dataframe and drop species if needed
-  if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred")) {data<-data.frame(taxa.nam,resp,pred)}
-  else {data<-data.frame(taxa.nam,resp,pred,vari.pred)
-        data<-data[!taxa.nam %in% as.factor(mismatch), ]}
+  data<-data.frame(taxa.nam,resp,pred)
   
-    #NA's check
-  if (sum(is.na(resp))!=0 | sum(is.na(pred))!=0)
-    {data<-data[!is.na(data$resp,)]
-     data<-data[!is.na(data$pred,)]
-     warning("NA's in response or predictor were removed")}
+      #Rename names vari.resp and vari.pred columns if 2 columns are provided (min and max case)
+      if(exists("vari.resp") && !is.null(dim(vari.resp))){colnames(vari.resp)<-c("resp.min","resp.max")}
+      if(exists("vari.pred") && !is.null(dim(vari.pred))){colnames(vari.pred)<-c("pred.min","pred.max")}
+  
+  if(exists("vari.resp")) {data<-cbind(data,vari.resp)}
+  if(exists("vari.pred")){data<-cbind(data,vari.pred)}
+  else
+  data<-data[!taxa.nam %in% as.factor(mismatch), ]
+
+
+  #NA's check
+  if (sum(is.na(resp))!=0 || sum(is.na(pred))!=0)
+    {data<-data[!is.na(data$resp),]
+     data<-data[!is.na(data$pred),]
+     warning("NA's in response or predictor, row with NA's were removed")}
   else
   
-    #transform NA's in SE column into zeros
+  #transform NA's in SE columns into zeros
   data[is.na(data)] <- 0
   
   if(inherits(tree, "multiPhylo")){  
@@ -156,10 +164,19 @@ variPgls <- function(resp,pred,vari.pred=NA,taxa.nam,tree,ntree=1,npred=1,method
     for (j in trees){
       tryCatch({
 
+      #choose a random value in [mean-se,mean+se] if vari.resp is provided
+      if(!inherits(pred, c("numeric","integer")) || !exists("vari.resp")) {data$variab<-data$pred}
+      
+      ####################HERE change
+      if(is.list(vari.pred){data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"][1],x["vari.pred"][2]))}
+      else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
+
       #choose a random value in [mean-se,mean+se] if vari.pred is provided
       if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred")) {data$variab<-data$pred}
       if(is.list(vari.pred){data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"][1],x["vari.pred"][2]))}
-      else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
+         else {data$variab<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x["pred"],x["vari.pred"],x["vari.pred"]))}
+         
+      
       c.data[[i]]<-data.frame(data)
 
       #comparative data creation if tree is class=multiphylo
