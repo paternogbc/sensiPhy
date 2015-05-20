@@ -148,8 +148,8 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
   rownames(data) <- tree1$tip.label
   
   #Function to pick a random value in the interval
-  if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)}
-      warning("With method=normal vari.pred must be the standard deviation of pred")
+  if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)
+      warning("With method=normal vari.pred must be the standard deviation of pred")}
   else  funr <- function(a,b) {runif(1,a-b,a+b)}
 
   # If the class of tree is multiphylo pick n=ntree random trees
