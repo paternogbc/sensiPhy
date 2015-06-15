@@ -26,7 +26,7 @@
 #' @return \code{data} Original dataset
 #' @return \code{errors} Species that showed erros during pgls fit
 #' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{caper::pgls}}, \code{\link{samp_pgls}}
+#' @seealso \code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
 #' @export
 
 influ_pgls <- function(formula,data,phy)
