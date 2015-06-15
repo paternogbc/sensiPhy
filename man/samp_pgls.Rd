@@ -57,6 +57,6 @@ samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird
 sensi_plot(samp1)
 }
 \seealso{
-\code{\link{pgls}}, \code{\link{influ_gls}}
+\code{\link[caper]{pgls}}, \code{\link{influ_pgls}}
 }
 

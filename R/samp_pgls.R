@@ -21,7 +21,7 @@
 #' @return \code{power_analysis} A data frame with power analysis
 #' @return \code{data} Original dataset
 #' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link{pgls}}, \code{\link{influ_gls}}
+#' @seealso \code{\link[caper]{pgls}}, \code{\link{influ_pgls}}
 #' @examples
 #' library(caper);library(ggplot2);library(gridExtra);library(sensiC)
 #' data(shorebird)

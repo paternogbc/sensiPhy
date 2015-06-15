@@ -18,6 +18,6 @@ Imports:
     ape,
     nlme,
     dplyr,
-	phylolm
+    phylolm
 Suggests: knitr
 VignetteBuilder: knitr
