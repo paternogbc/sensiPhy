@@ -31,8 +31,6 @@ sensi_plot <- function(x,graphs="all"){
                     result$beta.class =
                             with(result, factor(beta.class,
                                         levels = rev(levels(result$beta.class))))
-                    .e <- environment()
-
                     ## Graphs: Estimated betas ~ % species removed
                     if(length(levels(result$beta.class)) == 3){
                             col = c("skyblue","orange","red2")
@@ -44,7 +42,9 @@ sensi_plot <- function(x,graphs="all"){
                             col = c("skyblue")
                     }
 
-                    p1 <- ggplot2::ggplot(result,aes(y=beta,x=n.percents,colour=beta.class))+
+                    p1 <- ggplot2::ggplot(result,aes(y=beta,x=n.percents,
+                                                     colour=beta.class),
+                                                     environment = environment())+
 
                             geom_point(size=4,position = "jitter",alpha=.5)+
                             scale_x_continuous(breaks=result$n.percents)+
@@ -76,7 +76,8 @@ sensi_plot <- function(x,graphs="all"){
                     ## Power Analysis: p.value
 
                     p4 <-ggplot2::ggplot(power.tab,
-                                         aes(y=power.beta,x=percent_sp_removed))+
+                                         aes(y=power.beta,x=percent_sp_removed),
+                                             environment = environment())+
                               scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
                               scale_x_continuous(breaks=result$n.percents)+
                               xlab("% Species removed")+
@@ -103,7 +104,9 @@ sensi_plot <- function(x,graphs="all"){
                     }
 
                     p2 <- ggplot(beta.tab,
-                                 aes(y=proportion,x=n.percents,fill=factor(beta.class)))+
+                                 aes(y=proportion,x=n.percents,
+                                     fill=factor(beta.class)),
+                                     environment = environment())+
                             geom_bar(stat="identity",alpha=.5)+
                             scale_fill_manual(values=col,name="Change in beta")+
                             scale_y_continuous(limits=c(0,1),breaks=seq(0,1,.1))+
@@ -125,7 +128,8 @@ sensi_plot <- function(x,graphs="all"){
                     m.DFbetas <- dplyr::summarise(dplyr::group_by(result,n.percents),
                                             mDFbetas = mean(abs(DFbeta)),
                                             sd = as.numeric(sd(abs(DFbeta))))
-                    p3 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents))+
+                    p3 <- ggplot(m.DFbetas,aes(y=mDFbetas,x=n.percents),
+                                               environment = environment())+
                             geom_point(size=5,colour="red",alpha=.6)+
                             geom_errorbar(aes(ymin=mDFbetas-sd, ymax=mDFbetas+sd),
                                           colour="red", width=.8)+
@@ -161,7 +165,7 @@ sensi_plot <- function(x,graphs="all"){
 
           if  (x[[1]] == "influ_pgls")    {
 
-                    .e <- environment()
+
                     result <- x[[5]]
                     vars <- all.vars(x[[2]])
                     vars2 <- gsub("list","",attr(terms(x[[2]]),"variables"))[-1]
@@ -169,7 +173,8 @@ sensi_plot <- function(x,graphs="all"){
                     beta.0 <-  as.numeric(x[[3]][2])
 
                     # Distribution of estimated betas:
-                    p1 <- ggplot2::ggplot(result,aes(x=beta,y=..density..),environment=.e)+
+                    p1 <- ggplot2::ggplot(result,aes(x=beta,y=..density..),
+                                                     environment = environment())+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = beta.0,color="red",linetype=2,size=.7)+
@@ -177,7 +182,8 @@ sensi_plot <- function(x,graphs="all"){
                             theme(axis.text = element_text(size=14),
                                   axis.title = element_text(size=16))
                     # Distribution of estimated intercepts:
-                    p2 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..),environment=.e)+
+                    p2 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..),
+                                                     environment = environment())+
                               geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                               geom_density(size=.2) +
                               geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
@@ -194,7 +200,8 @@ sensi_plot <- function(x,graphs="all"){
                     # Influential points for beta estimation:
                     p3<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
                                                        eval(parse(text=vars2[1])),
-                                                       colour=abs(sDFbeta)),environment=.e)+
+                                                       colour=abs(sDFbeta)),
+                                                       environment = environment())+
                             geom_point(size=3,alpha=.8)+
                             scale_colour_gradient( low="black",high="red",name="")+
                             theme(legend.key.width = unit(.2,"cm"),
@@ -209,7 +216,8 @@ sensi_plot <- function(x,graphs="all"){
                                   axis.title = element_text(size=16))
 
                     # Statistically influential points for beta estimate
-                    p4 <- ggplot2::ggplot(result,aes(x=sDFbeta),environment=.e)+
+                    p4 <- ggplot2::ggplot(result,aes(x=sDFbeta),
+                                                     environment = environment())+
                             geom_histogram(fill="red",color="black",binwidth=.5) +
                             xlab("Standardized Difference in Beta")+
                             geom_histogram(data=subset(result,sDFbeta<2&sDFbeta>-2),
