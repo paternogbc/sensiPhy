@@ -49,6 +49,6 @@ This functions only works for simple linear regression \eqn{y = bx +
  This code is note fully checked. Please be aware.
 }
 \seealso{
-\code{\link{caper::pgls}}, \code{\link{samp_pgls}}
+\code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
 }
 

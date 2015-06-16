@@ -48,13 +48,14 @@ This functions only works for simple linear regression \eqn{y = bx +
  This code is note fully checked. Please be aware.
 }
 \examples{
-library(caper);library(ggplot2);library(gridExtra);library(sensiC)
+\dontrun{
+library(caper);library(sensiC)
 data(shorebird)
 comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
 sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
 shorebird.data <- shorebird.data[sp.ord,]
 samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
-sensi_plot(samp1)
+}
 }
 \seealso{
 \code{\link[caper]{pgls}}, \code{\link{influ_pgls}}
