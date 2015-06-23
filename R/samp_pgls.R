@@ -20,7 +20,6 @@
 #' @return \code{results} A data frame with all simulation estimates.
 #' @return \code{power_analysis} A data frame with power analysis
 #' @return \code{data} Original dataset
-#' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link[caper]{pgls}}, \code{\link{influ_pgls}}
 #' @examples
 #' \dontrun{
