@@ -40,7 +40,7 @@
 #' @export
 
 
-samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50)
+samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50,...)
 {
         ### Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be
@@ -61,9 +61,9 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         N <- nrow(c.data)
 
         mod.0 <- phylolm::phyloglm(formula, data=c.data,
-                                   phy=phy,method="logistic_MPLE",btol=btol)
+                                   phy=phy,method="logistic_MPLE",btol=btol,...)
         if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
-        #The above line checks if the null model converges, and if not terminates with a (somewhat unhelpful) suggsetion.
+        #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
         else
 
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
@@ -92,7 +92,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
 
                         mod=try(phylolm::phyloglm(formula, data=crop.data,
-                                                  phy=crop.phy,method="logistic_MPLE",btol=btol),TRUE)
+                                                  phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
                         else {
                                 ### Calculating model estimates:
