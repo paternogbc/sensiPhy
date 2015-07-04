@@ -34,8 +34,7 @@
 #' @export
 
 
-samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
-                      ...)
+samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1))
 {
         ### Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be
@@ -48,22 +47,22 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
 
         if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
                                                       in data and phy")
-        if ((model == "trend") & (is.ultrametric(phy)))
-                stop("the trend is unidentifiable for ultrametric trees.")
         else
 
-        formula=log(Egg.Mass) ~ log(M.Mass);data=bird.comp$data;phy=bird.comp$phy;
-        times= 100; breaks=c(0.1,.2,.3,.4,.5,.6,.7);model="lambda"
-        # FULL MODEL calculations:
-        c.data <- data
+                # Fiting FULL model:
+                c.data <- data
         N <- nrow(c.data)
-        mod.0 <- phylolm::phylolm(formula, data=c.data,model=model,phy=phy)
+        cor.0 <- ape::corPagel(1,phy=phy,fixed=F)
+        mod.0 <- nlme::gls(formula, data=c.data,method="ML",correlation=cor.0)
+        sumMod <- as.data.frame(summary(mod.0)$tTable)
+        names(mod.0)
 
-        a.0 <- mod.0$coefficients[[1]]             # Intercept (full model)
-        b.0 <- mod.0$coefficients[[2]]             # Beta (full model)
-        p.val.a0 <-    summary(mod.0)[2][[1]][1,4] # p.value (intercept)
-        p.val.b0 <-    summary(mod.0)[2][[1]][2,4] # p.value (slope)
-        optpar.0 <- mod.0$optpar
+        # Full model estimates
+        a.0 <-           sumMod[1,1]            # Intercept (full model)
+        b.0 <-           sumMod[2,1]            # Beta (full model)
+        p.val.a0 <-    anova(mod.0)[1,3]        # p.value (intercept)
+        p.val.b0 <-    anova(mod.0)[2,3]        # p.value (beta)
+        lambda.0 <-      as.numeric(mod.0$model)# Estimated lambda
 
         #Create the results data.frame
         results<-data.frame("n.removs" =numeric(), "n.percents"=numeric(),
@@ -72,7 +71,7 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                             "beta"=numeric(),"DFbeta"=numeric(),
                             "beta.change"=numeric(),"pval.intercept"=numeric(),
                             "pval.beta"=numeric(),"AIC"=numeric(),
-                            "optpar"=numeric())
+                            "Lambda"=numeric())
 
         # Loop:
         counter=1
@@ -82,27 +81,28 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                         exclude <- sample(1:N,i)
                         crop.data <- c.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
+                        crop.cor <- ape::corPagel(1,phy=crop.phy,fixed=F)
 
-                        mod=try(phylolm::phylolm(formula, data=crop.data,model=model,phy=crop.phy),TRUE)
+                        mod=try(nlme::gls(formula, data=crop.data,
+                                          correlation=crop.cor,method="ML"),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
                         else {
-                                ### Calculating model estimates
-                                a <-    mod$coefficients[[1]]          # Intercept (crop model)
-                                b <-    mod$coefficients[[2]]       # Beta (crop model)
+                                ### Calculating model estimates:
+                                sumMod.crop <- as.data.frame(summary(mod)$tTable)
+
+                                a <-    sumMod.crop[1,1]       # Intercept (crop model)
+                                b <-    sumMod.crop[2,1]       # Beta (crop model)
                                 DFa <- a - a.0                 # DF intercept
                                 DFb <- b - b.0                 # DF beta
                                 a.change <- round((abs(DFa/a.0))*100,digits=1)  # Percentage of intercept change
                                 b.change <- round((abs(DFb/b.0))*100,digits=1)  # Percentage of beta change
-                                pval.a <-    summary(mod)[2][[1]][1,4]        # p.value (intercept)
-                                pval.b <-    summary(mod)[2][[1]][2,4]     # p.value (beta)
+                                pval.a <-    anova(mod)[1,3]        # p.value (intercept)
+                                pval.b <-    anova(mod)[2,3]        # p.value (beta)
                                 aic.mod <-   AIC(mod)            # Model AIC
-                                optpar <-    mod$optpar# Estimated lambda
+                                lambda <-    as.numeric(mod$model)# Estimated lambda
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
-                                print(paste("Species removed= ",i,sep=""));
-                                print(paste("Repetition= ",j,""));
-
 
                                 ### Storing values for each simulation
                                 #write in a table
@@ -117,7 +117,7 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                                 results[counter,9]<- pval.a
                                 results[counter,10]<- pval.b
                                 results[counter,11]<- aic.mod
-                                results[counter,12]<- optpar
+                                results[counter,12]<- lambda
 
 
                                 counter=counter+1
