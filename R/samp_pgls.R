@@ -52,8 +52,6 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                 stop("the trend is unidentifiable for ultrametric trees.")
         else
 
-        formula=log(Egg.Mass) ~ log(M.Mass);data=bird.comp$data;phy=bird.comp$phy;
-        times= 100; breaks=c(0.1,.2,.3,.4,.5,.6,.7);model="lambda"
         # FULL MODEL calculations:
         c.data <- data
         N <- nrow(c.data)
