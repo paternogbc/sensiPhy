@@ -56,12 +56,12 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
         c.data <- data
         N <- nrow(c.data)
         mod.0 <- phylolm::phylolm(formula, data=c.data,model=model,phy=phy)
-
         a.0 <- mod.0$coefficients[[1]]             # Intercept (full model)
         b.0 <- mod.0$coefficients[[2]]             # Beta (full model)
-        p.val.a0 <-    summary(mod.0)[2][[1]][1,4] # p.value (intercept)
-        p.val.b0 <-    summary(mod.0)[2][[1]][2,4] # p.value (slope)
+        p.val.a0 <-    phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
+        p.val.b0 <-    phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
         optpar.0 <- mod.0$optpar
+        aic.0    <-mod.0$aic
 
         #Create the results data.frame
         results<-data.frame("n.removs" =numeric(), "n.percents"=numeric(),
@@ -91,9 +91,9 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                                 DFb <- b - b.0                 # DF beta
                                 a.change <- round((abs(DFa/a.0))*100,digits=1)  # Percentage of intercept change
                                 b.change <- round((abs(DFb/b.0))*100,digits=1)  # Percentage of beta change
-                                pval.a <-    summary(mod)[2][[1]][1,4]        # p.value (intercept)
-                                pval.b <-    summary(mod)[2][[1]][2,4]     # p.value (beta)
-                                aic.mod <-   AIC(mod)            # Model AIC
+                                pval.a <-    phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
+                                pval.b <-    phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
+                                aic.mod <-   mod$aic           # Model AIC
                                 optpar <-    mod$optpar# Estimated lambda
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
