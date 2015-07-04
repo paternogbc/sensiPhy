@@ -33,6 +33,8 @@
 #' }
 #' @export
 
+formula=Egg.Mass ~ M.Mass;data=bird.comp$data;phy=bird.comp$phy;
+times= 200; breaks=c(.8,.9);model="lambda";
 
 samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
                       ...)
@@ -91,8 +93,8 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                                 DFb <- b - b.0                 # DF beta
                                 a.change <- round((abs(DFa/a.0))*100,digits=1)  # Percentage of intercept change
                                 b.change <- round((abs(DFb/b.0))*100,digits=1)  # Percentage of beta change
-                                pval.a <-    phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
-                                pval.b <-    phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
+                                pval.a <-    phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
+                                pval.b <-    phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value (slope)
                                 aic.mod <-   mod$aic           # Model AIC
                                 optpar <-    mod$optpar# Estimated lambda
                                 n.remov <- i
