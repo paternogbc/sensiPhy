@@ -139,12 +139,12 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         res$sign.slope          <- sign.slope
         perc.sign.intercept     <- 1-(with(res,tapply(sign.intercept,n.remov,sum)))/times
         perc.sign.slope         <- 1-(with(res,tapply(sign.slope,n.remov,sum)))/times
-        perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
-                                perc.sign.intercept=as.numeric(perc.sign.intercept),
-                                perc.sign.slope=as.numeric(perc.sign.slope))
+        perc.sign.tab           <- data.frame(percent_sp_removed=breaks,
+                                        perc.sign.intercept=as.numeric(perc.sign.intercept),
+                                        perc.sign.slope=as.numeric(perc.sign.slope))
 
         #Summary of all full model details for output
-        param0<-list(coef=summary(mod.0)$coefficients,aic=summary(mod.0)$aic,optpar=summary(mod.0)$optpar)
+        param0<-list(coef=summary(mod.0)$coefficients,aic=summary(mod.0)$aic,optpar=summary(mod.0)$alpha)
 
         # Function output:
         return(list(analyis.type = "samp_phyloglm",
