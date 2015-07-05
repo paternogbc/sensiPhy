@@ -29,7 +29,7 @@
 #' @seealso \code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
 #' @export
 
-influ_pgls <- function(formula,data,phy,model="lambda",cutoff=2,...)
+influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
 {
         # Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be class
