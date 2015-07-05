@@ -47,31 +47,35 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                         names(error) <- rownames(full.data$data)[i]
                         errors <- c(errors,error)
                         next }
+                else {
+                        ### Extracting model estimates:
 
-
-
-
-        else {
-
-                        ### Calculating model estimates:
-                        intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
-                        beta <-    mod$coefficients[[2]]            # Beta (crop model)
-                        alpha <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
-                        pval <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
-                        DFbeta <- beta - beta.0
-                        DFint  <- intercept - intercept.0
-                        sp <- phy$tip.label[i]
-                        pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                        alpha<-mod$alpha
+                        sp                   <- phy$tip.label[i]      # species removed
+                        intercept            <- mod$coefficients[[1]] # Intercept (crop model)
+                        slope                <- mod$coefficients[[2]] # Beta (crop model)
+                        DFintercept          <- intercept - intercept.0 # DF intercept
+                        DFslope              <- slope - slope.0 # DF beta
+                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
+                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
+                        pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
+                        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
+                        aic.mod              <- mod$aic # Model AIC
+                        optpar               <- mod$alpha
+                        print(i)
 
                         ### Storing values for each simulation
-                        betas <- c(betas,beta)
-                        intercepts <- c(intercepts,intercept)
-                        DFbetas <- c(DFbetas,DFbeta)
-                        DFintercepts <- c(DFintercepts,DFint)
-                        species <- c(species,sp)
-                        p.values <- c( p.values,pval)
-                        print(i)
+                        influ.model.estimates[counter,1]  <- sp
+                        influ.model.estimates[counter,2]  <- intercept
+                        influ.model.estimates[counter,3]  <- DFintercept
+                        influ.model.estimates[counter,4]  <- intercept.perc
+                        influ.model.estimates[counter,5]  <- pval.intercept
+                        influ.model.estimates[counter,6]  <- slope
+                        influ.model.estimates[counter,7]  <- DFslope
+                        influ.model.estimates[counter,8]  <- slope.perc
+                        influ.model.estimates[counter,9]  <- pval.slope
+                        influ.model.estimates[counter,10] <- aic.mod
+                        influ.model.estimates[counter,11] <- optpar
+                        counter=counter+1
                 }
         }
 
