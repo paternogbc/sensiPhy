@@ -29,7 +29,7 @@
 #' @seealso \code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
 #' @export
 
-influ_pgls <- function(formula,data,phy,model="lambda",cutoff=2,...)
+influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
 {
         # Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be class
@@ -46,14 +46,14 @@ influ_pgls <- function(formula,data,phy,model="lambda",cutoff=2,...)
 
         # FULL MODEL calculations:
         full.data <- data
-        N <- nrow(full.data)
-        mod.0 <- phylolm::phylolm(formula, data=full.data,model=model,phy=phy)
+        N         <- nrow(full.data)
+        mod.0     <- phylolm::phylolm(formula, data=full.data,model=model,phy=phy)
 
-        intercept.0 <- mod.0$coefficients[[1]]             # Intercept (full model)
-        slope.0 <- mod.0$coefficients[[2]]             # Beta (full model)
+        intercept.0      <- mod.0$coefficients[[1]]             # Intercept (full model)
+        slope.0          <- mod.0$coefficients[[2]]             # Beta (full model)
         pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
-        pval.slope.0 <-     phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
-        optpar.0 <- mod.0$optpar
+        pval.slope.0     <-     phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
+        optpar.0         <- mod.0$optpar
 
         #Create the influ.model.estimates data.frame
         influ.model.estimates<-data.frame("species" =numeric(), "intercept"=numeric(),
@@ -80,43 +80,41 @@ influ_pgls <- function(formula,data,phy,model="lambda",cutoff=2,...)
                 else {
                         ### Calculating model estimates:
 
-                        sp <- phy$tip.label[i]         # species removed
-                        intercept <-    mod$coefficients[[1]]          # Intercept (crop model)
-                        slope <-    mod$coefficients[[2]]       # Beta (crop model)
-                        DFintercept <- intercept - intercept.0                 # DF intercept
-                        DFslope <- slope - slope.0                 # DF beta
-                        intercept.perc <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
-                        slope.perc <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
-                        pval.intercept <-    phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
-                        pval.slope <-    phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value
-                        aic.mod <-   mod$aic            # Model AIC
-                        optpar <-    mod$optpar# Estimated lambda
+                        sp                   <- phy$tip.label[i]      # species removed
+                        intercept            <- mod$coefficients[[1]] # Intercept (crop model)
+                        slope                <- mod$coefficients[[2]] # Beta (crop model)
+                        DFintercept          <- intercept - intercept.0 # DF intercept
+                        DFslope              <- slope - slope.0 # DF beta
+                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
+                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
+                        pval.intercept       <- phylolm::summary.phylolm(mod.)$coefficients[[1,4]] # p.value (intercept)
+                        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
+                        aic.mod              <- mod$aic # Model AIC
+                        optpar               <- mod$optpar# Estimated lambda
                         print(i)
 
                         ### Storing values for each simulation
-                        #write in a table
-                        influ.model.estimates[counter,1]<- sp
-                        influ.model.estimates[counter,2]<- intercept
-                        influ.model.estimates[counter,3]<- DFintercept
-                        influ.model.estimates[counter,4]<- intercept.perc
-                        influ.model.estimates[counter,5]<- pval.intercept
-                        influ.model.estimates[counter,6]<- slope
-                        influ.model.estimates[counter,7]<- DFslope
-                        influ.model.estimates[counter,8]<- slope.perc
-                        influ.model.estimates[counter,9]<- pval.slope
-                        influ.model.estimates[counter,10]<- aic.mod
-                        influ.model.estimates[counter,11]<- optpar
-
+                        influ.model.estimates[counter,1]  <- sp
+                        influ.model.estimates[counter,2]  <- intercept
+                        influ.model.estimates[counter,3]  <- DFintercept
+                        influ.model.estimates[counter,4]  <- intercept.perc
+                        influ.model.estimates[counter,5]  <- pval.intercept
+                        influ.model.estimates[counter,6]  <- slope
+                        influ.model.estimates[counter,7]  <- DFslope
+                        influ.model.estimates[counter,8]  <- slope.perc
+                        influ.model.estimates[counter,9]  <- pval.slope
+                        influ.model.estimates[counter,10] <- aic.mod
+                        influ.model.estimates[counter,11] <- optpar
                         counter=counter+1
                 }
         }
 
         ### Calculating Standardized DFbeta and DFintercept
         sDFintercept <- influ.model.estimates$DFintercept/sd(influ.model.estimates$DFintercept)
-        sDFslope <- influ.model.estimates$DFslope/sd(influ.model.estimates$DFslope)
+        sDFslope     <- influ.model.estimates$DFslope/sd(influ.model.estimates$DFslope)
 
 
-        influ.model.estimates$sDFslope <- sDFslope;
+        influ.model.estimates$sDFslope     <- sDFslope;
         influ.model.estimates$sDFintercept <- sDFintercept
 
         ### Original model estimates:
@@ -129,7 +127,7 @@ influ_pgls <- function(formula,data,phy,model="lambda",cutoff=2,...)
         influ.sp.b <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
 
         ### Output:
-        res <- list(analysis.type="influ_pgls",
+        res <- list(analysis.type="influ_phylolm",
              formula=formula,
              full.model.estimates=param0,
              influential.species= influ.sp.b,
