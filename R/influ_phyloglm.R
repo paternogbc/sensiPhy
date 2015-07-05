@@ -32,22 +32,26 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                                                   "pval.slope"=numeric(),"AIC"=numeric(),
                                                   "optpar" = numeric())
 
-        # Loop:
+        #Loop:
+        counter <- 1
+        errors <- NULL
 
-        for (i in 1:nrow(c.data)){
-                exclude <- c(1:nrow(c.data))[-i]
-                crop.data <- c.data[exclude,]
+        for (i in 1:N){
+                crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
+
                 mod=try(phylolm::phyloglm(formula, data=crop.data,
                                           phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
-
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
-                        names(error) <- rownames(c.data$data)[i]
+                        names(error) <- rownames(full.data$data)[i]
                         errors <- c(errors,error)
                         next }
 
-                else {
+
+
+
+        else {
 
                         ### Calculating model estimates:
                         intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
