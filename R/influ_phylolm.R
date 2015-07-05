@@ -120,7 +120,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
         ### Original model estimates:
         param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                        aic=phylolm::summary.phylolm(mod.0)$aic,
-                       optpar=phylolm::summary.phylolm(mod.0)$optpar)
+                       optpar=mod.0$optpar)
 
 
         ### Statistically Influential species for Beta (sDFbetas > cutoff)
