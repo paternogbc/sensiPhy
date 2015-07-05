@@ -55,14 +55,13 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         else
 
         # FULL MODEL calculations:
-
         full.data <- data
         N <- nrow(full.data)
 
         mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
-        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
-        #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
+        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol. See ?phyloglm")
+        #The above line checks if the null model converges, and if not terminates with the suggestion to change btol.
         else
 
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
