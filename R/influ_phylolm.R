@@ -131,7 +131,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
         ### Original model estimates:
         param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                        aic=phylolm::summary.phylolm(mod.0)$aic,
-                       optpar=phylolm::summary.phylolm(mod.0)$optpar)
+                       optpar=mod.0$optpar)
 
        ### Influential species (i.e. sDF > cutoff) for intercept & slope.
        reorder.on.slope        <-influ.model.estimates[order(abs(influ.model.estimates$sDFslope),decreasing=T),c("species","sDFslope")]
