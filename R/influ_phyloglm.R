@@ -1,26 +1,6 @@
 #' Leave-one-out-deletion analysis for gls phylogenetic regression. (GW: Make helpfile still!)
 
-#' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
-#' data(shorebird)
-#  #First, we need to match tip.labels with rownames in data:
-#' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-#' shorebird.data <- shorebird.data[sp.ord,]
-#' #Create a binary variable (large egg / small egg), for illustration purposes.
-#' mean(shorebird.data$Egg.Mass)
-#' shorebird.data$Egg.Mass.binary<-ifelse(shorebird.data$Egg.Mass>30,1,0) #Turn egg mass into a binary variable
-#' table(shorebird.data$Egg.Mass.binary) #Mostly small eggs.
-#' # Now we can run the function influ_phyloglm:
-#' influ_phyloglm<-influ_phyloglm(formula = Egg.Mass.binary~M.Mass,data = shorebird.data,phy=shorebird.tree,btol = 50)
-#' # Estimated parameters:
-#' head(influ_phyloglm$results)
-#' # Most influential species:
-#' influ_phyloglm$influential_species
-#' # Check for species with errors:
-#' influ_phyloglm$errors
-#' @export
-
-
-influ_phyloglm <- function(formula,data,phy,btol=50,...)
+influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
 {
         # Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be class
@@ -34,102 +14,103 @@ influ_phyloglm <- function(formula,data,phy,btol=50,...)
         else
 
         # FULL MODEL calculations:
-
-        c.data <- data
-        N <- nrow(c.data)
-
-        mod.0 <- phylolm::phyloglm(formula, data=c.data,
+        full.data <- data
+        N         <- nrow(full.data)
+        mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
-        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
-        #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
+        intercept.0      <- mod.0$coefficients[[1]]             # Intercept (full model)
+        slope.0          <- mod.0$coefficients[[2]]             # Slope (full model)
+        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] # p.value (intercept)
+        pval.slope.0     <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]] # p.value (slope)
+        optpar.0         <- mod.0$alpha
+        if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge, consider changing btol. See ?phyloglm")
         else
+                #Create the influ.model.estimates data.frame
+                influ.model.estimates<-data.frame("species" =numeric(), "intercept"=numeric(),
+                                                  "DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
+                                                  "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),
+                                                  "pval.slope"=numeric(),"AIC"=numeric(),
+                                                  "optpar" = numeric())
 
-        intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
-        beta.0 <-    mod.0$coefficients[[2]]            # Beta (full model)
-        alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
-        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
-        pval.beta.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value beta (full model)
+        #Loop:
+        counter <- 1
+        errors <- NULL
 
-
-
-        # Sampling effort analysis:
-        betas <- as.numeric()
-        intercepts <- as.numeric()
-        DFbetas <- as.numeric()
-        DFintercepts <- as.numeric()
-        DFfits <- as.numeric()
-        p.values <- as.numeric()
-        species <- as.character()
-        errors <- as.numeric()
-        # Loop:
-
-        for (i in 1:nrow(c.data)){
-                exclude <- c(1:nrow(c.data))[-i]
-                crop.data <- c.data[exclude,]
+        for (i in 1:N){
+                crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
+
                 mod=try(phylolm::phyloglm(formula, data=crop.data,
                                           phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
-
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
-                        names(error) <- rownames(c.data$data)[i]
+                        names(error) <- rownames(full.data$data)[i]
                         errors <- c(errors,error)
                         next }
-
-                else {
-
-                        ### Calculating model estimates:
-                        intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
-                        beta <-    mod$coefficients[[2]]            # Beta (crop model)
-                        alpha <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
-                        pval <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
-                        DFbeta <- beta - beta.0
-                        DFint  <- intercept - intercept.0
-                        sp <- phy$tip.label[i]
-                        pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                        alpha<-mod$alpha
+                else {### Extracting model estimates:
+                        sp                   <- phy$tip.label[i]      # species removed
+                        intercept            <- mod$coefficients[[1]] # Intercept (crop model)
+                        slope                <- mod$coefficients[[2]] # Beta (crop model)
+                        DFintercept          <- intercept - intercept.0 # DF intercept
+                        DFslope              <- slope - slope.0 # DF beta
+                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
+                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
+                        pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]] # p.value (intercept)
+                        pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]] # p.value
+                        aic.mod              <- mod$aic # Model AIC
+                        optpar               <- mod$alpha
+                        print(i)
 
                         ### Storing values for each simulation
-                        betas <- c(betas,beta)
-                        intercepts <- c(intercepts,intercept)
-                        DFbetas <- c(DFbetas,DFbeta)
-                        DFintercepts <- c(DFintercepts,DFint)
-                        species <- c(species,sp)
-                        p.values <- c( p.values,pval)
-                        print(i)
+                        influ.model.estimates[counter,1]  <- sp
+                        influ.model.estimates[counter,2]  <- intercept
+                        influ.model.estimates[counter,3]  <- DFintercept
+                        influ.model.estimates[counter,4]  <- intercept.perc
+                        influ.model.estimates[counter,5]  <- pval.intercept
+                        influ.model.estimates[counter,6]  <- slope
+                        influ.model.estimates[counter,7]  <- DFslope
+                        influ.model.estimates[counter,8]  <- slope.perc
+                        influ.model.estimates[counter,9]  <- pval.slope
+                        influ.model.estimates[counter,10] <- aic.mod
+                        influ.model.estimates[counter,11] <- optpar
+                        counter=counter+1
                 }
         }
 
-        sDFbetas <- DFbetas/sd(DFbetas)
-        sDFintercepts <- DFintercepts/sd(DFintercepts)
-        # Dataframe with results:
-        estimates <- data.frame(species,betas,DFbetas,sDFbetas,intercepts,DFintercepts,sDFintercepts,
-                                p.values)
+        ### Calculating Standardized DFbeta and DFintercept
+        sDFintercept <- influ.model.estimates$DFintercept/sd(influ.model.estimates$DFintercept)
+        sDFslope     <- influ.model.estimates$DFslope/sd(influ.model.estimates$DFslope)
 
-        param0 <- data.frame(intercept.0,beta.0)
 
-        ### Statistically Influential species for Beta (sDFbetas > 2)
-        sb.ord <- which(abs(estimates$sDFbetas) > 2)
-        influ.sp.b <- as.character(estimates$species[sb.ord])
+        influ.model.estimates$sDFslope     <- sDFslope;
+        influ.model.estimates$sDFintercept <- sDFintercept
 
-        ### Statistically Influential species for intercept (sDFintercepts > 2)
-        si.ord <- which(abs(estimates$sDFintercepts) > 2)
-        influ.sp.i <- as.character(estimates$species[si.ord])
-        influ.sp.i <- as.character(estimates[order(estimates$DFintercepts,decreasing=T)[1:5],]$species)
-        #Should we add these to the input too? Only first 5?
+        ### Original model estimates:
+        param0 <- list(coef=phylolm::summary.phyloglm(mod.0)$coefficients,
+                       aic=phylolm::summary.phyloglm(mod.0)$aic,
+                       optpar=phylolm::summary.phyloglm(mod.0)$alpha)
 
-        output <- list(errors=errors,formula=formula,
-                       model_estimates=param0,
-                       influential_species= influ.sp.b,
-                       results=estimates,data=c.data)
+        ### Statistically Influential species for Beta (sDFbetas > cutoff)
+        influ.sp.slope <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
+        influ.sp.intercept <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFintercept) > cutoff)])
 
-        if (length(output$errors) >0){
+
+        ### Output:
+        res <- list(analysis.type="influ_phyloglm",
+                    formula=formula,
+                    full.model.estimates=param0,
+                    influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+                    influ.model.estimates=influ.model.estimates,
+                    data=full.data,errors=errors)
+
+        ### Warnings:
+        if (length(res$errors) >0){
                 warning("Some species deletion presented errors, please check: output$errors")}
         else {
-                print("No errors found. All single deletions were performed and stored successfully")
-                output$errors <- "No errors found."
+                message("No errors found. All single deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
+                res$errors <- "No errors found."
         }
 
-        return(output)
+        return(res)
 
 }
