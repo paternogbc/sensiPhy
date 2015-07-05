@@ -20,7 +20,7 @@
 #' @export
 
 
-influ_phyloglm <- function(formula,data,phy,btol=50)
+influ_phyloglm <- function(formula,data,phy,btol=50,...)
 {
         # Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be class
@@ -39,9 +39,9 @@ influ_phyloglm <- function(formula,data,phy,btol=50)
         N <- nrow(c.data)
 
         mod.0 <- phylolm::phyloglm(formula, data=c.data,
-                                   phy=phy,method="logistic_MPLE",btol=btol)
+                                   phy=phy,method="logistic_MPLE",btol=btol,...)
         if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
-        #The above line checks if the null model converges, and if not terminates with a (somewhat unhelpful) suggsetion.
+        #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
         else
 
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
@@ -68,7 +68,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50)
                 crop.data <- c.data[exclude,]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
                 mod=try(phylolm::phyloglm(formula, data=crop.data,
-                                          phy=crop.phy,method="logistic_MPLE",btol=btol),TRUE)
+                                          phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
 
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
@@ -89,7 +89,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50)
                         pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
                         alpha<-mod$alpha
 
-                        ### Storing values for each simulation (add also alpha, p-value intercept?)
+                        ### Storing values for each simulation
                         betas <- c(betas,beta)
                         intercepts <- c(intercepts,intercept)
                         DFbetas <- c(DFbetas,DFbeta)
@@ -115,9 +115,9 @@ influ_phyloglm <- function(formula,data,phy,btol=50)
         ### Statistically Influential species for intercept (sDFintercepts > 2)
         si.ord <- which(abs(estimates$sDFintercepts) > 2)
         influ.sp.i <- as.character(estimates$species[si.ord])
-
-
         influ.sp.i <- as.character(estimates[order(estimates$DFintercepts,decreasing=T)[1:5],]$species)
+        #Should we add these to the input too? Only first 5?
+
         output <- list(errors=errors,formula=formula,
                        model_estimates=param0,
                        influential_species= influ.sp.b,
@@ -126,8 +126,8 @@ influ_phyloglm <- function(formula,data,phy,btol=50)
         if (length(output$errors) >0){
                 warning("Some species deletion presented errors, please check: output$errors")}
         else {
-                print("No erros found. All single deletions were performed and stored successfully")
-                output$errors <- "No erros found."
+                print("No errors found. All single deletions were performed and stored successfully")
+                output$errors <- "No errors found."
         }
 
         return(output)
