@@ -27,6 +27,19 @@
 #' @return \code{errors} Species that showed erros during pgls fit
 #' @section Warning: This code is note fully checked. Please be aware.
 #' @seealso \code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
+#' @examples
+#' \dontrun{
+#' tre = rtree(60)
+#'taxa = sort(tre$tip.label)
+#'b0=10; b1=1;
+#'x <- rTrait(n=1, phy=tre,model="BM",
+#'            parameters=list(ancestral.state=0,sigma2=10))
+#'y <- b0 + b1*x +
+#'        rTrait(n=1,phy=tre,model="lambda",parameters=list(
+#'                ancestral.state=0,sigma2=1,lambda=0.5))
+#'dat = data.frame(trait=y[taxa],pred=x[taxa])
+#'influence_phylolm<-influ_phylolm(formula = trait~pred,data=dat,phy=tre)
+
 #' @export
 
 influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
@@ -38,9 +51,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
                                            'data.frame'")
         if(class(phy)!="phylo") stop("Please phy must be class
                                            'phylo'")
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
-                                                      in data and phy")
-        if ((model == "trend") & (is.ultrametric(phy)))
+       if ((model == "trend") & (is.ultrametric(phy)))
                 stop("the trend is unidentifiable for ultrametric trees.")
         else
 
@@ -91,7 +102,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
                         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
                         aic.mod              <- mod$aic # Model AIC
                         optpar               <- mod$optpar# Estimated lambda
-                        print(i)
+                        print(paste(i," / ",N,sep=""))
 
                         ### Storing values for each simulation
                         influ.model.estimates[counter,1]  <- sp
@@ -147,3 +158,4 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
         return(res)
 
 }
+
