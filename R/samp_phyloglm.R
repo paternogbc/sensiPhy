@@ -18,7 +18,7 @@
 #' Also it currently only uses logistic_MPLE as a method, and can only deal with simple logistic regression models.
 #' @return The function \code{samp_phyloglm} returns a list with the following
 #'   components:
-#' @return \code{model_estimates} Full model estimates. This contains beta and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
+#' @return \code{model_estimates} Full model estimates. This contains slope and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
 #' @return \code{results} A data frame with all simulation estimates.
 #' @return \code{power_analysis} A data frame with power analysis for each
 #' @return \code{data} Original dataset
@@ -65,17 +65,17 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         else
 
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
-        beta.0 <-    mod.0$coefficients[[2]]            # Beta (full model)
+        slope.0 <-    mod.0$coefficients[[2]]            # slope (full model)
         alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
         pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
-        pval.beta.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value beta (full model)
+        pval.slope.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value slope (full model)
 
         # Sampling effort analysis:
         intercepts <- as.numeric()
-        betas <- as.numeric()
-        DFbetas <- as.numeric()
-        beta.change <- NULL
-        p.values.beta <- as.numeric()
+        slopes <- as.numeric()
+        DFslopes <- as.numeric()
+        slope.change <- NULL
+        p.values.slope <- as.numeric()
         p.values.intercept <- as.numeric()
         alphas <- as.numeric()
         n.removs <- as.numeric()
@@ -95,21 +95,21 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                         else {
                                 ### Calculating model estimates:
                                 intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
-                                beta <-    mod$coefficients[[2]]            # Beta (crop model)
+                                slope <-    mod$coefficients[[2]]            # slope (crop model)
                                 alpha <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
-                                DFbeta <- beta - beta.0
+                                DFslope <- slope - slope.0
 
-                                if (abs(DFbeta) < 0.05*beta.0)
+                                if (abs(DFslope) < 0.05*slope.0)
                                         b.change = "within 5%"
 
-                                if (abs(DFbeta) > 0.05*beta.0)
+                                if (abs(DFslope) > 0.05*slope.0)
                                         b.change = "higher than 5%"
-                                if (abs(DFbeta) > 0.1*beta.0){
+                                if (abs(DFslope) > 0.1*slope.0){
                                         b.change = "higher than 10%"
                                 }
                                 else
 
-                                pval.beta <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                                pval.slope <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
                                 pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
                                 alpha<-mod$alpha
                                 n.remov <- i
@@ -118,10 +118,10 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
                                 ### Storing values for each simulation
                                 intercepts <- c(intercepts,intercept)
-                                betas <- c(betas,beta)
-                                DFbetas <- c(DFbetas,DFbeta)
-                                beta.change <- c(beta.change,b.change)
-                                p.values.beta <- c( p.values.beta,pval.beta)
+                                slopes <- c(slopes,slope)
+                                DFslopes <- c(DFslopes,DFslope)
+                                slope.change <- c(slope.change,b.change)
+                                p.values.slope <- c( p.values.slope,pval.slope)
                                 p.values.intercept <- c(p.values.intercept,pval.intercept)
                                 alphas <- c(alphas,alpha)
                                 n.removs <- c(n.removs,n.remov)
@@ -133,19 +133,19 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         }
 
         # Data frame with results:
-        estimates <- data.frame(intercepts,betas,DFbetas,beta.change,p.values.beta,
+        estimates <- data.frame(intercepts,slopes,DFslopes,slope.change,p.values.slope,
                                 p.values.intercept,alphas,n.removs,n.percents)
 
         ## Power Analysis:
         times <- table(estimates$n.removs)[1]
         breaks <- unique(estimates$n.percents)
-        simu.sig <- estimates$p.values.beta > .05
+        simu.sig <- estimates$p.values.slope > .05
         estimates$simu.sig <- simu.sig
         power <- 1-(with(estimates,tapply(simu.sig,n.removs,sum)))/times
         power.tab <- data.frame(percent_sp_removed=breaks,power)
         estimates <- estimates[,-ncol(estimates)]
 
-        param0 <- data.frame(beta.0,pval.beta.0,intercept.0,pval.intercept.0,alpha.0)
+        param0 <- data.frame(slope.0,pval.slope.0,intercept.0,pval.intercept.0,alpha.0)
         return(list(model_estimates=param0,
                     results=estimates,power_analysis=power.tab,data=full.data))
 #Consider: print also the fitted formula to the output, as a reminder for people.
