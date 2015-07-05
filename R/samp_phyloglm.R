@@ -70,16 +70,11 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         pval.slope.0            <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]] #P-value slope (full model)
         aic.0                   <- mod.0$aic
 
-        # Sampling effort analysis:
-        intercepts <- as.numeric()
-        slopes <- as.numeric()
-        DFslopes <- as.numeric()
-        slope.change <- NULL
-        p.values.slope <- as.numeric()
-        p.values.intercept <- as.numeric()
-        optpars <- as.numeric()
-        n.removs <- as.numeric()
-        n.percents <- as.numeric()
+        #Create the samp.model.estimates data.frame
+        samp.model.estimates<-data.frame("n.removs" =numeric(), "n.percents"=numeric(),
+                                         "intercept"=numeric(),"DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
+                                         "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),"pval.slope"=numeric(),
+                                          "AIC"=numeric(),"optpar" = numeric())
 
         # Loop:
         limit <- sort(round((breaks)*nrow(full.data),digits=0))

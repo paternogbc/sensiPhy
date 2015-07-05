@@ -97,9 +97,8 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
-                                print(paste("Species removed= ",i,sep=""));
+                                print(paste("Break = ",n.percent,sep=""));
                                 print(paste("Repetition= ",j,""));
-
 
                                 ### Storing values for each simulation
                                 #write in a table
