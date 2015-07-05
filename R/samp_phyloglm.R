@@ -129,24 +129,30 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                 }
         }
 
-        # Data frame with results:
-        estimates <- data.frame(intercepts,slopes,DFslopes,slope.change,p.values.slope,
-                                p.values.intercept,optpars,n.removs,n.percents)
+        #Percentage Significant:
+        res                     <- samp.model.estimates
+        times                   <- table(res$n.remov)
+        breaks                  <- unique(res$n.percent)
+        sign.intercept          <- res$pval.intercept > .05
+        sign.slope              <- res$pval.slope > .05
+        res$sign.intercept      <- sign.intercept
+        res$sign.slope          <- sign.slope
+        perc.sign.intercept     <- 1-(with(res,tapply(sign.intercept,n.remov,sum)))/times
+        perc.sign.slope         <- 1-(with(res,tapply(sign.slope,n.remov,sum)))/times
+        perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
+                                perc.sign.intercept=as.numeric(perc.sign.intercept),
+                                perc.sign.slope=as.numeric(perc.sign.slope))
 
-        ## Power Analysis:
-        times <- table(estimates$n.removs)[1]
-        breaks <- unique(estimates$n.percents)
-        simu.sig <- estimates$p.values.slope > .05
-        estimates$simu.sig <- simu.sig
-        power <- 1-(with(estimates,tapply(simu.sig,n.removs,sum)))/times
-        power.tab <- data.frame(percent_sp_removed=breaks,power)
-        estimates <- estimates[,-ncol(estimates)]
+        #Summary of all full model details for output
+        param0<-list(coef=summary(mod.0)$coefficients,aic=summary(mod.0)$aic,optpar=summary(mod.0)$optpar)
 
-        param0 <- data.frame(slope.0,pval.slope.0,intercept.0,pval.intercept.0,optpar.0)
-        return(list(model_estimates=param0,
-                    results=estimates,power_analysis=power.tab,data=full.data))
-#Consider: print also the fitted formula to the output, as a reminder for people.
-
+        # Function output:
+        return(list(analyis.type = "samp_phyloglm",
+                    formula=formula,
+                    full.model.estimates=param0,
+                    samp.model.estimates=samp.model.estimates,
+                    sign.analysis=perc.sign.tab,
+                    data=full.data))
 }
 
 
