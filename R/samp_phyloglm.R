@@ -47,7 +47,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                                            class 'formula'")
         if(class(data)!="data.frame") stop("data data must be of class
                                                  'data.frame'. See ?phyloglm")
-        if(length(breaks)<2) stop("please include more then one break
+        if(length(breaks)<2) stop("please include more than one break
                                   (eg. breaks=c(.3,.5)")
         if(class(phy) != "phylo") stop("Please phy must be of class 'phylo'")
 
@@ -57,10 +57,10 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
         # FULL MODEL calculations:
 
-        c.data <- data
-        N <- nrow(c.data)
+        full.data <- data
+        N <- nrow(full.data)
 
-        mod.0 <- phylolm::phyloglm(formula, data=c.data,
+        mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
         if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
         #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
@@ -84,11 +84,11 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         n.percents <- as.numeric()
 
         # Loop:
-        limit <- sort(round((breaks)*nrow(c.data),digits=0))
+        limit <- sort(round((breaks)*nrow(full.data),digits=0))
         for (i in limit){
                 for (j in 1:times){
                         exclude <- sample(1:N,i)
-                        crop.data <- c.data[-exclude,]
+                        crop.data <- full.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
 
                         mod=try(phylolm::phyloglm(formula, data=crop.data,
@@ -149,7 +149,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
         param0 <- data.frame(beta.0,pval.beta.0,intercept.0,pval.intercept.0,alpha.0)
         return(list(model_estimates=param0,
-                    results=estimates,power_analysis=power.tab,data=c.data))
+                    results=estimates,power_analysis=power.tab,data=full.data))
 #Consider: print also the fitted formula to the output, as a reminder for people.
 
 }
