@@ -14,33 +14,24 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
         else
 
         # FULL MODEL calculations:
-
-        c.data <- data
-        N <- nrow(c.data)
-
-        mod.0 <- phylolm::phyloglm(formula, data=c.data,
+        full.data <- data
+        N         <- nrow(full.data)
+        mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
-        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol")
-        #The above line checks if the null model converges, and if not terminates with a sometimes helpful suggestion.
+        intercept.0      <- mod.0$coefficients[[1]]             # Intercept (full model)
+        slope.0          <- mod.0$coefficients[[2]]             # Slope (full model)
+        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] # p.value (intercept)
+        pval.slope.0     <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]] # p.value (slope)
+        optpar.0         <- mod.0$alpha
+        if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge, consider changing btol. See ?phyloglm")
         else
+                #Create the influ.model.estimates data.frame
+                influ.model.estimates<-data.frame("species" =numeric(), "intercept"=numeric(),
+                                                  "DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
+                                                  "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),
+                                                  "pval.slope"=numeric(),"AIC"=numeric(),
+                                                  "optpar" = numeric())
 
-        intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
-        beta.0 <-    mod.0$coefficients[[2]]            # Beta (full model)
-        alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
-        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
-        pval.beta.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value beta (full model)
-
-
-
-        # Sampling effort analysis:
-        betas <- as.numeric()
-        intercepts <- as.numeric()
-        DFbetas <- as.numeric()
-        DFintercepts <- as.numeric()
-        DFfits <- as.numeric()
-        p.values <- as.numeric()
-        species <- as.character()
-        errors <- as.numeric()
         # Loop:
 
         for (i in 1:nrow(c.data)){
