@@ -66,7 +66,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
         intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
         slope.0 <-    mod.0$coefficients[[2]]            # slope (full model)
-        alpha.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
+        optpar.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
         pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
         pval.slope.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value slope (full model)
 
@@ -77,7 +77,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         slope.change <- NULL
         p.values.slope <- as.numeric()
         p.values.intercept <- as.numeric()
-        alphas <- as.numeric()
+        optpars <- as.numeric()
         n.removs <- as.numeric()
         n.percents <- as.numeric()
 
@@ -96,7 +96,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                                 ### Calculating model estimates:
                                 intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
                                 slope <-    mod$coefficients[[2]]            # slope (crop model)
-                                alpha <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
+                                optpar <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
                                 DFslope <- slope - slope.0
 
                                 if (abs(DFslope) < 0.05*slope.0)
@@ -111,7 +111,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
                                 pval.slope <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
                                 pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                                alpha<-mod$alpha
+                                optpar<-mod$alpha
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
@@ -123,7 +123,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                                 slope.change <- c(slope.change,b.change)
                                 p.values.slope <- c( p.values.slope,pval.slope)
                                 p.values.intercept <- c(p.values.intercept,pval.intercept)
-                                alphas <- c(alphas,alpha)
+                                optpars <- c(optpars,optpar)
                                 n.removs <- c(n.removs,n.remov)
                                 n.percents <- c(n.percents,n.percent)
                         }
@@ -134,7 +134,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
 
         # Data frame with results:
         estimates <- data.frame(intercepts,slopes,DFslopes,slope.change,p.values.slope,
-                                p.values.intercept,alphas,n.removs,n.percents)
+                                p.values.intercept,optpars,n.removs,n.percents)
 
         ## Power Analysis:
         times <- table(estimates$n.removs)[1]
@@ -145,7 +145,7 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         power.tab <- data.frame(percent_sp_removed=breaks,power)
         estimates <- estimates[,-ncol(estimates)]
 
-        param0 <- data.frame(slope.0,pval.slope.0,intercept.0,pval.intercept.0,alpha.0)
+        param0 <- data.frame(slope.0,pval.slope.0,intercept.0,pval.intercept.0,optpar.0)
         return(list(model_estimates=param0,
                     results=estimates,power_analysis=power.tab,data=full.data))
 #Consider: print also the fitted formula to the output, as a reminder for people.
