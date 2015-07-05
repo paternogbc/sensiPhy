@@ -1,23 +1,6 @@
 #' Leave-one-out-deletion analysis for gls phylogenetic regression. (GW: Make helpfile still!)
 
-
-
-influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
-{
-        # Basic error checking:
-        if(class(formula)!="formula") stop("Please formula must be class
-                                           'forumla'")
-        if(class(data)!="data.frame") stop("Please data must be class
-                                           'data.frame'")
-        if(class(phy)!="phylo") stop("Please phy must be class
-                                           'phylo'")
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
-                                                      in data and phy")
-        if ((model == "trend") & (is.ultrametric(phy)))
-                stop("the trend is unidentifiable for ultrametric trees.")
-        else
-
-influ_phyloglm <- function(formula,data,phy,btol=50,...)
+influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
 {
         # Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be class
