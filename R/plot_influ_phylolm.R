@@ -20,6 +20,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
         vars2  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
         intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
         slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
+        cutoff      <-  x$cutoff
 
         ### Removing species with error:
         if (isTRUE(class(x$errors) != "character" )){
@@ -28,7 +29,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
         result.tab <- data.frame(x$influ.model.estimates,x$data[vars])
 
         ### Plots:
-        # Distribution of estimated betas:
+        # Distribution of estimated slopes:
         s1 <- ggplot2::ggplot(result,aes(x=slope,y=..density..),
                               environment = environment())+
                 geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
@@ -83,31 +84,54 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
                 theme(axis.text = element_text(size=14,colour="black"),
                       axis.title = element_text(size=16))
 
-        # Statistically influential points for slope estimate
+        # Influential points for slope estimate
         s3 <- ggplot2::ggplot(result,aes(x=sDFslope),
                               environment = environment())+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Slope")+
-                geom_histogram(data=subset(result,sDFslope<2&sDFslope>-2),
+                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
                 theme(axis.text = element_text(size=14),
                       axis.title = element_text(size=16))+
-                geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
-                geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
+                geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
+                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
 
-        # Statistically influential points for intercept estimate
+        # Influential points for intercept estimate
         i3 <- ggplot2::ggplot(result,aes(x=sDFslope),
                               environment = environment())+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
-                xlab("Standardized Difference in Slope")+
-                geom_histogram(data=subset(result,sDFslope<2&sDFslope>-2),
+                xlab("Standardized Difference in Intercept")+
+                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
                 theme(axis.text = element_text(size=14),
                       axis.title = element_text(size=16))+
-                geom_vline(xintercept = -2,color="red",linetype=2,size=.7)+
-                geom_vline(xintercept = 2,color="red",linetype=2,size=.7)
+                geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
+                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
 
-print(grid.arrange(s1,s2,s3,i1,i2,i3,ncol=3,nrow=2))
+        ### Ploting:
+        if (graphs == "both"){
+                print(grid.arrange(s1,s2,s3,i1,i2,i3,ncol=3,nrow=2))}
+        if (param == "slope" & graphs=="all")
+                print(grid.arrange(s1,s2,s3,ncol=2))
+        if (param == "slope" & graphs==1)
+                print(s1)
+        if (param == "slope" & graphs==2)
+                print(s2)
+        if (param == "slope" & graphs==3)
+                print(s3)
+        if (param == "intercept" & graphs=="all")
+                print(grid.arrange(i1,i2,i3,ncol=2))
+        if (param == "intercept" & graphs==1)
+                print(i1)
+        if (param == "intercept" & graphs==2)
+                print(i2)
+        if (param == "intercept" & graphs==3)
+                print(i3)
+
+        ### Warnings
+        if (isTRUE(class(x$errors) != "character" ))
+                warnings("Deletion of some species caused error. These species were not ploted")
+
 }
 
 
