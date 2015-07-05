@@ -129,11 +129,12 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
 
         ### Output:
         res <- list(analysis.type="influ_phylolm",
-             formula=formula,
-             full.model.estimates=param0,
-             influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
-             influ.model.estimates=influ.model.estimates,
-             data=full.data,errors=errors)
+                        cutoff=cutoff,
+                        formula=formula,
+                        full.model.estimates=param0,
+                        influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+                        influ.model.estimates=influ.model.estimates,
+                        data=full.data,errors=errors)
 
         ### Warnings:
         if (length(res$errors) >0){

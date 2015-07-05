@@ -97,6 +97,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
 
         ### Output:
         res <- list(analysis.type="influ_phyloglm",
+                    cutoff=cutoff,
                     formula=formula,
                     full.model.estimates=param0,
                     influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
