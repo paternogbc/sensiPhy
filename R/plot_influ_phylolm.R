@@ -1,10 +1,9 @@
-#' Graphical sensitive analysis for comparative methods
+#' Graphical diagnostics for \code{influ_phylolm}
 #'
-#' \code{sensi_plot} Plot results from \code{samp_pgls},
-#' \code{influ_pgls}
-#' @aliases sensi_plot
-#' @param x output from \code{samp_gls}, \code{influ_gls}
-#' @param graphs choose which graphs should be printed on the output ("all", 1,2,3 or 4)
+#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm},
+#' @param x output from \code{influ_phylolm}
+#' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
+#' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @export
 
 ### Start:
@@ -14,6 +13,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
         if (x[[1]] != "influ_phylolm")
                 stop("x must be an output from influ_phylolm!")
         else
+
         ### Organizing values:
         result <- x$influ.model.estimates
         vars   <- all.vars(x$formula)
@@ -80,7 +80,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
                       panel.grid.minor = element_blank())+
                 ylab(vars2[1])+
                 xlab(vars2[2])+
-                ggtitle("Standardized Difference in slope")+
+                ggtitle("Standardized Difference in Intercept")+
                 theme(axis.text = element_text(size=14,colour="black"),
                       axis.title = element_text(size=16))
 
@@ -108,25 +108,46 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
                 geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
 
+        # Distribution of slope.perc:
+
+        s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..),
+                              environment = environment())+
+                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
+                               colour="black", fill="white")+
+                xlab("% of change in Slope")+
+                theme(axis.text = element_text(size=14),
+                      axis.title = element_text(size=16))
+
+        # Distribution of slope.perc:
+        i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..),
+                              environment = environment())+
+                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
+                               colour="black", fill="white")+
+                xlab("% of change in Intercept")+
+                theme(axis.text = element_text(size=14),
+                      axis.title = element_text(size=16))
+
         ### Ploting:
-        if (graphs == "both"){
-                print(grid.arrange(s1,s2,s3,i1,i2,i3,ncol=3,nrow=2))}
         if (param == "slope" & graphs=="all")
-                print(grid.arrange(s1,s2,s3,ncol=2))
+                print(grid.arrange(s1,s2,s3,s4,ncol=2))
         if (param == "slope" & graphs==1)
                 print(s1)
         if (param == "slope" & graphs==2)
                 print(s2)
         if (param == "slope" & graphs==3)
                 print(s3)
+        if (param == "slope" & graphs==4)
+                print(s4)
         if (param == "intercept" & graphs=="all")
-                print(grid.arrange(i1,i2,i3,ncol=2))
+                print(grid.arrange(i1,i2,i3,i4,ncol=2))
         if (param == "intercept" & graphs==1)
                 print(i1)
         if (param == "intercept" & graphs==2)
                 print(i2)
         if (param == "intercept" & graphs==3)
                 print(i3)
+        if (param == "intercept" & graphs==4)
+                print(i4)
 
         ### Warnings
         if (isTRUE(class(x$errors) != "character" ))
