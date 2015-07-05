@@ -1,24 +1,21 @@
 #' Leave-one-out-deletion analysis for gls phylogenetic regression. (GW: Make helpfile still!)
 
-#' library(caper);library(ggplot2);library(gridExtra);library(phylolm)
-#' data(shorebird)
-#  #First, we need to match tip.labels with rownames in data:
-#' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-#' shorebird.data <- shorebird.data[sp.ord,]
-#' #Create a binary variable (large egg / small egg), for illustration purposes.
-#' mean(shorebird.data$Egg.Mass)
-#' shorebird.data$Egg.Mass.binary<-ifelse(shorebird.data$Egg.Mass>30,1,0) #Turn egg mass into a binary variable
-#' table(shorebird.data$Egg.Mass.binary) #Mostly small eggs.
-#' # Now we can run the function influ_phyloglm:
-#' influ_phyloglm<-influ_phyloglm(formula = Egg.Mass.binary~M.Mass,data = shorebird.data,phy=shorebird.tree,btol = 50)
-#' # Estimated parameters:
-#' head(influ_phyloglm$results)
-#' # Most influential species:
-#' influ_phyloglm$influential_species
-#' # Check for species with errors:
-#' influ_phyloglm$errors
-#' @export
 
+
+influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
+{
+        # Basic error checking:
+        if(class(formula)!="formula") stop("Please formula must be class
+                                           'forumla'")
+        if(class(data)!="data.frame") stop("Please data must be class
+                                           'data.frame'")
+        if(class(phy)!="phylo") stop("Please phy must be class
+                                           'phylo'")
+        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
+                                                      in data and phy")
+        if ((model == "trend") & (is.ultrametric(phy)))
+                stop("the trend is unidentifiable for ultrametric trees.")
+        else
 
 influ_phyloglm <- function(formula,data,phy,btol=50,...)
 {
