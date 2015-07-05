@@ -47,9 +47,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                         names(error) <- rownames(full.data$data)[i]
                         errors <- c(errors,error)
                         next }
-                else {
-                        ### Extracting model estimates:
-
+                else {### Extracting model estimates:
                         sp                   <- phy$tip.label[i]      # species removed
                         intercept            <- mod$coefficients[[1]] # Intercept (crop model)
                         slope                <- mod$coefficients[[2]] # Beta (crop model)
@@ -57,8 +55,8 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                         DFslope              <- slope - slope.0 # DF beta
                         intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
                         slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
-                        pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
-                        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
+                        pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]] # p.value (intercept)
+                        pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]] # p.value
                         aic.mod              <- mod$aic # Model AIC
                         optpar               <- mod$alpha
                         print(i)
@@ -79,36 +77,38 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                 }
         }
 
-        sDFbetas <- DFbetas/sd(DFbetas)
-        sDFintercepts <- DFintercepts/sd(DFintercepts)
-        # Dataframe with results:
-        estimates <- data.frame(species,betas,DFbetas,sDFbetas,intercepts,DFintercepts,sDFintercepts,
-                                p.values)
+        ### Calculating Standardized DFbeta and DFintercept
+        sDFintercept <- influ.model.estimates$DFintercept/sd(influ.model.estimates$DFintercept)
+        sDFslope     <- influ.model.estimates$DFslope/sd(influ.model.estimates$DFslope)
 
-        param0 <- data.frame(intercept.0,beta.0)
 
-        ### Statistically Influential species for Beta (sDFbetas > 2)
-        sb.ord <- which(abs(estimates$sDFbetas) > 2)
-        influ.sp.b <- as.character(estimates$species[sb.ord])
+        influ.model.estimates$sDFslope     <- sDFslope;
+        influ.model.estimates$sDFintercept <- sDFintercept
 
-        ### Statistically Influential species for intercept (sDFintercepts > 2)
-        si.ord <- which(abs(estimates$sDFintercepts) > 2)
-        influ.sp.i <- as.character(estimates$species[si.ord])
-        influ.sp.i <- as.character(estimates[order(estimates$DFintercepts,decreasing=T)[1:5],]$species)
-        #Should we add these to the input too? Only first 5?
+        ### Original model estimates:
+        param0 <- list(coef=phylolm::summary.phyloglm(mod.0)$coefficients,
+                       aic=phylolm::summary.phyloglm(mod.0)$aic,
+                       optpar=phylolm::summary.phyloglm(mod.0)$alpha)
 
-        output <- list(errors=errors,formula=formula,
-                       model_estimates=param0,
-                       influential_species= influ.sp.b,
-                       results=estimates,data=c.data)
+        ### Statistically Influential species for Beta (sDFbetas > cutoff)
+        influ.sp.b <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
 
-        if (length(output$errors) >0){
+        ### Output:
+        res <- list(analysis.type="influ_phyloglm",
+                    formula=formula,
+                    full.model.estimates=param0,
+                    influential.species= influ.sp.b,
+                    influ.model.estimates=influ.model.estimates,
+                    data=full.data,errors=errors)
+
+        ### Warnings:
+        if (length(res$errors) >0){
                 warning("Some species deletion presented errors, please check: output$errors")}
         else {
-                print("No errors found. All single deletions were performed and stored successfully")
-                output$errors <- "No errors found."
+                message("No errors found. All single deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
+                res$errors <- "No errors found."
         }
 
-        return(output)
+        return(res)
 
 }
