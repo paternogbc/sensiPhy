@@ -33,9 +33,6 @@
 #' }
 #' @export
 
-formula=Egg.Mass ~ M.Mass;data=bird.comp$data;phy=bird.comp$phy;
-times= 200; breaks=c(.8,.9);model="lambda";
-
 samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
                       ...)
 {
