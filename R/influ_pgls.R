@@ -62,7 +62,7 @@ influ_pgls <- function(formula,data,phy,model="lambda",...)
                             "pval.beta"=numeric(),"AIC"=numeric(),
                              "optpar" = numeric())
 
-        # Loop:
+        #Loop:
         counter <- 1
         errors <- NULL
 
