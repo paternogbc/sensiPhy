@@ -33,7 +33,7 @@
 #' }
 #' @export
 
-samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
+samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
                       ...)
 {
         ### Basic error checking:
@@ -52,70 +52,69 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
         else
 
         # FULL MODEL calculations:
-        c.data <- data
-        N <- nrow(c.data)
-        mod.0 <- phylolm::phylolm(formula, data=c.data,model=model,phy=phy)
-        a.0 <- mod.0$coefficients[[1]]             # Intercept (full model)
-        b.0 <- mod.0$coefficients[[2]]             # Beta (full model)
-        p.val.a0 <-    phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
-        p.val.b0 <-    phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
-        optpar.0 <- mod.0$optpar
-        aic.0    <-mod.0$aic
+        full.data <- data
+        N <- nrow(full.data)
+        mod.0 <- phylolm::phylolm(formula, data=full.data,model=model,phy=phy)
+
+        intercept.0             <- mod.0$coefficients[[1]] #Intercept (full model)
+        slope.0                 <- mod.0$coefficients[[2]] #Slope (full model)
+        optpar.0                <- mod.0$alpha             #The optimisation paratemer alpha (phylogenetic correlation parameter)
+        pval.intercept.0        <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
+        pval.slope.0            <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] #P-value slope (full model)
+        aic.0                   <- mod.0$aic
 
         #Create the results data.frame
-        results<-data.frame("n.removs" =numeric(), "n.percents"=numeric(),
-                            "intercept"=numeric(),"DFintercept"=numeric(),
-                            "intercept.change"=numeric(),
-                            "beta"=numeric(),"DFbeta"=numeric(),
-                            "beta.change"=numeric(),"pval.intercept"=numeric(),
-                            "pval.beta"=numeric(),"AIC"=numeric(),
-                            "optpar"=numeric())
+        samp.model.estimates<-data.frame("n.remov" =numeric(), "n.percent"=numeric(),
+                                         "intercept"=numeric(),"DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
+                                         "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),"pval.slope"=numeric(),
+                                         "AIC"=numeric(),"optpar" = numeric())
 
         # Loop:
         counter=1
-        limit <- sort(round((breaks)*nrow(c.data),digits=0))
+        limit <- sort(round((breaks)*nrow(full.data),digits=0))
         for (i in limit){
                 for (j in 1:times){
                         exclude <- sample(1:N,i)
-                        crop.data <- c.data[-exclude,]
+                        crop.data <- full.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
 
                         mod=try(phylolm::phylolm(formula, data=crop.data,model=model,phy=crop.phy),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
                         else {
-                                ### Calculating model estimates
-                                a <-    mod$coefficients[[1]]          # Intercept (crop model)
-                                b <-    mod$coefficients[[2]]       # Beta (crop model)
-                                DFa <- a - a.0                 # DF intercept
-                                DFb <- b - b.0                 # DF beta
-                                a.change <- round((abs(DFa/a.0))*100,digits=1)  # Percentage of intercept change
-                                b.change <- round((abs(DFb/b.0))*100,digits=1)  # Percentage of beta change
-                                pval.a <-    phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
-                                pval.b <-    phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value (slope)
-                                aic.mod <-   mod$aic           # Model AIC
-                                optpar <-    mod$optpar# Estimated lambda
+                                intercept             <- mod$coefficients[[1]] #Intercept (crop model)
+                                slope                 <- mod$coefficients[[2]] #Slope (crop model)
+                                optpar                <- mod$optpar            #The optimisation paratemer alpha (phylogenetic correlation parameter)
+                                pval.intercept        <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] #P-value intercept (crop model)
+                                pval.slope            <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] #P-value slope (crop model)
+                                aic                   <- mod$aic
+                                DFintercept           <- intercept - intercept.0   # DF intercept
+                                DFslope               <- slope - slope.0           # DF slope
+                                intercept.perc        <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
+                                slope.perc            <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of slope change
+                                pval.intercept        <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] #P-value intercept (full model)
+                                pval.slope            <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] #P-value slope (full model)
+                                aic                   <- mod$aic
+                                optpar                <- mod$optpar             #The optimisation paratemer alpha (phylogenetic correlation parameter)
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
                                 print(paste("Break = ",n.percent,sep=""));
                                 print(paste("Repetition= ",j,""));
 
-                                ### Storing values for each simulation
+                                ### Storing ### Storing values for each simulation
                                 #write in a table
-                                results[counter,1]<- n.remov
-                                results[counter,2]<- n.percent
-                                results[counter,3]<- a
-                                results[counter,4]<- DFa
-                                results[counter,5]<- a.change
-                                results[counter,6]<- b
-                                results[counter,7]<- DFb
-                                results[counter,8]<- b.change
-                                results[counter,9]<- pval.a
-                                results[counter,10]<- pval.b
-                                results[counter,11]<- aic.mod
-                                results[counter,12]<- optpar
-
-
+                                samp.model.estimates[counter,1]<- n.remov
+                                samp.model.estimates[counter,2]<- n.percent
+                                samp.model.estimates[counter,3]<- intercept
+                                samp.model.estimates[counter,4]<- DFintercept
+                                samp.model.estimates[counter,5]<- intercept.perc
+                                samp.model.estimates[counter,6]<- pval.intercept
+                                samp.model.estimates[counter,7]<- slope
+                                samp.model.estimates[counter,8]<- DFslope
+                                samp.model.estimates[counter,9]<- slope.perc
+                                samp.model.estimates[counter,10]<- pval.slope
+                                samp.model.estimates[counter,11]<- aic
+                                samp.model.estimates[counter,12]<- optpar
                                 counter=counter+1
 
 
@@ -126,23 +125,31 @@ samp_pgls <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lamb
                 }
         }
 
-        ## Power Analysis:
-        res <- results
-        times <- table(res$n.removs)
-        breaks <- unique(res$n.percents)
-        sig.a <- res$pval.intercept > .05
-        sig.b <- res$pval.beta > .05
-        res$sig.a <- sig.a
-        res$sig.b <- sig.b
-        power.intercept <- 1-(with(res,tapply(sig.a,n.removs,sum)))/times
-        power.beta <- 1-(with(res,tapply(sig.b,n.removs,sum)))/times
-        power.tab <- data.frame(percent_sp_removed=breaks,
-                                power.intercept=as.numeric(power.intercept),
-                                power.beta=as.numeric(power.beta))
+        #Percentage Significant:
+        res                     <- samp.model.estimates
+        times                   <- table(res$n.remov)
+        breaks                  <- unique(res$n.percent)
+        sign.intercept          <- res$pval.intercept > .05
+        sign.slope              <- res$pval.slope > .05
+        res$sign.intercept      <- sign.intercept
+        res$sign.slope          <- sign.slope
+        perc.sign.intercept     <- 1-(with(res,tapply(sign.intercept,n.remov,sum)))/times
+        perc.sign.slope         <- 1-(with(res,tapply(sign.slope,n.remov,sum)))/times
+        perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
+                                          perc.sign.intercept=as.numeric(perc.sign.intercept),
+                                          perc.sign.slope=as.numeric(perc.sign.slope))
+
+        #Summary of all full model details for output
+        param0<-list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
+                     aic=phylolm::summary.phylolm(mod.0)$aic,
+                     optpar=summary(mod.0)$optpar)
 
         # Function output:
-        return(list(output = "samp_pgls",
-                    model_estimates=data.frame(intercept = a.0,beta=b.0),
-                    results=results,power.analysis=power.tab,data=c.data))
+        return(list(analyis.type = "samp_phylolm",
+                    formula=formula,
+                    full.model.estimates=param0,
+                    samp.model.estimates=samp.model.estimates,
+                    sign.analysis=perc.sign.tab,
+                    data=full.data))
 
 }
