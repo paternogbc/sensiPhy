@@ -9,8 +9,6 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                                            'data.frame'")
         if(class(phy)!="phylo") stop("Please phy must be class
                                            'phylo'")
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
-                                                      in data and phy")
         else
 
         # FULL MODEL calculations:
@@ -59,7 +57,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                         pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]] # p.value
                         aic.mod              <- mod$aic # Model AIC
                         optpar               <- mod$alpha
-                        print(i)
+                        print(paste(i," / ",N,sep=""))
 
                         ### Storing values for each simulation
                         influ.model.estimates[counter,1]  <- sp
@@ -115,3 +113,6 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
         return(res)
 
 }
+
+
+
