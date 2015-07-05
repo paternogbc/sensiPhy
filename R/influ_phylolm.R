@@ -133,10 +133,11 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
                        aic=phylolm::summary.phylolm(mod.0)$aic,
                        optpar=phylolm::summary.phylolm(mod.0)$optpar)
 
-
-        ### Statistically Influential species for Beta (sDFbetas > cutoff)
-        influ.sp.slope <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
-        influ.sp.intercept <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFintercept) > cutoff)])
+       ### Influential species (i.e. sDF > cutoff) for intercept & slope.
+       reorder.on.slope        <-influ.model.estimates[order(abs(influ.model.estimates$sDFslope),decreasing=T),c("species","sDFslope")]
+       influ.sp.slope          <-as.character(reorder.on.slope$species[abs(reorder.on.slope$sDFslope)>cutoff])
+       reorder.on.intercept        <-influ.model.estimates[order(abs(influ.model.estimates$sDFintercept),decreasing=T),c("species","sDFintercept")]
+       influ.sp.intercept          <-as.character(reorder.on.intercept$species[abs(reorder.on.intercept$sDFintercept)>cutoff])
 
         ### Output:
         res <- list(analysis.type="influ_phylolm",
