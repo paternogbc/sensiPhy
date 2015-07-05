@@ -91,13 +91,15 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...)
                        optpar=phylolm::summary.phyloglm(mod.0)$alpha)
 
         ### Statistically Influential species for Beta (sDFbetas > cutoff)
-        influ.sp.b <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
+        influ.sp.slope <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFslope) > cutoff)])
+        influ.sp.intercept <- as.character(influ.model.estimates$species[which(abs(influ.model.estimates$sDFintercept) > cutoff)])
+
 
         ### Output:
         res <- list(analysis.type="influ_phyloglm",
                     formula=formula,
                     full.model.estimates=param0,
-                    influential.species= influ.sp.b,
+                    influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
                     influ.model.estimates=influ.model.estimates,
                     data=full.data,errors=errors)
 
