@@ -142,7 +142,7 @@ samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="l
         #Summary of all full model details for output
         param0<-list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                      aic=phylolm::summary.phylolm(mod.0)$aic,
-                     optpar=summary(mod.0)$optpar)
+                     optpar=mod.0$optpar)
 
         # Function output:
         return(list(analyis.type = "samp_phylolm",
