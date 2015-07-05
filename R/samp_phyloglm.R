@@ -59,14 +59,16 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         N <- nrow(full.data)
         mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
-        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol. See ?phyloglm")
-        else
 
-        intercept.0 <-    mod.0$coefficients[[1]]       # Intercept (full model)
-        slope.0 <-    mod.0$coefficients[[2]]            # slope (full model)
-        optpar.0 <-    mod.0$alpha                #Alpha (phylogenetic correlation parameter)
-        pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
-        pval.slope.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]  #P-value slope (full model)
+        if(isTRUE(mod.0$convergence!=0)) stop("Null model failed to converge, consider changing btol. See ?phyloglm")
+
+        else
+        intercept.0             <- mod.0$coefficients[[1]] #Intercept (full model)
+        slope.0                 <- mod.0$coefficients[[2]] #Slope (full model)
+        optpar.0                <- mod.0$alpha             #The optimisation paratemer alpha (phylogenetic correlation parameter)
+        pval.intercept.0        <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
+        pval.slope.0            <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]] #P-value slope (full model)
+        aic.0                   <- mod.0$aic
 
         # Sampling effort analysis:
         intercepts <- as.numeric()
