@@ -67,8 +67,7 @@ influ_pgls <- function(formula,data,phy,model="lambda",...)
         errors <- NULL
 
         for (i in 1:N){
-                exclude <- c(1:N)[-i]
-                crop.data <- c.data[exclude,]
+                crop.data <- c.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
 
                 mod=try(phylolm::phylolm(formula, data=crop.data,model=model,phy=crop.phy),TRUE)
