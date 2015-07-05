@@ -41,17 +41,16 @@
 
 
 samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50,...)
-{
-        ### Basic error checking:
+{### Basic error checking:
         if(class(formula)!="formula") stop("Please formula must be
                                            class 'formula'")
         if(class(data)!="data.frame") stop("data data must be of class
                                                  'data.frame'. See ?phyloglm")
-        if(length(breaks)<2) stop("please include more than one break
+        if(length(breaks)<2) stop("Please include more than one break
                                   (eg. breaks=c(.3,.5)")
-        if(class(phy) != "phylo") stop("Please phy must be of class 'phylo'")
+        if(class(phy) != "phylo") stop("phy must be of class 'phylo'")
 
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
+        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be in the same order
                                                       in data and phy")
         else
 
