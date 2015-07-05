@@ -71,12 +71,12 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
         aic.0                   <- mod.0$aic
 
         #Create the samp.model.estimates data.frame
-        samp.model.estimates<-data.frame("n.removs" =numeric(), "n.percents"=numeric(),
+        samp.model.estimates<-data.frame("n.remov" =numeric(), "n.percent"=numeric(),
                                          "intercept"=numeric(),"DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
                                          "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),"pval.slope"=numeric(),
                                           "AIC"=numeric(),"optpar" = numeric())
-
         # Loop:
+        counter=1
         limit <- sort(round((breaks)*nrow(full.data),digits=0))
         for (i in limit){
                 for (j in 1:times){
@@ -84,46 +84,48 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                         crop.data <- full.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
 
-                        mod=try(phylolm::phyloglm(formula, data=crop.data,
+                        mod<-try(phylolm::phyloglm(formula, data=crop.data,
                                                   phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
-                        else {
-                                ### Calculating model estimates:
-                                intercept <-    mod$coefficients[[1]]       # Intercept (crop model)
-                                slope <-    mod$coefficients[[2]]            # slope (crop model)
-                                optpar <-    mod$alpha                #Alpha (phylogenetic correlation parameter)
-                                DFslope <- slope - slope.0
-
-                                if (abs(DFslope) < 0.05*slope.0)
-                                        b.change = "within 5%"
-
-                                if (abs(DFslope) > 0.05*slope.0)
-                                        b.change = "higher than 5%"
-                                if (abs(DFslope) > 0.1*slope.0){
-                                        b.change = "higher than 10%"
-                                }
-                                else
-
-                                pval.slope <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
-                                pval.intercept <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                                optpar<-mod$alpha
+                        else {#Extracting model estimates
+                                intercept             <- mod$coefficients[[1]] #Intercept (crop model)
+                                slope                 <- mod$coefficients[[2]] #Slope (crop model)
+                                optpar                <- mod$alpha             #The optimisation paratemer alpha (phylogenetic correlation parameter)
+                                pval.intercept        <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]] #P-value intercept (crop model)
+                                pval.slope            <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]] #P-value slope (crop model)
+                                aic                   <- mod$aic
+                                DFintercept           <- intercept - intercept.0   # DF intercept
+                                DFslope               <- slope - slope.0           # DF slope
+                                intercept.perc        <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
+                                slope.perc            <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of slope change
+                                pval.intercept        <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]] #P-value intercept (full model)
+                                pval.slope            <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]] #P-value slope (full model)
+                                aic                   <- mod$aic
+                                optpar                <- mod$alpha             #The optimisation paratemer alpha (phylogenetic correlation parameter)
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
+                                print(paste("Break = ",n.percent,sep=""));
+                                print(paste("Repetition= ",j,""));
+
 
                                 ### Storing values for each simulation
-                                intercepts <- c(intercepts,intercept)
-                                slopes <- c(slopes,slope)
-                                DFslopes <- c(DFslopes,DFslope)
-                                slope.change <- c(slope.change,b.change)
-                                p.values.slope <- c( p.values.slope,pval.slope)
-                                p.values.intercept <- c(p.values.intercept,pval.intercept)
-                                optpars <- c(optpars,optpar)
-                                n.removs <- c(n.removs,n.remov)
-                                n.percents <- c(n.percents,n.percent)
+                                #write in a table
+                                samp.model.estimates[counter,1]<- n.remov
+                                samp.model.estimates[counter,2]<- n.percent
+                                samp.model.estimates[counter,3]<- intercept
+                                samp.model.estimates[counter,4]<- DFintercept
+                                samp.model.estimates[counter,5]<- intercept.perc
+                                samp.model.estimates[counter,6]<- pval.intercept
+                                samp.model.estimates[counter,7]<- slope
+                                samp.model.estimates[counter,8]<- DFslope
+                                samp.model.estimates[counter,9]<- slope.perc
+                                samp.model.estimates[counter,10]<- pval.slope
+                                samp.model.estimates[counter,11]<- aic
+                                samp.model.estimates[counter,12]<- optpar
+
+                                counter=counter+1
                         }
-
-
                 }
         }
 
