@@ -144,7 +144,9 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                                         perc.sign.slope=as.numeric(perc.sign.slope))
 
         #Summary of all full model details for output
-        param0<-list(coef=summary(mod.0)$coefficients,aic=summary(mod.0)$aic,optpar=summary(mod.0)$alpha)
+        param0<-list(coef=phylolm::summary.phyloglm(mod.0)$coefficients,
+                     aic=phylolm::summary.phyloglm(mod.0)$aic,
+                     optpar=phylolm::summary.phyloglm(mod.0)$alpha)
 
         # Function output:
         return(list(analyis.type = "samp_phyloglm",
