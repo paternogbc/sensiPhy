@@ -87,7 +87,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
                         DFslope              <- slope - slope.0 # DF beta
                         intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
                         slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
-                        pval.intercept       <- phylolm::summary.phylolm(mod.)$coefficients[[1,4]] # p.value (intercept)
+                        pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
                         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
                         aic.mod              <- mod$aic # Model AIC
                         optpar               <- mod$optpar# Estimated lambda
