@@ -1,7 +1,8 @@
 #' Sensitivity Analysis Species Sampling  - Phylogenetic Linear Regression
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
-#' species and detecting the effects on parameter estimates.
+#' species and detecting the effects on parameter estimates in a phylogenetic
+#' linear regression.
 #'
 #' @param formula The model formula
 #' @param data Data frame containing species traits with row names matching tips
@@ -82,7 +83,7 @@
 #'      breaks = c(0.25,0.5,0.75),times=100)
 #'
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyloglm}},
 #' \code{sensi_plot}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
@@ -146,19 +147,14 @@ samp_phylolm <- function(formula,data,phy,times=20,
                                         DFintercept/intercept.0))*100,digits=1)
                                 slope.perc            <- round((abs(
                                         DFslope/slope.0))*100,digits=1)
-                                pval.intercept        <-
-                                        phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-                                pval.slope            <-
-                                        phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                                 aic                   <- mod$aic
                                 optpar                <- mod$optpar
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
-                                if(track==TRUE){
-                                print(paste("Break = ",n.percent,sep=""));
-                                print(paste("Repetition= ",j,""));}
-                                else
+
+                                if(track==TRUE) (
+                                print(paste("Break = ",n.percent,". Repetition = ",j,sep="")))
 
                                 # Stores values for each simulation
                                 samp.model.estimates[counter,1]<- n.remov
