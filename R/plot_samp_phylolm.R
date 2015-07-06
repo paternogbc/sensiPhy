@@ -1,4 +1,4 @@
-#' Graphical diagnostics for \code{influ_phylolm}
+#' Graphical diagnostics for \code{samp_phylolm}
 #'
 #' \code{plot_samp_phylolm} Plot results from \code{samp_phylolm},
 #' @param x output from \code{samp_phylolm}
@@ -9,10 +9,11 @@
 plot_samp_phylolm <- function(x,graphs="all",param="slope"){
 
         ########### samp_pgls graphs ##################
-        if (x[[1]] != "samp_phylolm")
-                stop("x must be an output from samp_phylolm!")
+        if (x[[1]] != "samp_phylolm" & x[[1]] != "samp_phyloglm")
+                stop("x must be an output from samp_phylolm or samp_phyloglm!")
         else
 
+        x <- test.samp.glm
         result    <- x$samp.model.estimates
         sig.tab <- x$sign.analysis
 
@@ -125,13 +126,15 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
         ### Proportion of change.classes across n.percent
         n.perc.times <- as.numeric(table(result$n.percent))
         slope.perc <- with(result,aggregate(data=result,slope ~ slope.class*n.percent,FUN=length))
-        slope.perc$slope <- (slope.perc$slope/rep(n.perc.times,each=3))*100
+        a <- colSums(table(slope.perc$slope.class,slope.perc$n.percent))
+        slope.perc$slope <- (slope.perc$slope/rep(n.perc.times,
+                                                  times=a))*100
         intercept.perc <- with(result,aggregate(data=result,intercept ~ intercept.class*n.percent,FUN=length))
-        intercept.perc$intercept <- (intercept.perc$intercept/rep(n.perc.times,each=3))*100
-        perc.class.tab <- data.frame(slope.perc,intercept= intercept.perc$intercept)
-
+        b <- colSums(table(intercept.perc$intercept.class,intercept.perc$n.percent))
+        intercept.perc$intercept <- (intercept.perc$intercept/rep(n.perc.times,
+                                                  times=b))*100
         ### Graph: Slope
-        s2 <- ggplot(perc.class.tab,
+        s2 <- ggplot(slope.perc,
                      aes(y=slope,x=n.percent,
                          fill=factor(slope.class)),
                      environment = environment())+
@@ -153,9 +156,9 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 ylab("Proportion of estimated slope")
 
         ### Graph: Intercept
-        i2 <- ggplot(perc.class.tab,
+        i2 <- ggplot(intercept.perc,
                      aes(y=intercept,x=n.percent,
-                         fill=factor(slope.class)),
+                         fill=factor(intercept.class)),
                      environment = environment())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=col,name="Change in beta")+
