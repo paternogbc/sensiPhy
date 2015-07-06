@@ -186,32 +186,6 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                               mDFintercept=mDFintercept,
                               sdmDFintercept=sdDFintercept)
 
-        s3 <- ggplot(mDF.tab,aes(y=mDFslope,x=n.percent),
-                     environment = environment())+
-                geom_point(size=5,colour="red",alpha=.6)+
-                geom_errorbar(aes(ymin=mDFslope-sdDFslope, ymax=mDFslope+sdDFslope),
-                              colour="red", width=.8)+
-                scale_x_continuous(breaks=result$n.percent)+
-                theme(axis.title=element_text(size=16),
-                      axis.text = element_text(size=14),
-                      panel.background = element_rect(fill="white",
-                                                      colour="black"))+
-                xlab("% of Species Removed")+
-                ylab("Mean DFslope (+- SD)")
-        ### Mean DFintercept across % of species removed:
-        i3 <- ggplot(mDF.tab,aes(y=mDFintercept,x=n.percent),
-                     environment = environment())+
-                geom_point(size=5,colour="red",alpha=.6)+
-                geom_errorbar(aes(ymin=mDFintercept-sdDFintercept, ymax=mDFintercept+sdDFintercept),
-                              colour="red", width=.8)+
-                scale_x_continuous(breaks=result$n.percent)+
-                theme(axis.title=element_text(size=16),
-                      axis.text = element_text(size=14),
-                      panel.background = element_rect(fill="white",
-                                                      colour="black"))+
-                xlab("% of Species Removed")+
-                ylab("Mean DFintercept (+- SD)")
-
         ### Optpar acros % removed species:
         opt <- ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
                 geom_point()+
