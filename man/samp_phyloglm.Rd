@@ -5,16 +5,9 @@
 \title{Sampling effort analysis for phylogenetic generalized linear models (logistic regression).}
 \usage{
 samp_phyloglm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
-  btol = 50)
+  btol = 50, ...)
 }
 \arguments{
-\item{formula}{A model formula}
-
-\item{data}{A data frame containing variables that can be attributed to the taxa
-at the tips of a phylogeny}
-
-\item{phy}{A phylogeny (class 'phylo') to be matched to the data above}
-
 \item{times}{The number of times to repeat each simulation (per
 \code{breaks}) interval.}
 
@@ -28,7 +21,7 @@ random in each simulation.}
 The function \code{samp_phyloglm} returns a list with the following
   components:
 
-\code{model_estimates} Full model estimates. This contains beta and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
+\code{model_estimates} Full model estimates. This contains slope and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
 
 \code{results} A data frame with all simulation estimates.
 
