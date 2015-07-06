@@ -4,14 +4,14 @@
 #' @param x output from \code{influ_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
-#' @export
+
 
 ### Start:
 plot_influ_phylolm <- function(x,graphs="all",param="slope"){
 
         ########### samp_pgls graphs ##################
-        if (x[[1]] != "influ_phylolm")
-                stop("x must be an output from influ_phylolm!")
+        if (x[[1]] != "influ_phylolm" & x[[1]] != "influ_phyloglm")
+                stop("x must be an output from influ_phylolm or influ_phyloglm!")
         else
 
         ### Organizing values:
