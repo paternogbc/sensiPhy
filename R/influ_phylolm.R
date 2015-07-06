@@ -54,15 +54,18 @@
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
 #' library(sensiPhy)
+#' set.seed(2468)
 #' tree <- rtree(100)
-#' pred<- rTraitCont(tree,root.value=0,sigma=12,model="BM")
+#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
 #' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=25)
-#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=1,
-#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
-#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=1,
+#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
+#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
 #'                       X=cbind(rep(1,length(tree$tip.label)),pred))
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+#' fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
+#' fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
