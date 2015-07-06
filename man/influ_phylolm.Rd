@@ -46,8 +46,9 @@ difference (\code{sDFintercept}), the percentage change in intercept compared
 to the full model (\code{intercept.perc}) and intercept p-value
 (\code{pval.intercept}). All of these are also reported for the regression
 slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
-the optimised value (e.g. \code{kappa} or \code{lambda}) of the phylogenetic
-paratemeter (\code{optpar}) are reported.
+the optimised value (\code{optpar}) of the phylogenetic paratemeter
+(e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
+reported.
 
 \code{data}: Original full dataset.
 
@@ -73,6 +74,24 @@ above the value of \code{cutoff} are identified as influential.
 
 Currently, this function can only implement simple linear models (i.e. \eqn{trait~
 predictor}). In the future we will implement more complex models.
+}
+\examples{
+library(sensiPhy)
+set.seed(2468)
+tree <- rtree(100)
+pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+                     X=cbind(rep(1,length(tree$tip.label)),pred))
+bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
+                      X=cbind(rep(1,length(tree$tip.label)),pred))
+dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
+fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
+}
+\references{
+Here still: reference to phylolm paper + our own?
 }
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}

@@ -3,7 +3,7 @@
 \name{samp_phylolm}
 \alias{samp_pgls}
 \alias{samp_phylolm}
-\title{Sampling effort analysis for pgls linear regression.}
+\title{Sampling effort analysis for pgls linear regression. Gw working on updating.}
 \usage{
 samp_phylolm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
   model = "lambda", ...)

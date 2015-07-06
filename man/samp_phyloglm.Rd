@@ -2,7 +2,7 @@
 % Please edit documentation in R/samp_phyloglm.R
 \name{samp_phyloglm}
 \alias{samp_phyloglm}
-\title{Sampling effort analysis for phylogenetic generalized linear models (logistic regression).}
+\title{GW Updating. Sampling effort analysis for phylogenetic generalized linear models (logistic regression).}
 \usage{
 samp_phyloglm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
   btol = 50, ...)
