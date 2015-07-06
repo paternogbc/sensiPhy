@@ -13,7 +13,6 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 stop("x must be an output from samp_phylolm or samp_phyloglm!")
         else
 
-        x <- test.samp.glm
         result    <- x$samp.model.estimates
         sig.tab <- x$sign.analysis
 
@@ -220,8 +219,9 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                                                       colour="black"))
 
         ### Ploting:
+        param="slope";graphs="all"
         if (param == "slope" & graphs=="all")
-                print(grid.arrange(s1,s2,opt,s4,ncol=2))
+                print(arrangeGrob(s1, s2,opt,s4,ncol=2))
         if (param == "slope" & graphs==1)
                 print(s1)
         if (param == "slope" & graphs==2)
@@ -231,7 +231,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
         if (param == "slope" & graphs==4)
                 print(s4)
         if (param == "intercept" & graphs=="all")
-                print(grid.arrange(i1,i2,opt,i4,ncol=2))
+                print(gridExtra::arrangeGrob(i1, i2,opt,i4,ncol=2))
         if (param == "intercept" & graphs==1)
                 print(i1)
         if (param == "intercept" & graphs==2)
