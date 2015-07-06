@@ -1,4 +1,4 @@
-#' Influential species detection
+#' Influential species detection - Phylogenetic Linear Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic linear regression,
 #' and detects influential species.
@@ -54,21 +54,35 @@
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
 #' library(sensiPhy)
+#'
+#' #Generate a random tree
 #' set.seed(2468)
 #' tree <- rtree(100)
+#'
+#' #Generate random predictor variable (pred), evolving according to a BM model.
 #' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+#'
+#' #Generate two continous traits, one evolving highly correlated with the
+#' predictor (trait 1), and one evolving more randomly (trait 2)
 #' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
 #' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+#'
+#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
 #' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
 #'                      X=cbind(rep(1,length(tree$tip.label)),pred))
 #' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
 #'                       X=cbind(rep(1,length(tree$tip.label)),pred))
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+#'
+#' #Determine influential species for both regressions.
 #' fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
 #' fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
+#' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
+
+
 
 influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")
