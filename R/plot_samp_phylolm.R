@@ -13,15 +13,27 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 stop("x must be an output from samp_phylolm or samp_phyloglm!")
         else
 
+        x <- fit21
         result    <- x$samp.model.estimates
         sig.tab <- x$sign.analysis
 
         # classes of slope.perc:
         result$slope.class <- "class"
-        result[result$slope.perc <= 5,]$slope.class <- "within 5%"
-        result[result$slope.perc > 5
-               & result$slope.perc <= 10 ,]$slope.class <- "higher than 5%"
-        result[result$slope.perc > 10,]$slope.class <- "higher than 10%"
+        ### Within 5%:
+        if (length(result[result$slope.perc <= 5 ,]$slope.class) > 1){
+                result[result$slope.perc <= 5,]$slope.class <- "within 5%"
+        }
+        ### Higher than 5%
+        if (length(result[result$slope.perc > 5
+                & result$slope.perc <= 10 ,]$slope.class) > 1){
+                result[result$slope.perc > 5
+                       & result$slope.perc <= 10 ,]$slope.class <- "higher than 5%"
+        }
+        ### Higher than 10%
+        if (length(result[result$slope.perc > 10,]$slope.class) > 1){
+                result[result$slope.perc > 10,]$slope.class <- "higher than 10%"
+        }
+
         result$slope.class <- as.factor(result$slope.class)
         slope.0    <- as.numeric(x$full.model.estimates$coef[2])
         slope.5    <- .05*slope.0
@@ -29,10 +41,21 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
 
         # classes of intercept.perc:
         result$intercept.class <- "class"
-        result[result$intercept.perc <= 5,]$intercept.class <- "within 5%"
-        result[result$intercept.perc > 5
-               & result$intercept.perc <= 10 ,]$intercept.class <- "higher than 5%"
-        result[result$intercept.perc > 10,]$intercept.class <- "higher than 10%"
+        ### Within 5%:
+        if (length(result[result$intercept.perc <= 5 ,]$intercept.class) > 1){
+                result[result$intercept.perc <= 5,]$intercept.class <- "within 5%"
+        }
+        ### Higher than 5%
+        if (length(result[result$intercept.perc > 5
+                          & result$intercept.perc <= 10 ,]$intercept.class) > 1){
+                result[result$intercept.perc > 5
+                       & result$intercept.perc <= 10 ,]$intercept.class <- "higher than 5%"
+        }
+        ### Higher than 10%
+        if (length(result[result$intercept.perc > 10,]$intercept.class) > 1){
+                result[result$intercept.perc > 10,]$intercept.class <- "higher than 10%"
+        }
+
         result$intercept.class <- as.factor(result$intercept.class)
         intercept.0    <- as.numeric(x$full.model.estimates$coef[1])
         intercept.5    <- .05*intercept.0
@@ -46,15 +69,25 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 with(result, factor(intercept.class,
                                     levels = rev(levels(result$intercept.class))))
 
-        ## Organizing colours:
+        ## Organizing colours: slope
         if(length(levels(result$slope.class)) == 3){
-                col = c("skyblue","orange","red2")
+                colS = c("skyblue","orange","red2")
         }
         if(length(levels(result$slope.class)) == 2){
-                col = c("skyblue","orange")
+                colS = c("skyblue","orange")
         }
         if(length(levels(result$slope.class)) == 1){
-                col = c("skyblue")
+                colS = c("skyblue")
+        }
+        ## Organizing colours: intercept
+        if(length(levels(result$intercept.class)) == 3){
+                colI = c("skyblue","orange","red2")
+        }
+        if(length(levels(result$intercept.class)) == 2){
+                colI = c("skyblue","orange")
+        }
+        if(length(levels(result$intercept.class)) == 1){
+                colI = c("skyblue")
         }
 
         ### Graphs--------------------------------------------------------------
@@ -68,7 +101,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 scale_x_continuous(breaks=result$n.percent)+
                 ylab("Estimated slopes")+
                 xlab("% of Species Removed ")+
-                scale_colour_manual(values=col)+
+                scale_colour_manual(values=colS)+
                 geom_hline(yintercept=slope.0,linetype=1,color="red",
                            size=1,alpha=.6,name="Original slope")+
 
@@ -99,7 +132,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 scale_x_continuous(breaks=result$n.percent)+
                 ylab("Estimated intercepts")+
                 xlab("% of Species Removed ")+
-                scale_colour_manual(values=col)+
+                scale_colour_manual(values=colI)+
                 geom_hline(yintercept=intercept.0,linetype=1,color="red",
                            size=1,alpha=.6,name="Original intercept")+
 
@@ -138,7 +171,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                          fill=factor(slope.class)),
                      environment = environment())+
                 geom_bar(stat="identity",alpha=.5)+
-                scale_fill_manual(values=col,name="Change in beta")+
+                scale_fill_manual(values=colS,name="Change in beta")+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
@@ -160,7 +193,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                          fill=factor(intercept.class)),
                      environment = environment())+
                 geom_bar(stat="identity",alpha=.5)+
-                scale_fill_manual(values=col,name="Change in beta")+
+                scale_fill_manual(values=colS,name="Change in beta")+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
