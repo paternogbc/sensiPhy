@@ -1,44 +1,70 @@
 #' Influential species detection
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic linear regression.
+#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
+#' and detects influential species.
+#'
+#' @param formula The model formula
+#' @param data Data frame containing species traits with row names matching tips
+#' in \code{phy}.
+#' @param phy A phylogeny (class 'phylo') matching \code{data}.
+#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
+#' @param cutoff The cutoff value used to identify for influential species
+#' (see Details)
+#' @param ... Further arguments to be passed to \code{phylolm}
+#' @details
 #' This function sequentially removes one species at a time, fits a phylogenetic
 #' linear regression model using \code{\link[phylolm]{phylolm}}, stores the
 #' results and detects influential species.
-#' @aliases influ_pgls
-#' @param formula A model formula
-#' @param data A data frame containing variables that can be attributed to the taxa
-#' at the tips of a phylogeny
-#' @param phy A phylogeny (class 'phylo') to be matched to the data above
-#' @details This functions only works for simple linear regression \eqn{y = bx +
-#'   a}. Future implementation will deal with more complex models. This functions only
-#'   works with Pagel correlation (see \code{corPagel}). If any error occur during simulation,
-#'   check 'output$errors' for details.
-#' @return The function \code{influ_gls} returns a list with the following
-#'   components:
 #'
-#' @return \code{formula} The model formula
-#' @return \code{model_estimates} Full model estimates
-#' @return \code{influential_species} Most influential species for beta
-#' @return \code{results} A data frame with all simulation estimates. DFbeta and
-#'   DFintercept represent absolute difference between full model and simulation.
-#'   sDFintercept and sDFbeta represent the standardized differences.
-#' @return \code{data} Original dataset
-#' @return \code{errors} Species that showed erros during pgls fit
-#' @section Warning: This code is note fully checked. Please be aware.
-#' @seealso \code{\link[caper]{pgls}}, \code{\link{samp_pgls}}
+#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
+#' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
+#' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
+#'
+#' \code{influ_phylolm} detects influential species based on the standardised
+#' difference in intercept and/or slope when removing a given species compared
+#' to the full model including all species. Species with a standardised difference
+#' above the value of \code{cutoff} are identified as influential.
+#'
+#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' predictor}). In the future we will implement more complex models.
+#'
+#' @return The function \code{influ_phylolm} returns a list with the following
+#' components:
+#' @return \code{cutoff}: The value selected for \code{cutoff}
+#' @return \code{formula}: The formula
+#' @return \code{full.model.estimates}: Coefficients, aic and the optimised
+#' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
+#' without deleted species.
+#' @return \code{influential_species}: List of influential species, both
+#' based on standardised difference in interecept and in the slope of the
+#' regression. Species are ordered from most influential to less influential and
+#' only include species with a standardised difference > \code{cutoff}.
+#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' estimates. Each row represents a deleted species. Reported are the calculated
+#' regression intercept (\code{intercept}), difference between simulation
+#' intercept and full model intercept (\code{DFintercept}), the standardised
+#' difference (\code{sDFintercept}), the percentage change in intercept compared
+#' to the full model (\code{intercept.perc}) and intercept p-value
+#' (\code{pval.intercept}). All of these are also reported for the regression
+#' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
+#' the optimised value (\code{optpar}) of the phylogenetic paratemeter
+#' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
+#' reported.
+#' @return \code{data}: Original full dataset.
+#' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
-#' \dontrun{
-#' tre = rtree(60)
-#'taxa = sort(tre$tip.label)
-#'b0=10; b1=1;
-#'x <- rTrait(n=1, phy=tre,model="BM",
-#'            parameters=list(ancestral.state=0,sigma2=10))
-#'y <- b0 + b1*x +
-#'        rTrait(n=1,phy=tre,model="lambda",parameters=list(
-#'                ancestral.state=0,sigma2=1,lambda=0.5))
-#'dat = data.frame(trait=y[taxa],pred=x[taxa])
-#'influence_phylolm<-influ_phylolm(formula = trait~pred,data=dat,phy=tre)
-
+#' library(sensiPhy)
+#' tree <- rtree(100)
+#' pred<- rTraitCont(tree,root.value=0,sigma=12,model="BM")
+#' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=25)
+#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=1,
+#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
+#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=1,
+#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
+#' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
+#' @references Here still: reference to phylolm paper + our own?
 #' @export
 
 influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
@@ -88,8 +114,8 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
                         DFslope              <- slope - slope.0
                         intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
                         slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
-                        pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                        pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                        pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
+                        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                         aic.mod              <- mod$aic
                         optpar               <- mod$optpar
                         print(paste(i," / ",N,sep=""))
