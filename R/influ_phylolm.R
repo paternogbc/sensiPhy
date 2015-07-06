@@ -104,7 +104,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
         pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
         optpar.0         <- mod.0$optpar
 
-        #Creates empy data frame to store model outputs
+        #Creates empty data frame to store model outputs
         influ.model.estimates<-
                 data.frame("species" =numeric(), "intercept"=numeric(),
                            "DFintercept"=numeric(),"intercept.perc"=numeric(),

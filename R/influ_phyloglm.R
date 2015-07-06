@@ -103,7 +103,7 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...){
                                         consider changing btol. See ?phyloglm")
         else
 
-        #Creates empy data frame to store model outputs
+        #Creates empty data frame to store model outputs
         influ.model.estimates<-
                 data.frame("species" =numeric(), "intercept"=numeric(),
                            "DFintercept"=numeric(),"intercept.perc"=numeric(),
