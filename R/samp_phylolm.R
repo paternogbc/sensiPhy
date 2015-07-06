@@ -1,3 +1,90 @@
+#' Subsampling Sensitiviy Analyis  - Phylogenetic Linear Regression
+#'
+#' Performs sensitivity analyses to subsampling of the dataset, randomly removing
+#' species and detecting the effects on parameter estimates.
+#'
+#' @param formula The model formula
+#' @param data Data frame containing species traits with row names matching tips
+#' in \code{phy}.
+#' @param phy A phylogeny (class 'phylo') matching \code{data}.
+#' @param times The number of times species are randomly deleted for each
+#' \code{break}.
+#' @param breaks A vector containing the percentages of species to remove.
+#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
+#' @param ... Further arguments to be passed to \code{phylolm}
+#' @details
+#'
+#' This function randomly removes a given percentage of species (controlled by
+#' \code{breaks}) in the full phylogenetic linear regression, fits a phylogenetic
+#' linear regression model without these species using \code{\link[phylolm]{phylolm}},
+#' repeats this many times (controlled by \code{times}, stores the results and
+#' calculates the effects on model parameters.
+#'
+#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
+#' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
+#' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
+#'
+#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' predictor}). In the future we will implement more complex models.
+#'
+#' Output can be visualised using \code{sensi_plot}.
+#'
+#' @return The function \code{influ_phylolm} returns a list with the following
+#' components:
+#' @return \code{cutoff}: The value selected for \code{cutoff}
+#' @return \code{formula}: The formula
+#' @return \code{full.model.estimates}: Coefficients, aic and the optimised
+#' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
+#' without deleted species.
+#' @return \code{influential_species}: List of influential species, both
+#' based on standardised difference in interecept and in the slope of the
+#' regression. Species are ordered from most influential to less influential and
+#' only include species with a standardised difference > \code{cutoff}.
+#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' estimates. Each row represents a deleted species. Reported are the calculated
+#' regression intercept (\code{intercept}), difference between simulation
+#' intercept and full model intercept (\code{DFintercept}), the standardised
+#' difference (\code{sDFintercept}), the percentage change in intercept compared
+#' to the full model (\code{intercept.perc}) and intercept p-value
+#' (\code{pval.intercept}). All of these are also reported for the regression
+#' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
+#' the optimised value (\code{optpar}) of the phylogenetic paratemeter
+#' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
+#' reported.
+#' @return \code{data}: Original full dataset.
+#' @return \code{errors}: Species where deletion resulted in errors.
+#' @examples
+#' library(sensiPhy)
+#'
+#' #Generate a random tree
+#' set.seed(2468)
+#' tree <- rtree(100)
+#'
+#' #Generate random predictor variable (pred), evolving according to a BM model.
+#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+#'
+#' #Generate two continous traits, one evolving highly correlated with the
+#' predictor (trait 1), and one evolving more randomly (trait 2)
+#' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+#'
+#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
+#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
+#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
+#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
+#' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+#'
+#' #Determine influential species for both regressions.
+#' fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
+#' fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
+#' @author Gustavo Paterno & Gijsbert D.A. Werner
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
+#' \code{sensi_plot}
+#' @references Here still: reference to phylolm paper + our own?
+#' @export
+
+
 #' Sampling effort analysis for pgls linear regression. Gw working on updating.
 #'
 #' \code{samp_pgls} performs sample size sensitive analysis for \code{pgls}
