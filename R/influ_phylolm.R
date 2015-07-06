@@ -1,10 +1,9 @@
-#' Leave-one-out-deletion analysis for gls phylogenetic regression.
+#' Influential species detection
 #'
-#' \code{influ_pgls} performs leave-one-out-deletion analysis for
-#' \code{\link{gls}} phylogenetic linear regression. It removes one species at a time, fits
-#' a gls model without the species and store the results of the model
-#' estimates. The function repeats this procedure for all species in the dataset
-#' and store all the results in a data.frame.
+#' Performs leave-one-out deletion analyis for phylogenetic linear regression.
+#' This function sequentially removes one species at a time, fits a phylogenetic
+#' linear regression model using \code{\link[phylolm]{phylolm}}, stores the
+#' results and detects influential species.
 #' @aliases influ_pgls
 #' @param formula A model formula
 #' @param data A data frame containing variables that can be attributed to the taxa
