@@ -27,6 +27,8 @@
 #' Currently, this function can only implement simple models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
 #'
+#' Output can be visualised using \code{sensi_plot}.
+#'
 #' @return The function \code{influ_phyloglm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
@@ -76,7 +78,8 @@
 #' fit1<-influ_phyloglm(bin_trait1~pred,data = dat,phy = tree)
 #' fit2<-influ_phyloglm(bin_trait2~pred,data = dat,phy = tree)
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
+#' \code{sensi_plot}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
