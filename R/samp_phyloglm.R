@@ -50,8 +50,8 @@ samp_phyloglm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),btol=50
                                   (eg. breaks=c(.3,.5)")
         if(class(phy) != "phylo") stop("phy must be of class 'phylo'")
 
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be in the same order
-                                                      in data and phy")
+        #if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be in the same order
+        #                                              in data and phy")
         else
 
         #Full model calculations:
