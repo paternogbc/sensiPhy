@@ -145,7 +145,6 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
                         optpar               <- mod$optpar
 
                         if(track==TRUE) (print(paste(i," / ",N,sep="")))
-                        else
 
                         # Stores values for each simulation
                         influ.model.estimates[counter,1]  <- sp

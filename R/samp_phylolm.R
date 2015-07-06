@@ -1,6 +1,6 @@
-#' Subsampling Sensitiviy Analyis  - Phylogenetic Linear Regression
+#' Sensitivity Analysis Species Sampling  - Phylogenetic Linear Regression
 #'
-#' Performs sensitivity analyses to subsampling of the dataset, randomly removing
+#' Performs analyses of sensitivity to species sampling by randomly removing
 #' species and detecting the effects on parameter estimates.
 #'
 #' @param formula The model formula
@@ -11,6 +11,7 @@
 #' \code{break}.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
+#' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #'
@@ -28,32 +29,28 @@
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#'
-#'GW Update from here
-#' @return The function \code{influ_phylolm} returns a list with the following
+#' @return The function \code{samp_phylolm} returns a list with the following
 #' components:
-#' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
-#' @return \code{influential_species}: List of influential species, both
-#' based on standardised difference in interecept and in the slope of the
-#' regression. Species are ordered from most influential to less influential and
-#' only include species with a standardised difference > \code{cutoff}.
-#' @return \code{influ.model.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted species. Reported are the calculated
-#' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage change in intercept compared
-#' to the full model (\code{intercept.perc}) and intercept p-value
-#' (\code{pval.intercept}). All of these are also reported for the regression
-#' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
-#' the optimised value (\code{optpar}) of the phylogenetic paratemeter
-#' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
-#' reported.
+#' @return \code{samp.model.estimates}: A data frame with all simulation
+#' estimates. Each row represents a model rerun with a given number of species
+#' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
+#' Reported are the calculated regression intercept (\code{intercept}),
+#' difference between simulation intercept and full model intercept (\code{DFintercept}),
+#' the percentage change in intercept compared to the full model (\code{intercept.perc})
+#' and intercept p-value (\code{pval.intercept}). All of these are also reported
+#' for the regression slope (\code{DFslope} etc.). Additonally, model aic value
+#' (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
+#' parameter (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel
+#' used) are reported.
+#' @retun \code{sign.analysis} For each break (i.e. each percentage of species
+#' removed) this reports the percentage of statistically signficant (at p<0.05)
+#' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
+#' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
 #' @return \code{data}: Original full dataset.
-#' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
 #' library(sensiPhy)
 #'
@@ -76,53 +73,22 @@
 #'                       X=cbind(rep(1,length(tree$tip.label)),pred))
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
 #'
-#' #Determine influential species for both regressions.
-#' fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
-#' fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
+#' #For both regressions, determine sensitivity of results to species sampled.
+#' fit1<-samp_phylolm(cont_trait1~pred,data = dat,phy = tree)
+#' fit2<-samp_phylolm(cont_trait2~pred,data = dat,phy = tree)
+#'
+#' #It is possible to change the species removal percentages and number of repeats
+#' fit3<-samp_phylolm(cont_trait2~pred,data = dat,phy = tree,
+#'      breaks = c(0.25,0.5,0.75),times=100)
+#'
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
 #' \code{sensi_plot}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-
-#' Sampling effort analysis for pgls linear regression. Gw working on updating.
-#'
-#' \code{samp_pgls} performs sample size sensitive analysis for \code{pgls}
-#' linear regressions. It removes species at random, fits a pgls model without the
-#' species and store the results of the model estimates. The percentage of
-#' species removed is specified with \code{breaks} and the number of simulations
-#' per break is defined by \code{times}.
-#' @aliases samp_pgls
-#' @inheritParams influ_pgls
-#' @param breaks Percentage intervals to remove species. For example:
-#'   \code{breaks = c(.1,.2,.3)},removes 10,20 and 30 percentage of species at
-#'   random in each simulation.
-#' @param times The number of times to repeat each simulation (per
-#'   \code{breaks}) interval.
-#' @details This functions only works for simple linear regression \eqn{y = bx +
-#'   a}. Future implementation will deal with more complex models.
-#' @return The function \code{samp_gls} returns a list with the following
-#'   components:
-#' @return \code{model_estimates} Full model estimates
-#' @return \code{results} A data frame with all simulation estimates.
-#' @return \code{power_analysis} A data frame with power analysis
-#' @return \code{data} Original dataset
-#' @seealso \code{\link[caper]{pgls}}, \code{\link{influ_pgls}}
-#' @examples
-#' \dontrun{
-#' library(caper);library(sensiC)
-#' data(shorebird)
-#' comp.data <- comparative.data(shorebird.tree, shorebird.data, Species, vcv=TRUE, vcv.dim=3)
-# # First we need to match tip.labels with rownames in data:
-#' sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-#' shorebird.data <- shorebird.data[sp.ord,]
-#' samp1 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
-#' }
-#' @export
-
 samp_phylolm <- function(formula,data,phy,times=20,
-                         breaks=seq(.1,.7,.1),model="lambda",...)
+                         breaks=seq(.1,.7,.1),model="lambda",track=TRUE,...)
         {if(class(formula)!="formula") stop("formula must be class 'formula'")
          if(class(data)!="data.frame") stop("data must be class 'data.frame'")
          if(class(phy)!="phylo") stop("phy must be class 'phylo'")
@@ -189,8 +155,10 @@ samp_phylolm <- function(formula,data,phy,times=20,
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
+                                if(track==TRUE){
                                 print(paste("Break = ",n.percent,sep=""));
-                                print(paste("Repetition= ",j,""));
+                                print(paste("Repetition= ",j,""));}
+                                else
 
                                 # Stores values for each simulation
                                 samp.model.estimates[counter,1]<- n.remov

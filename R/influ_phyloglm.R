@@ -144,7 +144,6 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                         optpar               <- mod$alpha
 
                         if(track==TRUE) (print(paste(i," / ",N,sep="")))
-                        else
 
                         #Stores values for eacht simulation
                         influ.model.estimates[counter,1]  <- sp
