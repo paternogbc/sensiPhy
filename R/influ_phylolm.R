@@ -42,69 +42,60 @@
 
 #' @export
 
-influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
-{
-        # Basic error checking:
-        if(class(formula)!="formula") stop("Please formula must be class
-                                           'forumla'")
-        if(class(data)!="data.frame") stop("Please data must be class
-                                           'data.frame'")
-        if(class(phy)!="phylo") stop("Please phy must be class
-                                           'phylo'")
-       if ((model == "trend") & (is.ultrametric(phy)))
-                stop("the trend is unidentifiable for ultrametric trees.")
+influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
+        if(class(formula)!="formula") stop("formula must be class 'formula'")
+        if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+        if(class(phy)!="phylo") stop("phy must be class 'phylo'")
         else
 
-        # FULL MODEL calculations:
-        full.data <- data
-        N         <- nrow(full.data)
-        mod.0     <- phylolm::phylolm(formula, data=full.data,model=model,phy=phy)
-
-        intercept.0      <- mod.0$coefficients[[1]]             # Intercept (full model)
-        slope.0          <- mod.0$coefficients[[2]]             # Beta (full model)
-        pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] # p.value (intercept)
-        pval.slope.0     <-     phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] # p.value (slope)
+        #Calculates the full model, extracts model parameters
+        full.data       <- data
+        N               <- nrow(full.data)
+        mod.0           <- phylolm::phylolm(formula, data=full.data,
+                                            model=model,phy=phy)
+        intercept.0      <- mod.0$coefficients[[1]]
+        slope.0          <- mod.0$coefficients[[2]]
+        pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
+        pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
         optpar.0         <- mod.0$optpar
 
-        #Create the influ.model.estimates data.frame
-        influ.model.estimates<-data.frame("species" =numeric(), "intercept"=numeric(),
-                            "DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
-                            "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),
-                            "pval.slope"=numeric(),"AIC"=numeric(),
-                             "optpar" = numeric())
-        #Loop:
+        #Creates empy data frame to store model outputs
+        influ.model.estimates<-
+                data.frame("species" =numeric(), "intercept"=numeric(),
+                           "DFintercept"=numeric(),"intercept.perc"=numeric(),
+                           "pval.intercept"=numeric(),"slope"=numeric(),
+                           "DFslope"=numeric(),"slope.perc"=numeric(),
+                           "pval.slope"=numeric(),"AIC"=numeric(),
+                           "optpar" = numeric())
+
+        #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
-
         for (i in 1:N){
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
-
-                mod=try(phylolm::phylolm(formula, data=crop.data,model=model,phy=crop.phy),TRUE)
-
+                mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
+                                         phy=crop.phy),
+                        TRUE)
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
                         names(error) <- rownames(full.data$data)[i]
                         errors <- c(errors,error)
                         next }
-
-                else {
-                        ### Calculating model estimates:
-
-                        sp                   <- phy$tip.label[i]      # species removed
-                        intercept            <- mod$coefficients[[1]] # Intercept (crop model)
-                        slope                <- mod$coefficients[[2]] # Beta (crop model)
-                        DFintercept          <- intercept - intercept.0 # DF intercept
-                        DFslope              <- slope - slope.0 # DF beta
-                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
-                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of beta change
-                        pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] # p.value (intercept)
-                        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] # p.value
-                        aic.mod              <- mod$aic # Model AIC
-                        optpar               <- mod$optpar# Estimated lambda
+                else {  sp                   <- phy$tip.label[i]
+                        intercept            <- mod$coefficients[[1]]
+                        slope                <- mod$coefficients[[2]]
+                        DFintercept          <- intercept - intercept.0
+                        DFslope              <- slope - slope.0
+                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
+                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
+                        pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
+                        pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                        aic.mod              <- mod$aic
+                        optpar               <- mod$optpar
                         print(paste(i," / ",N,sep=""))
 
-                        ### Storing values for each simulation
+                        # Stores values for each simulation
                         influ.model.estimates[counter,1]  <- sp
                         influ.model.estimates[counter,2]  <- intercept
                         influ.model.estimates[counter,3]  <- DFintercept
@@ -121,30 +112,36 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...)
         }
 
         ### Calculating Standardized DFbeta and DFintercept
-        sDFintercept <- influ.model.estimates$DFintercept/sd(influ.model.estimates$DFintercept)
-        sDFslope     <- influ.model.estimates$DFslope/sd(influ.model.estimates$DFslope)
+        sDFintercept <- influ.model.estimates$DFintercept/
+                sd(influ.model.estimates$DFintercept)
+        sDFslope     <- influ.model.estimates$DFslope/
+                sd(influ.model.estimates$DFslope)
 
-
-        influ.model.estimates$sDFslope     <- sDFslope;
+        influ.model.estimates$sDFslope     <- sDFslope
         influ.model.estimates$sDFintercept <- sDFintercept
 
-        ### Original model estimates:
+        #Creates a list with full model estimates:
         param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                        aic=phylolm::summary.phylolm(mod.0)$aic,
                        optpar=mod.0$optpar)
 
-       ### Influential species (i.e. sDF > cutoff) for intercept & slope.
-       reorder.on.slope        <-influ.model.estimates[order(abs(influ.model.estimates$sDFslope),decreasing=T),c("species","sDFslope")]
-       influ.sp.slope          <-as.character(reorder.on.slope$species[abs(reorder.on.slope$sDFslope)>cutoff])
-       reorder.on.intercept        <-influ.model.estimates[order(abs(influ.model.estimates$sDFintercept),decreasing=T),c("species","sDFintercept")]
-       influ.sp.intercept          <-as.character(reorder.on.intercept$species[abs(reorder.on.intercept$sDFintercept)>cutoff])
+       #Identifies influencital species (sDF > cutoff) and orders by influence
+       reorder.on.slope         <-influ.model.estimates[order(abs(
+               influ.model.estimates$sDFslope),decreasing=T),c("species","sDFslope")]
+       influ.sp.slope           <-as.character(reorder.on.slope$species[abs(
+               reorder.on.slope$sDFslope)>cutoff])
+       reorder.on.intercept     <-influ.model.estimates[order(abs(
+               influ.model.estimates$sDFintercept),decreasing=T),c("species","sDFintercept")]
+       influ.sp.intercept       <-as.character(reorder.on.intercept$species[abs(
+               reorder.on.intercept$sDFintercept)>cutoff])
 
-        ### Output:
+        #Generates output:
         res <- list(analysis.type="influ_phylolm",
                         cutoff=cutoff,
                         formula=formula,
                         full.model.estimates=param0,
-                        influential.species= list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+                        influential.species= list(influ.sp.slope=influ.sp.slope,
+                                                  influ.sp.intercept=influ.sp.intercept),
                         influ.model.estimates=influ.model.estimates,
                         data=full.data,errors=errors)
 
