@@ -10,6 +10,7 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
+#' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function sequentially removes one species at a time, fits a phylogenetic
@@ -91,7 +92,7 @@
 
 
 
-influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
+influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")
         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
@@ -142,7 +143,9 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
                         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                         aic.mod              <- mod$aic
                         optpar               <- mod$optpar
-                        print(paste(i," / ",N,sep=""))
+
+                        if(track==TRUE) (print(paste(i," / ",N,sep="")))
+                        else
 
                         # Stores values for each simulation
                         influ.model.estimates[counter,1]  <- sp
