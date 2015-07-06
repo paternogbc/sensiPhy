@@ -83,7 +83,7 @@
 #'
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
-#' \code{sensi_plot}
+#' \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
