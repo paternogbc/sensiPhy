@@ -2,62 +2,117 @@
 % Please edit documentation in R/samp_phyloglm.R
 \name{samp_phyloglm}
 \alias{samp_phyloglm}
-\title{GW Updating. Sampling effort analysis for phylogenetic generalized linear models (logistic regression).}
+\title{Sensitivity Analysis Species Sampling  - Phylogenetic Logistic Regression}
 \usage{
 samp_phyloglm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
-  btol = 50, ...)
+  btol = 50, track = TRUE, ...)
 }
 \arguments{
-\item{times}{The number of times to repeat each simulation (per
-\code{breaks}) interval.}
+\item{formula}{The model formula}
 
-\item{breaks}{Percentage intervals to remove species. For example:
-\code{breaks = c(.1,.2,.3)},removes 10, 20 and 30 percent of species at
-random in each simulation.}
+\item{data}{Data frame containing species traits with row names matching tips
+in \code{phy}.}
 
-\item{btol}{Bound on the linear predictor to bound the searching space (see ?phyloglm)}
+\item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
+
+\item{times}{The number of times species are randomly deleted for each
+\code{break}.}
+
+\item{breaks}{A vector containing the percentages of species to remove.}
+
+\item{btol}{Bound on searching space. For details see \code{phyloglm}}
+
+\item{track}{Print a report tracking function progress (default = TRUE)}
+
+\item{...}{Further arguments to be passed to \code{phylolm}}
 }
 \value{
-The function \code{samp_phyloglm} returns a list with the following
-  components:
+The function \code{samp_phylolm} returns a list with the following
+components:
 
-\code{model_estimates} Full model estimates. This contains slope and intercept for the full model and associated p-values, as well as the phylogenetic correlation parameter alpha from \code{phyloglm}.
+\code{formula}: The formula
 
-\code{results} A data frame with all simulation estimates.
+\code{full.model.estimates}: Coefficients, aic and the optimised
+value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
+without deleted species.
 
-\code{power_analysis} A data frame with power analysis for each
+\code{samp.model.estimates}: A data frame with all simulation
+estimates. Each row represents a model rerun with a given number of species
+\code{n.remov} removed, representing \code{n.percent} of the full dataset.
+Reported are the calculated regression intercept (\code{intercept}),
+difference between simulation intercept and full model intercept (\code{DFintercept}),
+the percentage change in intercept compared to the full model (\code{intercept.perc})
+and intercept p-value (\code{pval.intercept}). All of these are also reported
+for the regression slope (\code{DFslope} etc.). Additonally, model aic value
+(\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
+parameter (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel
+used) are reported.
 
-\code{data} Original dataset
+\code{sign.analysis} For each break (i.e. each percentage of species
+removed) this reports the percentage of statistically signficant (at p<0.05)
+intercepts (\code{perc.sign.intercept}) over all repititions as well as the
+percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+
+\code{data}: Original full dataset.
 }
 \description{
-\code{samp_phyloglm} performs sample size sensitivity analysis for logistic regresssions using \code{phyloglm}.
-It removes species at random, fits a phyloglm model without the
-species and stores the results of the model estimates. The percentage of
-species removed is specified with \code{breaks} and the number of simulations
-per break is defined by \code{times}.
+Performs analyses of sensitivity to species sampling by randomly removing
+species and detecting the effects on parameter estimates in phylogenetic
+logistic regression.
 }
 \details{
-This functions currently only works for logistic regressions, Poisson regressions
-will be implemented later (see R-package phylolm, Ives and Garland 2002 and Ives and Garland 2010).
-Also it currently only uses logistic_MPLE as a method, and can only deal with simple logistic regression models.
-}
-\section{Warning}{
- This code is not fully checked. Please be aware.
+This function randomly removes a given percentage of species (controlled by
+\code{breaks}) in the full phylogenetic logistic regression, fits a phylogenetic
+linear regression model without these species using \code{\link[phylolm]{phyloglm}},
+repeates this many times (controlled by \code{times}, stores the results and
+calculates the effects on model parameters.
+
+Currently only logistic regression using the "logistic_MPLE"-method from
+\code{phyloglm} is implemented.
+
+Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+predictor}). In the future we will implement more complex models.
+
+Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-library(caper);library(ggplot2);library(gridExtra);library(phylolm)
-data(shorebird)
-sp.ord <- match(shorebird.tree$tip.label, rownames(shorebird.data))
-shorebird.data <- shorebird.data[sp.ord,]
-#Create a binary variable (large egg / small egg), for illustration purposes.
-mean(shorebird.data$Egg.Mass)
-shorebird.data$Egg.Mass.binary<-ifelse(shorebird.data$Egg.Mass>30,1,0) #Turn egg mass into a binary variable
-table(shorebird.data$Egg.Mass.binary) #Mostly small eggs.
-#Run samp_phyloglm
-samp_phyloglm1<-samp_phyloglm(formula = Egg.Mass.binary~M.Mass,data = shorebird.data,phy=shorebird.tree,btol = 50)
-sensi_plot(samp_phyloglm1)
+library(sensiPhy)
+
+#Generate a random tree
+set.seed(2468)
+tree <- rtree(100)
+
+#Generate random predictor variable (pred), evolving according to a BM model.
+pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+
+#Generate two continous traits, one evolving highly correlated with the
+predictor (trait 1), and one evolving more randomly (trait 2)
+cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+
+#Generate two binary traits, one highly correlated to pred (trait 1), the other less.
+bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+                     X=cbind(rep(1,length(tree$tip.label)),pred))
+bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
+                      X=cbind(rep(1,length(tree$tip.label)),pred))
+dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+
+#For both regressions, determine sensitivity of results to species sampled.
+fit1<-samp_phyloglm(bin_trait1~pred,data = dat,phy = tree)
+fit2<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree)
+
+#It is possible to change the species removal percentages and number of repeats
+fit3<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree,
+     breaks = c(0.25,0.5,0.75),times=100)
+}
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}
+\references{
+Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link{pgls}}, \code{\link{influ_pgls}}, \code{\link{samp_pgls}}, \code{\link{samp_phyloglm}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
+\code{\link{sensi_plot}}
 }
 

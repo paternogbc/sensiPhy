@@ -4,7 +4,8 @@
 \alias{influ_phylolm}
 \title{Influential species detection - Phylogenetic Linear Regression}
 \usage{
-influ_phylolm(formula, data, phy, model = "lambda", cutoff = 2, ...)
+influ_phylolm(formula, data, phy, model = "lambda", cutoff = 2,
+  track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -18,6 +19,8 @@ in \code{phy}.}
 
 \item{cutoff}{The cutoff value used to identify for influential species
 (see Details)}
+
+\item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{...}{Further arguments to be passed to \code{phylolm}}
 }
@@ -46,7 +49,7 @@ difference (\code{sDFintercept}), the percentage change in intercept compared
 to the full model (\code{intercept.perc}) and intercept p-value
 (\code{pval.intercept}). All of these are also reported for the regression
 slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
-the optimised value (\code{optpar}) of the phylogenetic paratemeter
+the optimised value (\code{optpar}) of the phylogenetic parameter
 (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
 reported.
 
@@ -74,6 +77,8 @@ above the value of \code{cutoff} are identified as influential.
 
 Currently, this function can only implement simple linear models (i.e. \eqn{trait~
 predictor}). In the future we will implement more complex models.
+
+Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 library(sensiPhy)
@@ -100,6 +105,10 @@ dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
 #Determine influential species for both regressions.
 fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
 fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
+
+#For purposes of comparison the full model output from phylolm:
+summary(phylolm(cont_trait1~pred,data = dat,phy = tree,model = "lambda"))
+summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
@@ -108,6 +117,7 @@ Gustavo Paterno & Gijsbert D.A. Werner
 Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
+\code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
+\code{\link{sensi_plot}}
 }
 
