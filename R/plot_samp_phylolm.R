@@ -174,18 +174,6 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                 xlab("% of Species Removed")+
                 ylab("Proportion of estimated intercept")
 
-        ### Mean DFslope across % of species removed:
-        mDFslope  <- with(result,tapply(DFslope,n.percent,function(x){abs(mean(x))}))
-        sdDFslope <- with(result,tapply(DFslope,n.percent,function(x){sd(abs(x))}))
-        mDFintercept  <- with(result,tapply(DFintercept,n.percent,function(x){abs(mean(x))}))
-        sdDFintercept <-with(result,tapply(DFintercept,n.percent,function(x){sd(abs(x))}))
-
-        mDF.tab <- data.frame(n.percent = as.numeric(rownames(mDFslope)),
-                              mDFslope=mDFslope,
-                              sdmDFslope=sdDFslope,
-                              mDFintercept=mDFintercept,
-                              sdmDFintercept=sdDFintercept)
-
         ### Optpar acros % removed species:
         opt <- ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
                 geom_point()+
@@ -228,7 +216,6 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope"){
                       panel.background = element_rect(fill="white",
                                                       colour="black"))
 
-        ### Ploting:
         ### Ploting:
         if (param == "slope" & graphs=="all")
                 print(grid.arrange(s1,s2,opt,s4,ncol=2))
