@@ -46,7 +46,7 @@
 #' (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 #' parameter (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel
 #' used) are reported.
-#' @retun \code{sign.analysis} For each break (i.e. each percentage of species
+#' @return \code{sign.analysis} For each break (i.e. each percentage of species
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
 #' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
