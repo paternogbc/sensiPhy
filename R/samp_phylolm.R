@@ -1,4 +1,4 @@
-#' Sampling effort analysis for pgls linear regression.
+#' Sampling effort analysis for pgls linear regression. Gw working on updating.
 #'
 #' \code{samp_pgls} performs sample size sensitive analysis for \code{pgls}
 #' linear regressions. It removes species at random, fits a pgls model without the

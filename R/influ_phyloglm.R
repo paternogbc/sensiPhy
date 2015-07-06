@@ -1,4 +1,4 @@
-
+#' GW working on updating help.
 
 influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")

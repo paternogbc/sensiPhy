@@ -1,4 +1,4 @@
-#' Sampling effort analysis for phylogenetic generalized linear models (logistic regression).
+#' GW Updating. Sampling effort analysis for phylogenetic generalized linear models (logistic regression).
 #'
 #' \code{samp_phyloglm} performs sample size sensitivity analysis for logistic regresssions using \code{phyloglm}.
 #' It removes species at random, fits a phyloglm model without the
