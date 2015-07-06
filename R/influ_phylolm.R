@@ -49,7 +49,7 @@
 #' to the full model (\code{intercept.perc}) and intercept p-value
 #' (\code{pval.intercept}). All of these are also reported for the regression
 #' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
-#' the optimised value (\code{optpar}) of the phylogenetic paratemeter
+#' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
 #' reported.
 #' @return \code{data}: Original full dataset.
