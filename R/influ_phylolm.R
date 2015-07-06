@@ -156,7 +156,7 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,...){
                 }
         }
 
-        ### Calculating Standardized DFbeta and DFintercept
+        #Calculates Standardized DFbeta and DFintercept
         sDFintercept <- influ.model.estimates$DFintercept/
                 sd(influ.model.estimates$DFintercept)
         sDFslope     <- influ.model.estimates$DFslope/
