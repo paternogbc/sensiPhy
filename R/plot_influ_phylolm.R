@@ -129,7 +129,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
 
         ### Ploting:
         if (param == "slope" & graphs=="all")
-                print(grid.arrange(s1,s2,s3,s4,ncol=2))
+                print(gridExtra::grid.arrange(s1,s2,s3,s4,ncol=2))
         if (param == "slope" & graphs==1)
                 print(s1)
         if (param == "slope" & graphs==2)
@@ -139,7 +139,7 @@ plot_influ_phylolm <- function(x,graphs="all",param="slope"){
         if (param == "slope" & graphs==4)
                 print(s4)
         if (param == "intercept" & graphs=="all")
-                print(grid.arrange(i1,i2,i3,i4,ncol=2))
+                print(gridExtra::grid.arrange(i1,i2,i3,i4,ncol=2))
         if (param == "intercept" & graphs==1)
                 print(i1)
         if (param == "intercept" & graphs==2)
