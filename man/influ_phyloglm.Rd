@@ -2,11 +2,110 @@
 % Please edit documentation in R/influ_phyloglm.R
 \name{influ_phyloglm}
 \alias{influ_phyloglm}
-\title{GW working on updating help.}
+\title{Influential species detection - Phylogenetic Logistic Regression}
 \usage{
 influ_phyloglm(formula, data, phy, btol = 50, cutoff = 2, ...)
 }
+\arguments{
+\item{formula}{The model formula}
+
+\item{data}{Data frame containing species traits with row names matching tips
+in \code{phy}.}
+
+\item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
+
+\item{btol}{Bound on searching space. For details see \code{phyloglm}}
+
+\item{cutoff}{The cutoff value used to identify for influential species
+(see Details)}
+
+\item{...}{Further arguments to be passed to \code{phylolm}}
+}
+\value{
+The function \code{influ_phyloglm} returns a list with the following
+components:
+
+\code{cutoff}: The value selected for \code{cutoff}
+
+\code{formula}: The formula
+
+\code{full.model.estimates}: Coefficients, aic and the optimised
+value of the phylogenetic parameter (i.e. \code{alpha}) for the full model
+without deleted species.
+
+\code{influential_species}: List of influential species, both
+based on standardised difference in interecept and in the slope of the
+regression. Species are ordered from most influential to less influential and
+only include species with a standardised difference > \code{cutoff}.
+
+\code{influ.model.estimates}: A data frame with all simulation
+estimates. Each row represents a deleted species. Reported are the calculated
+regression intercept (\code{intercept}), difference between simulation
+intercept and full model intercept (\code{DFintercept}), the standardised
+difference (\code{sDFintercept}), the percentage change in intercept compared
+to the full model (\code{intercept.perc}) and intercept p-value
+(\code{pval.intercept}). All of these are also reported for the regression
+slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
+the optimised value (\code{optpar}) of the phylogenetic paratemeter
+(i.e. \code{alpha}) are reported.
+
+\code{data}: Original full dataset.
+
+\code{errors}: Species where deletion resulted in errors.
+}
 \description{
-GW working on updating help.
+Performs leave-one-out deletion analyis for phylogenetic logistic regression,
+and detects influential species.
+}
+\details{
+This function sequentially removes one species at a time, fits a phylogenetic
+logistic regression model using \code{\link[phylolm]{phyloglm}}, stores the
+results and detects influential species.
+
+Currently only logistic regression using the "logistic_MPLE"-method from
+\code{phyloglm} is implemented.
+
+\code{influ_phyloglm} detects influential species based on the standardised
+difference in intercept and/or slope when removing a given species compared
+to the full model including all species. Species with a standardised difference
+above the value of \code{cutoff} are identified as influential.
+
+Currently, this function can only implement simple models (i.e. \eqn{trait~
+predictor}). In the future we will implement more complex models.
+}
+\examples{
+library(sensiPhy)
+
+#Generate a random tree
+set.seed(2468)
+tree <- rtree(100)
+
+#Generate random predictor variable (pred), evolving according to a BM model.
+pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+
+#Generate two continous traits, one evolving highly correlated with the
+predictor (trait 1), and one evolving more randomly (trait 2)
+cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+
+#Generate two binary traits, one highly correlated to pred (trait 1), the other less.
+bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+                     X=cbind(rep(1,length(tree$tip.label)),pred))
+bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
+                      X=cbind(rep(1,length(tree$tip.label)),pred))
+dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
+
+#Determine influential species for both regressions.
+fit1<-influ_phyloglm(bin_trait1~pred,data = dat,phy = tree)
+fit2<-influ_phyloglm(bin_trait2~pred,data = dat,phy = tree)
+}
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}
+\references{
+Here still: reference to phylolm paper + our own?
+}
+\seealso{
+\code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}}
 }
 
