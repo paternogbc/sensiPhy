@@ -17,7 +17,7 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) in the full phylogenetic linear regression, fits a phylogenetic
 #' linear regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times}, stores the results and
+#' repeates this many times (controlled by \code{times}, stores the results and
 #' calculates the effects on model parameters.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
@@ -29,6 +29,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
+#'GW Update from here
 #' @return The function \code{influ_phylolm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
@@ -120,43 +121,41 @@
 #' }
 #' @export
 
-samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="lambda",
-                      ...)
-{
-        ### Basic error checking:
-        if(class(formula)!="formula") stop("Please formula must be
-                                           class 'formula'")
-        if(class(data)!="data.frame") stop("data data must be of class
-                                                 'data.frame'. See function `comparative.data`.")
-        if(length(breaks)<2) stop("please include more then one break
-                                  (eg. breaks=c(.3,.5)")
-        if(class(phy) != "phylo") stop("Please phy must be of class 'phylo'")
+samp_phylolm <- function(formula,data,phy,times=20,
+                         breaks=seq(.1,.7,.1),model="lambda",...)
+        {if(class(formula)!="formula") stop("formula must be class 'formula'")
+         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
+         if(length(breaks)<2) stop("Please include more than one break,
+                                  e.g. breaks=c(.3,.5)")
+         if ((model == "trend") & (is.ultrametric(phy)))
+                 stop("Trend is unidentifiable for ultrametric trees.,
+                      see ?phylolm for details")
+         else
 
-        if (sum(rownames(data) != phy$tip.label) > 0) stop("Species must be at the same order
-                                                      in data and phy")
-        if ((model == "trend") & (is.ultrametric(phy)))
-                stop("the trend is unidentifiable for ultrametric trees.")
-        else
-
-        # FULL MODEL calculations:
-        full.data <- data
-        N <- nrow(full.data)
-        mod.0 <- phylolm::phylolm(formula, data=full.data,model=model,phy=phy)
-
-        intercept.0             <- mod.0$coefficients[[1]] #Intercept (full model)
-        slope.0                 <- mod.0$coefficients[[2]] #Slope (full model)
-        optpar.0                <- mod.0$alpha             #The optimisation paratemer alpha (phylogenetic correlation parameter)
-        pval.intercept.0        <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]] #P-value intercept (full model)
-        pval.slope.0            <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]] #P-value slope (full model)
+        #Calculates the full model, extracts model parameters
+        full.data       <- data
+        N               <- nrow(full.data)
+        mod.0           <- phylolm::phylolm(formula, data=full.data,
+                                             model=model,phy=phy)
+        intercept.0      <- mod.0$coefficients[[1]]
+        slope.0          <- mod.0$coefficients[[2]]
+        pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
+        pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
+        optpar.0         <- mod.0$optpar
         aic.0                   <- mod.0$aic
 
-        #Create the results data.frame
-        samp.model.estimates<-data.frame("n.remov" =numeric(), "n.percent"=numeric(),
-                                         "intercept"=numeric(),"DFintercept"=numeric(),"intercept.perc"=numeric(),"pval.intercept"=numeric(),
-                                         "slope"=numeric(),"DFslope"=numeric(),"slope.perc"=numeric(),"pval.slope"=numeric(),
-                                         "AIC"=numeric(),"optpar" = numeric())
+        #Creates empty data frame to store model outputs
+        samp.model.estimates<-
+                data.frame("n.remov" =numeric(), "n.percent"=numeric(),
+                           "intercept"=numeric(),"DFintercept"=numeric(),
+                           "intercept.perc"=numeric(),"pval.intercept"=numeric(),
+                           "slope"=numeric(),"DFslope"=numeric(),
+                           "slope.perc"=numeric(),"pval.slope"=numeric(),
+                           "AIC"=numeric(),"optpar" = numeric())
 
-        # Loop:
+        #Loops over breaks, remove percentage of species determined by 'breaks
+        #and repeat determined by 'times'.
         counter=1
         limit <- sort(round((breaks)*nrow(full.data),digits=0))
         for (i in limit){
@@ -164,32 +163,36 @@ samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="l
                         exclude <- sample(1:N,i)
                         crop.data <- full.data[-exclude,]
                         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-
-                        mod=try(phylolm::phylolm(formula, data=crop.data,model=model,phy=crop.phy),TRUE)
+                        mod=try(phylolm::phylolm(formula, data=crop.data,
+                                                 model=model,phy=crop.phy),TRUE)
                         if(isTRUE(class(mod)=="try-error")) { next }
-                        else {
-                                intercept             <- mod$coefficients[[1]] #Intercept (crop model)
-                                slope                 <- mod$coefficients[[2]] #Slope (crop model)
-                                optpar                <- mod$optpar            #The optimisation paratemer alpha (phylogenetic correlation parameter)
-                                pval.intercept        <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] #P-value intercept (crop model)
-                                pval.slope            <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] #P-value slope (crop model)
+                        else {  intercept             <- mod$coefficients[[1]]
+                                slope                 <- mod$coefficients[[2]]
+                                optpar                <- mod$optpar
+                                pval.intercept        <-
+                                        phylolm::summary.phylolm(mod)$coefficients[[1,4]]
+                                pval.slope            <-
+                                        phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                                 aic                   <- mod$aic
-                                DFintercept           <- intercept - intercept.0   # DF intercept
-                                DFslope               <- slope - slope.0           # DF slope
-                                intercept.perc        <- round((abs(DFintercept/intercept.0))*100,digits=1)  # Percentage of intercept change
-                                slope.perc            <- round((abs(DFslope/slope.0))*100,digits=1)  # Percentage of slope change
-                                pval.intercept        <- phylolm::summary.phylolm(mod)$coefficients[[1,4]] #P-value intercept (full model)
-                                pval.slope            <- phylolm::summary.phylolm(mod)$coefficients[[2,4]] #P-value slope (full model)
+                                DFintercept           <- intercept - intercept.0
+                                DFslope               <- slope - slope.0
+                                intercept.perc        <- round((abs(
+                                        DFintercept/intercept.0))*100,digits=1)
+                                slope.perc            <- round((abs(
+                                        DFslope/slope.0))*100,digits=1)
+                                pval.intercept        <-
+                                        phylolm::summary.phylolm(mod)$coefficients[[1,4]]
+                                pval.slope            <-
+                                        phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                                 aic                   <- mod$aic
-                                optpar                <- mod$optpar             #The optimisation paratemer alpha (phylogenetic correlation parameter)
+                                optpar                <- mod$optpar
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
                                 print(paste("Break = ",n.percent,sep=""));
                                 print(paste("Repetition= ",j,""));
 
-                                ### Storing ### Storing values for each simulation
-                                #write in a table
+                                # Stores values for each simulation
                                 samp.model.estimates[counter,1]<- n.remov
                                 samp.model.estimates[counter,2]<- n.percent
                                 samp.model.estimates[counter,3]<- intercept
@@ -203,16 +206,11 @@ samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="l
                                 samp.model.estimates[counter,11]<- aic
                                 samp.model.estimates[counter,12]<- optpar
                                 counter=counter+1
-
-
-
                         }
-
-
                 }
         }
 
-        #Percentage Significant:
+        #Calculates percentages of signficant intercepts & slopes within breaks.
         res                     <- samp.model.estimates
         times                   <- table(res$n.remov)
         breaks                  <- unique(res$n.percent)
@@ -226,12 +224,12 @@ samp_phylolm <- function(formula,data,phy,times=20,breaks=seq(.1,.7,.1),model="l
                                           perc.sign.intercept=as.numeric(perc.sign.intercept),
                                           perc.sign.slope=as.numeric(perc.sign.slope))
 
-        #Summary of all full model details for output
+        #Creates a list with full model estimates:
         param0<-list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                      aic=phylolm::summary.phylolm(mod.0)$aic,
                      optpar=mod.0$optpar)
 
-        # Function output:
+        #Generates output:
         return(list(analyis.type = "samp_phylolm",
                     formula=formula,
                     full.model.estimates=param0,
