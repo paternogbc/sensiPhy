@@ -33,8 +33,8 @@ components:
 \code{formula}: The formula
 
 \code{full.model.estimates}: Coefficients, aic and the optimised
-value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
-without deleted species.
+value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
+the full model without deleted species.
 
 \code{samp.model.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
@@ -62,12 +62,12 @@ logistic regression.
 }
 \details{
 This function randomly removes a given percentage of species (controlled by
-\code{breaks}) in the full phylogenetic logistic regression, fits a phylogenetic
-linear regression model without these species using \code{\link[phylolm]{phyloglm}},
-repeates this many times (controlled by \code{times}, stores the results and
+\code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
+logistic regression model without these species using \code{\link[phylolm]{phyloglm}},
+repeates this many times (controlled by \code{times}), stores the results and
 calculates the effects on model parameters.
 
-Currently only logistic regression using the "logistic_MPLE"-method from
+Only logistic regression using the "logistic_MPLE"-method from
 \code{phyloglm} is implemented.
 
 Currently, this function can only implement simple linear models (i.e. \eqn{trait~
@@ -109,10 +109,11 @@ fit3<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree,
 Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Here still: reference to phylolm paper + our own + some more
+background papers.
 }
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
-\code{\link{sensi_plot}}
+\code{\link{influ_phyloglm}}, \code{\link{sensi_plot}}
 }
 

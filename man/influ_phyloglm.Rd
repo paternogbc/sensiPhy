@@ -71,7 +71,8 @@ Currently only logistic regression using the "logistic_MPLE"-method from
 \code{influ_phyloglm} detects influential species based on the standardised
 difference in intercept and/or slope when removing a given species compared
 to the full model including all species. Species with a standardised difference
-above the value of \code{cutoff} are identified as influential.
+above the value of \code{cutoff} are identified as influential. The default
+value for the cutoff is 2 standardised differences change.
 
 Currently, this function can only implement simple models (i.e. \eqn{trait~
 predictor}). In the future we will implement more complex models.
@@ -115,7 +116,7 @@ Gustavo Paterno & Gijsbert D.A. Werner
 Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyloglm}},
+\code{\link{influ_phylolm}}, \code{\link{sensi_plot}}
 }
 

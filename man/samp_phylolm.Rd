@@ -33,8 +33,8 @@ components:
 \code{formula}: The formula
 
 \code{full.model.estimates}: Coefficients, aic and the optimised
-value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
-without deleted species.
+value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
+the full model without deleted species.
 
 \code{samp.model.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
@@ -62,9 +62,9 @@ linear regression.
 }
 \details{
 This function randomly removes a given percentage of species (controlled by
-\code{breaks}) in the full phylogenetic linear regression, fits a phylogenetic
+\code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 linear regression model without these species using \code{\link[phylolm]{phylolm}},
-repeates this many times (controlled by \code{times}, stores the results and
+repeates this many times (controlled by \code{times}), stores the results and
 calculates the effects on model parameters.
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
@@ -110,10 +110,11 @@ fit3<-samp_phylolm(cont_trait2~pred,data = dat,phy = tree,
 Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Here still: reference to phylolm paper + our own + some more
+bacground papers.
 }
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyloglm}},
-\code{\link{sensi_plot}}
+\code{\link{influ_phylolm}},\code{\link{sensi_plot}}
 }
 
