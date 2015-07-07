@@ -11,7 +11,7 @@ plot_samp_phylolm(x, graphs = "all", param = "slope")
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which parameter ("intercept" or "slope") should be printed}
+\item{param}{choose which model parameter should be ploted  ("intercept" or "slope")}
 }
 \description{
 \code{plot_samp_phylolm} Plot results from \code{samp_phylolm},

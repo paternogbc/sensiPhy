@@ -9,7 +9,10 @@ sensi_plot(x, graphs = "all", param = "slope")
 \arguments{
 \item{x}{output from \code{samp_gls}, \code{influ_gls}}
 
-\item{graphs}{choose which graphs should be printed on the output ("all", 1,2,3 or 4)}
+\item{graphs}{choose which graphs should be printed on the output ("all", 1,2,3
+or 4)}
+
+\item{param}{choose which model parameter should be ploted  ("intercept" or "slope")}
 }
 \description{
 \code{sensi_plot} Plot results from \code{samp_influ_phyloglm},
