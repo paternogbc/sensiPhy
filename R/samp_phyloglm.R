@@ -17,12 +17,12 @@
 #' @details
 #'
 #' This function randomly removes a given percentage of species (controlled by
-#' \code{breaks}) in the full phylogenetic logistic regression, fits a phylogenetic
-#' linear regression model without these species using \code{\link[phylolm]{phyloglm}},
-#' repeates this many times (controlled by \code{times}, stores the results and
+#' \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
+#' logistic regression model without these species using \code{\link[phylolm]{phyloglm}},
+#' repeates this many times (controlled by \code{times}), stores the results and
 #' calculates the effects on model parameters.
 #'
-#' Currently only logistic regression using the "logistic_MPLE"-method from
+#' Only logistic regression using the "logistic_MPLE"-method from
 #' \code{phyloglm} is implemented.
 #'
 #' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
@@ -33,8 +33,8 @@
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
-#' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
-#' without deleted species.
+#' value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
+#' the full model without deleted species.
 #' @return \code{samp.model.estimates}: A data frame with all simulation
 #' estimates. Each row represents a model rerun with a given number of species
 #' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
@@ -84,7 +84,8 @@
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
 #' \code{\link{sensi_plot}}
-#' @references Here still: reference to phylolm paper + our own?
+#' @references Here still: reference to phylolm paper + our own + some more
+#' background papers.
 #' @export
 
 samp_phyloglm <- function(formula,data,phy,times=20,
