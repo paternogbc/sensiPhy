@@ -1,5 +1,5 @@
 Package: sensiPhy
-Title: Sensitive  analysis for comparative methods
+Title: Sensitivity analysis for comparative methods
 Version: 0.1.1
 Date: 2015-03-03
 Authors@R: c(
