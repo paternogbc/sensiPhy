@@ -80,7 +80,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-library(sensiPhy)
+library(sensiPhy);library(phylolm)
 
 #Generate a random tree
 set.seed(2468)
@@ -90,7 +90,7 @@ tree <- rtree(100)
 pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
 
 #Generate two continous traits, one evolving highly correlated with the
-predictor (trait 1), and one evolving more randomly (trait 2)
+#predictor (trait 1), and one evolving more randomly (trait 2)
 cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
 cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
 

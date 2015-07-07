@@ -27,7 +27,7 @@
 #' @param taxa.nam A character vector of taxa names that will be used to match data rows to phylogeny tips.
 #' @param lambda A value for the lambda transformation. If NULL, \code{lambda}="ML"
 #' Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}
-#' @details This functions only works for simple linear regression \eqn{y = bx +a}. 
+#' @details This functions only works for simple linear regression \eqn{y = bx +a}.
 #' Future implementation will deal with more complex models.
 #' If you log-transform your predictor variable, make sure that your vari.pred is in a log-scale too or use ##### function
 #' to build your input data.
@@ -43,6 +43,7 @@
 #' If \code{ntree} and \code{nvari} are set to 1, the function computes a classic phylogenetic gls.
 #' @seealso \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
 #' @examples
+#' \dontrun{
 #' library(caper);library(phylolm);library(phytools)
 #'
 #' # Example with a single tree
@@ -68,19 +69,20 @@
 #' sp <- multitree[[1]]$tip.label
 #' # variPgls analysis
 #' variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,nvari=2,method="normal",taxa.nam=sp)
-#' @export
+#' }
+#'  @export
 
 variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,nvari=1,method="normal",lambda="ML"){
 
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
     stop("'", deparse(substitute(tree)), "' not of class 'phylo' or 'multiPhylo'")
-  
-  if(inherits(tree, "multiPhylo")){  
+
+  if(inherits(tree, "multiPhylo")){
   tree1<-tree[[1]]}
   else
   tree1<-tree
-  
+
   #Error check for phylo
     if (!is.rooted(tree1)) {
     if (force.root) {
@@ -90,35 +92,35 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
       stop("'", deparse(substitute(tree1)), "' is not rooted or has a basal polytomy.")
     }
   }
-  if (any(duplicated(tree1$tip.label))) 
+  if (any(duplicated(tree1$tip.label)))
     stop("Duplicate tip labels present in phylogeny")
-  if (any(duplicated(c(tree1$tip.label, tree1$node.label)))) 
+  if (any(duplicated(c(tree1$tip.label, tree1$node.label))))
     stop("Labels duplicated between tips and nodes in phylogeny")
 
 
   #Match data and phylogeny in comparative.data style
   tiplabl<-tree1$tip.label
   spnames<-as.data.frame(taxa.nam)
-  
+
   in.both <- intersect(taxa.nam, tiplabl)
-  if (length(in.both) == 0) 
+  if (length(in.both) == 0)
     stop("No tips are common to the dataset and phylogeny")
-  
+
   mismatch<-union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
   if (length(mismatch) != 0)   warning("Phylogeny tips not not match the species list,
   species were dropped from phylogeny or species list")
-  
+
   #Drop species from tree
   tree<-lapply(tree,ape::drop.tip,tip=mismatch)
   class(tree)<-"multiPhylo"
 
   #Assemble the dataframe and drop species if needed
   data<-data.frame(taxa.nam,resp,pred)
-  
+
       #Rename names vari.resp and vari.pred columns if 2 columns are provided (min and max case)
       if(exists("vari.resp") && !is.null(dim(vari.resp))){colnames(vari.resp)<-c("resp.min","resp.max")}
       if(exists("vari.pred") && !is.null(dim(vari.pred))){colnames(vari.pred)<-c("pred.min","pred.max")}
-  
+
   if(exists("vari.resp")) {data<-cbind(data,vari.resp)}
   if(exists("vari.pred")){data<-cbind(data,vari.pred)}
   else
@@ -131,22 +133,22 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
      data<-data[!is.na(data$pred),]
      warning("NA's in response or predictor, row with NA's were removed")}
   else
-  
+
   #transform NA's in SE columns into zeros
   data[is.na(data)] <- 0
-  
-  if(inherits(tree, "multiPhylo")){  
+
+  if(inherits(tree, "multiPhylo")){
     tree1<-tree[[1]]}
   else
     tree1<-tree
-  
+
   rownames(data)<-data$taxa.nam
   tip.order <- match(tree1$tip.label, rownames(data))
-  if (any(is.na(tip.order))) 
-    stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")  
+  if (any(is.na(tip.order)))
+    stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
   data <- data[tip.order, , drop = FALSE]
   rownames(data) <- tree1$tip.label
-  
+
   #Function to pick a random value in the interval
   if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)
       warning("With method=normal vari.pred must be the standard deviation of pred")}
@@ -168,33 +170,33 @@ variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,ntree=1,n
   for (i in 1:nvari) {
     for (j in trees){
       tryCatch({
-        
+
       ##Set response and predictor variables
         #vari.resp and vari.resp are not provided
         if(!inherits(resp, c("numeric","integer")) || !exists("vari.resp") || !exists("vari.resp")) {data$respV<-data$resp}
-        
+
         #choose a random value in min/max if vari.resp is provided
-        if(exists("vari.resp") && !is.null(dim(vari.resp)))      
+        if(exists("vari.resp") && !is.null(dim(vari.resp)))
           {data$respV<-apply(data[,c("resp.min","resp.max")],1,function(x)runif(1,x[1],x[2]))}
-        
+
         #choose a random value in [mean-se,mean+se] if vari.resp is provided
         if(exists("vari.resp") && !is.null(dim(vari.resp)))
           {data$respV<-apply(data[,c("resp","vari.resp")],1,function(x)funr(x[1],x[2]))}
-        
+
         else
         #vari.pred and vari.pred are not provided
         if(!inherits(pred, c("numeric","integer")) || !exists("vari.pred") || !exists("vari.pred")) {data$predV<-data$pred}
-        
+
         #choose a random value in min/max if vari.pred is provided
-        if(exists("vari.pred") && !is.null(dim(vari.pred)))      
+        if(exists("vari.pred") && !is.null(dim(vari.pred)))
           {data$predV<-apply(data[,c("pred.min","pred.max")],1,function(x)runif(1,x[1],x[2]))}
-        
+
         #choose a random value in [mean-se,mean+se] if vari.pred is provided
         if(exists("vari.pred") && !is.null(dim(vari.pred)))
-          {data$predV<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x[1],x[2]))}       
-          
+          {data$predV<-apply(data[,c("pred","vari.pred")],1,function(x)funr(x[1],x[2]))}
+
         else
-      
+
       c.data[[i]]<-data.frame(data)
 
       #comparative data creation if tree is class=multiphylo

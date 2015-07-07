@@ -70,6 +70,7 @@ to build your input data.
 If \code{ntree} and \code{nvari} are set to 1, the function computes a classic phylogenetic gls.
 }
 \examples{
+\dontrun{
 library(caper);library(phylolm);library(phytools)
 
 # Example with a single tree
@@ -95,6 +96,7 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 sp <- multitree[[1]]$tip.label
 # variPgls analysis
 variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,nvari=2,method="normal",taxa.nam=sp)
+}
 }
 \seealso{
 \code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}

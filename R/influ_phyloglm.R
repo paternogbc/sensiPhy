@@ -55,7 +55,7 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
-#' library(sensiPhy)
+#' library(sensiPhy);library(phylolm)
 #'
 #' #Generate a random tree
 #' set.seed(2468)
@@ -65,7 +65,7 @@
 #' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
 #'
 #' #Generate two continous traits, one evolving highly correlated with the
-#' predictor (trait 1), and one evolving more randomly (trait 2)
+#' #predictor (trait 1), and one evolving more randomly (trait 2)
 #' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
 #' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
 #'
