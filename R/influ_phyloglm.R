@@ -23,7 +23,8 @@
 #' \code{influ_phyloglm} detects influential species based on the standardised
 #' difference in intercept and/or slope when removing a given species compared
 #' to the full model including all species. Species with a standardised difference
-#' above the value of \code{cutoff} are identified as influential.
+#' above the value of \code{cutoff} are identified as influential. The default
+#' value for the cutoff is 2 standardised differences change.
 #'
 #' Currently, this function can only implement simple models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
