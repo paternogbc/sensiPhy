@@ -84,8 +84,8 @@
 #' summary(phyloglm(bin_trait1~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
 #' summary(phyloglm(bin_trait2~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
-#' \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyloglm}},
+#' \code{\link{influ_phylolm}}, \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 

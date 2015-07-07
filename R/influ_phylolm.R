@@ -87,7 +87,7 @@
 #' summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
-#' \code{\link{sensi_plot}}
+#' \code{\link{influ_phyloglm}},\code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
