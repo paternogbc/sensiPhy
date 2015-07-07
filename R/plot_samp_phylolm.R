@@ -3,12 +3,11 @@
 #' \code{plot_samp_phylolm} Plot results from \code{samp_phylolm},
 #' @param x output from \code{samp_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which parameter ("intercept" or "slope") should be printed
+#' @param param choose which model parameter should be ploted  ("intercept" or "slope")
 
-### Start:
-plot_samp_phylolm <- function(x,graphs="all",param="slope"){
-
-        ########### samp_pgls graphs ##################
+plot_samp_phylolm <- function(x,graphs="all",param="slope")
+{
+        ### Error check:
         if (x[[1]] != "samp_phylolm" & x[[1]] != "samp_phyloglm")
                 stop("x must be an output from samp_phylolm or samp_phyloglm!")
         else

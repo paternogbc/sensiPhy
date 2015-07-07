@@ -4,7 +4,9 @@
 #' \code{influ_pgls}
 #' @aliases sensi_plot
 #' @param x output from \code{samp_gls}, \code{influ_gls}
-#' @param graphs choose which graphs should be printed on the output ("all", 1,2,3 or 4)
+#' @param graphs choose which graphs should be printed on the output ("all", 1,2,3
+#' or 4)
+#' @param param choose which model parameter should be ploted  ("intercept" or "slope")
 #' @export
 
 ### Start:
