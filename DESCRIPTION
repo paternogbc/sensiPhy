@@ -18,6 +18,5 @@ Imports:
     ape (>= 3.3),
     phylolm (>= 2.2)
 Suggests: 
-    knitr (>= 1.10.15),
-    testthat (>= 0.10.0),
-VignetteBuilder: knitr
+    knitr (>= 1.10),
+VignetteBuilder: knitr 
