@@ -19,4 +19,5 @@ Imports:
     phylolm (>= 2.2)
 Suggests: 
     knitr (>= 1.10),
+    testthat
 VignetteBuilder: knitr 
