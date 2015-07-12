@@ -34,7 +34,7 @@ mod0 <- phylolm(cont_trait1 ~ pred, data=dat,phy=tree)
 summary(mod0)
 ```
 
-#### Model diagnostics with sensiC package:
+#### Sensitivity analysis with sensiPhy package:
 
 ##### Example: Estimating sampling effort bias with `samp_phylolm`
 
@@ -50,7 +50,7 @@ samp2 <- samp_phylolm(cont_trait1 ~ pred,data=dat,phy=tree,
                  times= 50, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
 ```
 
-##### Example: Estimating influential points and parameter bias with `influ_pgls`
+##### Example: Estimating influential species and parameter bias with `influ_phylolm`
 
 ```{r}
 # Run influential analysis:
