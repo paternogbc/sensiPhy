@@ -1,54 +1,52 @@
-sensiC
-======
+sensiPhy
+========
 
-R package to perform model diagnostic for comparative methods
+R package to perform sensitivity analysis for comparative methods
 
-####Installing sensiC from Github:
+####Installing sensiPhy from Github:
 
 ```{r}
 # First install the package `devtools` (you should skip this if you have `devtools`)
 install.packages("devtools")
 
-# Install `sensiC` from github: 
-devtools::install_github("paternogbc/sensiC")
+# Install `sensiPhy` from github: 
+devtools::install_github("paternogbc/sensiPhy")
 
-# Required packages:
-library(caper);library(ggplot2);library(gridExtra)
-library(sensiC)
+# Loading required packages:
+library(phylolm);library(ggplot2);library(gridExtra)
+library(sensiPhy)
 ```
 
-Loading and organizing data:
+Simulating data:
 ```{r}
-data(shorebird)
-
-# Organizing comparative data for pgls:
-bird.comp <- comparative.data(shorebird.tree, shorebird.data, Species, 
-        vcv=TRUE, vcv.dim=3)
+set.seed(2468)
+    tree <- rtree(100)
+    pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+    cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=2.5)
+    bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=3,
+                          X=cbind(rep(1,length(tree$tip.label)),pred))
+    dat<-data.frame(pred,cont_trait1,bin_trait1)
 ```
 
 Original Linear regression (PGLS):
 ```{r}
-mod0 <- pgls(log(Egg.Mass) ~ log(M.Mass), data=bird.comp,"ML")
+mod0 <- phylolm(cont_trait1 ~ pred, data=dat,phy=tree)
 summary(mod0)
 ```
 
 #### Model diagnostics with sensiC package:
 
-##### Example: Estimating sampling effort bias with `samp_pgls`
+##### Example: Estimating sampling effort bias with `samp_phylolm`
 
 ```{r}
-# First match the order of species in data and phy:
-ord <- match(shorebird.tree$tip.label,shorebird.data$Species)
-shorebird.data <- shorebird.data[ord,]
-
 # Run sensitive analysis:
-samp <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+samp <- samp_phylolm(cont_trait1 ~ pred,data=dat,phy=tree)
 
 # To check the results:
-samp$results
+head(samp$samp.model.estimates)
 
 # You can also specify the number of simulation and break intervals:
-samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp$phy,
+samp2 <- samp_phylolm(cont_trait1 ~ pred,data=dat,phy=tree,
                  times= 50, breaks=c(0.1,.2,.3,.4,.5,.6,.7,.8))
 ```
 
@@ -56,11 +54,11 @@ samp2 <- samp_pgls(log(Egg.Mass) ~ log(M.Mass),data=bird.comp$data,phy=bird.comp
 
 ```{r}
 # Run influential analysis:
-influ <- influ_pgls(log(Egg.Mass) ~ log(M.Mass),data=shorebird.data,phy=shorebird.tree)
+influ <- influ_phylolm(cont_trait1 ~ pred,data=dat,phy=tree)
 # Check the results
-influ$results
+influ[[6]]
 # Check the most influential species:
-influ[[4]]
+influ[[5]]
 # Check for species that presented errors during simulations:
 influ$errors
 ```
@@ -72,8 +70,8 @@ sensi_plot(influ)
 
 ```
 
-### Output `samp_gls`:
-![Output samp_gls](http://i.imgur.com/zp5JXIJ.jpg)
+### Output `samp_phylolm`:
+![Output samp_phylolm](http://i.imgur.com/YyKMEbX.jpg)
 
-### Output `influ_gls`:
+### Output `influ_phylolm`:
 ![Output samp_gls](http://i.imgur.com/gF6GuEH.jpg)
