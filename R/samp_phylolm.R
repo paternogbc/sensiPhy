@@ -149,7 +149,6 @@ samp_phylolm <- function(formula,data,phy,times=20,
                                 slope.perc            <- round((abs(
                                         DFslope/slope.0))*100,digits=1)
                                 aic                   <- mod$aic
-                                optpar                <- mod$optpar
                                 if (model == "BM"){
                                     optpar <- NA
                                 }
