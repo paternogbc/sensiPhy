@@ -108,7 +108,8 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
         slope.0          <- mod.0$coefficients[[2]]
         pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
         pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-        optpar.0         <- mod.0$optpar
+        optpar.0 <- mod.0$optpar
+        
 
         #Creates empty data frame to store model outputs
         influ.model.estimates<-
@@ -143,7 +144,12 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
                         pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
                         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                         aic.mod              <- mod$aic
+                        if (model == "BM"){
+                            optpar <- NA
+                        }
+                        if (model != "BM"){
                         optpar               <- mod$optpar
+                        }
 
                         if(track==TRUE) (print(paste(i," / ",N,sep="")))
 

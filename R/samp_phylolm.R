@@ -111,7 +111,7 @@ samp_phylolm <- function(formula,data,phy,times=20,
         pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
         pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
         optpar.0         <- mod.0$optpar
-        aic.0                   <- mod.0$aic
+        aic.0            <- mod.0$aic
 
         #Creates empty data frame to store model outputs
         samp.model.estimates<-
@@ -150,6 +150,12 @@ samp_phylolm <- function(formula,data,phy,times=20,
                                         DFslope/slope.0))*100,digits=1)
                                 aic                   <- mod$aic
                                 optpar                <- mod$optpar
+                                if (model == "BM"){
+                                    optpar <- NA
+                                }
+                                if (model != "BM"){
+                                    optpar               <- mod$optpar
+                                }
                                 n.remov <- i
                                 n.percent <- round((n.remov/N)*100,digits=0)
                                 rep <- j
