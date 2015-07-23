@@ -97,15 +97,7 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
     if(class(data)!="data.frame") stop("data must be class 'data.frame'")
     if(class(phy)!="phylo") stop("phy must be class 'phylo'")
     if(class(fam)!="character") stop("fam must be class 'character'")
-    
-    #formula = cont_trait1~pred; 
-    #data = dat
-    #phy = tree
-    #model="lambda"
-    #cutoff=2
-    #track=TRUE
-    #fam="fam"
-    
+        
     #Calculates the full model, extracts model parameters
     full.data = data
     N               <- nrow(full.data)
@@ -127,7 +119,7 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
                    "pval.slope"=numeric(),"AIC"=numeric(),
                    "optpar" = numeric())
     
-    #Loops over all species, and removes each one individually
+    #Loops over all families, and removes each one individually
     counter <- 1
     errors <- NULL
     
@@ -140,12 +132,12 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
                                  phy=crop.phy),TRUE)
         if(isTRUE(class(mod)=="try-error")) {
             
-            error <- full.data[,"fam"][full.data[,"fam"]==i][1]
+            error <- i
             errors <- c(errors,error)
             next }
         else {  
             
-            family  <- full.data[,"fam"][full.data[,"fam"]==i][1]
+            family  <- i
             intercept            <- mod$coefficients[[1]]
             slope                <- mod$coefficients[[2]]
             DFintercept          <- intercept - intercept.0
@@ -194,7 +186,7 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
                    aic=phylolm::summary.phylolm(mod.0)$aic,
                    optpar=mod.0$optpar)
     
-    #Identifies influencital species (sDF > cutoff) and orders by influence
+    #Identifies influencital families (sDF > cutoff) and orders by influence
     reorder.on.slope         <-influ.model.estimates[order(abs(
         influ.model.estimates$sDFslope),decreasing=T),c("family","sDFslope")]
     influ.fam.slope           <-as.character(reorder.on.slope$family[abs(
@@ -205,24 +197,25 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
         reorder.on.intercept$sDFintercept)>cutoff])
     
     #Generates output:
-    res <- list(analysis.type="influ_phylolm",
+    res <- list(analysis.type="fam_phylolm",
                 cutoff=cutoff,
                 formula=formula,
                 full.model.estimates=param0,
-                influential.species= list(influ.sp.slope=influ.sp.slope,
-                                          influ.sp.intercept=influ.sp.intercept),
+                influential.species= list(influ.fam.slope=influ.fam.slope,
+                                          influ.fam.intercept=influ.fam.intercept),
                 influ.model.estimates=influ.model.estimates,
                 data=full.data,errors=errors)
     
     ### Warnings:
     if (length(res$errors) >0){
-        warning("Some species deletion presented errors, please check: output$errors")}
+        warning("Some families deletion presented errors, please check: output$errors")}
     else {
-        message("No errors found. All single deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
+        message("No errors found. All deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
         res$errors <- "No errors found."
     }
     
     return(res)
     
 }
+
 
