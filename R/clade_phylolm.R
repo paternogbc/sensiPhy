@@ -8,23 +8,26 @@
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
-#' @param cutoff The cutoff value used to identify for influential species
+#' @param cutoff The cutoff value used to identify for influential clades
 #' (see Details)
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param 
+#' @param clade.col The name of a column in the provided data frame with clades 
+#' specification.
+#' @n.species Minimum required number of species in the clade in order to include
+#' this clade in the leave-one-out deletion analyis. Default is \code{10}.
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
-#' This function sequentially removes one species at a time, fits a phylogenetic
+#' This function sequentially removes one clade at a time, fits a phylogenetic
 #' linear regression model using \code{\link[phylolm]{phylolm}}, stores the
-#' results and detects influential species.
+#' results and detects influential clades.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' \code{influ_phylolm} detects influential species based on the standardised
-#' difference in intercept and/or slope when removing a given species compared
-#' to the full model including all species. Species with a standardised difference
+#' \code{clade_phylolm} detects influential clades based on the standardised
+#' difference in intercept and/or slope when removing a given clade compared
+#' to the full model including all species. Clades with a standardised difference
 #' above the value of \code{cutoff} are identified as influential. The default
 #' value for the cutoff is 2 standardised differences change.
 #'
@@ -33,19 +36,19 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{influ_phylolm} returns a list with the following
+#' @return The function \code{clade_phylolm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
-#' @return \code{influential_species}: List of influential species, both
+#' @return \code{influential_clades}: List of influential clades, both
 #' based on standardised difference in interecept and in the slope of the
-#' regression. Species are ordered from most influential to less influential and
-#' only include species with a standardised difference > \code{cutoff}.
+#' regression. Clades are ordered from most influential to less influential and
+#' only include clades with a standardised difference > \code{cutoff}.
 #' @return \code{clade.model.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted species. Reported are the calculated
+#' estimates. Each row represents a deleted clade. Reported are the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DFintercept}), the standardised
 #' difference (\code{sDFintercept}), the percentage change in intercept compared
@@ -56,7 +59,7 @@
 #' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
 #' reported.
 #' @return \code{data}: Original full dataset.
-#' @return \code{errors}: Species where deletion resulted in errors.
+#' @return \code{errors}: Clades where deletion resulted in errors.
 #' @examples
 #' library(sensiPhy);library(phylolm)
 #'
@@ -212,7 +215,7 @@ clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
                 cutoff=cutoff,
                 formula=formula,
                 full.model.estimates=param0,
-                influential.species= list(influ.clade.slope=influ.clade.slope,
+                influential.clades= list(influ.clade.slope=influ.clade.slope,
                                           influ.clade.intercept=influ.clade.intercept),
                 clade.model.estimates=clade.model.estimates,
                 data=full.data,errors=errors)
