@@ -43,7 +43,7 @@
 #' based on standardised difference in interecept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
-#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' @return \code{clade.model.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted species. Reported are the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DFintercept}), the standardised
@@ -91,15 +91,16 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
-                        fam, ...){
+clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
+                        clade, n = 10, ...){
     if(class(formula)!="formula") stop("formula must be class 'formula'")
     if(class(data)!="data.frame") stop("data must be class 'data.frame'")
     if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-    if(class(fam)!="character") stop("fam must be class 'character'")
-        
+    if(class(clade)!="character") stop("clade must be class 'character'")
+    
     #Calculates the full model, extracts model parameters
-    full.data = data
+    full.data <- data
+    clade <- clade
     N               <- nrow(full.data)
     mod.0           <- phylolm::phylolm(formula, data=full.data,
                                         model=model,phy=phy)
@@ -111,22 +112,32 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
     
     
     #Creates empty data frame to store model outputs
-    influ.model.estimates<-
-        data.frame("family" =I(as.character()), "intercept"=numeric(),
+    clade.model.estimates<-
+        data.frame("clade" =I(as.character()), "intercept"=numeric(),
                    "DFintercept"=numeric(),"intercept.perc"=numeric(),
                    "pval.intercept"=numeric(),"slope"=numeric(),
                    "DFslope"=numeric(),"slope.perc"=numeric(),
                    "pval.slope"=numeric(),"AIC"=numeric(),
                    "optpar" = numeric())
     
-    #Loops over all families, and removes each one individually
+    #Loops over all clades, and removes each one individually
     counter <- 1
     errors <- NULL
     
-    k <- unique(full.data[,"fam"])
+    k <- names(which(table(full.data[,clade]) > n ))
+    if (length(k) == 0) stop(paste("There is no clade with more than ",
+                          n," species. Change 'n' to fix this problem",sep=""))
+    # Loop:
     for (i in k){
-        crop.data <- full.data[full.data[,"fam"] %in% setdiff(k,i),]
-        crop.sp <-   which(!full.data[,"fam"] %in% setdiff(k,i))
+        if (length(k) > 1) {
+            crop.data <- full.data[full.data[ ,clade] %in% setdiff(k,i),]
+            crop.sp <-   which(!full.data[ ,clade] %in% setdiff(k,i))
+        }
+        if (length(k) == 1) {
+            crop.data <- full.data[full.data[ ,clade] %in% k,]
+            crop.sp <-   which(!full.data[ ,clade] %in% k)
+        }
+        
         crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
         mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
                                  phy=crop.phy),TRUE)
@@ -137,7 +148,6 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
             next }
         else {  
             
-            family  <- i
             intercept            <- mod$coefficients[[1]]
             slope                <- mod$coefficients[[2]]
             DFintercept          <- intercept - intercept.0
@@ -157,60 +167,60 @@ fam_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
             if(track==TRUE) (print(paste(i," / ",N,sep="")))
             
             # Stores values for each simulation
-            influ.model.estimates[counter,1]  <- family
-            influ.model.estimates[counter,2]  <- intercept
-            influ.model.estimates[counter,3]  <- DFintercept
-            influ.model.estimates[counter,4]  <- intercept.perc
-            influ.model.estimates[counter,5]  <- pval.intercept
-            influ.model.estimates[counter,6]  <- slope
-            influ.model.estimates[counter,7]  <- DFslope
-            influ.model.estimates[counter,8]  <- slope.perc
-            influ.model.estimates[counter,9]  <- pval.slope
-            influ.model.estimates[counter,10] <- aic.mod
-            influ.model.estimates[counter,11] <- optpar
+            clade.model.estimates[counter,1]  <- i
+            clade.model.estimates[counter,2]  <- intercept
+            clade.model.estimates[counter,3]  <- DFintercept
+            clade.model.estimates[counter,4]  <- intercept.perc
+            clade.model.estimates[counter,5]  <- pval.intercept
+            clade.model.estimates[counter,6]  <- slope
+            clade.model.estimates[counter,7]  <- DFslope
+            clade.model.estimates[counter,8]  <- slope.perc
+            clade.model.estimates[counter,9]  <- pval.slope
+            clade.model.estimates[counter,10] <- aic.mod
+            clade.model.estimates[counter,11] <- optpar
             counter=counter+1
         }
     }
     
     #Calculates Standardized DFbeta and DFintercept
-    sDFintercept <- influ.model.estimates$DFintercept/
-        sd(influ.model.estimates$DFintercept)
-    sDFslope     <- influ.model.estimates$DFslope/
-        sd(influ.model.estimates$DFslope)
+    sDFintercept <- clade.model.estimates$DFintercept/
+        sd(clade.model.estimates$DFintercept)
+    sDFslope     <- clade.model.estimates$DFslope/
+        sd(clade.model.estimates$DFslope)
     
-    influ.model.estimates$sDFslope     <- sDFslope
-    influ.model.estimates$sDFintercept <- sDFintercept
+    clade.model.estimates$sDFslope     <- sDFslope
+    clade.model.estimates$sDFintercept <- sDFintercept
     
     #Creates a list with full model estimates:
     param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                    aic=phylolm::summary.phylolm(mod.0)$aic,
                    optpar=mod.0$optpar)
     
-    #Identifies influencital families (sDF > cutoff) and orders by influence
-    reorder.on.slope         <-influ.model.estimates[order(abs(
-        influ.model.estimates$sDFslope),decreasing=T),c("family","sDFslope")]
-    influ.fam.slope           <-as.character(reorder.on.slope$family[abs(
+    #Identifies influencital clade (sDF > cutoff) and orders by influence
+    reorder.on.slope         <-clade.model.estimates[order(abs(
+        clade.model.estimates$sDFslope),decreasing=T),c("clade","sDFslope")]
+    influ.clade.slope           <-as.character(reorder.on.slope$clade[abs(
         reorder.on.slope$sDFslope)>cutoff])
-    reorder.on.intercept     <-influ.model.estimates[order(abs(
-        influ.model.estimates$sDFintercept),decreasing=T),c("family","sDFintercept")]
-    influ.fam.intercept       <-as.character(reorder.on.intercept$family[abs(
+    reorder.on.intercept     <-clade.model.estimates[order(abs(
+        clade.model.estimates$sDFintercept),decreasing=T),c("clade","sDFintercept")]
+    influ.clade.intercept       <-as.character(reorder.on.intercept$clade[abs(
         reorder.on.intercept$sDFintercept)>cutoff])
     
     #Generates output:
-    res <- list(analysis.type="fam_phylolm",
+    res <- list(analysis.type="clade_phylolm",
                 cutoff=cutoff,
                 formula=formula,
                 full.model.estimates=param0,
-                influential.species= list(influ.fam.slope=influ.fam.slope,
-                                          influ.fam.intercept=influ.fam.intercept),
-                influ.model.estimates=influ.model.estimates,
+                influential.species= list(influ.clade.slope=influ.clade.slope,
+                                          influ.clade.intercept=influ.clade.intercept),
+                clade.model.estimates=clade.model.estimates,
                 data=full.data,errors=errors)
     
     ### Warnings:
     if (length(res$errors) >0){
-        warning("Some families deletion presented errors, please check: output$errors")}
+        warning("Some clades deletion presented errors, please check: output$errors")}
     else {
-        message("No errors found. All deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
+        message("No errors found. All deletions were performed and stored successfully. Please, check outpu$clade.model.estimates.")
         res$errors <- "No errors found."
     }
     
