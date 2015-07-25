@@ -67,7 +67,8 @@ to build your input data.
 }
 \section{Warning}{
  This code is not fully checked. Please be aware.
-If \code{ntree} and \code{nvari} are set to 1, the function computes a classic phylogenetic gls.
+If \code{ntree} and \code{nvari} are set to 1, the function computes a
+classic phylogenetic gls.
 }
 \examples{
 \dontrun{
@@ -83,22 +84,26 @@ Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- tree$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree,nvari=2,method="normal",taxa.nam=sp)
+variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree,nvari=2,
+method="normal",taxa.nam=sp)
 
 # Example with a set of trees of class multiphylo
 N <- 100 # Number of species in the trees
 multitree <- rmtree(N=50,n=100)
 # Simulating response variable with phylogenetic signal
-Ly <- rTrait(n=1, multitree[[1]], model=c("lambda"),parameters=list(lambda=.8))
+Ly <- rTrait(n=1, multitree[[1]], model=c("lambda"),
+parameters=list(lambda=.8))
 # Simulating explanatory variable and its standard error
 Lx <- data.frame(xmean=Ly + rnorm(N,mean(Ly),1),xse=rep(0.5,100))
 # Including Species names
 sp <- multitree[[1]]$tip.label
 # variPgls analysis
-variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,nvari=2,method="normal",taxa.nam=sp)
+variPgls(resp=Ly,pred=Lx$xmean,vari.pred=Lx$xse,tree=multitree,ntree=2,
+nvari=2,method="normal",taxa.nam=sp)
 }
 }
 \seealso{
-\code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}}, \code{\link{rnorm}}
+\code{\link{gls}}, \code{\link{corPagel}}, \code{\link{runif}},
+ \code{\link{rnorm}}
 }
 

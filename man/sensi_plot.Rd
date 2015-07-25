@@ -2,12 +2,13 @@
 % Please edit documentation in R/sensi_plot.R
 \name{sensi_plot}
 \alias{sensi_plot}
-\title{Graphical sensitive analysis for comparative methods}
+\title{Graphical sensitivity analysis for comparative methods}
 \usage{
 sensi_plot(x, graphs = "all", param = "slope")
 }
 \arguments{
-\item{x}{output from \code{samp_gls}, \code{influ_gls}}
+\item{x}{output from \code{samp_phylolm}, \code{samp_phyloglm},
+\code{influ_phylolm} and \code{influ_phyloglm}}
 
 \item{graphs}{choose which graphs should be printed on the output ("all", 1,2,3
 or 4)}
