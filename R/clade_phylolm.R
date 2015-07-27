@@ -1,6 +1,6 @@
 #' Influential species detection - Phylogenetic Linear Regression
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
+#' Performs leave-one-out deletion (clades) analyis for phylogenetic linear regression,
 #' and detects influential clades.
 #'
 #' @param formula The model formula
@@ -130,16 +130,18 @@ clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
     
     k <- names(which(table(full.data[,clade]) > n.species ))
     if (length(k) == 0) stop(paste("There is no clade with more than ",
-                          n.species," species. Change 'n' to fix this problem",sep=""))
+                          n.species," species. Change 'n.species' to fix this
+                          problem",sep=""))
     # Loop:
+    #k <- k[1]
     for (i in k){
         if (length(k) > 1) {
             crop.data <- full.data[full.data[ ,clade] %in% setdiff(k,i),]
             crop.sp <-   which(!full.data[ ,clade] %in% setdiff(k,i))
         }
         if (length(k) == 1) {
-            crop.data <- full.data[full.data[ ,clade] %in% k,]
-            crop.sp <-   which(!full.data[ ,clade] %in% k)
+            crop.data <- full.data[!full.data[ ,clade] %in% k,]
+            crop.sp <-   which(full.data[ ,clade] %in% k)
         }
         
         crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
