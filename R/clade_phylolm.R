@@ -1,6 +1,6 @@
-#' Influential species detection - Phylogenetic Linear Regression
+#' Influential clade detection - Phylogenetic Linear Regression
 #'
-#' Performs leave-one-out deletion (clades) analyis for phylogenetic linear regression,
+#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
 #' and detects influential clades.
 #'
 #' @param formula The model formula
@@ -13,7 +13,7 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param clade.col The name of a column in the provided data frame with clades 
 #' specification.
-#' @n.species Minimum required number of species in the clade in order to include
+#' @param n.species Minimum required number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{10}.
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
@@ -70,41 +70,29 @@
 #' #Generate random predictor variable (pred), evolving according to a BM model.
 #' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
 #'
-#' #Generate two continous traits, one evolving highly correlated with the
-#' #predictor (trait 1), and one evolving more randomly (trait 2)
-#' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+#' #Generate one continous traits
+#' cont_trait <- pred + rTraitCont(tree,model="BM",sigma=2.5)
+#' fam <- rep(c("fam1","fam2","fam3","fam4","fam5"),each=20)
+#' dat<-data.frame(pred,cont_trait,fam)
 #'
-#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
-#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
-#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
-#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
-#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
-#' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
-#'
-#' #Determine influential species for both regressions.
-#' fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
-#' fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
-#'
-#' #For purposes of comparison the full model output from phylolm:
-#' summary(phylolm(cont_trait1~pred,data = dat,phy = tree,model = "lambda"))
-#' summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
-#' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
-#' \code{\link{influ_phyloglm}},\code{\link{sensi_plot}}
+#' #Determine influential clades:
+#' clade.test <- clade_phylolm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
+#' @author Gustavo Paterno
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylolm}},
+#' \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
 clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
-                        clade, n.species = 10, ...){
+                        clade.col, n.species = 10, ...){
     if(class(formula)!="formula") stop("formula must be class 'formula'")
     if(class(data)!="data.frame") stop("data must be class 'data.frame'")
     if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-    if(class(clade)!="character") stop("clade must be class 'character'")
+    if(class(clade.col)!="character") stop("clade must be class 'character'")
     
     #Calculates the full model, extracts model parameters
     full.data <- data
-    clade <- clade
+    clade <- clade.col
     N               <- nrow(full.data)
     mod.0           <- phylolm::phylolm(formula, data=full.data,
                                         model=model,phy=phy)
@@ -229,7 +217,6 @@ clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
         message("No errors found. All deletions were performed and stored successfully. Please, check outpu$clade.model.estimates.")
         res$errors <- "No errors found."
     }
-    
     return(res)
     
 }
