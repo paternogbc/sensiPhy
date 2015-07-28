@@ -209,7 +209,7 @@ clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
                                           influ.clade.intercept=influ.clade.intercept),
                 clade.model.estimates=clade.model.estimates,
                 data=full.data,errors=errors)
-    
+    class(res) <- "sensi.clade"
     ### Warnings:
     if (length(res$errors) >0){
         warning("Some clades deletion presented errors, please check: output$errors")}
