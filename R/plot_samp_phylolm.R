@@ -251,7 +251,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope")
 
         ### Ploting:
         if (param == "slope" & graphs=="all")
-                print(arrangeGrob(s1, s2,opt,s4,ncol=2))
+                print(gridExtra::arrangeGrob(s1, s2,opt,s4,ncol=2))
         if (param == "slope" & graphs==1)
                 print(s1)
         if (param == "slope" & graphs==2)
