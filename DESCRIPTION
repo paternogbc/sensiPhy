@@ -8,8 +8,8 @@ Authors@R: c(
     person("Caterina", "Perone", email = "caterina.perone@gmail.com", role = "aut"))
 Description: This package performs sensitivity analysis for comparative methods.
 Depends: R (>= 3.1.1),
-    ape (>= 3.3),
-    phylolm (>= 2.2)
+    ape,
+    phylolm
 License: GPL-3
 URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues
