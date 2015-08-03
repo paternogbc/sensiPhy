@@ -69,11 +69,9 @@ intercept.perc <- sDFintercept <- NULL
         if (x[[1]] != "influ_phylolm" & x[[1]] != "influ_phyloglm")
                 stop("x must be an output from influ_phylolm or influ_phyloglm!")
         else
-
         ### Organizing values:
         result <- x$influ.model.estimates
-        vars   <- all.vars(x$formula)
-        vars2  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
+        vars  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
         intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
         slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
         cutoff      <-  x$cutoff
@@ -82,12 +80,11 @@ intercept.perc <- sDFintercept <- NULL
         if (isTRUE(class(x$errors) != "character" )){
                 x$data <- x$data[-as.numeric(x$errors),]
         }
-        result.tab <- data.frame(x$influ.model.estimates,x$data[vars])
+        result.tab <- data.frame(x$influ.model.estimates,x$data[all.vars(x$formula)])
 
         ### Plots:
         # Distribution of estimated slopes:
-        s1 <- ggplot2::ggplot(result,aes(x=slope,y=..density..),
-                              environment = environment())+
+        s1 <- ggplot2::ggplot(result,aes(x=slope,y=..density..))+
                 geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                 geom_density(size=.2) +
                 geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
@@ -95,8 +92,7 @@ intercept.perc <- sDFintercept <- NULL
                 theme(axis.text = element_text(size=14),
                       axis.title = element_text(size=16))
         # Distribution of estimated intercepts:
-        i1 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..),
-                              environment = environment())+
+        i1 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..))+
                 geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
                 geom_density(size=.2) +
                 geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
@@ -105,44 +101,41 @@ intercept.perc <- sDFintercept <- NULL
                       axis.title = element_text(size=16))
 
         # Original plot with Standardized DFslope as colour gradient
-        s2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
-                                           eval(parse(text=vars2[1])),
-                                           colour=abs(sDFslope)),
-                            environment = environment())+
+        s2<-ggplot2::ggplot(result.tab,aes(x= eval(parse(text=vars[2])),
+                                           y= eval(parse(text=vars[1])),
+                                           colour=abs(sDFslope)))+
                 geom_point(size=3,alpha=.8)+
                 scale_colour_gradient( low="black",high="red",name="")+
-                theme(legend.key.width = unit(.2,"cm"),
+                theme(legend.key.width = grid::unit(.2,"cm"),
                       panel.background=element_rect(fill="white",colour="black"),
                       legend.text = element_text(size=14),
                       panel.grid.major = element_blank(),
                       panel.grid.minor = element_blank())+
-                ylab(vars2[1])+
-                xlab(vars2[2])+
+                ylab(vars[1])+
+                xlab(vars[2])+
                 ggtitle("Standardized Difference in slope")+
                 theme(axis.text = element_text(size=14,colour="black"),
                       axis.title = element_text(size=16))
 
         # Original plot with Standardized DFintercept as colour gradient
-        i2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars2[2])),
-                                           eval(parse(text=vars2[1])),
-                                           colour=abs(sDFintercept)),
-                            environment = environment())+
+        i2<-ggplot2::ggplot(result.tab,aes(x = eval(parse(text=vars[2])),
+                                           y = eval(parse(text=vars[1])),
+                                           colour=abs(sDFintercept)))+
                 geom_point(size=3,alpha=.8)+
                 scale_colour_gradient( low="black",high="red",name="")+
-                theme(legend.key.width = unit(.2,"cm"),
+                theme(legend.key.width = grid::unit(.2,"cm"),
                       panel.background=element_rect(fill="white",colour="black"),
                       legend.text = element_text(size=14),
                       panel.grid.major = element_blank(),
                       panel.grid.minor = element_blank())+
-                ylab(vars2[1])+
-                xlab(vars2[2])+
+                ylab(vars[1])+
+                xlab(vars[2])+
                 ggtitle("Standardized Difference in Intercept")+
                 theme(axis.text = element_text(size=14,colour="black"),
                       axis.title = element_text(size=16))
 
         # Influential points for slope estimate
-        s3 <- ggplot2::ggplot(result,aes(x=sDFslope),
-                              environment = environment())+
+        s3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Slope")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
@@ -153,8 +146,7 @@ intercept.perc <- sDFintercept <- NULL
                 geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
 
         # Influential points for intercept estimate
-        i3 <- ggplot2::ggplot(result,aes(x=sDFslope),
-                              environment = environment())+
+        i3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Intercept")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
@@ -166,8 +158,7 @@ intercept.perc <- sDFintercept <- NULL
 
         # Distribution of slope.perc:
 
-        s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..),
-                              environment = environment())+
+        s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..))+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white")+
                 xlab("% of change in Slope")+
@@ -175,8 +166,7 @@ intercept.perc <- sDFintercept <- NULL
                       axis.title = element_text(size=16))
 
         # Distribution of slope.perc:
-        i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..),
-                              environment = environment())+
+        i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white")+
                 xlab("% of change in Intercept")+
