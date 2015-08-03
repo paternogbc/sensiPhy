@@ -7,7 +7,7 @@ Authors@R: c(
     person("Gijsbert", "Werner", email = "g.d.a.werner@vu.nl", role = "aut"),
     person("Caterina", "Perone", email = "caterina.perone@gmail.com", role = "aut"))
 Description: This package performs sensitivity analysis for comparative methods.
-Depends: R (>= 3.1.2),
+Depends: R (>= 3.1.1),
     ape (>= 3.3),
     phylolm (>= 2.2)
 License: GPL-3
