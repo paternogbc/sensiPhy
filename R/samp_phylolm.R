@@ -85,8 +85,9 @@
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyloglm}},
 #' \code{\link{influ_phylolm}},\code{\link{sensi_plot}}
-#' @references Ho, L. S. T. and Ané, C. 2014. "A linear-time algorithm for 
+#' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
+#' @import ape phylolm
 #' @export
 
 samp_phylolm <- function(formula,data,phy,times=20,
@@ -96,7 +97,7 @@ samp_phylolm <- function(formula,data,phy,times=20,
          if(class(phy)!="phylo") stop("phy must be class 'phylo'")
          if(length(breaks)<2) stop("Please include more than one break,
                                   e.g. breaks=c(.3,.5)")
-         if ((model == "trend") & (is.ultrametric(phy)))
+         if ((model == "trend") & (ape::is.ultrametric(phy)))
                  stop("Trend is unidentifiable for ultrametric trees.,
                       see ?phylolm for details")
          else

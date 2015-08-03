@@ -110,7 +110,7 @@ fit3<-samp_phylolm(cont_trait2~pred,data = dat,phy = tree,
 Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
-Ho, L. S. T. and Ané, C. 2014. "A linear-time algorithm for
+Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{

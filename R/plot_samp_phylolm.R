@@ -4,9 +4,18 @@
 #' @param x output from \code{samp_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which model parameter should be ploted  ("intercept" or "slope")
+#' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
+#' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
+
 
 plot_samp_phylolm <- function(x,graphs="all",param="slope")
 {
+    
+# nulling variables:
+slope <- n.percent <- slope.class <- intercept <- intercept.class <- NULL
+optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
+
+
         ### Error check:
         if (x[[1]] != "samp_phylolm" & x[[1]] != "samp_phyloglm")
                 stop("x must be an output from samp_phylolm or samp_phyloglm!")
@@ -164,7 +173,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope")
         intercept.perc$intercept <- (intercept.perc$intercept/rep(n.perc.times,
                                                   times=b))*100
         ### Graph: Slope
-        s2 <- ggplot(slope.perc,
+        s2 <- ggplot2::ggplot(slope.perc,
                      aes(y=slope,x=n.percent,
                          fill=factor(slope.class)),
                      environment = environment())+
@@ -186,7 +195,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope")
                 ylab("Proportion of estimated slope")
 
         ### Graph: Intercept
-        i2 <- ggplot(intercept.perc,
+        i2 <- ggplot2::ggplot(intercept.perc,
                      aes(y=intercept,x=n.percent,
                          fill=factor(intercept.class)),
                      environment = environment())+
@@ -208,7 +217,7 @@ plot_samp_phylolm <- function(x,graphs="all",param="slope")
                 ylab("Proportion of estimated intercept")
 
         ### Optpar acros % removed species:
-        opt <- ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
+        opt <- ggplot2::ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
                 geom_point()+
                 geom_boxplot(fill="red",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
