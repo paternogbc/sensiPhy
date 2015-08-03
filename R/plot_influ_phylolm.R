@@ -135,30 +135,29 @@ intercept.perc <- sDFintercept <- NULL
 
         ### Ploting:
         if (param == "slope" & graphs=="all")
-                print(gridExtra::grid.arrange(s1,s2,s3,s4,ncol=2))
+            suppressMessages(print(multiplot(s1,s3,s2,s4,cols=2)))
         if (param == "slope" & graphs==1)
-                print(s1)
+            suppressMessages(print(s1))
         if (param == "slope" & graphs==2)
-                print(s2)
+            suppressMessages(print(s2))
         if (param == "slope" & graphs==3)
-                print(s3)
+            suppressMessages(print(s3))
         if (param == "slope" & graphs==4)
-                print(s4)
+            suppressMessages(print(s4))
         if (param == "intercept" & graphs=="all")
-                print(gridExtra::grid.arrange(i1,i2,i3,i4,ncol=2))
+            suppressMessages(print(multiplot(i1,i3,i2,i4,cols=2)))
         if (param == "intercept" & graphs==1)
-                print(i1)
+            suppressMessages(print(i1))
         if (param == "intercept" & graphs==2)
-                print(i2)
+            suppressMessages(print(i2))
         if (param == "intercept" & graphs==3)
-                print(i3)
+            suppressMessages(print(i3))
         if (param == "intercept" & graphs==4)
-                print(i4)
+            suppressMessages(print(i4))
 
         ### Warnings
         if (isTRUE(class(x$errors) != "character" ))
                 warnings("Deletion of some species caused error. These species were not ploted")
 
 }
-
 
