@@ -76,6 +76,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 library(sensiPhy);library(phylolm)
 
 #Generate a random tree
@@ -104,6 +105,7 @@ fit2<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree)
 #It is possible to change the species removal percentages and number of repeats
 fit3<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree,
      breaks = c(0.25,0.5,0.75),times=100)
+}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

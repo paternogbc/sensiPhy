@@ -82,6 +82,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 library(sensiPhy);library(phylolm)
 
 #Generate a random tree
@@ -110,6 +111,7 @@ fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
 #For purposes of comparison the full model output from phylolm:
 summary(phylolm(cont_trait1~pred,data = dat,phy = tree,model = "lambda"))
 summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
+}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

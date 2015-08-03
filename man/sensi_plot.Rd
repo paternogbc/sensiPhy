@@ -64,7 +64,8 @@ the value of \code{cutoff}).
 Graph 4: Ditribution of the percentage of change in slope or intercept.
 }
 \examples{
-library(sensiPhy);library(phylolm)
+\dontrun{
+library(sensiPhy)
 
 # Generating tree and traits:
 set.seed(2468)
@@ -82,6 +83,7 @@ sensi_plot(fit1)
 sensi_plot(fit2)
 sensi_plot(fit2, graphs = 1, param = "intercept")
 sensi_plot(fit2, graphs = 4, param = "slope")
+}
 }
 \author{
 Gustavo Paterno

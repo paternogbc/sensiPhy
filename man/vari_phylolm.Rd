@@ -13,31 +13,41 @@ vari_phylolm(resp, pred, vari.resp = NA, vari.pred = NA, taxa.nam, tree,
 
 \item{pred}{Vector containing the predictor variable}
 
-\item{vari.resp}{Vector containing the standard error, the standard deviation or the minimum and maximum (cbind(min,max)) of \code{resp}
+\item{vari.resp}{Vector containing the standard error, the standard deviation
+or the minimum and maximum (cbind(min,max)) of \code{resp}
 When information is not available for one species, the value can be 0 or \code{NA}}
 
-\item{vari.pred}{Vector containing the standard error, the standard deviation or the minimum and maximum (cbind(min,max)) of \code{pred}
+\item{vari.pred}{Vector containing the standard error, the standard deviation
+or the minimum and maximum (cbind(min,max)) of \code{pred}
 When information is not available for one species, the value can be 0 or \code{NA}}
 
-\item{taxa.nam}{A character vector of taxa names that will be used to match data rows to phylogeny tips.}
+\item{taxa.nam}{A character vector of taxa names that will be used to match
+data rows to phylogeny tips.}
 
 \item{tree}{A tree or list of tree of class \code{Phylo} or \code{multiPhylo}}
 
-\item{nintra}{If TRUE, the number of times to repeat the analysis generating a random value in the interval
-[\code{pred}-\code{vari.pred},\code{pred}+\code{vari.pred}] or in the interval [min,max] (if vari.pred=(cbind(min,max)))
+\item{nintra}{If TRUE, the number of times to repeat the analysis generating
+a random value in the interval [\code{pred}-\code{vari.pred},
+\code{pred}+\code{vari.pred}] or in the interval [min,max]
+(if vari.pred=(cbind(min,max)))
 and a random value in the interval
-[\code{resp}-\code{vari.resp},\code{resp}+\code{vari.resp}] or in the interval [min,max] (if vari.resp=(cbind(min,max))).
+[\code{resp}-\code{vari.resp},\code{resp}+\code{vari.resp}] or in the interval
+[min,max] (if vari.resp=(cbind(min,max))).
 If NULL, \code{nintra} = 1}
 
-\item{ntree}{If TRUE or class(tree)=multiPhylo, the number of times to repeat the analysis with n different
-trees picked randomly in the multiPhylo file. If NULL, \code{ntree} = 1}
+\item{ntree}{If TRUE or class(tree)=multiPhylo, the number of times to repeat
+the analysis with n different trees picked randomly in the multiPhylo file.
+If NULL, \code{ntree} = 1}
 
 \item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 
-\item{method}{A character string indicating which method to use to generate a random value in the interval
-[\code{pred} - \code{vari.pred}, \code{pred} + \code{vari.pred}]. Default is uniform distribution: "uniform"
+\item{method}{A character string indicating which method to use to generate a
+ random value in the interval
+[\code{pred} - \code{vari.pred}, \code{pred} + \code{vari.pred}]. Default is
+uniform distribution: "uniform"
 (function \code{\link{rnorm}}), normal distribution is "normal" (\code{\link{runif}})
-Warning: normal distribution can be used oly if vari.pred is the standard deviation of the mean.}
+Warning: normal distribution can be used oly if vari.pred is the standard
+deviation of the mean.}
 
 \item{cutoff}{The cutoff value used to identify for influential species
 (see Details)}
@@ -45,32 +55,40 @@ Warning: normal distribution can be used oly if vari.pred is the standard deviat
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{lambda}{A value for the lambda transformation. If NULL, \code{lambda}="ML"
-Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}}
+Note that the model can be weighted by the sample size of each species, see
+ \code{weights} in \code{\link{gls}}}
 }
 \value{
 The function \code{variPgls} returns a list with the following components:
 
 \code{model_results} Model parameters for each iteration
-parameters: intercept, intercept standard error and pvalue, beta, beta standard error and pvalue and confidence interval, AIC, lambda
+parameters: intercept, intercept standard error and pvalue, beta, beta
+ standard error and pvalue and confidence interval, AIC, lambda
 
 \code{stats} Statistics for model parameters.
 
 Residual degrees of freedom and number of models that converged properly
-\code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values for each parameter
-\code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd due to phylogenetic uncertainty,
+\code{min}, \code{max} and \code{mean} are the minimum, maximum and mean values
+ for each parameter
+\code{sd_all} is the total standard deviation (sd), \code{sd_tree} is the sd
+due to phylogenetic uncertainty,
 \code{sd_pred} is the sd due to intraspecific variation
 }
 \description{
-\code{vari_phylolm} performs Phylogenetic linear regression analysis accounting for intraspecific variability and phylogenetic
+\code{vari_phylolm} performs Phylogenetic linear regression analysis accounting
+for intraspecific variability and phylogenetic
 uncertainty in trees topology.
-It picks n times a random value within an interval for the predictor or response variable (intraspecific variability) and
-it repeats the analysis m times for m trees from a \code{multiPhylo} file. The trees are chosen randomly in the \code{multiPhylo} file.
+It picks n times a random value within an interval for the predictor or response
+ variable (intraspecific variability) and
+it repeats the analysis m times for m trees from a \code{multiPhylo} file.
+The trees are chosen randomly in the \code{multiPhylo} file.
 The output gives a minimum, maximum, mean and sd of the model parameters.
 }
 \details{
 This functions only works for simple linear regression \eqn{y = bx +a}.
 Future implementation will deal with more complex models.
-If you log-transform your predictor variable, make sure that your vari.pred is in a log-scale too
+If you log-transform your predictor variable, make sure that your vari.pred
+is in a log-scale too
 to build your input data.
 }
 \section{Warning}{
