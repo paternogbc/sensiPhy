@@ -1,12 +1,60 @@
 #' Graphical diagnostics for \code{influ_phylolm}
 #'
-#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm},
+#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm}, 
+#' \code{influ_phyloglm}
 #' @param x output from \code{influ_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
 #' ggtitle element_blank
+#' @author Gustavo Paterno
+#' @seealso \code{\link[ggplot2]{ggplot}}
+#' @details For 'x' from influ_phylolm or influ_phyloglm:
+#' 
+#' Graph 1: Distribution of estimated slopes or intercepts for each 
+#' simulation (leave-one-out deletion). Red vertical line represents the original
+#' slope or intercept from the full model (with all species). 
+#' 
+#' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
+#' difference in slope or intercept is represented by a continous colour scale, 
+#' ranging from black (low \code{sDFintercept} or \code{sDFslope} values) to red
+#' (high \code{sDFintercept} or \code{sDFslope} values).
+#' 
+#' Graph 3: Distribution of Standardized difference in slope or intercept. Red 
+#' colour indicates inbfluential species (with a standardised difference above 
+#' the value of \code{cutoff}).
+#' 
+#' Graph 4: Ditribution of the percentage of change in slope or intercept.
+#' @examples
+#' library(sensiPhy)
+#'
+#' #Generate a random tree
+#' set.seed(2468)
+#' tree <- rtree(100)
+#'
+#' #Generate random predictor variable (pred), evolving according to a BM model.
+#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+#'
+#' #Generate two continous traits, one evolving highly correlated with the
+#' #predictor (trait 1), and one evolving more randomly (trait 2)
+#' cont_trait <- pred + rTraitCont(tree,model="BM",sigma=0.1)
+#'
+#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
+#' bin_trait <-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
+#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
+#' dat<-data.frame(pred,cont_trait,bin_trait)
+#'
+#' #Determine influential species for both regressions.
+#' fit1<-influ_phylolm(cont_trait~pred,data = dat,phy = tree)
+#' fit2<-influ_phyloglm(bin_trait~pred,data = dat,phy = tree)
+#' 
+#' # Plot results:
+#' sensi_plot(fit1)
+#' sensi_plot(fit2)
+#' # You can also choose which graph and parameter should be ploted:
+#' sensi_plot(fit1, graphs = 1, param = "intercept")
+#' sensi_plot(fit2, graphs = "all", param = "slope")
 #' @importFrom grid unit 
 
 ### Start:
