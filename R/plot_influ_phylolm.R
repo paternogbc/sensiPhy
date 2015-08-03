@@ -69,6 +69,7 @@ intercept.perc <- sDFintercept <- NULL
         if (x[[1]] != "influ_phylolm" & x[[1]] != "influ_phyloglm")
                 stop("x must be an output from influ_phylolm or influ_phyloglm!")
         else
+
         ### Organizing values:
         result <- x$influ.model.estimates
         vars  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
@@ -103,7 +104,8 @@ intercept.perc <- sDFintercept <- NULL
         # Original plot with Standardized DFslope as colour gradient
         s2<-ggplot2::ggplot(result.tab,aes(x= eval(parse(text=vars[2])),
                                            y= eval(parse(text=vars[1])),
-                                           colour=abs(sDFslope)))+
+                                           colour=abs(sDFslope),
+                            environment <- environment()))+
                 geom_point(size=3,alpha=.8)+
                 scale_colour_gradient( low="black",high="red",name="")+
                 theme(legend.key.width = grid::unit(.2,"cm"),
@@ -120,7 +122,8 @@ intercept.perc <- sDFintercept <- NULL
         # Original plot with Standardized DFintercept as colour gradient
         i2<-ggplot2::ggplot(result.tab,aes(x = eval(parse(text=vars[2])),
                                            y = eval(parse(text=vars[1])),
-                                           colour=abs(sDFintercept)))+
+                                           colour=abs(sDFintercept),
+                            environment <- environment()))+
                 geom_point(size=3,alpha=.8)+
                 scale_colour_gradient( low="black",high="red",name="")+
                 theme(legend.key.width = grid::unit(.2,"cm"),
