@@ -2,6 +2,9 @@
 title: "sensiPhy realease notes"
 output: html_document
 ---
+## sensiPhy v0.2.0 (xxxxxxxx)
+* New function...
+
 ## sensiPhy v0.1.1 (04.04.15)
 * New function `variPgls` was added to perform Pgls analysis accounting for intraspecific variability and phylogenetic uncertainty
 * `sensi_plot` was completed reformulated.
