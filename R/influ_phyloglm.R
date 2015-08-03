@@ -55,7 +55,8 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
-#' library(sensiPhy);library(phylolm)
+#' \dontrun{
+#' library(sensiPhy)
 #'
 #' #Generate a random tree
 #' set.seed(2468)
@@ -83,6 +84,7 @@
 #' #For purposes of comparison the full model output from phylolm:
 #' summary(phyloglm(bin_trait1~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
 #' summary(phyloglm(bin_trait2~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
+#' }
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyloglm}},
 #' \code{\link{influ_phylolm}}, \code{\link{sensi_plot}}

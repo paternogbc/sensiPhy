@@ -57,6 +57,7 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @examples
+#' \dontrun{
 #' library(sensiPhy);library(phylolm)
 #'
 #' #Generate a random tree
@@ -85,6 +86,7 @@
 #' #For purposes of comparison the full model output from phylolm:
 #' summary(phylolm(cont_trait1~pred,data = dat,phy = tree,model = "lambda"))
 #' summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
+#' }
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
 #' \code{\link{influ_phyloglm}},\code{\link{sensi_plot}}
