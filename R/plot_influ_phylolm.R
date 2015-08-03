@@ -102,40 +102,40 @@ intercept.perc <- sDFintercept <- NULL
                       axis.title = element_text(size=16))
 
         # Original plot with Standardized DFslope as colour gradient
-        s2<-ggplot2::ggplot(result.tab,aes(x= eval(parse(text=vars[2])),
-                                           y= eval(parse(text=vars[1])),
-                                           colour=abs(sDFslope),
-                            environment <- environment()))+
-                geom_point(size=3,alpha=.8)+
-                scale_colour_gradient( low="black",high="red",name="")+
-                theme(legend.key.width = grid::unit(.2,"cm"),
-                      panel.background=element_rect(fill="white",colour="black"),
-                      legend.text = element_text(size=14),
-                      panel.grid.major = element_blank(),
-                      panel.grid.minor = element_blank())+
-                ylab(vars[1])+
-                xlab(vars[2])+
-                ggtitle("Standardized Difference in slope")+
-                theme(axis.text = element_text(size=14,colour="black"),
-                      axis.title = element_text(size=16))
+        s2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
+                                           eval(parse(text=vars[1])),
+                                           colour=abs(sDFslope)),
+                            environment = environment())+
+            geom_point(size=3,alpha=.8)+
+            scale_colour_gradient( low="black",high="red",name="")+
+            theme(legend.key.width = unit(.2,"cm"),
+                  panel.background=element_rect(fill="white",colour="black"),
+                  legend.text = element_text(size=14),
+                  panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank())+
+            ylab(vars[1])+
+            xlab(vars[2])+
+            ggtitle("Standardized Difference in slope")+
+            theme(axis.text = element_text(size=14,colour="black"),
+                  axis.title = element_text(size=16))
 
         # Original plot with Standardized DFintercept as colour gradient
-        i2<-ggplot2::ggplot(result.tab,aes(x = eval(parse(text=vars[2])),
-                                           y = eval(parse(text=vars[1])),
-                                           colour=abs(sDFintercept),
-                            environment <- environment()))+
-                geom_point(size=3,alpha=.8)+
-                scale_colour_gradient( low="black",high="red",name="")+
-                theme(legend.key.width = grid::unit(.2,"cm"),
-                      panel.background=element_rect(fill="white",colour="black"),
-                      legend.text = element_text(size=14),
-                      panel.grid.major = element_blank(),
-                      panel.grid.minor = element_blank())+
-                ylab(vars[1])+
-                xlab(vars[2])+
-                ggtitle("Standardized Difference in Intercept")+
-                theme(axis.text = element_text(size=14,colour="black"),
-                      axis.title = element_text(size=16))
+        i2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
+                                           eval(parse(text=vars[1])),
+                                           colour=abs(sDFintercept)),
+                            environment = environment())+
+            geom_point(size=3,alpha=.8)+
+            scale_colour_gradient( low="black",high="red",name="")+
+            theme(legend.key.width = unit(.2,"cm"),
+                  panel.background=element_rect(fill="white",colour="black"),
+                  legend.text = element_text(size=14),
+                  panel.grid.major = element_blank(),
+                  panel.grid.minor = element_blank())+
+            ylab(vars[1])+
+            xlab(vars[2])+
+            ggtitle("Standardized Difference in Intercept")+
+            theme(axis.text = element_text(size=14,colour="black"),
+                  axis.title = element_text(size=16))
 
         # Influential points for slope estimate
         s3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
