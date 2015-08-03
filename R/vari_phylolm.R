@@ -27,6 +27,7 @@
 #' @param taxa.nam A character vector of taxa names that will be used to match data rows to phylogeny tips.
 #' @param lambda A value for the lambda transformation. If NULL, \code{lambda}="ML"
 #' Note that the model can be weighted by the sample size of each species, see \code{weights} in \code{\link{gls}}
+#' @inheritParams influ_phylolm
 #' @details This functions only works for simple linear regression \eqn{y = bx +a}.
 #' Future implementation will deal with more complex models.
 #' If you log-transform your predictor variable, make sure that your vari.pred is in a log-scale too
@@ -77,7 +78,7 @@
 #' }
 #'  @export
 
-variPgls <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,nintra=1,ntree=1,model="lambda",method="normal",cutoff=2,track=TRUE){
+vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,nintra=1,ntree=1,model="lambda",method="normal",cutoff=2,track=TRUE){
   
   #Error check
   if (!inherits(tree, "phylo") & !inherits(tree, "multiPhylo"))
