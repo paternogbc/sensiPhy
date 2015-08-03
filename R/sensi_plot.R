@@ -48,7 +48,8 @@
 #' 
 #' Graph 4: Ditribution of the percentage of change in slope or intercept.
 #' @examples
-#' library(sensiPhy);library(phylolm)
+#' \dontrun{
+#' library(sensiPhy)
 #'
 #' # Generating tree and traits:
 #' set.seed(2468)
@@ -66,10 +67,12 @@
 #' sensi_plot(fit2)
 #' sensi_plot(fit2, graphs = 1, param = "intercept")
 #' sensi_plot(fit2, graphs = 4, param = "slope")
+#' }
 #' @author Gustavo Paterno
 #' @seealso \code{\link[sensiPhy]{samp_phylolm}},
 #' \code{\link[sensiPhy]{samp_phyloglm}}, \code{\link[sensiPhy]{influ_phylolm}},
 #' \code{\link[sensiPhy]{influ_phyloglm}}
+#' @importFrom grid grid.newpage pushViewport grid.layout viewport
 #' @export
 
 ### Start:
@@ -90,3 +93,29 @@ if (x[[1]] == "influ_phylolm" | x[[1]] == "influ_phyloglm")
     plot_influ_phylolm(x,graphs,param)
 }
 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+
+    plots <- c(list(...), plotlist)
+    
+    numPlots = length(plots)
+    
+    if (is.null(layout)) {
+        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                         ncol = cols, nrow = ceiling(numPlots/cols))
+    }
+    
+    if (numPlots==1) {
+        print(plots[[1]])
+        
+    } else {
+        grid.newpage()
+        pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+        
+        for (i in 1:numPlots) {
+            matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+            
+            print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                            layout.pos.col = matchidx$col))
+        }
+    }
+}
