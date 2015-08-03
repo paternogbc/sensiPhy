@@ -26,8 +26,8 @@
 #' above the value of \code{cutoff} are identified as influential. The default
 #' value for the cutoff is 2 standardised differences change.
 #'
-#' Currently, this function can only implement simple models (i.e. \eqn{trait~
-#' predictor}). In the future we will implement more complex models.
+#' Currently, this function can only implement simple models (i.e. 
+#' \eqn{y = a*b}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'

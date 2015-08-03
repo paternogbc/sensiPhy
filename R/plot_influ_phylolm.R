@@ -1,6 +1,6 @@
-#' Graphical diagnostics for \code{influ_phylolm}
+#' Graphical diagnostics for \code{influ_phylolm} and \code{influ_phyloglm}
 #'
-#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm}, 
+#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm} and 
 #' \code{influ_phyloglm}
 #' @param x output from \code{influ_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
@@ -27,6 +27,7 @@
 #' 
 #' Graph 4: Ditribution of the percentage of change in slope or intercept.
 #' @examples
+#' \dontrun{
 #' library(sensiPhy)
 #'
 #' #Generate a random tree
@@ -55,6 +56,7 @@
 #' # You can also choose which graph and parameter should be ploted:
 #' sensi_plot(fit1, graphs = 1, param = "intercept")
 #' sensi_plot(fit2, graphs = "all", param = "slope")
+#' }
 #' @importFrom grid unit 
 
 ### Start:

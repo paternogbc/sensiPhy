@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_influ_phylolm.R
 \name{plot_influ_phylolm}
 \alias{plot_influ_phylolm}
-\title{Graphical diagnostics for \code{influ_phylolm}}
+\title{Graphical diagnostics for \code{influ_phylolm} and \code{influ_phyloglm}}
 \usage{
 plot_influ_phylolm(x, graphs = "all", param = "slope")
 }
@@ -14,9 +14,29 @@ plot_influ_phylolm(x, graphs = "all", param = "slope")
 \item{param}{choose which parameter ("intercept" or "slope" should be printed)}
 }
 \description{
-\code{plot_influ_phylolm} Plot results from \code{influ_phylolm},
+\code{plot_influ_phylolm} Plot results from \code{influ_phylolm} and
+\code{influ_phyloglm}
+}
+\details{
+For 'x' from influ_phylolm or influ_phyloglm:
+
+Graph 1: Distribution of estimated slopes or intercepts for each
+simulation (leave-one-out deletion). Red vertical line represents the original
+slope or intercept from the full model (with all species).
+
+Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized
+difference in slope or intercept is represented by a continous colour scale,
+ranging from black (low \code{sDFintercept} or \code{sDFslope} values) to red
+(high \code{sDFintercept} or \code{sDFslope} values).
+
+Graph 3: Distribution of Standardized difference in slope or intercept. Red
+colour indicates inbfluential species (with a standardised difference above
+the value of \code{cutoff}).
+
+Graph 4: Ditribution of the percentage of change in slope or intercept.
 }
 \examples{
+\dontrun{
 library(sensiPhy)
 
 #Generate a random tree
@@ -45,6 +65,7 @@ sensi_plot(fit2)
 # You can also choose which graph and parameter should be ploted:
 sensi_plot(fit1, graphs = 1, param = "intercept")
 sensi_plot(fit2, graphs = "all", param = "slope")
+}
 }
 \author{
 Gustavo Paterno

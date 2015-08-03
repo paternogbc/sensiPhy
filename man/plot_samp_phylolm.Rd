@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_samp_phylolm.R
 \name{plot_samp_phylolm}
 \alias{plot_samp_phylolm}
-\title{Graphical diagnostics for \code{samp_phylolm}}
+\title{Graphical diagnostics for \code{samp_phylolm} and \code{samp_phyloglm}}
 \usage{
 plot_samp_phylolm(x, graphs = "all", param = "slope")
 }
@@ -14,9 +14,30 @@ plot_samp_phylolm(x, graphs = "all", param = "slope")
 \item{param}{choose which model parameter should be ploted  ("intercept" or "slope")}
 }
 \description{
-\code{plot_samp_phylolm} Plot results from \code{samp_phylolm},
+\code{plot_samp_phylolm} Plot results from \code{samp_phylolm} and
+\code{influ_phyloglm}
+}
+\details{
+For 'x' from samp_phylolm or samp_phyloglm:
+
+Graph 1: Estimated slopes or intercepts for each simution across
+percentage of species removed. Colours represent percentage
+of change in comparison with the full model (blue = lower than 5, orange =
+between 5 and 10 and red = higher than 10).
+The red horizontal line represents the original slope or
+intercept from the full model (with all species).
+
+Graph 2: The proportion of estimated slopes and intercepts in each category
+across the percentage of species removed.
+
+Graph 3: Estimated phylogenetic model parameter for each simulation across
+the percentage of species removed.
+
+Graph 4: The percentage of significant slopes or intercepts across the
+percentage of species removed.
 }
 \examples{
+\dontrun{
 library(sensiPhy)
 
 #Generate a random tree
@@ -45,6 +66,7 @@ sensi_plot(fit2)
 # You can also choose which graph and parameter should be ploted:
 sensi_plot(fit1, graphs = 1, param = "intercept")
 sensi_plot(fit2, graphs = "all", param = "slope")
+}
 }
 \author{
 Gustavo Paterno
