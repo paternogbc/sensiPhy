@@ -1,8 +1,32 @@
+#' Graphical diagnostics for \code{clade_phylolm} and \code{influ_phyloglm}
+#'
+#' \code{plot_clade_phylolm} Plot results from \code{clade_phylolm} and 
+#' \code{clade_phyloglm}
+#' @param x output from \code{clade_phylolm}
+#' @param clade The name of the clade to be evaluated
+#' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
+#' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
+#' ggtitle element_blank
+#' @author Gustavo Paterno
+#' @seealso \code{\link[sensiPhy]{clade_phylolm}} 
+#' @details For 'x' from clade_phylolm or clade_phyloglm:
+#' 
+#' This function plots the original scaterplot \eqn{y = a + bx} (with the 
+#' full dataset), plus a comparison between regression lines of the full model
+#' and the model without the selected clade (set with \code{clade}). For further
+#' details about this method, please see \code{\link[sensiPhy]{clade_phylolm}}.
+#' Species from the selected clade are represented in red (removed species),
+#' solid line represents the full model regression line and dashed line represent\
+#' the regression line of the model without the species from the selected clade.
+#' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
+#' in the objected returned from \code{clade_phylolm} or \code{clade_phyloglm}. 
+#'  
+
 plot_clade_phylolm <- function(x,clade){
     
     clades.names <- x$clade.model.estimates$clade
     clade.n <- which(clade == clades.names)
-    if (length(clade.n) == 0) stop("Clade name is not correct")
+    if (length(clade.n) == 0) stop("Clade name is not valid")
     
     ### Organizing values:
     result <- x$clade.model.estimates
