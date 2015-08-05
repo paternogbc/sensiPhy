@@ -1,7 +1,6 @@
 #' Graphical diagnostics for \code{clade_phylolm} and \code{clade_phyloglm}
 #'
-#' Plot results from \code{clade_phylolm} and 
-#' \code{clade_phyloglm}
+#' Plot results from \code{clade_phylolm} and \code{clade_phyloglm}
 #' @param x output from \code{clade_phylolm} or \code{clade_phyloglm}
 #' @param clade The name of the clade to be evaluated (see details)
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
