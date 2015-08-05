@@ -53,6 +53,7 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
 #' @examples
+#' \dontrun{
 #' library(sensiPhy);library(phylolm)
 #'
 #' #Generate a random tree
@@ -69,6 +70,7 @@
 #'
 #' #Determine influential clades:
 #' clade.test <- clade_phylolm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
+#' }
 #' @author Gustavo Paterno
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylolm}},
 #' \code{\link{sensi_plot}}
