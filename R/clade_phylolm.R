@@ -1,59 +1,51 @@
 #' Influential clade detection - Phylogenetic Linear Regression
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
-#' and detects influential clades.
+#' Estimate the impact on model estimates phylogenetic linear regression after 
+#' removing clades from the analysis. 
 #'
 #' @param formula The model formula
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
-#' @param cutoff The cutoff value used to identify for influential clades
-#' (see Details)
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param clade.col The name of a column in the provided data frame with clades 
-#' specification.
-#' @param n.species Minimum required number of species in the clade in order to include
-#' this clade in the leave-one-out deletion analyis. Default is \code{10}.
+#' specification (a character vector with clade names).
+#' @param n.species Minimum number of species in the clade in order to include
+#' this clade in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function sequentially removes one clade at a time, fits a phylogenetic
-#' linear regression model using \code{\link[phylolm]{phylolm}}, stores the
-#' results and detects influential clades.
+#' linear regression model using \code{\link[phylolm]{phylolm}} and stores the
+#' results. The impact of of a specific clade on model estimates is calculated by the
+#'  comparison between the full model (with all species) and the model without 
+#'  the species belonging to a clade.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' \code{clade_phylolm} detects influential clades based on the standardised
+#' \code{clade_phylolm} detects influential clades based on
 #' difference in intercept and/or slope when removing a given clade compared
-#' to the full model including all species. Clades with a standardised difference
-#' above the value of \code{cutoff} are identified as influential. The default
-#' value for the cutoff is 2 standardised differences change.
-#'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
-#' predictor}). In the future we will implement more complex models.
+#' to the full model including all species.
+#' 
+#' Currently, this function can only implement simple linear models (i.e. 
+#' \eqn{y = a + bx}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
 #' @return The function \code{clade_phylolm} returns a list with the following
 #' components:
-#' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
-#' @return \code{influential_clades}: List of influential clades, both
-#' based on standardised difference in interecept and in the slope of the
-#' regression. Clades are ordered from most influential to less influential and
-#' only include clades with a standardised difference > \code{cutoff}.
 #' @return \code{clade.model.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. Reported are the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage change in intercept compared
-#' to the full model (\code{intercept.perc}) and intercept p-value
-#' (\code{pval.intercept}). All of these are also reported for the regression
+#' intercept and full model intercept (\code{DFintercept}), the percentage change
+#'  in intercept compared to the full model (\code{intercept.perc}) and intercept 
+#'  p-value (\code{pval.intercept}). All of these are also reported for the regression
 #' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel used) are
@@ -83,8 +75,8 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
-                        clade.col, n.species = 10, ...){
+clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
+                        clade.col, n.species = 5, ...){
     if(class(formula)!="formula") stop("formula must be class 'formula'")
     if(class(data)!="data.frame") stop("data must be class 'data.frame'")
     if(class(phy)!="phylo") stop("phy must be class 'phylo'")
@@ -176,40 +168,18 @@ clade_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,
         }
     }
     
-    #Calculates Standardized DFbeta and DFintercept
-    sDFintercept <- clade.model.estimates$DFintercept/
-        sd(clade.model.estimates$DFintercept)
-    sDFslope     <- clade.model.estimates$DFslope/
-        sd(clade.model.estimates$DFslope)
-    
-    clade.model.estimates$sDFslope     <- sDFslope
-    clade.model.estimates$sDFintercept <- sDFintercept
-    
     #Creates a list with full model estimates:
     param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                    aic=phylolm::summary.phylolm(mod.0)$aic,
                    optpar=mod.0$optpar)
     
-    #Identifies influencital clade (sDF > cutoff) and orders by influence
-    reorder.on.slope         <-clade.model.estimates[order(abs(
-        clade.model.estimates$sDFslope),decreasing=T),c("clade","sDFslope")]
-    influ.clade.slope           <-as.character(reorder.on.slope$clade[abs(
-        reorder.on.slope$sDFslope)>cutoff])
-    reorder.on.intercept     <-clade.model.estimates[order(abs(
-        clade.model.estimates$sDFintercept),decreasing=T),c("clade","sDFintercept")]
-    influ.clade.intercept       <-as.character(reorder.on.intercept$clade[abs(
-        reorder.on.intercept$sDFintercept)>cutoff])
-    
     #Generates output:
     res <- list(analysis.type="clade_phylolm",
-                cutoff=cutoff,
                 formula=formula,
                 full.model.estimates=param0,
-                influential.clades= list(influ.clade.slope=influ.clade.slope,
-                                          influ.clade.intercept=influ.clade.intercept),
                 clade.model.estimates=clade.model.estimates,
                 data=full.data,errors=errors)
-    class(res) <- "sensi.clade"
+    class(res) <- c("sensi.clade","clade_phylolm")
     ### Warnings:
     if (length(res$errors) >0){
         warning("Some clades deletion presented errors, please check: output$errors")}
