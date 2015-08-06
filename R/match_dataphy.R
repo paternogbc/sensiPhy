@@ -1,7 +1,10 @@
-match_dataphy <- function(data,phy){
+match_dataphy <- function(formula,data,phy){
 
+  resp<-formula[[2]]
+  pred<-formula[[3]]
+  
 #Remove NA's before matching data and tips
-  if (sum(is.na(data))!=0 || sum(is.na(data))!=0)
+  if (sum(is.na(resp))!=0 || sum(is.na(pred))!=0)
   {data<-data[!is.na(data$resp),]
   data<-data[!is.na(data$pred),]
   warning("NA's in response or predictor, rows with NA's were removed")}
@@ -27,9 +30,6 @@ if (length(mismatch) != 0)   warning("Phylogeny tips do not match the species li
 #Drop species from tree
 phy<-lapply(phy,ape::drop.tip,tip=mismatch)
 class(phy)<-"multiPhylo"
-
-#transform NA's in SE columns into zeros
-#data[is.na(data)] <- 0
 
 #Reorder rows according to tip labels
 if(inherits(phy, "multiPhylo")){  
