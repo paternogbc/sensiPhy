@@ -1,6 +1,6 @@
 #' Graphical sensitivity analysis for comparative methods
 #'
-#' Generic function for plotting summary results from
+#' Generic function for plotting results from
 #' any sensitivity analysis performed with 'sensiPhy' (see \code{\link[sensiPhy]{samp_phylolm}},
 #' \code{\link[sensiPhy]{samp_phyloglm}}, \code{\link[sensiPhy]{influ_phylolm}},
 #' \code{\link[sensiPhy]{influ_phyloglm}}) 
