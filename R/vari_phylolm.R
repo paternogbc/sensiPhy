@@ -263,7 +263,7 @@ vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,
   #variation due to tree choice
   mean_by_tree<-stats::aggregate(.~n.tree, data=resultados, mean)
   #variation due to continuous trait
-  mean_by_randomval<-aggregate(.~n.intra, data=resultados, mean)
+  mean_by_randomval<-stats::aggregate(.~n.intra, data=resultados, mean)
   
   statresults<-data.frame(min=apply(resultados,2,min),
                           max=apply(resultados,2,max),
