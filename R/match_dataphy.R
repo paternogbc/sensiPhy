@@ -43,4 +43,6 @@ if (any(is.na(tip.order)))
   stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
 data <- data[tip.order, , drop = FALSE]
 rownames(data) <- data$taxa.nam
+return(data)
+return(phy)
 }
