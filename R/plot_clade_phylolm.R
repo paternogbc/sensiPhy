@@ -38,7 +38,7 @@ plot_clade_phylolm <- function(x,clade=NULL){
     ### Organizing values:
     result <- x$clade.model.estimates
     vars   <- all.vars(x$formula)
-    vars2  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
+    vars2  <- gsub("list","",attr(stats::terms(x$formula),"variables"))[-1]
     intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
     slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
     cutoff      <-  x$cutoff

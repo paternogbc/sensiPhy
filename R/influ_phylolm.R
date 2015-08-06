@@ -173,9 +173,9 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
 
         #Calculates Standardized DFbeta and DFintercept
         sDFintercept <- influ.model.estimates$DFintercept/
-                sd(influ.model.estimates$DFintercept)
+                stats::sd(influ.model.estimates$DFintercept)
         sDFslope     <- influ.model.estimates$DFslope/
-                sd(influ.model.estimates$DFslope)
+                stats::sd(influ.model.estimates$DFslope)
 
         influ.model.estimates$sDFslope     <- sDFslope
         influ.model.estimates$sDFintercept <- sDFintercept

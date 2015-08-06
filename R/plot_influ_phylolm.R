@@ -72,7 +72,7 @@ intercept.perc <- sDFintercept <- NULL
 
         ### Organizing values:
         result <- x$influ.model.estimates
-        vars  <- gsub("list","",attr(terms(x$formula),"variables"))[-1]
+        vars  <- gsub("list","",attr(stats::terms(x$formula),"variables"))[-1]
         intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
         slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
         cutoff      <-  x$cutoff

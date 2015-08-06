@@ -158,8 +158,8 @@ vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,
   
     
   #Function to pick a random value in the interval
-  if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)}
-  else  funr <- function(a,b) {runif(1,a-b,a+b)}
+  if (method=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
+  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
   
   # If the class of tree is multiphylo pick n=ntree random trees
   if(inherits(tree, "multiPhylo")){trees<-sample(length(tree),ntree,replace=F)}
@@ -184,7 +184,7 @@ vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,
         
         #choose a random value in min/max if vari.resp is provided
         if(exists("vari.resp") && !is.null(dim(vari.resp)))
-        {data$respV<-apply(data[,c("resp.min","resp.max")],1,function(x)runif(1,x[1],x[2]))}
+        {data$respV<-apply(data[,c("resp.min","resp.max")],1,function(x)stats::runif(1,x[1],x[2]))}
         
         #choose a random value in [mean-se,mean+se] if vari.resp is provided
         if(exists("vari.resp") && is.null(dim(vari.resp)))
@@ -195,7 +195,7 @@ vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,
         
         #choose a random value in min/max if vari.pred is provided
         if(exists("vari.pred") && !is.null(dim(vari.pred)))
-        {data$predV<-apply(data[,c("pred.min","pred.max")],1,function(x)runif(1,x[1],x[2]))}
+        {data$predV<-apply(data[,c("pred.min","pred.max")],1,function(x)stats::runif(1,x[1],x[2]))}
         
         #choose a random value in [mean-se,mean+se] if vari.pred is provided
         if(exists("vari.pred") && is.null(dim(vari.pred)))
@@ -261,16 +261,16 @@ vari_phylolm <- function(resp,pred,vari.resp=NA,vari.pred=NA,taxa.nam,tree,
   
   #calculate mean and sd for each parameter
   #variation due to tree choice
-  mean_by_tree<-aggregate(.~n.tree, data=resultados, mean)
+  mean_by_tree<-stats::aggregate(.~n.tree, data=resultados, mean)
   #variation due to continuous trait
   mean_by_randomval<-aggregate(.~n.intra, data=resultados, mean)
   
   statresults<-data.frame(min=apply(resultados,2,min),
                           max=apply(resultados,2,max),
                           mean=apply(resultados,2,mean),
-                          sd_all=apply(resultados,2,sd),
-                          sd_tree=apply(mean_by_tree,2,sd),
-                          sd_intra=apply(mean_by_randomval,2,sd))[-(1:2),]
+                          sd_all=apply(resultados,2,stats::sd),
+                          sd_tree=apply(mean_by_tree,2,stats::sd),
+                          sd_intra=apply(mean_by_randomval,2,stats::sd))[-(1:2),]
   
   
   output <- list(output="variPgls",model_results=resultados,paste("Number of observations:",n),
