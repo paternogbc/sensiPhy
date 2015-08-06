@@ -1,0 +1,18 @@
+sensiPhy v0.2.0 (xxxxxxxx)
+--------------------------------------------------------------------------------
+
+* New function...
+
+sensiPhy v0.1.1 (04.04.15)
+--------------------------------------------------------------------------------
+* New function `variPgls` was added to perform Pgls analysis accounting for 
+intraspecific variability and phylogenetic uncertainty
+* `sensi_plot` was completed reformulated.
+* Excluded function `samp_pgls` (replaced by samp_gls)
+* Excluded function `influ_pgls` (replaced by influ_gls)
+
+sensiPhy v0.1.0
+--------------------------------------------------------------------------------
+* Included function 'influ_gls'
+* Included function 'samp_gls'
+* Update 'sensi_plot' to plot results from 'samp_gls' and 'influ_gls'
