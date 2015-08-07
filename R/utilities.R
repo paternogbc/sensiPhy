@@ -33,13 +33,14 @@ if (length(mismatch) != 0)   warning("Phylogeny tips do not match the species li
 if(inherits(phy, "multiPhylo")){ 
     phy<-lapply(phy,ape::drop.tip,tip=mismatch)
     class(phy)<-"multiPhylo"
+    tip.order <- match(phy[[1]]$tip.label, rownames(data))
 }
 if(inherits(phy, "phylo")){ 
     phy<- ape::drop.tip(phy,tip=mismatch)
     class(phy)<-"phylo"
+    tip.order <- match(phy$tip.label, rownames(data))
 }
 
-tip.order <- match(phy$tip.label, rownames(data))
 if (any(is.na(tip.order)))
     stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
 data <- data[tip.order, , drop = FALSE]
