@@ -3,7 +3,7 @@ match_dataphy <- function(formula,data,phy){
 # original data set:
 data.0 <- data
 # Croping data frame by formula variables:
-mf <- stats::model.frame(formula = formula, data = data, na.action = na.pass )
+mf <- stats::model.frame(formula = formula, data = data, na.action = stats::na.pass )
 vars <- all.vars(formula)
   
 #Remove NA's before matching data and tips
