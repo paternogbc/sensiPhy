@@ -1,13 +1,15 @@
 match_dataphy <- function(formula,data,phy){
 
-  resp<-deparse(formula[[2]])
-  pred<-deparse(formula[[3]])
+# original data set:
+data.0 <- data
+# Croping data frame by formula variables:
+mf <- stats::model.frame(formula = formula, data = data, na.action = stats::na.pass )
+vars <- all.vars(formula)
   
 #Remove NA's before matching data and tips
-  if (sum(is.na(data[,resp]))!=0 || sum(is.na(data[,pred]))!=0)
-  {data<-data[!is.na(data[,resp]),]
-  data<-data[!is.na(data[,pred]),]
-  warning("NA's in response or predictor, rows with NA's were removed")}
+if (sum(is.na(mf[,1]))!=0 || sum(is.na(mf[,2]))!=0)
+{data <- mf[!is.na(mf[,1]) & !is.na(mf[,2]),]
+ warning("NA's in response or predictor, rows with NA's were removed")}
 
 #Match data and phylogeny in comparative.data style
 if(inherits(phy, "multiPhylo")){  
@@ -28,22 +30,21 @@ if (length(mismatch) != 0)   warning("Phylogeny tips do not match the species li
                                      species were dropped from phylogeny or species list")
 
 #Drop species from tree
-phy<-lapply(phy,ape::drop.tip,tip=mismatch)
-class(phy)<-"multiPhylo"
+if(inherits(phy, "multiPhylo")){ 
+    phy<-lapply(phy,ape::drop.tip,tip=mismatch)
+    class(phy)<-"multiPhylo"
+    tip.order <- match(phy[[1]]$tip.label, rownames(data))
+}
+if(inherits(phy, "phylo")){ 
+    phy<- ape::drop.tip(phy,tip=mismatch)
+    class(phy)<-"phylo"
+    tip.order <- match(phy$tip.label, rownames(data))
+}
 
-#Drop species from data
-data<-data[!rownames(data) %in% mismatch,]
-
-#Reorder rows according to tip labels
-if(inherits(phy, "multiPhylo")){  
-  phy1<-phy[[1]]}
-else
-  phy1<-phy
-
-tip.order <- match(phy1$tip.label, rownames(data))
 if (any(is.na(tip.order)))
-  stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
+    stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
 data <- data[tip.order, , drop = FALSE]
-rownames(data) <- data$taxa.nam
-return(list(data,phy))
+data.out <- data.0[rownames(data),]
+
+return(list(data = data.out,phy = phy))
 }
