@@ -27,7 +27,7 @@ if (length(in.both) == 0)
 
 mismatch<-union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
 if (length(mismatch) != 0)   warning("Phylogeny tips do not match the species list,
-                                     species were dropped from phylogeny or species list")
+species were dropped from phylogeny or species list")
 
 #Drop species from tree
 if(inherits(phy, "multiPhylo")){ 
