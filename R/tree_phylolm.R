@@ -137,4 +137,4 @@ tree_phylolm <- function(formula,data,phy,
                  stats=statresults)
   
   return(output)
-} 
+}
