@@ -1,12 +1,12 @@
 match_dataphy <- function(formula,data,phy){
 
-  resp<-formula[[2]]
-  pred<-formula[[3]]
+  resp<-deparse(formula[[2]])
+  pred<-deparse(formula[[3]])
   
 #Remove NA's before matching data and tips
-  if (sum(is.na(resp))!=0 || sum(is.na(pred))!=0)
-  {data<-data[!is.na(data$resp),]
-  data<-data[!is.na(data$pred),]
+  if (sum(is.na(data[,resp]))!=0 || sum(is.na(data[,pred]))!=0)
+  {data<-data[!is.na(data[,resp]),]
+  data<-data[!is.na(data[,pred]),]
   warning("NA's in response or predictor, rows with NA's were removed")}
 
 #Match data and phylogeny in comparative.data style
@@ -31,18 +31,19 @@ if (length(mismatch) != 0)   warning("Phylogeny tips do not match the species li
 phy<-lapply(phy,ape::drop.tip,tip=mismatch)
 class(phy)<-"multiPhylo"
 
+#Drop species from data
+data<-data[!rownames(data) %in% mismatch,]
+
 #Reorder rows according to tip labels
 if(inherits(phy, "multiPhylo")){  
   phy1<-phy[[1]]}
 else
   phy1<-phy
 
-rownames(data)<-data$taxa.nam
 tip.order <- match(phy1$tip.label, rownames(data))
 if (any(is.na(tip.order)))
   stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
 data <- data[tip.order, , drop = FALSE]
 rownames(data) <- data$taxa.nam
-return(data)
-return(phy)
+return(list(data,phy))
 }
