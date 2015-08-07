@@ -1,10 +1,10 @@
+# sensiPhy
+
 [![Travis-CI Build Status](https://travis-ci.org/paternogbc/sensiPhy.svg?branch=master)](https://travis-ci.org/paternogbc/sensiPhy)
 [![GitHub version](https://badge.fury.io/gh/paternogbc%2FsensiPhy.svg)](http://badge.fury.io/gh/paternogbc%2FsensiPhy)
 
-sensiPhy
-========
-
 R package to perform sensitivity analysis for comparative methods
+
 
 ####Installing sensiPhy from Github:
 
