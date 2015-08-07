@@ -20,6 +20,8 @@ library(phylolm);library(ggplot2);library(gridExtra)
 library(sensiPhy)
 ```
 
+#### Quick tutorial:
+
 Simulating data:
 ```{r}
 set.seed(2468)
