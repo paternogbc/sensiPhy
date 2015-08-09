@@ -67,7 +67,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
         
     } else {
         grid::grid.newpage()
-        grid::pushViewport(grid::viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+        grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow(layout), ncol(layout))))
         
         for (i in 1:numPlots) {
             matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
