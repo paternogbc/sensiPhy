@@ -58,7 +58,6 @@ tree_phylolm <- function(formula,data,phy,
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
   data<-datphy[[1]]
-  row.names(data)<-data[,1]
   phy<-datphy[[2]]
 
   # If the class of tree is multiphylo pick n=ntree random trees
@@ -76,7 +75,7 @@ tree_phylolm <- function(formula,data,phy,
   for (j in trees){
       
       #phylolm model
-      mod <- try(phylolm::phylolm(formula, data=data,model=model,phy=phy[[j]]),TRUE)
+      mod = try(phylolm::phylolm(formula, data=data,model=model,phy=phy[[j]]),TRUE)
 
       
       if(isTRUE(class(mod)=="try-error")) {
@@ -114,7 +113,7 @@ tree_phylolm <- function(formula,data,phy,
         tree.model.estimates[counter,6] <- se.slope
         tree.model.estimates[counter,7] <- pval.slope
         tree.model.estimates[counter,8] <- aic.mod
-        tree.model.estimates[counter,9]<- optpar
+        tree.model.estimates[counter,9]<-  optpar
         
         
         counter=counter+1
