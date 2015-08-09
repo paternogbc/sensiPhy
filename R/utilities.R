@@ -66,7 +66,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
         print(plots[[1]])
         
     } else {
-        grid.newpage()
+        grid::grid.newpage()
         pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
         
         for (i in 1:numPlots) {
