@@ -1,6 +1,6 @@
 #' Phylogenetic uncertainty - Phylogenetic Linear Regression
 #'
-#' Performs Phylogenetic linear regression accounting for
+#' Performs Phylogenetic linear regression evaluating
 #' uncertainty in trees topology.
 #'
 #' @param formula The model formula

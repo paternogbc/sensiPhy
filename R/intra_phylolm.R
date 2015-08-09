@@ -1,6 +1,6 @@
 #' Intraspecific variability - Phylogenetic Linear Regression
 #'
-#' Performs Phylogenetic linear regression accounting for
+#' Performs Phylogenetic linear regression evaluating
 #' intraspecific variability.
 #'
 #' @param formula The model formula: \code{response~predictor}. 
