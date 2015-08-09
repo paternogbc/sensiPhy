@@ -32,6 +32,8 @@
 #' a random value in the interval [\code{predictor}-\code{vari.pred},\code{predictor}+\code{vari.pred}] and
 #' a random value in the interval [\code{response}-\code{vari.resp},\code{response}+\code{vari.resp}].
 #' If \code{minmax}=TRUE the value is randomly generated in the interval [min,max].
+#' If you log-transform your predictor and/or response variables, make sure that 
+#' vari.pred and/or vari.resp are in a log-scale too.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
