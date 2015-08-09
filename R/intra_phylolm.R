@@ -79,17 +79,17 @@ intra_phylolm <- function(formula,data,phy,
   
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
-  data<-datphy[[1]]
+  full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
   resp<-all.vars(formula)[1]
   pred<-all.vars(formula)[2]
   
-  if(exists("vari.resp") && sum(is.na(data[,vari.resp]))!=0){
-    data[is.na(data[,vari.resp]),] <- 0}
+  if(exists("vari.resp") && sum(is.na(full.data[,vari.resp]))!=0){
+    full.data[is.na(full.data[,vari.resp]),] <- 0}
     
-    if(exists("vari.pred") && sum(is.na(data[,vari.pred]))!=0){
-      data[is.na(data[,vari.pred]),] <- 0}
+    if(exists("vari.pred") && sum(is.na(full.data[,vari.pred]))!=0){
+      full.data[is.na(full.data[,vari.pred]),] <- 0}
 
 
 
@@ -113,34 +113,34 @@ intra_phylolm <- function(formula,data,phy,
 
       ##Set response and predictor variables
       #vari.resp is not provided or is not numeric, do not pick random value
-      if(!inherits(data[,resp], c("numeric","integer")) || !exists("vari.resp")) {data$respV<-data[,resp]}
+      if(!inherits(full.data[,resp], c("numeric","integer")) || !exists("vari.resp")) {full.data$respV<-full.data[,resp]}
       
       #choose a random value in min/max if vari.resp is provided and minmax=T
       if(exists("vari.resp") && minmax==T)
-      {data$respV<-apply(data[,c(resp,vari.resp)],1,function(x)runif(1,x[1],x[2]))}
+      {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.resp is provided and minmax=F
       if(exists("vari.resp") && minmax==F)
-      {data$respV<-apply(data[,c(resp,vari.resp)],1,function(x)funr(x[1],x[2]))}
+      {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)funr(x[1],x[2]))}
       
     
       #vari.pred is not provided or is not numeric, do not pick random value
-      if(!inherits(data[,pred], c("numeric","integer")) || !exists("vari.pred")) {data$predV<-data[,pred]}
+      if(!inherits(full.data[,pred], c("numeric","integer")) || !exists("vari.pred")) {full.data$predV<-full.data[,pred]}
       
       #choose a random value in min/max if vari.pred is provided and minmax=T
       if(exists("vari.pred") && minmax==T)
-      {data$predV<-apply(data[,c(pred,vari.pred)],1,function(x)runif(1,x[1],x[2]))}
+      {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.pred is provided
       if(exists("vari.pred") && is.null(dim(vari.pred)))
-      {data$predV<-apply(data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
+      {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
 
       #model
-      mod = try(phylolm::phylolm(respV~predV, data=data, model=model,phy=phy),TRUE)
+      mod = try(phylolm::phylolm(respV~predV, data=full.data, model=model,phy=phy),TRUE)
 
       if(isTRUE(class(mod)=="try-error")) {
         error <- i
-        names(error) <- rownames(c.data$data)[i]
+        names(error) <- rownames(c.data$full.data)[i]
         errors <- c(errors,error)
         next }
       
@@ -189,10 +189,11 @@ intra_phylolm <- function(formula,data,phy,
   statresults<-data.frame(min=apply(intra.model.estimates,2,min),
                           max=apply(intra.model.estimates,2,max),
                           mean=apply(intra.model.estimates,2,mean),
-                          sd_intra=apply(mean_by_randomval,2,sd))[-(1:2),]
+                          sd_intra=apply(mean_by_randomval,2,sd))[-1,]
   
   
   output <- list(analysis.type="intra_phylolm",formula=formula,
+                 datas=full.data,
                  model_results=intra.model.estimates,N.obs=n,
                  stats=statresults)
   
