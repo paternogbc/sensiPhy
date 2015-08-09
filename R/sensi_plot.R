@@ -80,9 +80,10 @@ sensi_plot <- function(x,graphs="all",param="slope"){
 
 ### Basic error checking:
 if (x[[1]] != "samp_phylolm" & x[[1]] != "samp_phyloglm" &
-            x[[1]]!= "influ_phylolm" & x[[1]] != "influ_phyloglm")
+            x[[1]]!= "influ_phylolm" & x[[1]] != "influ_phyloglm" &
+            x[[1]]!= "tree_phylolm" & x[[1]] != "intra_phylolm")
         stop("x must be an output from one of these functions: samp_phyloglm,
-             samp_phylolm, influ_phylolm and influ_phyloglm")
+             samp_phylolm, influ_phylolm, influ_phyloglm, tree_phylolm and intra_phylolm")
 
 ### samp_phylolm or samp_phylolm output:
 if (x[[1]] == "samp_phylolm" | x[[1]] == "samp_phyloglm")
@@ -92,3 +93,9 @@ if (x[[1]] == "samp_phylolm" | x[[1]] == "samp_phyloglm")
 if (x[[1]] == "influ_phylolm" | x[[1]] == "influ_phyloglm")
     plot_influ_phylolm(x,graphs,param)
 }
+
+### influ_phylolm or influ_phylolm output:
+if (x[[1]] == "tree_phylolm" | x[[1]] == "intra_phylolm")
+    plot_tree.intra_phylolm(x,graphs,param)
+}
+
