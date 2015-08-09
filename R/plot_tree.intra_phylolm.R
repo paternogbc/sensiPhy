@@ -31,7 +31,7 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
     
     resp<-all.vars(formula)[1]
     pred<-all.vars(formula)[2]
-    dat<-data.frame("response"=datas$resp,"predictor"=datas$pred)
+    dat<-data.frame("response"=x$datas$resp,"predictor"=x$datas$pred)
     result <- x$model_results
     statm<- x$stats
     slope.0 <-  as.numeric(statm[4,3])
@@ -62,7 +62,7 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
 
     ### Plotting:
     if (graphs=="all")
-      suppressMessages(print(multiplot(s1,s3,i1,cols=2)))
+      suppressMessages(print(multiplot(s1,s2,i1,cols=2)))
     if (param == "slope" & graphs==1)
       suppressMessages(print(s1))
     if (param == "slope" & graphs==2)

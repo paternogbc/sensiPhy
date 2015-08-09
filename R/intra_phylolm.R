@@ -183,7 +183,7 @@ intra_phylolm <- function(formula,data,phy,
         
       }
      }
-
+  
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
   mean_by_randomval<-stats::aggregate(.~n.intra, data=intra.model.estimates, mean)
