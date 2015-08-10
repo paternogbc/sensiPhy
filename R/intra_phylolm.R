@@ -18,11 +18,11 @@
 #' values in the formula and columns containig maximum values in \code{vari.resp} and/or \code{vari.pred} (default = FALSE).
 #' @param nintra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
 #' If NULL, \code{nintra} = 2
-#' @param method A character string indicating which method to use to generate a random value for the response 
+#' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables.Default is uniform distribution: "uniform" (\code{\link{runif}})
 #' normal distribution is "normal" (function \code{\link{rnorm}}).
 #' Warning: normal distribution can be used oly if vari.pred is the standard 
-#' deviation of the mean. If minmax=T, only "uniform" method is available.
+#' deviation of the mean. If minmax=T, only "uniform" distribution is available.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -70,13 +70,13 @@
 
 intra_phylolm <- function(formula,data,phy,
                           vari.resp=NA,vari.pred=NA,minmax=FALSE,
-                          nintra=2,method="uniform",model="lambda",track=TRUE){
+                          nintra=2,distrib="uniform",model="lambda",track=TRUE,...){
 
   #Error check
   if (!inherits(phy, "phylo"))
     stop("'", deparse(substitute(phy)), "' not of class 'phylo'")
   
-  if (method=="normal" && minmax==T)
+  if (distrib=="normal" && minmax==T)
     stop("Cannot generate normal distribution from min and max values!")
   
   #Matching tree and phylogeny using utils.R
@@ -96,7 +96,7 @@ intra_phylolm <- function(formula,data,phy,
 
 
   #Function to pick a random value in the interval
-  if (method=="normal") funr <- function(a, b) {rnorm(1,a,b)}
+  if (distrib=="normal") funr <- function(a, b) {rnorm(1,a,b)}
   else  funr <- function(a,b) {runif(1,a-b,a+b)}
   
 

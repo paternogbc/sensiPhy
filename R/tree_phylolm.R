@@ -49,7 +49,7 @@
 #' @export
 
 tree_phylolm <- function(formula,data,phy,
-                         ntree=2,model="lambda",track=TRUE){
+                         ntree=2,model="lambda",track=TRUE,...){
   
   #Error check
   if (!inherits(phy, "multiPhylo"))
