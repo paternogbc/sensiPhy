@@ -73,12 +73,13 @@ intra_phylolm <- function(formula,data,phy,
                           nintra=2,distrib="uniform",model="lambda",track=TRUE,...){
 
   #Error check
-  if (!inherits(phy, "phylo"))
-    stop("'", deparse(substitute(phy)), "' not of class 'phylo'")
-  
+  if(class(formula)!="formula") stop("formula must be class 'formula'")
+  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if (distrib=="normal" && minmax==T)
     stop("Cannot generate normal distribution from min and max values!")
-  
+  else
+    
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
   full.data<-datphy[[1]]
@@ -156,7 +157,7 @@ intra_phylolm <- function(formula,data,phy,
         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
         aic.mod              <- mod$aic
         n                    <- mod$n
-        d                    <- mod$d
+        #d                    <- mod$d
         
         if (model == "BM"){
           optpar <- NA
@@ -194,11 +195,10 @@ intra_phylolm <- function(formula,data,phy,
                           sd_intra=apply(mean_by_randomval,2,sd))[-1,]
   
   
-  output <- list(analysis.type="intra_phylolm",formula=formula,
+  res <- list(analysis.type="intra_phylolm",formula=formula,
                  datas=full.data,
                  model_results=intra.model.estimates,N.obs=n,
                  stats=statresults)
-  
-  return(output)
+  return(res)
 }
 

@@ -52,8 +52,10 @@ tree_phylolm <- function(formula,data,phy,
                          ntree=2,model="lambda",track=TRUE,...){
   
   #Error check
-  if (!inherits(phy, "multiPhylo"))
-    stop("'", deparse(substitute(phy)), "' not of class 'multiPhylo'")
+  if(class(formula)!="formula") stop("formula must be class 'formula'")
+  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
+  else
   
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
@@ -131,9 +133,9 @@ tree_phylolm <- function(formula,data,phy,
                           sd_tree=apply(mean_by_tree,2,sd))[-1,]
   
   
-  output <- list(analysis.type="tree_phylolm",formula=formula,
+  res <- list(analysis.type="tree_phylolm",formula=formula,
                  model_results=tree.model.estimates,N.obs=n,
                  stats=statresults)
   
-  return(output)
+  return(res)
 }
