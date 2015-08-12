@@ -92,7 +92,6 @@ if (x[[1]] == "samp_phylolm" | x[[1]] == "samp_phyloglm")
 ### influ_phylolm or influ_phylolm output:
 if (x[[1]] == "influ_phylolm" | x[[1]] == "influ_phyloglm")
     plot_influ_phylolm(x,graphs,param)
-}
 
 ### influ_phylolm or influ_phylolm output:
 if (x[[1]] == "tree_phylolm" | x[[1]] == "intra_phylolm")

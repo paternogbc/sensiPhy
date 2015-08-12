@@ -39,11 +39,8 @@
 #' \dontrun{
 #' library(sensiPhy);library(phylolm)
 #' #which example should we put here?
-#'
-#'
-#'
-#'
-#' @authors Caterina Penone & Pablo Ariel Martinez
+#' }
+#' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export

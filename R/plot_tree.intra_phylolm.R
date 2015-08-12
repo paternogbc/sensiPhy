@@ -3,6 +3,7 @@
 #' \code{plot_tree.intra_phylolm} Plot results from \code{tree_phylolm} and
 #' \code{intra_phylolm}
 #' @param x output from \code{tree_phylolm} or \code{intra_phylolm}
+#' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @param graphs choose which graph should be printed on the output ("all", 1,2 or 3)
 #' @author Caterina Penone and Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
@@ -19,7 +20,7 @@
 #' \dontrun{
 #' library(sensiPhy)
 #' 
-#' ?
+#' }
 #' 
 
 plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){

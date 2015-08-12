@@ -5,7 +5,7 @@
 \title{Phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
 tree_phylolm(formula, data, phy, ntree = 2, model = "lambda",
-  track = TRUE)
+  track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -40,7 +40,7 @@ different phylogenetic tree.
 due to phylogenetic uncertainty.
 }
 \description{
-Performs Phylogenetic linear regression accounting for
+Performs Phylogenetic linear regression evaluating
 uncertainty in trees topology.
 }
 \details{
