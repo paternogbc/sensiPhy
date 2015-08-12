@@ -38,6 +38,8 @@ different phylogenetic tree.
 
 \code{stats}: Statistics for model parameters. code{sd_tree} is the standard deviation
 due to phylogenetic uncertainty.
+
+#which example should we put here?
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -55,12 +57,6 @@ Currently, this function can only implement simple linear models (i.e. \eqn{trai
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
-}
-\examples{
-\dontrun{
-library(sensiPhy);library(phylolm)
-#which example should we put here?
-}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

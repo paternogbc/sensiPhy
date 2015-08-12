@@ -4,7 +4,9 @@
 #' \code{intra_phylolm}
 #' @param x output from \code{tree_phylolm} or \code{intra_phylolm}
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
-#' @param graphs choose which graph should be printed on the output ("all", 1,2 or 3)
+#' @param graphs choose which graph should be printed on the output ("all", 1, 2 or 3)
+#' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
+#' geom_vline xlab geom_point
 #' @author Caterina Penone and Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
 #' \code{\link[sensiPhy]{intra_phylolm}}
@@ -27,7 +29,7 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
   
   
   # nulling variables
-  sd <- formula <- slope <- density <- intercept <- NULL
+  sd <- formula <- slope <- ..density.. <- intercept <- NULL
   predictor <- response <-  s3 <- NULL
 
   

@@ -35,11 +35,7 @@
 #' @return \code{stats}: Statistics for model parameters. code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty.
 #' 
-#' @examples
-#' \dontrun{
-#' library(sensiPhy);library(phylolm)
 #' #which example should we put here?
-#' }
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
