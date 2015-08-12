@@ -127,7 +127,7 @@ tree_phylolm <- function(formula,data,phy,
   statresults<-data.frame(min=apply(tree.model.estimates,2,min),
                           max=apply(tree.model.estimates,2,max),
                           mean=apply(tree.model.estimates,2,mean),
-                          sd_tree=apply(mean_by_tree,2,sd))[-1,]
+                          sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
   
   res <- list(analysis.type="tree_phylolm",formula=formula,

@@ -25,6 +25,12 @@
 
 plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
   
+  
+  # nulling variables
+  sd <- formula <- slope <- density <- intercept <- NULL
+  predictor <- response <-  s3 <- NULL
+
+  
   ### Error check:
   if (x[[1]] != "tree_phylolm" & x[[1]] != "intra_phylolm")
     stop("x must be an output from tree_phylolm or intra_phylolm!")

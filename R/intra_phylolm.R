@@ -94,8 +94,8 @@ intra_phylolm <- function(formula,data,phy,
 
 
   #Function to pick a random value in the interval
-  if (distrib=="normal") funr <- function(a, b) {rnorm(1,a,b)}
-  else  funr <- function(a,b) {runif(1,a-b,a+b)}
+  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
+  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
   
 
   #Create the results data.frame
@@ -117,7 +117,7 @@ intra_phylolm <- function(formula,data,phy,
       
       #choose a random value in min/max if vari.resp is provided and minmax=T
       if(exists("vari.resp") && minmax==T)
-      {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)runif(1,x[1],x[2]))}
+      {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)stats::runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.resp is provided and minmax=F
       if(exists("vari.resp") && minmax==F)
@@ -129,7 +129,7 @@ intra_phylolm <- function(formula,data,phy,
       
       #choose a random value in min/max if vari.pred is provided and minmax=T
       if(exists("vari.pred") && minmax==T)
-      {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)runif(1,x[1],x[2]))}
+      {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)stats::runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.pred is provided
       if(exists("vari.pred") && is.null(dim(vari.pred)))
@@ -189,7 +189,7 @@ intra_phylolm <- function(formula,data,phy,
   statresults<-data.frame(min=apply(intra.model.estimates,2,min),
                           max=apply(intra.model.estimates,2,max),
                           mean=apply(intra.model.estimates,2,mean),
-                          sd_intra=apply(mean_by_randomval,2,sd))[-1,]
+                          sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
   
   res <- list(analysis.type="intra_phylolm",formula=formula,
