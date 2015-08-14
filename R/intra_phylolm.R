@@ -61,7 +61,7 @@
 
 
 intra_phylolm <- function(formula,data,phy,
-                          vari.resp=NA,vari.pred=NA,minmax=FALSE,
+                          vari.resp=NULL,vari.pred=NULL,minmax=FALSE,
                           nintra=2,distrib="uniform",model="lambda",track=TRUE,...){
 
   #Error check
@@ -80,10 +80,10 @@ intra_phylolm <- function(formula,data,phy,
   resp<-all.vars(formula)[1]
   pred<-all.vars(formula)[2]
   
-  if(exists("vari.resp") && sum(is.na(full.data[,vari.resp]))!=0){
+  if(!is.null(vari.resp) && sum(is.na(full.data[,vari.resp]))!=0){
     full.data[is.na(full.data[,vari.resp]),] <- 0}
     
-    if(exists("vari.pred") && sum(is.na(full.data[,vari.pred]))!=0){
+    if(!is.null(vari.pred) && sum(is.na(full.data[,vari.pred]))!=0){
       full.data[is.na(full.data[,vari.pred]),] <- 0}
 
 
@@ -108,26 +108,26 @@ intra_phylolm <- function(formula,data,phy,
 
       ##Set response and predictor variables
       #vari.resp is not provided or is not numeric, do not pick random value
-      if(!inherits(full.data[,resp], c("numeric","integer")) || !exists("vari.resp")) {full.data$respV<-full.data[,resp]}
+      if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(vari.resp)) {full.data$respV<-full.data[,resp]}
       
       #choose a random value in min/max if vari.resp is provided and minmax=T
-      if(exists("vari.resp") && minmax==T)
+      if(!is.null(vari.resp) && minmax==T)
       {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)stats::runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.resp is provided and minmax=F
-      if(exists("vari.resp") && minmax==F)
+      if(!is.null(vari.resp) && minmax==F)
       {full.data$respV<-apply(full.data[,c(resp,vari.resp)],1,function(x)funr(x[1],x[2]))}
       
     
       #vari.pred is not provided or is not numeric, do not pick random value
-      if(!inherits(full.data[,pred], c("numeric","integer")) || !exists("vari.pred")) {full.data$predV<-full.data[,pred]}
+      if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(vari.pred)) {full.data$predV<-full.data[,pred]}
       
       #choose a random value in min/max if vari.pred is provided and minmax=T
-      if(exists("vari.pred") && minmax==T)
+      if(!is.null(vari.pred) && minmax==T)
       {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)stats::runif(1,x[1],x[2]))}
       
       #choose a random value in [mean-se,mean+se] if vari.pred is provided
-      if(exists("vari.pred") && is.null(dim(vari.pred)))
+      if(!is.null(vari.pred) && is.null(dim(vari.pred)))
       {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
 
       #model

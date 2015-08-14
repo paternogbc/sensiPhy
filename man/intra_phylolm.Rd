@@ -4,7 +4,7 @@
 \alias{intra_phylolm}
 \title{Intraspecific variability - Phylogenetic Linear Regression}
 \usage{
-intra_phylolm(formula, data, phy, vari.resp = NA, vari.pred = NA,
+intra_phylolm(formula, data, phy, vari.resp = NULL, vari.pred = NULL,
   minmax = FALSE, nintra = 2, distrib = "uniform", model = "lambda",
   track = TRUE, ...)
 }

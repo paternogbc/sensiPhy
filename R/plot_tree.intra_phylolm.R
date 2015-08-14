@@ -1,8 +1,10 @@
-#' Graphical diagnostics for \code{tree_phylolm} and \code{intra_phylolm}
+#' Graphical diagnostics for \code{tree_phylolm}, \code{tree_phyloglm},
+#' \code{intra_phylolm} and \code{intra_phyloglm}.
 #'
-#' \code{plot_tree.intra_phylolm} Plot results from \code{tree_phylolm} and
-#' \code{intra_phylolm}
-#' @param x output from \code{tree_phylolm} or \code{intra_phylolm}
+#' \code{plot_tree.intra_phylolm} Plot results from \code{tree_phylolm},
+#' \code{intra_phylolm} and \code{intra_phyloglm}
+#' @param x output from \code{tree_phylolm}, \code{tree_phyloglm},
+#' \code{intra_phylolm} or \code{intra_phyloglm}
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @param graphs choose which graph should be printed on the output ("all", 1, 2 or 3)
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
@@ -10,7 +12,8 @@
 #' @author Caterina Penone and Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
 #' \code{\link[sensiPhy]{intra_phylolm}}
-#' @details For 'x' from tree_phylolm or intra_phylolm:
+#' @details For 'x' from \code{tree_phylolm}, \code{tree_phyloglm},
+#' \code{intra_phylolm} or \code{intra_phyloglm}:
 #' 
 #' Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylolm}) or 
 #' value generated within a given interval (\code{intra_phylolm})
@@ -34,8 +37,8 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
 
   
   ### Error check:
-  if (x[[1]] != "tree_phylolm" & x[[1]] != "intra_phylolm")
-    stop("x must be an output from tree_phylolm or intra_phylolm!")
+  if (x[[1]] != "tree_phylolm" & x[[1]] != "intra_phylolm" & x[[1]] != "tree_phyloglm" & x[[1]] != "intra_phyloglm")
+    stop("x must be an output from tree_phylolm, tree_phyloglm, intra_phylolm or intra_phyloglm!")
   else
     
     resp<-all.vars(formula)[1]

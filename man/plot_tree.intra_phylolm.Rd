@@ -2,23 +2,26 @@
 % Please edit documentation in R/plot_tree.intra_phylolm.R
 \name{plot_tree.intra_phylolm}
 \alias{plot_tree.intra_phylolm}
-\title{Graphical diagnostics for \code{tree_phylolm} and \code{intra_phylolm}}
+\title{Graphical diagnostics for \code{tree_phylolm}, \code{tree_phyloglm},
+\code{intra_phylolm} and \code{intra_phyloglm}.}
 \usage{
 plot_tree.intra_phylolm(x, graphs = "all", param = NULL)
 }
 \arguments{
-\item{x}{output from \code{tree_phylolm} or \code{intra_phylolm}}
+\item{x}{output from \code{tree_phylolm}, \code{tree_phyloglm},
+\code{intra_phylolm} or \code{intra_phyloglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1, 2 or 3)}
 
 \item{param}{choose which parameter ("intercept" or "slope" should be printed)}
 }
 \description{
-\code{plot_tree.intra_phylolm} Plot results from \code{tree_phylolm} and
-\code{intra_phylolm}
+\code{plot_tree.intra_phylolm} Plot results from \code{tree_phylolm},
+\code{intra_phylolm} and \code{intra_phyloglm}
 }
 \details{
-For 'x' from tree_phylolm or intra_phylolm:
+For 'x' from \code{tree_phylolm}, \code{tree_phyloglm},
+\code{intra_phylolm} or \code{intra_phyloglm}:
 
 Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylolm}) or
 value generated within a given interval (\code{intra_phylolm})
