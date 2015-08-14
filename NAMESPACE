@@ -3,7 +3,6 @@
 export(clade_phylolm)
 export(influ_phyloglm)
 export(influ_phylolm)
-export(intra_phyloglm)
 export(intra_phylolm)
 export(plot_clade_phylolm)
 export(samp_phyloglm)
