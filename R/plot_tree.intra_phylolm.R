@@ -5,7 +5,7 @@
 #' \code{intra_phylolm} and \code{intra_phyloglm}
 #' @param x output from \code{tree_phylolm}, \code{tree_phyloglm},
 #' \code{intra_phylolm} or \code{intra_phyloglm}
-#' @param graphs choose which graph should be printed on the output ("all", 1, 2 or 3)
+#' @param graphs choose which graph should be printed in the output ("all", 1, 2 or 3)
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
 #' geom_vline xlab geom_point theme
 #' @author Caterina Penone and Gustavo Paterno
