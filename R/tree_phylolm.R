@@ -28,6 +28,7 @@
 #' @return The function \code{tree_phylolm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
+#' @return \code{data}: Original full dataset
 #' @return \code{model_results}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 #' different phylogenetic tree.
@@ -127,6 +128,7 @@ tree_phylolm <- function(formula,data,phy,
   
   
   res <- list(analysis.type="tree_phylolm",formula=formula,
+              datas=full.data,
                  model_results=tree.model.estimates,N.obs=n,
                  stats=statresults)
   

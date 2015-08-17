@@ -47,6 +47,7 @@
 #' @return The function \code{intra_phylolm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
+#' @return \code{data}: Original full dataset
 #' @return \code{model_results}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 #' different phylogenetic tree.

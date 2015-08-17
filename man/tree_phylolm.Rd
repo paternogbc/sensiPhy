@@ -30,6 +30,8 @@ components:
 
 \code{formula}: The formula
 
+\code{data}: Original full dataset
+
 \code{model_results}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a
 different phylogenetic tree.
