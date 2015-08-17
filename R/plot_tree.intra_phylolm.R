@@ -5,10 +5,9 @@
 #' \code{intra_phylolm} and \code{intra_phyloglm}
 #' @param x output from \code{tree_phylolm}, \code{tree_phyloglm},
 #' \code{intra_phylolm} or \code{intra_phyloglm}
-#' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @param graphs choose which graph should be printed on the output ("all", 1, 2 or 3)
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
-#' geom_vline xlab geom_point
+#' geom_vline xlab geom_point theme
 #' @author Caterina Penone and Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
 #' \code{\link[sensiPhy]{intra_phylolm}}
@@ -27,8 +26,9 @@
 #' 
 #' }
 #' 
+#' @importFrom grid unit 
 
-plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
+plot_tree.intra_phylolm <- function(x,graphs="all"){
   
   
   # nulling variables
@@ -67,6 +67,11 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
     #third plot: data visualisation
     s2 <- ggplot2::ggplot(dat,aes(x=predictor,y=response))+
       geom_point(size=3,alpha=.8)+
+      theme(legend.key.width = unit(.2,"cm"),
+            panel.background=element_rect(fill="white",colour="black"),
+            legend.text = element_text(size=14),
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank())+
       geom_abline(intercept = intercept.0, slope=slope.0, aes(colour="mean"),size=1)+
       geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
       geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
@@ -75,11 +80,11 @@ plot_tree.intra_phylolm <- function(x,graphs="all",param=NULL){
     ### Plotting:
     if (graphs=="all")
       suppressMessages(print(multiplot(s1,s2,i1,cols=2)))
-    if (param == "slope" & graphs==1)
+    if (graphs==1)
       suppressMessages(print(s1))
-    if (param == "slope" & graphs==2)
+    if (graphs==2)
       suppressMessages(print(s3))
-    if (param == "slope" & graphs==3)
+    if (graphs==3)
       suppressMessages(print(i1))
 
 }
