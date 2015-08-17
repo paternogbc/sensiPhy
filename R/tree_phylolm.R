@@ -33,7 +33,7 @@
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 #' different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
-#' @return \code{stats}: Statistics for model parameters. code{sd_tree} is the standard deviation 
+#' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty.
 #' 
 #' #which example should we put here?

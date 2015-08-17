@@ -57,7 +57,7 @@ different phylogenetic tree.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
-\code{stats}: Statistics for model parameters. code{sd_tree} is the standard deviation
+\code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
 due to phylogenetic uncertainty.
 }
 \description{
