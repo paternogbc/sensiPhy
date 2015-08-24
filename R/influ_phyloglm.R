@@ -27,7 +27,7 @@
 #' value for the cutoff is 2 standardised differences change.
 #'
 #' Currently, this function can only implement simple models (i.e. 
-#' \eqn{y = a*b}). In the future we will implement more complex models.
+#' \eqn{y = a + bx}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
