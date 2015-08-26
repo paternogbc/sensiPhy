@@ -165,10 +165,11 @@ intra_phyloglm <- function(formula,data,phy,
                           sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
   
-  res <- list(analysis.type="intra_phyloglm",formula=formula,
-                 datas=full.data,
-                 model_results=intra.model.estimates,N.obs=n,
-                 stats=statresults)
+  res <- list(formula=formula,
+              datas=full.data,
+              model_results=intra.model.estimates,N.obs=n,
+              stats=statresults)
+  class(res) <- "sensiIntra"
   return(res)
 }
 

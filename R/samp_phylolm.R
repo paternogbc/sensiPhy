@@ -203,11 +203,12 @@ param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
     optpar = optpar.0)
 
 #Generates output:
-return(list(analyis.type = "samp_phylolm",
-            formula = formula,
+res <- list(formula = formula,
             full.model.estimates = param0,
             samp.model.estimates = samp.model.estimates,
             sign.analysis = perc.sign.tab,
-            data = full.data))
+            data = full.data)
+class(res) <- "sensiSamp"
+return(res)
 
 }

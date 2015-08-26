@@ -176,12 +176,11 @@ clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
                    optpar=mod.0$optpar)
     
     #Generates output:
-    res <- list(analysis.type="clade_phylolm",
-                formula=formula,
+    res <- list(formula=formula,
                 full.model.estimates=param0,
                 clade.model.estimates=clade.model.estimates,
                 data=full.data,errors=errors)
-    class(res) <- c("sensi.clade","clade_phylolm")
+    class(res) <- "sensiClade"
     ### Warnings:
     if (length(res$errors) >0){
         warning("Some clades deletion presented errors, please check: output$errors")}

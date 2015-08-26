@@ -117,10 +117,10 @@ tree_phyloglm <- function(formula,data,phy,
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
   
-  res <- list(analysis.type="tree_phyloglm",formula=formula,
+  res <- list(formula=formula,
               datas=full.data,
               model_results=tree.model.estimates,N.obs=n,
               stats=statresults)
-  
+  class(res) <- "sensiTree"
   return(res)
 }
