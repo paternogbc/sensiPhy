@@ -29,7 +29,7 @@
 #' @importFrom grid unit 
 #' @export
 
-sensi_plot.sensiIntra <- function(x, graphs="all"){
+sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   
   
   # nulling variables
