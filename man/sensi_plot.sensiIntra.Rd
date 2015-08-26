@@ -4,7 +4,7 @@
 \alias{sensi_plot.sensiIntra}
 \title{Graphical diagnostics for class 'sensiIntra'}
 \usage{
-\method{sensi_plot}{sensiIntra}(x, graphs = "all")
+\method{sensi_plot}{sensiIntra}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{tree_phylolm}, \code{tree_phyloglm},
