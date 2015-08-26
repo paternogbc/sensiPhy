@@ -77,16 +77,11 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
+clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
                         clade.col, n.species = 5, ...){
-    if(class(formula)!="formula") stop("formula must be class 'formula'")
-    if(class(data)!="data.frame") stop("data must be class 'data.frame'")
-    if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-    if(class(clade.col)!="character") stop("clade must be class 'character'")
-    
+
     #Calculates the full model, extracts model parameters
     full.data <- data
-    clade <- clade.col
     N               <- nrow(full.data)
     mod.0           <- phylolm::phylolm(formula, data=full.data,
                                         model=model,phy=phy)
@@ -95,7 +90,7 @@ clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
     pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
     pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
     optpar.0 <- mod.0$optpar
-    
+
     
     #Creates empty data frame to store model outputs
     clade.model.estimates<-
@@ -110,20 +105,20 @@ clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
     counter <- 1
     errors <- NULL
     
-    k <- names(which(table(full.data[,clade]) > n.species ))
+    k <- names(which(table(full.data[,clade.col]) > n.species ))
     if (length(k) == 0) stop(paste("There is no clade with more than ",
                           n.species," species. Change 'n.species' to fix this
                           problem",sep=""))
     # Loop:
-    #k <- k[1]
+    
     for (i in k){
         if (length(k) > 1) {
-            crop.data <- full.data[full.data[ ,clade] %in% setdiff(k,i),]
-            crop.sp <-   which(!full.data[ ,clade] %in% setdiff(k,i))
+            crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(k,i),]
+            crop.sp <-   which(!full.data[ ,clade.col] %in% setdiff(k,i))
         }
         if (length(k) == 1) {
-            crop.data <- full.data[!full.data[ ,clade] %in% k,]
-            crop.sp <-   which(full.data[ ,clade] %in% k)
+            crop.data <- full.data[!full.data[ ,clade.col] %in% k,]
+            crop.sp <-   which(full.data[ ,clade.col] %in% k)
         }
         
         crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
@@ -140,8 +135,10 @@ clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
             slope                <- mod$coefficients[[2]]
             DFintercept          <- intercept - intercept.0
             DFslope              <- slope - slope.0
-            intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
-            slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
+            intercept.perc       <- round((abs(DFintercept / intercept.0)) * 100,
+                                          digits = 1)
+            slope.perc           <- round((abs(DFslope / slope.0)) * 100,
+                                          digits = 1)
             pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
             pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
             aic.mod              <- mod$aic
@@ -174,12 +171,13 @@ clade_phylolm <- function(formula,data,phy,model="lambda",track=TRUE,
     param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                    aic=phylolm::summary.phylolm(mod.0)$aic,
                    optpar=mod.0$optpar)
-    
+
     #Generates output:
     res <- list(formula=formula,
                 full.model.estimates=param0,
                 clade.model.estimates=clade.model.estimates,
-                data=full.data,errors=errors)
+                data=full.data,errors=errors,
+                clade.col = clade.col)
     class(res) <- "sensiClade"
     ### Warnings:
     if (length(res$errors) >0){
