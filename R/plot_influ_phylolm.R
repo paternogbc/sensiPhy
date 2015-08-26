@@ -62,7 +62,7 @@
 #' @export
 
 ### Start:
-sensi_plot.sensiInflu <- function(x, graphs="all", param="slope"){
+sensi_plot.sensiInflu <- function(x, graphs="all", param="slope", ...){
 
 # nulling variables:------------------------------------------------------------
 slope <- ..density.. <- intercept <- sDFslope <- slope.perc <- NULL
