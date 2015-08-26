@@ -8,8 +8,6 @@ mf <- stats::model.frame(formula = formula, data = data.0, na.action = stats::na
 if (nrow(data.0) > nrow(mf)) warning("NA's in response or predictor,", 
                                      " rows with NA's were removed")
 
-vars <- all.vars(formula)
-  
 #Match data and phylogeny in comparative.data style
 if(inherits(phy, "multiPhylo")){  
   phy1 <- phy[[1]]}
