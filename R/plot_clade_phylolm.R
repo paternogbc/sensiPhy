@@ -33,7 +33,6 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
                 Use clade = 'clade name' to plot results for other clades")
     }
     clade.n <- which(clade == clades.names)
-    if (x$analysis.type != "clade_phylolm") stop("x is not an output from 'clade_phylolm'")
     if (length(clade.n) == 0) stop(paste(clade,"is not a valide clade name"))
     
     ### Organizing values:

@@ -59,6 +59,7 @@
 #' sensi_plot(fit1, graphs = 1, param = "intercept")
 #' sensi_plot(fit2, graphs = "all", param = "slope")
 #' }
+#' @export
 
 sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
 {
@@ -66,12 +67,6 @@ sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
 # nulling variables:
 slope <- n.percent <- slope.class <- intercept <- intercept.class <- NULL
 optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
-
-
-        ### Error check:
-        if (x[[1]] != "samp_phylolm" & x[[1]] != "samp_phyloglm")
-                stop("x must be an output from samp_phylolm or samp_phyloglm!")
-        else
 
         result    <- x$samp.model.estimates
         sig.tab <- x$sign.analysis

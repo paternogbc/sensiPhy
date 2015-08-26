@@ -59,6 +59,7 @@
 #' sensi_plot(fit2, graphs = "all", param = "slope")
 #' }
 #' @importFrom grid unit 
+#' @export
 
 ### Start:
 sensi_plot.sensiInflu <- function(x, graphs="all", param="slope"){
@@ -66,10 +67,6 @@ sensi_plot.sensiInflu <- function(x, graphs="all", param="slope"){
 # nulling variables:------------------------------------------------------------
 slope <- ..density.. <- intercept <- sDFslope <- slope.perc <- NULL
 intercept.perc <- sDFintercept <- NULL
-        ########### samp_pgls graphs ##################
-        if (x[[1]] != "influ_phylolm" & x[[1]] != "influ_phyloglm")
-                stop("x must be an output from influ_phylolm or influ_phyloglm!")
-        else
 
         ### Organizing values:
         result <- x$influ.model.estimates

@@ -27,6 +27,7 @@
 #' }
 #' 
 #' @importFrom grid unit 
+#' @export
 
 sensi_plot.sensiIntra <- function(x, graphs="all"){
   
@@ -35,12 +36,6 @@ sensi_plot.sensiIntra <- function(x, graphs="all"){
   sd <- formula <- slope <- ..density.. <- intercept <- NULL
   predictor <- response <-  s3 <- NULL
 
-  
-  ### Error check:
-  if (x[[1]] != "tree_phylolm" & x[[1]] != "intra_phylolm" & x[[1]] != "tree_phyloglm" & x[[1]] != "intra_phyloglm")
-    stop("x must be an output from tree_phylolm, tree_phyloglm, intra_phylolm or intra_phyloglm!")
-  else
-    
     resp<-all.vars(formula)[1]
     pred<-all.vars(formula)[2]
     dat<-data.frame("response"=x$datas$resp,"predictor"=x$datas$pred)
