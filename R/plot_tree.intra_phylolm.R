@@ -107,6 +107,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 #' Graph 3: Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
 #' 
 #' @importFrom grid unit 
+#' @export
 sensi_plot.sensiTree <- function(x, graphs = "all", ...){
     sensi_plot.sensiIntra(x, graphs = "all", ...)
 }
