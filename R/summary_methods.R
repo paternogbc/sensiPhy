@@ -70,12 +70,14 @@ summary.sensiSamp <- function(object, ...){
 
 #' @export
 summary.sensiIntra <- function(object, ...){
-    return(object$statresults)
+    res <- object$stats
+    return(res)
 }
 
 ### Summary method for class: sensiTree:----------------------------------------
 
 #' @export
 summary.sensiTree <- function(object, ...){
-    return(object$statresults)
+    res <- object$stats
+    return(res)
 }
