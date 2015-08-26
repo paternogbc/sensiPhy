@@ -1,10 +1,11 @@
-#' Graphical diagnostics for \code{samp_phylolm} and \code{samp_phyloglm}
+#' Graphical diagnostics for class 'sensiSamp'
 #'
 #' \code{plot_samp_phylolm} Plot results from \code{samp_phylolm} and
 #' \code{influ_phyloglm}
 #' @param x output from \code{samp_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which model parameter should be ploted  ("intercept" or "slope")
+#' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
 #' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
 #' @author Gustavo Paterno
@@ -59,7 +60,7 @@
 #' sensi_plot(fit2, graphs = "all", param = "slope")
 #' }
 
-plot_samp_phylolm <- function(x,graphs="all",param="slope")
+sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
 {
     
 # nulling variables:

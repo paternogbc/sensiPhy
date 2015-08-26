@@ -1,8 +1,9 @@
-#' Graphical diagnostics for \code{clade_phylolm} and \code{clade_phyloglm}
+#' Graphical diagnostics for class 'sensiClade'
 #'
 #' Plot results from \code{clade_phylolm} and \code{clade_phyloglm}
 #' @param x output from \code{clade_phylolm} or \code{clade_phyloglm}
 #' @param clade The name of the clade to be evaluated (see details)
+#' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
 #' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
 #' guide_legend element_rect
@@ -22,7 +23,7 @@
 #' in the objected returned from \code{clade_phylolm} or \code{clade_phyloglm}. 
 #' @export
 
-plot_clade_phylolm <- function(x,clade=NULL){
+sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     
     clades.names <- x$clade.model.estimates$clade
     if (is.null(clade) == T){

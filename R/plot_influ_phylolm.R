@@ -1,10 +1,11 @@
-#' Graphical diagnostics for \code{influ_phylolm} and \code{influ_phyloglm}
+#' Graphical diagnostics for class 'sensiInflu'
 #'
 #' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm} and 
 #' \code{influ_phyloglm}
 #' @param x output from \code{influ_phylolm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
+#' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
 #' ggtitle element_blank
@@ -60,7 +61,7 @@
 #' @importFrom grid unit 
 
 ### Start:
-plot_influ_phylolm <- function(x,graphs="all",param="slope"){
+sensi_plot.sensiInflu <- function(x, graphs="all", param="slope"){
 
 # nulling variables:------------------------------------------------------------
 slope <- ..density.. <- intercept <- sDFslope <- slope.perc <- NULL
