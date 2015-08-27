@@ -41,7 +41,8 @@ if(inherits(phy, "phylo")){
 
 if (any(is.na(tip.order)))
     stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
-data.out <- mf
+ data <- data[tip.order, , drop = FALSE]
+ data.out <- data.0[rownames(data),]
 
 message(paste("Final dataset with ",nrow(data.out)," species in data and phylogeny"))
 return(list(data = data.out, phy = phy))
