@@ -132,7 +132,7 @@ intra_phylolm <- function(formula,data,phy,
       {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
 
       #model
-      mod = try(phylolm::phylolm(respV~predV, data=full.data, model=model,phy=phy),TRUE)
+      mod = try(phylolm::phylolm(respV~predV, data=full.data, model=model,phy=phy),FALSE)
 
       if(isTRUE(class(mod)=="try-error")) {
         error <- i

@@ -117,9 +117,9 @@ intra_phyloglm <- function(formula,data,phy,
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
   
     #model
-    if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)}
+    if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)}
     else
-    mod = try(phylolm::phyloglm(resp1~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)
+    mod = try(phylolm::phyloglm(resp1~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)
 
     if(isTRUE(class(mod)=="try-error")) {
       error <- i

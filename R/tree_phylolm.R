@@ -71,7 +71,7 @@ tree_phylolm <- function(formula,data,phy,
   for (j in trees){
       
       #phylolm model
-      mod = try(phylolm::phylolm(formula, data=full.data,model=model,phy=phy[[j]]),TRUE)
+      mod = try(phylolm::phylolm(formula, data=full.data,model=model,phy=phy[[j]]),FALSE)
 
       
       if(isTRUE(class(mod)=="try-error")) {

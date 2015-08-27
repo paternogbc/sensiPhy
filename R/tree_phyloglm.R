@@ -67,7 +67,7 @@ tree_phyloglm <- function(formula,data,phy,
   for (j in trees){
     
     #phyloglm model
-    mod = try(phylolm::phyloglm(formula, data=full.data,phy=phy[[j]],method="logistic_MPLE",btol=btol),TRUE)
+    mod = try(phylolm::phyloglm(formula, data=full.data,phy=phy[[j]],method="logistic_MPLE",btol=btol),FALSE)
 
     if(isTRUE(class(mod)=="try-error")) {
       error <- j
