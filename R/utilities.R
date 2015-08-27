@@ -31,12 +31,12 @@ if (length(mismatch) != 0)   warning("Some phylogeny tips do not match species i
 if(inherits(phy, "multiPhylo")){ 
     phy <- lapply(phy, ape::drop.tip,tip = mismatch)
     class(phy)<-"multiPhylo"
-    tip.order <- match(phy[[1]]$tip.label, rownames(mf))
+    tip.order <- match(phy[[1]]$tip.label, rownames(data))
 }
 if(inherits(phy, "phylo")){ 
     phy <- ape::drop.tip(phy,tip = mismatch)
     class(phy)<-"phylo"
-    tip.order <- match(phy$tip.label, rownames(mf))
+    tip.order <- match(phy$tip.label, rownames(data))
 }
 
 if (any(is.na(tip.order)))
