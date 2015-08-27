@@ -4,8 +4,8 @@
 \alias{clade_phylolm}
 \title{Influential clade detection - Phylogenetic Linear Regression}
 \usage{
-clade_phylolm(formula, data, phy, model = "lambda", track = TRUE, clade.col,
-  n.species = 5, ...)
+clade_phylolm(formula, data, phy, model = "lambda", track = TRUE,
+  clade.col = NULL, n.species = 5, ...)
 }
 \arguments{
 \item{formula}{The model formula}

@@ -78,10 +78,18 @@
 #' @export
 
 clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
-                        clade.col, n.species = 5, ...){
-
+                        clade.col = NULL, n.species = 5, ...){
+    if(!is.data.frame(data)) stop("data must be class 'data.frame'")
+    if(is.null(clade.col)) stop("clade.col not defined. Please, define the",
+                                " column with clade names.")
     #Calculates the full model, extracts model parameters
     full.data <- data
+    clade.col <- clade.col
+    namesInd <- match(clade.col, names(full.data))
+    if (is.na(namesInd)) {
+        stop("Names column '", clade.col, "' not found in data frame'")
+    }
+    
     N               <- nrow(full.data)
     mod.0           <- phylolm::phylolm(formula, data=full.data,
                                         model=model,phy=phy)

@@ -21,10 +21,14 @@
 #' the regression of the model without the species from the selected clade.
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the objected returned from \code{clade_phylolm} or \code{clade_phyloglm}. 
+#' @importFrom ggplot2 aes_string
 #' @export
 
 sensi_plot.sensiClade <- function(x, clade = NULL, ...){
-
+    
+    # nuling global variables:
+    yy <- NULL
+    # start:
     full.data <- x$data
     mapp <- c(x$formula[[3]], x$formula[[2]])
     clade.col <- x$clade.col
@@ -51,6 +55,14 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     model <- NULL
     estimates <- data.frame(inter,slo, model=c("Without clade","Full model"))
     
+    xf <- full.data[, as.character(mapp[1])]
+    yf <- plogis(estimates[2,1] + estimates[2,2] * xf)
+    yw <- plogis(estimates[1,1] + estimates[1,2] * xf)
+    plot_data <- data.frame("xf" = c(xf,xf),
+                            "yy" = c(yf, yw),
+                            model = rep(c("Without clade","Full model"),
+                                        each = length(yf)))
+                            
     match.y <- which(full.data[, clade.col] == clade)
     match.n <- which(full.data[, clade.col] != clade)
     
@@ -61,9 +73,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
                    size = 4)+
         geom_point(data = full.data[match.y, ],alpha = .5,
                    size = 4, aes(shape = "Removed species"), colour = "red")+
-        geom_abline(data = estimates, aes(intercept = inter, slope = slo,
-                                       linetype = factor(model)),
-                    size=.8, show_guide = T)+
+        
         scale_shape_manual(name = "", values = c("Removed species" = 16))+
         guides(shape = guide_legend(override.aes = list(linetype = 0)))+
         scale_linetype_manual(name = "Model", values = c("Full model" = "solid",
@@ -74,6 +84,16 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
               plot.title = element_text(size = 20),
               panel.background = element_rect(fill = "white", colour = "black"))+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
-    return(g1)
+    
+    ### plot lines: linear or logistic depending on output class
+    if(length(class(x)) == 1){
+        g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
+                                      linetype = factor(model)),
+                size=.8, show_guide = T)
+    }
+    if(length(class(x)) == 2){
+        g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model)))
+    }
+    return(g.out)
 }
 
