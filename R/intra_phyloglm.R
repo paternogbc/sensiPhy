@@ -111,9 +111,11 @@ intra_phyloglm <- function(formula,data,phy,
     #choose a random value in [mean-se,mean+se] if vari.pred is provided
     if(!is.null(vari.pred) && is.null(dim(vari.pred)))
     {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
+    
+    full.data$resp<-full.data[,resp] #try to improve this in future
   
     #model
-    mod = try(phylolm::phyloglm(respV~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)
+    mod = try(phylolm::phyloglm(resp~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)
 
     if(isTRUE(class(mod)=="try-error")) {
       error <- i
