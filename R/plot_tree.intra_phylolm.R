@@ -38,7 +38,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 
     resp<-all.vars(x$formula)[1]
     pred<-all.vars(x$formula)[2]
-    dat<-data.frame("response"=x$datas$resp,"predictor"=x$datas$pred)
+    dat<-data.frame("response"=x$datas[,resp],"predictor"=x$datas[,pred])
     result <- x$model_results
     statm<- x$stats
     slope.0 <-  as.numeric(statm[4,3])
