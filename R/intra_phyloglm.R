@@ -74,8 +74,9 @@ intra_phyloglm <- function(formula,data,phy,
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
-  resp<-all.vars(formula)[1]
-  pred<-all.vars(formula)[2]
+  resp1<-all.vars(formula)[1]
+  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
+  pred<-all.vars(formula)[length(all.vars(formula))]
   
   if(!is.null(vari.pred) && sum(is.na(full.data[,vari.pred]))!=0){
     full.data[is.na(full.data[,vari.pred]),] <- 0}
@@ -112,10 +113,13 @@ intra_phyloglm <- function(formula,data,phy,
     if(!is.null(vari.pred) && is.null(dim(vari.pred)))
     {full.data$predV<-apply(full.data[,c(pred,vari.pred)],1,function(x)funr(x[1],x[2]))}
     
-    full.data$resp<-full.data[,resp] #try to improve this in future
+    full.data$resp1<-full.data[,resp1] #try to improve this in future
+    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
   
     #model
-    mod = try(phylolm::phyloglm(resp~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)
+    if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)}
+    else
+    mod = try(phylolm::phyloglm(resp1~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),TRUE)
 
     if(isTRUE(class(mod)=="try-error")) {
       error <- i
