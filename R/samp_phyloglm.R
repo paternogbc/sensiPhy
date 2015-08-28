@@ -194,7 +194,8 @@ samp_phyloglm <- function(formula,data,phy,times=20,
                      optpar=mod.0$alpha)
 
         #Generates output:
-        res <- list(formula=formula,
+        res <- list(model = model,
+                    formula=formula,
                     full.model.estimates=param0,
                     samp.model.estimates=samp.model.estimates,
                     sign.analysis=perc.sign.tab,

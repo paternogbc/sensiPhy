@@ -203,7 +203,8 @@ param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
     optpar = optpar.0)
 
 #Generates output:
-res <- list(formula = formula,
+res <- list(model = model,
+            formula = formula,
             full.model.estimates = param0,
             samp.model.estimates = samp.model.estimates,
             sign.analysis = perc.sign.tab,
