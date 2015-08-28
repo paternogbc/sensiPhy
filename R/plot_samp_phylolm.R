@@ -28,37 +28,9 @@
 #' 
 #' Graph 4: The percentage of significant slopes or intercepts across the 
 #' percentage of species removed.  
-#' @examples
-#' \dontrun{
-#' library(sensiPhy)
-#'
-#' #Generate a random tree
-#' set.seed(2468)
-#' tree <- rtree(100)
-#'
-#' #Generate random predictor variable (pred), evolving according to a BM model.
-#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
-#'
-#' #Generate two continous traits, one evolving highly correlated with the
-#' #predictor (trait 1), and one evolving more randomly (trait 2)
-#' cont_trait <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-#'
-#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
-#' bin_trait <-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
-#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
-#' dat<-data.frame(pred,cont_trait,bin_trait)
-#'
-#' #Determine influential species for both regressions.
-#' fit1 <- samp_phylolm(cont_trait ~ pred,data = dat,phy = tree)
-#' fit2 <- samp_phyloglm(bin_trait ~ pred,data = dat,phy = tree)
 #' 
-#' # Plot results:
-#' sensi_plot(fit1)
-#' sensi_plot(fit2)
-#' # You can also choose which graph and parameter should be ploted:
-#' sensi_plot(fit1, graphs = 1, param = "intercept")
-#' sensi_plot(fit2, graphs = "all", param = "slope")
-#' }
+#' @note If model = "BM", only plots 1, 2 and 4 are printed. Plot 3, phylogenetic
+#'  model parameter is not available for model = "BM"
 #' @export
 
 sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
@@ -304,26 +276,8 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                       axis.title=element_text(size=16),
                       panel.background = element_rect(fill="white",
                                                       colour="black"))
-
-        ### Ploting:
-        if (param == "slope" & graphs=="all")
-            suppressMessages(print(multiplot(s1,opt, s2,s4,cols=2)))
-        if (param == "slope" & graphs==1)
-            suppressMessages(print(s1))
-        if (param == "slope" & graphs==2)
-            suppressMessages(print(s2))
-        if (param == "slope" & graphs==3)
-            suppressMessages(print(opt))
-        if (param == "slope" & graphs==4)
-            suppressMessages(print(s4))
-        if (param == "intercept" & graphs=="all")
-            suppressMessages(print(multiplot(i1,opt,i2,i4,cols=2)))
-        if (param == "intercept" & graphs==1)
-            suppressMessages(print(i1))
-        if (param == "intercept" & graphs==2)
-            suppressMessages(print(i2))
-        if (param == "intercept" & graphs==3)
-            suppressMessages(print(opt))
-        if (param == "intercept" & graphs==4)
-            suppressMessages(print(i4))
+        
+        which_plot(param = param, graphs = graphs,
+                   s1 = s1, s2 = s2, s4 = s4, opt = opt,
+                   i1 = i1, i2 = i2, i4 = i4, model = x$model)
 }
