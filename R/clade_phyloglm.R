@@ -61,7 +61,10 @@ clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
                                 " column with clade names.")
     
     #Calculates the full model, extracts model parameters
-    
+    data_phy <- match_dataphy(formula, data, phy)
+    #Calculates the full model, extracts model parameters
+    full.data <- data_phy$data
+    phy <- data_phy$phy
     full.data <- data
     namesInd <- match(clade.col, names(full.data))
     if (is.na(namesInd)) {
