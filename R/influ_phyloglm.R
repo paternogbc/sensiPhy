@@ -96,9 +96,13 @@ influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
         else
-
+        
+        # Check match between data and phy 
+        data_phy <- match_dataphy(formula, data, phy)
         #Calculates the full model, extracts model parameters
-        full.data       <- data
+        full.data <- data_phy$data
+        phy <- data_phy$phy
+        #Calculates the full model, extracts model parameters
         N               <- nrow(full.data)
         mod.0           <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)

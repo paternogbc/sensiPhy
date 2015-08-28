@@ -101,8 +101,11 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
         else
 
+        # Check match between data and phy 
+        data_phy <- match_dataphy(formula, data, phy)
         #Calculates the full model, extracts model parameters
-        full.data       <- data
+        full.data <- data_phy$data
+        phy <- data_phy$phy
         N               <- nrow(full.data)
         mod.0           <- phylolm::phylolm(formula, data=full.data,
                                             model=model,phy=phy)
