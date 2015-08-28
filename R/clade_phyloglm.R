@@ -52,12 +52,12 @@
 #' @export
 
 clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
-                          clade.col = NULL, n.species = 5, ...){
+                          clade.col, n.species = 5, ...){
     
     if(class(formula)!="formula") stop("formula must be class 'formula'")
     if(!is.data.frame(data)) stop("data must be class 'data.frame'")
     if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-    if(is.null(clade.col)) stop("clade.col not defined. Please, define the",
+    if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                                 " column with clade names.")
     
     #Calculates the full model, extracts model parameters
