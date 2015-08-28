@@ -37,7 +37,7 @@ sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
 {
     
 # nulling variables:
-slope <- n.percent <- slope.class <- intercept <- intercept.class <- NULL
+slope <- n.percent <- slope.class <- intercept <- model <- intercept.class <- NULL
 optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
         result    <- x$samp.model.estimates

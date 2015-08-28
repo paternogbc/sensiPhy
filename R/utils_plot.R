@@ -8,8 +8,8 @@ which_plot <- function(param = "slope", graphs = "all",
 if(param != "slope" & param != "intercept")
     stop("param = ", param, " is not valid. Valid options are: `slope` or",
     "`intecept`")
-if(is.na(match(graphs, 1:4)))
-    stop("graphs = ", graphs, " is not valid. Valid options are: 1, 2, 3, 4.")
+if(graphs != 1 & graphs != 2 & graphs != 3 & graphs != 4 & graphs != "all")
+    stop("graphs = ", graphs, " is not valid. Valid options are: `all`, 1, 2, 3, 4.")
     
     
 ### if model == "BM" | SLOPE: --------------------------------------------------
