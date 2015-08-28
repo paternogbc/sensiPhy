@@ -99,8 +99,11 @@ samp_phyloglm <- function(formula,data,phy,times=20,
                                   e.g. breaks=c(.3,.5)")
         else
 
+        # Check match between data and phy 
+        data_phy <- match_dataphy(formula, data, phy)
         #Calculates the full model, extracts model parameters
-        full.data               <- data
+        full.data <- data_phy$data
+        phy <- data_phy$phy
         N                       <- nrow(full.data)
         mod.0 <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol,...)
