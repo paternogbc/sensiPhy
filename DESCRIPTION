@@ -22,23 +22,3 @@ Suggests:
     knitr (>= 1.10),
     testthat
 VignetteBuilder: knitr
-Collate:
-    'clade_phyloglm.R'
-    'utilities.R'
-    'clade_phylolm.R'
-    'influ_phyloglm.R'
-    'influ_phylolm.R'
-    'intra_phyloglm.R'
-    'intra_phylolm.R'
-    'plot_clade_phylolm.R'
-    'plot_influ_phylolm.R'
-    'plot_samp_phylolm.R'
-    'plot_tree.intra_phylolm.R'
-    'samp_phyloglm.R'
-    'samp_phylolm.R'
-    'sensiPhy.R'
-    'sensi_plot.R'
-    'summary_methods.R'
-    'tree_phyloglm.R'
-    'tree_phylolm.R'
-    'utils_plot.R'
