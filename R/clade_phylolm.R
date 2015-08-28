@@ -82,6 +82,8 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
     if(!is.data.frame(data)) stop("data must be class 'data.frame'")
     if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                                 " column with clade names.")
+    if(class(phy)!="phylo") stop("phy must be class 'phylo'")
+    
     data_phy <- match_dataphy(formula, data, phy)
     #Calculates the full model, extracts model parameters
     full.data <- data_phy$data
