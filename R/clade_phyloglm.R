@@ -60,12 +60,11 @@ clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
     if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                                 " column with clade names.")
     
-    #Calculates the full model, extracts model parameters
+    # Check match between data and phy 
     data_phy <- match_dataphy(formula, data, phy)
     #Calculates the full model, extracts model parameters
     full.data <- data_phy$data
     phy <- data_phy$phy
-    full.data <- data
     namesInd <- match(clade.col, names(full.data))
     if (is.na(namesInd)) {
         stop("Names column '", clade.col, "' not found in data frame'")

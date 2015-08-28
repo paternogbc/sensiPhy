@@ -86,7 +86,6 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
     #Calculates the full model, extracts model parameters
     full.data <- data_phy$data
     phy <- data_phy$phy
-    clade.col <- clade.col
     namesInd <- match(clade.col, names(full.data))
     if (is.na(namesInd)) {
         stop("Names column '", clade.col, "' not found in data frame'")
