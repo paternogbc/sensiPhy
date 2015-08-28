@@ -1,5 +1,4 @@
-### Plot decision:
-### Ploting:
+### decide which plot should be printed (for plot_samp):
 which_plot <- function(param = "slope", graphs = "all",
                        s1 = s1, s2 = s2, opt = opt, s4 = s4,
                        i1 = i1, i2 = i2, i4 = i4, model = model){
@@ -59,4 +58,25 @@ if (param == "intercept" & graphs==3)
     suppressMessages(return(opt))
 if (param == "intercept" & graphs==4)
     suppressMessages(return(i4))
+}
+
+### Function to plot multiple ggplo2 graphs:------------------------------------
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+    plots <- c(list(...), plotlist)
+    numPlots = length(plots)
+    if (is.null(layout)) {
+        layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                         ncol = cols, nrow = ceiling(numPlots/cols))
+    }
+    if (numPlots==1) {
+        print(plots[[1]])
+    } else {
+        grid::grid.newpage()
+        grid::pushViewport(grid::viewport(layout = grid::grid.layout(nrow(layout), ncol(layout))))
+        for (i in 1:numPlots) {
+            matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+            print(plots[[i]], vp = grid::viewport(layout.pos.row = matchidx$row,
+                                                  layout.pos.col = matchidx$col))
+        }
+    }
 }
