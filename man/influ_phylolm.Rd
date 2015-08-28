@@ -82,36 +82,21 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
-library(sensiPhy);library(phylolm)
+library(sensiPhy)
 
-#Generate a random tree
-set.seed(2468)
-tree <- rtree(100)
+# Loading data and phylogeny:
+data(alien)
+trait <- alien$data
+phy <- alien$phy[[1]]
 
-#Generate random predictor variable (pred), evolving according to a BM model.
-pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
+# Run sensitivity analysis (influential species)
+out <- influ_phylolm( log10(Mass) ~ log10(range), data = trait, phy = phy)
 
-#Generate two continous traits, one evolving highly correlated with the
-#predictor (trait 1), and one evolving more randomly (trait 2)
-cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
+# Check most influential species for slope and intercept:
+summary(out)
 
-#Generate two binary traits, one highly correlated to pred (trait 1), the other less.
-bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
-                     X=cbind(rep(1,length(tree$tip.label)),pred))
-bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
-                      X=cbind(rep(1,length(tree$tip.label)),pred))
-dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
-
-#Determine influential species for both regressions.
-fit1<-influ_phylolm(cont_trait1~pred,data = dat,phy = tree)
-fit2<-influ_phylolm(cont_trait2~pred,data = dat,phy = tree)
-
-#For purposes of comparison the full model output from phylolm:
-summary(phylolm(cont_trait1~pred,data = dat,phy = tree,model = "lambda"))
-summary(phylolm(cont_trait2~pred,data = dat,phy = tree,model = "lambda"))
-}
+# Plot results:
+sensi_plot(out)
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
