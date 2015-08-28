@@ -44,7 +44,7 @@ if (any(is.na(tip.order)))
  data <- data[tip.order, , drop = FALSE]
  data.out <- data.0[rownames(data),]
 
-message(paste("Final dataset with ",nrow(data.out)," species in data and phylogeny"))
+message(paste("Used dataset has ",nrow(data.out)," species that match data and phylogeny"))
 return(list(data = data.out, phy = phy))
 }
 
