@@ -26,11 +26,11 @@
 
 sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     
-    # nuling global variables:
     yy <- NULL
     # start:
     full.data <- x$data
     mapp <- c(x$formula[[3]], x$formula[[2]])
+    vars <- all.vars(x$formula)
     clade.col <- x$clade.col
     
     clades.names <- x$clade.model.estimates$clade
@@ -55,7 +55,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     model <- NULL
     estimates <- data.frame(inter,slo, model=c("Without clade","Full model"))
     
-    xf <- full.data[, as.character(mapp[1])]
+    xf <- full.data[, vars[1]]
     yf <- plogis(estimates[2,1] + estimates[2,2] * xf)
     yw <- plogis(estimates[1,1] + estimates[1,2] * xf)
     plot_data <- data.frame("xf" = c(xf,xf),
