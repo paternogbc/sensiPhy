@@ -27,7 +27,7 @@ summary.sensiInflu <- function(object, ...){
     slope <- object$influ.model.estimates[rows.slope, c(1,6,7,8,9)]
     ord.slope <- order(slope$DFslope, 
                        decreasing = TRUE)
-    slope <- slope[ord.slope,]
+    slope <- slope[ord.slope, ]
     rownames(slope) <- NULL
     colnames(slope) <- c("Species removed", "Slope", "DFslope", "Change(%)", "Pval")
     
@@ -36,16 +36,12 @@ summary.sensiInflu <- function(object, ...){
     inter <- object$influ.model.estimates[rows.inter, c(1,2,3,4,5)]
     ord.inter <- order(inter$DFintercept, 
                        decreasing = TRUE)
-    inter <- slope[ord.inter,]
+    inter <- inter[ord.inter, ]
     rownames(inter) <- NULL
     colnames(inter) <- c("Species removed", "Intercept", "DFintercept", "Change(%)", "Pval")
-    sp.inter <-object$influential.species$influ.sp.intercept
-    rows.inter <- match(sp.inter, object$influ.model.estimates$species)
-    inter <- object$influ.model.estimates[rows.inter, c(1,6,7,8,9)]
-    names(object$influ.model.estimates)
     
-    res <- list("Influential species for the Slope" = sp.slope, "Estimates" = slope,
-                "Influential species for the Intercept" = sp.inter, "Estimates" = inter)
+    res <- list("Influential species for the Slope" = sp.slope, "Slope Estimates" = slope,
+                "Influential species for the Intercept" = sp.inter, "Intercept Estimates" = inter)
     return(res)
     
 }
