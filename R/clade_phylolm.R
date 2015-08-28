@@ -78,10 +78,11 @@
 #' @export
 
 clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
-                        clade.col = NULL, n.species = 5, ...){
+                        clade.col, n.species = 5, ...){
     if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-    if(is.null(clade.col)) stop("clade.col not defined. Please, define the",
+    if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                                 " column with clade names.")
+    
     #Calculates the full model, extracts model parameters
     full.data <- data
     clade.col <- clade.col
@@ -118,7 +119,7 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
                           n.species," species. Change 'n.species' to fix this
                           problem",sep=""))
     # Loop:
-    
+
     for (i in k){
         if (length(k) > 1) {
             crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(k,i),]
@@ -150,10 +151,10 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
             pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
             pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
             aic.mod              <- mod$aic
-            if (model == "BM"){
+            if (model == "BM" | model == "trend"){
                 optpar <- NA
             }
-            if (model != "BM"){
+            if (model != "BM" & model != "trend" ){
                 optpar               <- mod$optpar
             }
             
@@ -181,10 +182,12 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
                    optpar=mod.0$optpar)
 
     #Generates output:
-    res <- list(formula=formula,
-                full.model.estimates=param0,
-                clade.model.estimates=clade.model.estimates,
-                data=full.data,errors=errors,
+    res <- list(model = model,
+                formula = formula,
+                full.model.estimates = param0,
+                clade.model.estimates = clade.model.estimates,
+                data = full.data,
+                errors = errors,
                 clade.col = clade.col)
     class(res) <- "sensiClade"
     ### Warnings:
