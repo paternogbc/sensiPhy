@@ -152,12 +152,14 @@ for (i in limit){
         intercept.perc <- round( (abs(DFintercept / intercept.0)) * 100, digits = 1)
         slope.perc     <- round( (abs(DFslope / slope.0)) * 100, digits = 1)
         aic            <- mod$aic
-        if (model == "BM"){
+        
+        if (model == "BM" | model == "trend"){
             optpar <- NA
         }
-        if (model != "BM"){
-        optpar <- mod$optpar
+        if (model != "BM" & model != "trend" ){
+            optpar               <- mod$optpar
         }
+        
         n.remov <- i
         n.percent <- round( (n.remov / N) * 100,digits = 0)
         #rep <- j

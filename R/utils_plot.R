@@ -12,30 +12,30 @@ if(graphs != 1 & graphs != 2 & graphs != 3 & graphs != 4 & graphs != "all")
     stop("graphs = ", graphs, " is not valid. Valid options are: `all`, 1, 2, 3, 4.")
     
     
-### if model == "BM" | SLOPE: --------------------------------------------------
-if (model == "BM" & param == "slope" & graphs == "all")
-    return(multiplot(s1, "No `optpar` plot available for model == `BM`", 
+### if model == "BM" or "trend" | SLOPE: ----------------------------------------
+if (model == "BM" | model == "trend" & param == "slope" & graphs == "all")
+    return(multiplot(s1, "No `optpar` plot available for model == `BM` or `trend`", 
                      s2, s4, cols=2))
-if (model == "BM" & param == "slope" & graphs == 1)
+if (model == "BM" | model == "trend" & param == "slope" & graphs == 1)
     return(s1)
-if (model == "BM" & param == "slope" & graphs == 2)
+if (model == "BM" | model == "trend" & param == "slope" & graphs == 2)
     return(s2)
-if (model == "BM" & param == "slope" & graphs == 3)
-    stop("No `optpar` plot available for model == `BM`")
-if (model == "BM" & param == "slope" & graphs == 4)
+if (model == "BM" | model == "trend" & param == "slope" & graphs == 3)
+    stop("No `optpar` plot available for model == `BM` or `trend`")
+if (model == "BM" | model == "trend" & param == "slope" & graphs == 4)
     return(s4)
     
-### if model == "BM" | INTERCEPT: ----------------------------------------------
-if (model == "BM" & param == "intercept" & graphs == "all")
+### if model == "BM" or "trend" | INTERCEPT: -----------------------------------
+if (model == "BM" | model == "trend" & param == "intercept" & graphs == "all")
     return(multiplot(i1, "No `optpar` plot available for model == `BM`", 
                      i2, i4, cols=2))
-if (model == "BM" & param == "intercept" & graphs == 1)
+if (model == "BM" | model == "trend" & param == "intercept" & graphs == 1)
     return(i1)
-if (model == "BM" & param == "intercept" & graphs == 2)
+if (model == "BM" | model == "trend" & param == "intercept" & graphs == 2)
     return(i2)
-if (model == "BM" & param == "intercept" & graphs == 3)
+if (model == "BM" | model == "trend" & param == "intercept" & graphs == 3)
     stop("No `optpar` plot available for model == `BM`")
-if (model == "BM" & param == "intercept" & graphs == 4)
+if (model == "BM" | model == "trend" & param == "intercept" & graphs == 4)
     return(i4)
 
 ### if model != "BM" | SLOPE: ----------------------------------------------

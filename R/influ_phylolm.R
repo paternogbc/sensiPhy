@@ -146,11 +146,11 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
                         pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
                         pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
                         aic.mod              <- mod$aic
-                        if (model == "BM"){
+                        if (model == "BM" | model == "trend"){
                             optpar <- NA
                         }
-                        if (model != "BM"){
-                        optpar               <- mod$optpar
+                        if (model != "BM" & model != "trend" ){
+                            optpar               <- mod$optpar
                         }
 
                         if(track==TRUE) (print(paste(i," / ",N,sep="")))
