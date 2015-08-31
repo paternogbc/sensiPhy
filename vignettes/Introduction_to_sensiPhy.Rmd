@@ -1,23 +1,30 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "sensiPhy: an R package to perform sensitivity analysis for comparative methods"
+author: "Gustavo Paterno; Caterina Penoni; Gijsbert Werner"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+fig_caption: yes
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+Conclusions drawn from phylogenetic comparative methods can be sensitive to uncertainty in data, phylogenetic, sampling design.
+The robustness of (key) conclusions to these various forms of uncertainty must be addressed and quantified in order to be confident about the biological conclusions. 
+We present SensiPhy, an R-package to easily and rapidly perform sensitivity analysis in phylogenetic regression models, both for linear and logistic phylogenetic regression. 
+SensiPhy allows researchers to assess species uncertainty, detect influential species and clades, quantify sampling effort and evaluate effects of intraspecific variation and phylogenetic uncertainty. 
+By providing a single, one-stop, package that takes into account various sources of uncertainty, SensiPhy allows for phylogenetic sensitivity analysis in a quick and user-firendly way. 
+Using real datasets we show how conclusions from phylogenetic comparative methods can be affected by uncertainty and how SensiPhy can help determine if a conclusion is robust. 
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
 
-## Vignette Info
+## Types of uncertainty
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+The R package `sensiPhy` can estimate the impact of different types of uncertainty 
+for PGLS models. Each type of uncertainty has different functions for simple
+linear regressions and logist regressions (Fig. 1).
+![Fig. 1](workflow.resized.jpg)
+
 
 ## Styles
 
