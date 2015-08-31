@@ -8,7 +8,7 @@
 > R package to perform sensitivity analysis for comparative methods
 
 
-####Installing sensiPhy from Github:
+#### Instalation:
 
 ```{r}
 # First install the package `devtools` (you should skip this if you have `devtools`)
@@ -16,11 +16,11 @@ install.packages("devtools")
 
 # Install `sensiPhy` from github: 
 devtools::install_github("paternogbc/sensiPhy")
-
-# Loading required packages:
-library(phylolm);library(ggplot2);library(gridExtra)
-library(sensiPhy)
 ```
+
+#### Quick turorial
+
+Get started witn [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial)
 
 ### Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
