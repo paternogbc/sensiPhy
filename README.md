@@ -82,3 +82,6 @@ sensi_plot(influ)
 
 ### Output `influ_phylolm`:
 ![Output samp_gls](http://i.imgur.com/gF6GuEH.jpg)
+
+### Code of Conduct
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
