@@ -21,45 +21,34 @@ Using real datasets we show how conclusions from phylogenetic comparative method
 ## Types of uncertainty
 
 The R package `sensiPhy` can estimate the impact of different types of uncertainty 
-for PGLS models. Each type of uncertainty has different functions for simple
-linear regressions and logist regressions (Fig. 1).
+on PGLS models (Fig. 1). Until now only linear and logist regressions are supported. 
+
 ![Fig. 1](workflow.resized.jpg)
+__Figure 1:__ Types of uncertainty and related `sensiPhy` functions. The sufix '_phylm' 
+works with linear regressions while `_phyglm` works for logist regressions.
 
+## Background
 
-## Styles
+Describe the methods to deal with each type of uncertainty.
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+## Types of uncertainty:
+ * Phylogentic
+ * Species sampling
+ * Data
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+### Phylogentic
 
-## Figures
+Include exmplae here.
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
+### Species sampling
 
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
+Include exmplae here.
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+### Data
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+Include exmplae here.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+## References
 
-## More Examples
+Include references here.
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
