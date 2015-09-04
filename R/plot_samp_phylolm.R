@@ -42,7 +42,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
         result    <- x$samp.model.estimates
         sig.tab <- x$sign.analysis
-
+        
         # classes of slope.perc:
         result$slope.class <- "class"
         ### Within 5%:
@@ -129,7 +129,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 xlab("% of Species Removed ")+
                 scale_colour_manual(values=colS)+
                 geom_hline(yintercept=slope.0,linetype=1,color="red",
-                           size=1,alpha=.6,name="Original slope")+
+                           size=1, alpha = .6)+
 
                 geom_hline(yintercept=slope.0+slope.5,linetype=2,
                            alpha=.6)+
@@ -160,7 +160,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 xlab("% of Species Removed ")+
                 scale_colour_manual(values=colI)+
                 geom_hline(yintercept=intercept.0,linetype=1,color="red",
-                           size=1,alpha=.6,name="Original intercept")+
+                           size=1,alpha=.6)+
 
                 geom_hline(yintercept=intercept.0+intercept.5,linetype=2,
                            alpha=.6)+
