@@ -29,7 +29,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     yy <- NULL
     # start:
     full.data <- x$data
-    mapp <- c(x$formula[[3]], x$formula[[2]])
+    mappx <- x$formula[[3]]
+    mappy <- x$formula[[2]]
     vars <- all.vars(x$formula)
     clade.col <- x$clade.col
     
@@ -66,9 +67,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     match.y <- which(full.data[, clade.col] == clade)
     match.n <- which(full.data[, clade.col] != clade)
     
-    g1 <- ggplot2::ggplot(full.data, aes_string(x = mapp[1], y = mapp[2]),
+    g1 <- ggplot2::ggplot(full.data, aes_string(y = mappy, x = mappx),
                     environment = parent.frame())+
-        
         geom_point(data = full.data[match.n, ], alpha = .7,
                    size = 4)+
         geom_point(data = full.data[match.y, ],alpha = .5,
@@ -89,7 +89,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     if(length(class(x)) == 1){
         g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
                                       linetype = factor(model)),
-                size=.8, show_guide = T)
+                size=.8)
     }
     if(length(class(x)) == 2){
         g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model)))
