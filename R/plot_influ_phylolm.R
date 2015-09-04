@@ -84,21 +84,26 @@ intercept.perc <- sDFintercept <- NULL
         ### Plots:
         # Distribution of estimated slopes:
         s1 <- ggplot2::ggplot(result,aes(x=slope,y=..density..))+
-                geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
+                geom_histogram(fill="lightyellow",colour="grey60", size=.2) +
                 geom_density(size=.2) +
                 geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated slopes")+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))
+                theme(axis.title=element_text(size=16),
+                    axis.text = element_text(size=14),
+                    panel.background = element_rect(fill="white",
+                                                  colour="black"))
+        
         # Distribution of estimated intercepts:
         i1 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..))+
-                geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
+                geom_histogram(fill="lightyellow",colour="grey60", size=.2) +
                 geom_density(size=.2) +
                 geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated Intercepts")+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))
-
+                theme(axis.title=element_text(size=16),
+                    axis.text = element_text(size=14),
+                    panel.background = element_rect(fill="white",
+                                                  colour="black"))
+        
         # Original plot with Standardized DFslope as colour gradient
         s2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
                                            eval(parse(text=vars[1])),
@@ -114,8 +119,10 @@ intercept.perc <- sDFintercept <- NULL
             ylab(vars[1])+
             xlab(vars[2])+
             ggtitle("Standardized Difference in slope")+
-            theme(axis.text = element_text(size=14,colour="black"),
-                  axis.title = element_text(size=16))
+            theme(axis.title=element_text(size=16),
+                  axis.text = element_text(size=14),
+                  panel.background = element_rect(fill="white",
+                                                  colour="black"))
 
         # Original plot with Standardized DFintercept as colour gradient
         i2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
@@ -132,8 +139,10 @@ intercept.perc <- sDFintercept <- NULL
             ylab(vars[1])+
             xlab(vars[2])+
             ggtitle("Standardized Difference in Intercept")+
-            theme(axis.text = element_text(size=14,colour="black"),
-                  axis.title = element_text(size=16))
+            theme(axis.title=element_text(size=16),
+                  axis.text = element_text(size=14),
+                  panel.background = element_rect(fill="white",
+                                                  colour="black"))
 
         # Influential points for slope estimate
         s3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
@@ -141,10 +150,12 @@ intercept.perc <- sDFintercept <- NULL
                 xlab("Standardized Difference in Slope")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
-                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
+                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
+                theme(axis.title=element_text(size=16),
+                    axis.text = element_text(size=14),
+                    panel.background = element_rect(fill="white",
+                                                  colour="black"))
 
         # Influential points for intercept estimate
         i3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
@@ -152,27 +163,33 @@ intercept.perc <- sDFintercept <- NULL
                 xlab("Standardized Difference in Intercept")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
-                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)
+                geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
+                theme(axis.title=element_text(size=16),
+                    axis.text = element_text(size=14),
+                    panel.background = element_rect(fill="white",
+                                              colour="black"))                
 
         # Distribution of slope.perc:
 
         s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..))+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
-                               colour="black", fill="white")+
+                               colour="black", fill="lightyellow")+
                 xlab("% of change in Slope")+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))
+                theme(axis.title=element_text(size=16),
+                       axis.text = element_text(size=14),
+                       panel.background = element_rect(fill="white",
+                                                       colour="black"))
 
         # Distribution of slope.perc:
         i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
-                               colour="black", fill="white")+
+                               colour="black", fill="lightyellow")+
                 xlab("% of change in Intercept")+
-                theme(axis.text = element_text(size=14),
-                      axis.title = element_text(size=16))
+                theme(axis.title=element_text(size=16),
+                    axis.text = element_text(size=14),
+                    panel.background = element_rect(fill="white",
+                                                  colour="black"))
 
         ### Ploting:
         if (param == "slope" & graphs=="all")
