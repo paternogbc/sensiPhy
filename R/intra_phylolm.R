@@ -162,17 +162,10 @@ intra_phylolm <- function(formula,data,phy,
         if(track==TRUE) print(paste("intra: ",i,sep=""))
         
         #write in a table
-        intra.model.estimates[counter,1] <- i
-        intra.model.estimates[counter,2] <- intercept
-        intra.model.estimates[counter,3] <- se.intercept
-        intra.model.estimates[counter,4] <- pval.intercept
-        intra.model.estimates[counter,5] <- slope
-        intra.model.estimates[counter,6] <- se.slope
-        intra.model.estimates[counter,7] <- pval.slope
-        intra.model.estimates[counter,8] <- aic.mod
-        intra.model.estimates[counter,9]<-  optpar
-        
-        
+        estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
+                                 slope, se.slope, pval.slope, aic.mod, optpar,
+                                 stringsAsFactors = F)
+        intra.model.estimates[counter, ]  <- estim.simu
         counter=counter+1
         
       }

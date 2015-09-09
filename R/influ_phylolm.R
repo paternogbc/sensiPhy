@@ -144,17 +144,11 @@ influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,..
                         if(track==TRUE) (print(paste(i," / ",N,sep="")))
 
                         # Stores values for each simulation
-                        influ.model.estimates[counter,1]  <- sp
-                        influ.model.estimates[counter,2]  <- intercept
-                        influ.model.estimates[counter,3]  <- DFintercept
-                        influ.model.estimates[counter,4]  <- intercept.perc
-                        influ.model.estimates[counter,5]  <- pval.intercept
-                        influ.model.estimates[counter,6]  <- slope
-                        influ.model.estimates[counter,7]  <- DFslope
-                        influ.model.estimates[counter,8]  <- slope.perc
-                        influ.model.estimates[counter,9]  <- pval.slope
-                        influ.model.estimates[counter,10] <- aic.mod
-                        influ.model.estimates[counter,11] <- optpar
+                        estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
+                                                 pval.intercept, slope, DFslope, slope.perc,
+                                                 pval.slope, aic.mod, optpar,
+                                                 stringsAsFactors = F)
+                        influ.model.estimates[counter, ]  <- estim.simu
                         counter=counter+1
                 }
         }

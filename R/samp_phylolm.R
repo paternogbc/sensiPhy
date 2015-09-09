@@ -171,18 +171,13 @@ for (i in limit){
             print(paste("Break = ",n.percent,". Repetition = ",j,sep="")))
 
         # Stores values for each simulation
-        samp.model.estimates[counter,1]<- n.remov
-        samp.model.estimates[counter,2]<- n.percent
-        samp.model.estimates[counter,3]<- intercept
-        samp.model.estimates[counter,4]<- DFintercept
-        samp.model.estimates[counter,5]<- intercept.perc
-        samp.model.estimates[counter,6]<- pval.intercept
-        samp.model.estimates[counter,7]<- slope
-        samp.model.estimates[counter,8]<- DFslope
-        samp.model.estimates[counter,9]<- slope.perc
-        samp.model.estimates[counter,10]<- pval.slope
-        samp.model.estimates[counter,11]<- aic
-        samp.model.estimates[counter,12]<- optpar
+        estim.simu <- data.frame(n.remov, n.percent, intercept, 
+                                 DFintercept, intercept.perc,
+                                 pval.intercept, slope,
+                                 DFslope, slope.perc,
+                                 pval.slope, aic, optpar,
+                                 stringsAsFactors = F)
+        samp.model.estimates[counter, ]  <- estim.simu
         counter <- counter + 1
         }
     }
