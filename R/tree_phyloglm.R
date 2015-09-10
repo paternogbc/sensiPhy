@@ -91,17 +91,10 @@ tree_phyloglm <- function(formula,data,phy,
       if(track==TRUE) print(paste("tree: ",j,sep=""))
       
       #write in a table
-      tree.model.estimates[counter,1] <- j
-      tree.model.estimates[counter,2] <- intercept
-      tree.model.estimates[counter,3] <- se.intercept
-      tree.model.estimates[counter,4] <- pval.intercept
-      tree.model.estimates[counter,5] <- slope
-      tree.model.estimates[counter,6] <- se.slope
-      tree.model.estimates[counter,7] <- pval.slope
-      tree.model.estimates[counter,8] <- aic.mod
-      tree.model.estimates[counter,9]<-  optpar
-      
-      
+      estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
+                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               stringsAsFactors = F)
+      tree.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
       
     }

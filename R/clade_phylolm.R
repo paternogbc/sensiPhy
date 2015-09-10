@@ -163,17 +163,11 @@ clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
             if(track==TRUE) (print(i))
             
             # Stores values for each simulation
-            clade.model.estimates[counter,1]  <- i
-            clade.model.estimates[counter,2]  <- intercept
-            clade.model.estimates[counter,3]  <- DFintercept
-            clade.model.estimates[counter,4]  <- intercept.perc
-            clade.model.estimates[counter,5]  <- pval.intercept
-            clade.model.estimates[counter,6]  <- slope
-            clade.model.estimates[counter,7]  <- DFslope
-            clade.model.estimates[counter,8]  <- slope.perc
-            clade.model.estimates[counter,9]  <- pval.slope
-            clade.model.estimates[counter,10] <- aic.mod
-            clade.model.estimates[counter,11] <- optpar
+            estim.simu <- data.frame(i, intercept, DFintercept, intercept.perc,
+                                     pval.intercept, slope, DFslope, slope.perc,
+                                     pval.slope, aic.mod, optpar,
+                                     stringsAsFactors = F)
+            clade.model.estimates[counter, ]  <- estim.simu
             counter=counter+1
         }
     }

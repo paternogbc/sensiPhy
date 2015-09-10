@@ -90,120 +90,122 @@
 #' background papers.
 #' @export
 
-samp_phyloglm <- function(formula,data,phy,times=20,
-                         breaks=seq(.1,.7,.1),btol=50,track=TRUE,...)
-        {if(class(formula)!="formula") stop("formula must be class 'formula'")
-        if(class(data)!="data.frame") stop("data must be class 'data.frame'")
-        if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-        if(length(breaks)<2) stop("Please include more than one break,
-                                  e.g. breaks=c(.3,.5)")
-        else
+samp_phyloglm <- function(formula, data, phy, times = 20,
+                         breaks=seq(.1, .7, .1), btol = 50, track = TRUE, ...)
+{
+    
+if(class(formula) != "formula") stop("formula must be class 'formula'")
+if(class(data) != "data.frame") stop("data must be class 'data.frame'")
+if(class(phy) != "phylo") stop("phy must be class 'phylo'")
+if(length(breaks) < 2) stop("Please include more than one break,
+                          e.g. breaks=c(.3,.5)")
+else
 
-        # Check match between data and phy 
-        data_phy <- match_dataphy(formula, data, phy)
-        #Calculates the full model, extracts model parameters
-        full.data <- data_phy$data
-        phy <- data_phy$phy
-        N                       <- nrow(full.data)
-        mod.0 <- phylolm::phyloglm(formula, data=full.data,
-                                   phy=phy,method="logistic_MPLE",btol=btol,...)
-        if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge,
+# Check match between data and phy 
+data_phy <- match_dataphy(formula, data, phy)
+
+full.data <- data_phy$data
+phy <- data_phy$phy
+N <- nrow(full.data)
+
+mod.0 <- phylolm::phyloglm(formula, data = full.data,
+                           phy = phy, method = "logistic_MPLE", btol = btol, ...)
+
+if(isTRUE(mod.0$convergence != 0)) stop("Full model failed to converge,
                                               consider changing btol. See ?phyloglm")
-        intercept.0             <- mod.0$coefficients[[1]]
-        slope.0                 <- mod.0$coefficients[[2]]
-        optpar.0                <- mod.0$alpha
-        pval.intercept.0        <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]]
-        pval.slope.0            <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]
-        aic.0                   <- mod.0$aic
+intercept.0             <- mod.0$coefficients[[1]]
+slope.0                 <- mod.0$coefficients[[2]]
+optpar.0                <- mod.0$alpha
+pval.intercept.0        <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]]
+pval.slope.0            <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]
+aic.0                   <- mod.0$aic
 
-        #Creates empty data frame to store model outputs
-        samp.model.estimates<-
-                data.frame("n.remov" =numeric(), "n.percent"=numeric(),
-                           "intercept"=numeric(),"DFintercept"=numeric(),
-                           "intercept.perc"=numeric(),"pval.intercept"=numeric(),
-                           "slope"=numeric(),"DFslope"=numeric(),
-                           "slope.perc"=numeric(),"pval.slope"=numeric(),
-                           "AIC"=numeric(),"optpar" = numeric())
+#Creates empty data frame to store model outputs
+samp.model.estimates<-
+        data.frame("n.remov" = numeric(), "n.percent" = numeric(),
+                   "intercept" = numeric(), "DFintercept" = numeric(),
+                   "intercept.perc" = numeric(), "pval.intercept" = numeric(),
+                   "slope" = numeric(), "DFslope" = numeric(),
+                   "slope.perc" = numeric(), "pval.slope" = numeric(),
+                   "AIC" = numeric(),"optpar" = numeric())
 
-        #Loops over breaks, remove percentage of species determined by 'breaks
-        #and repeat determined by 'times'.
-        counter=1
-        limit <- sort(round((breaks)*nrow(full.data),digits=0))
-        for (i in limit){
-                for (j in 1:times){
-                        exclude <- sample(1:N,i)
-                        crop.data <- full.data[-exclude,]
-                        crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-                        mod<-try(phylolm::phyloglm(formula, data=crop.data,
-                                phy=crop.phy,method="logistic_MPLE",btol=btol,...),TRUE)
-                        if(isTRUE(class(mod)=="try-error")) { next }
-                        else {  intercept             <- mod$coefficients[[1]]
-                                slope                 <- mod$coefficients[[2]]
-                                pval.intercept        <-
-                                        phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                                pval.slope            <-
-                                        phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
-                                aic                   <- mod$aic
-                                DFintercept           <- intercept - intercept.0
-                                DFslope               <- slope - slope.0
-                                intercept.perc        <- round((abs(
-                                        DFintercept/intercept.0))*100,digits=1)
-                                slope.perc            <- round((abs(
-                                        DFslope/slope.0))*100,digits=1)
-                                aic                   <- mod$aic
-                                optpar                <- mod$alpha
-                                n.remov <- i
-                                n.percent <- round((n.remov/N)*100,digits=0)
-                                rep <- j
+#Loops over breaks, remove percentage of species determined by 'breaks
+#and repeat determined by 'times'.
+counter=1
+limit <- sort(round((breaks) * nrow(full.data), digits = 0))
+for (i in limit){
+    for (j in 1:times){
+            exclude <- sample(1:N, i)
+            crop.data <- full.data[-exclude, ]
+            crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
+            mod <- try(phylolm::phyloglm(formula, data = crop.data,
+                            phy = crop.phy, method = "logistic_MPLE",
+                            btol = btol, ...), TRUE)
+            
+            if(isTRUE(class(mod)=="try-error")) { next }
+            else { 
+                intercept             <- mod$coefficients[[1]]
+                slope                 <- mod$coefficients[[2]]
+                pval.intercept        <-
+                phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
+                pval.slope <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                aic <- mod$aic
+                DFintercept <- intercept - intercept.0
+                DFslope <- slope - slope.0
+                intercept.perc  <- round((abs(
+                    DFintercept / intercept.0)) * 100, digits = 1)
+                slope.perc <- round((abs(
+                    DFslope / slope.0)) * 100, digits = 1)
+                aic <- mod$aic
+                optpar <- mod$alpha
+                n.remov <- i
+                n.percent <- round((n.remov/N)*100,digits=0)
+                rep <- j
+                
+                if(track==TRUE) (
+                    print(paste("Break = ", n.percent, ". Repetition = ", j, 
+                                sep = "")))
 
-                                if(track==TRUE) (
-                                        print(paste("Break = ",n.percent,". Repetition = ",j,sep="")))
+                    # Stores values for each simulation
+                    estim.simu <- data.frame(n.remov, n.percent, intercept, 
+                                             DFintercept, intercept.perc,
+                                             pval.intercept, slope,
+                                             DFslope, slope.perc,
+                                             pval.slope, aic, optpar,
+                                             stringsAsFactors = F)
+                    samp.model.estimates[counter, ]  <- estim.simu
+                    counter=counter+1
+            }
+    }
+}
 
-                                # Stores values for each simulation
-                                samp.model.estimates[counter,1]<- n.remov
-                                samp.model.estimates[counter,2]<- n.percent
-                                samp.model.estimates[counter,3]<- intercept
-                                samp.model.estimates[counter,4]<- DFintercept
-                                samp.model.estimates[counter,5]<- intercept.perc
-                                samp.model.estimates[counter,6]<- pval.intercept
-                                samp.model.estimates[counter,7]<- slope
-                                samp.model.estimates[counter,8]<- DFslope
-                                samp.model.estimates[counter,9]<- slope.perc
-                                samp.model.estimates[counter,10]<- pval.slope
-                                samp.model.estimates[counter,11]<- aic
-                                samp.model.estimates[counter,12]<- optpar
-                                counter=counter+1
-                        }
-                }
-        }
+#Calculates percentages of signficant intercepts & slopes within breaks.
+res                     <- samp.model.estimates
+times                   <- table(res$n.remov)
+breaks                  <- unique(res$n.percent)
+sign.intercept          <- res$pval.intercept > .05
+sign.slope              <- res$pval.slope > .05
+res$sign.intercept      <- sign.intercept
+res$sign.slope          <- sign.slope
+perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / times
+perc.sign.slope     <- 1-(with(res,tapply(sign.slope,n.remov,sum))) / times
+perc.sign.tab   <- data.frame(percent_sp_removed = breaks,
+                              perc.sign.intercept = as.numeric(perc.sign.intercept),
+                              perc.sign.slope = as.numeric(perc.sign.slope))
 
-        #Calculates percentages of signficant intercepts & slopes within breaks.
-        res                     <- samp.model.estimates
-        times                   <- table(res$n.remov)
-        breaks                  <- unique(res$n.percent)
-        sign.intercept          <- res$pval.intercept > .05
-        sign.slope              <- res$pval.slope > .05
-        res$sign.intercept      <- sign.intercept
-        res$sign.slope          <- sign.slope
-        perc.sign.intercept     <- 1-(with(res,tapply(sign.intercept,n.remov,sum)))/times
-        perc.sign.slope         <- 1-(with(res,tapply(sign.slope,n.remov,sum)))/times
-        perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
-                                          perc.sign.intercept=as.numeric(perc.sign.intercept),
-                                          perc.sign.slope=as.numeric(perc.sign.slope))
+#Creates a list with full model estimates:
+param0<-list(coef = phylolm::summary.phyloglm(mod.0)$coefficients,
+             aic = phylolm::summary.phyloglm(mod.0)$aic,
+             optpar = mod.0$alpha)
 
-        #Creates a list with full model estimates:
-        param0<-list(coef=phylolm::summary.phyloglm(mod.0)$coefficients,
-                     aic=phylolm::summary.phyloglm(mod.0)$aic,
-                     optpar=mod.0$alpha)
-
-        #Generates output:
-        res <- list(model = "logistic_MPLE",
-                    formula=formula,
-                    full.model.estimates=param0,
-                    samp.model.estimates=samp.model.estimates,
-                    sign.analysis=perc.sign.tab,
-                    data=full.data)
-        class(res) <- "sensiSamp"
-        return(res)
+#Generates output:
+res <- list(model = "logistic_MPLE",
+            formula = formula,
+            full.model.estimates = param0,
+            samp.model.estimates = samp.model.estimates,
+            sign.analysis = perc.sign.tab,
+            data = full.data)
+class(res) <- "sensiSamp"
+return(res)
         
 }

@@ -52,7 +52,7 @@
 #' @export
 
 clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
-                          clade.col, n.species = 5, ...){
+                           clade.col, n.species = 5, ...){
     
     if(class(formula)!="formula") stop("formula must be class 'formula'")
     if(!is.data.frame(data)) stop("data must be class 'data.frame'")
@@ -69,24 +69,24 @@ clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
     if (is.na(namesInd)) {
         stop("Names column '", clade.col, "' not found in data frame'")
     }
-
+    
     N               <- nrow(full.data)
     mod.0           <- phylolm::phyloglm(formula, data = full.data, 
-                                        phy = phy, method = "logistic_MPLE",
-                                        btol = btol)
+                                         phy = phy, method = "logistic_MPLE",
+                                         btol = btol)
     intercept.0      <- mod.0$coefficients[[1]]
     slope.0          <- mod.0$coefficients[[2]]
     pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]]
     pval.slope.0     <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]
     optpar.0 <- mod.0$alpha
-
+    
     
     if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge,
-                                        consider changing btol. See ?phyloglm")
+                                          consider changing btol. See ?phyloglm")
     else
-    
-    #Creates empty data frame to store model outputs
-    clade.model.estimates<-
+        
+        #Creates empty data frame to store model outputs
+        clade.model.estimates<-
         data.frame("clade" = I(as.character()), "intercept" = numeric(),
                    "DFintercept" = numeric(), "intercept.perc" = numeric(),
                    "pval.intercept" = numeric(), "slope" = numeric(),
@@ -115,8 +115,8 @@ clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
         
         crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
         mod=try(phylolm::phyloglm(formula, data = crop.data, 
-                                 phy = crop.phy, method = "logistic_MPLE",
-                                 btol = btol), TRUE)
+                                  phy = crop.phy, method = "logistic_MPLE",
+                                  btol = btol), TRUE)
         if(isTRUE(class(mod) == "try-error")) {
             
             error <- i
@@ -138,17 +138,11 @@ clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
             if(track==TRUE) (print(i))
             
             # Stores values for each simulation
-            clade.model.estimates[counter,1]  <- i
-            clade.model.estimates[counter,2]  <- intercept
-            clade.model.estimates[counter,3]  <- DFintercept
-            clade.model.estimates[counter,4]  <- intercept.perc
-            clade.model.estimates[counter,5]  <- pval.intercept
-            clade.model.estimates[counter,6]  <- slope
-            clade.model.estimates[counter,7]  <- DFslope
-            clade.model.estimates[counter,8]  <- slope.perc
-            clade.model.estimates[counter,9]  <- pval.slope
-            clade.model.estimates[counter,10] <- aic.mod
-            clade.model.estimates[counter,11] <- optpar
+            estim.simu <- data.frame(i, intercept, DFintercept, intercept.perc,
+                                     pval.intercept, slope, DFslope, slope.perc,
+                                     pval.slope, aic.mod, optpar,
+                                     stringsAsFactors = F)
+            clade.model.estimates[counter, ]  <- estim.simu
             counter=counter+1
         }
     }
