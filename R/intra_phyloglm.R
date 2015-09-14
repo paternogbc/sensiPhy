@@ -168,7 +168,7 @@ intra_phyloglm <- function(formula,data,phy,
               datas=full.data,
               model_results=intra.model.estimates,N.obs=n,
               stats=statresults)
-  class(res) <- "sensiIntra"
+  class(res) <- c("sensiIntra","sensiIntraL")
   return(res)
 }
 

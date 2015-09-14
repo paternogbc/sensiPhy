@@ -7,7 +7,7 @@
 #' for each function in the package.
 #'
 #' @name sensiPhy
-#' @author Gustavo Paterno; Caterina Penoni & Gijsbert D.A. Werner
+#' @author Gustavo Paterno; Caterina Penone & Gijsbert D.A. Werner
 #' @section Bug reports: 
 #' 
 #' \url{https://github.com/paternogbc/sensiPhy/issues}.

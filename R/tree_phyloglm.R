@@ -114,6 +114,6 @@ tree_phyloglm <- function(formula,data,phy,
               datas=full.data,
               model_results=tree.model.estimates,N.obs=n,
               stats=statresults)
-  class(res) <- "sensiTree"
+  class(res) <- c("sensiTree","sensiTreeL")
   return(res)
 }

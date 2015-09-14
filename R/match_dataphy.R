@@ -20,24 +20,28 @@
 #' @param phy A phylogeny (class 'phylo' or 'multiphylo')
 #' @return The function \code{match_dataphy} returns a list with the following
 #' components:
-#' @return \code{data}: Croped dataset matching phylogeny
-#' @return \code{phy}: Croped phylogeny matching data
+#' @return \code{data}: Cropped dataset matching phylogeny
+#' @return \code{phy}: Cropped phylogeny matching data
 #' @details This function uses all variables provided in the `formula` to match
-#' data and phylogeny. To avoid croping the full dataset, `match_dataphy` searches
+#' data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 #' for NA values only on variables provided by formula. Missing values on 
 #' other variables, not included in `formula`, wont be removed from data. 
 #' 
 #' This ensures consistance between data and phylogeny only for the variables 
 #' that are being used in the model (set by `formula`).
 #' 
-#' If phy is a 'multiphylo' object, all phylogenies will be croped
+#' If phy is a 'multiphylo' object, all phylogenies will be cropped
 #' to match data. The returned phyogeny will be a 'multiphylo' object.
 #' @note If tips are removed from the phylogeny and data or if rows containing
 #' missing values are removed from data, a message will be printed with the 
 #' details. Further, the final number of species that match data and phy will
 #' always be informed by a message.
 #' 
-#' @author Caterina Penoni
+#' @author Caterina Penone
+#' @references This function is largely inspired by the function \code{comparative.data} in caper package
+#' David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac and Will Pearse
+#' (2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
+#' http://CRAN.R-project.org/package=caper
 #' @export
 match_dataphy <- function(formula, data, phy){
     
