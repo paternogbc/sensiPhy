@@ -44,6 +44,16 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     slope.0 <-  as.numeric(statm[4,3])
     intercept.0 <-  as.numeric(statm[1,3])
     model_results<-x$model_results
+    
+    
+    xf <- dat[, 2]
+    yf <- plogis(intercept.0 + slope.0 * xf)
+    yp <-plogis((intercept.0+statm[1,4]) + (slope.0 * xf + statm[4,4])) 
+    ym <-plogis((intercept.0-statm[1,4]) + (slope.0 * xf - statm[4,4]))
+    
+    plot_data <- data.frame("xf" = c(xf,xf,xf),
+                            "yy" = c(yf, yp, ym),
+                            linety = rep(c("Mean","SD1","SD2"),each = length(yf)))
 
     #Distribution of estimated slopes:
     s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),environment=environment())+
@@ -62,25 +72,38 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     #third plot: data visualisation
     s2 <- ggplot2::ggplot(dat,aes(x=predictor,y=response))+
       geom_point(size=3,alpha=.8)+
-      theme(legend.key.width = unit(.2,"cm"),
-            panel.background=element_rect(fill="white",colour="black"),
-            legend.text = element_text(size=14),
+      theme(panel.background=element_rect(fill="white",colour="black"),
             panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank())+
-      geom_abline(intercept = intercept.0, slope=slope.0, aes(colour="mean"),size=1)+
-      geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
-      geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
-      scale_color_manual("",values = c("black","blue"),guide=F)
+            panel.grid.minor = element_blank(),
+            legend.position="none")
 
+    if(length(class(x)) == 1){
+      s2.out <- s2 +
+        geom_abline(intercept = intercept.0, slope=slope.0, aes(colour="mean"),size=1)+
+        geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
+        geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
+        scale_color_manual("",values = c("black","blue"),guide=F)
+    }
+    
+    
+    if(length(class(x)) == 2){
+      s2.out <- s2 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype=linety, col=linety),size=1)+
+        scale_linetype_manual(values = c(1,2,2)) +
+        scale_color_manual("",values = c("black","blue","blue"),guide=F)
+                   
+    }
+    
+    
+    
     ### Plotting:
     if (graphs=="all")
-      suppressMessages(print(multiplot(s1,s2,i1,cols=2)))
+      suppressMessages(print(multiplot(s1,s2.out,i1,cols=2)))
     if (graphs==1)
       suppressMessages(print(s1))
     if (graphs==2)
-      suppressMessages(print(s3))
-    if (graphs==3)
       suppressMessages(print(i1))
+    if (graphs==3)
+      suppressMessages(print(s2.out))
 
 }
 

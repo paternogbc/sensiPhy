@@ -37,7 +37,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     clades.names <- x$clade.model.estimates$clade
     if (is.null(clade) == T){
         clade <- clades.names[1]
-        warning("Clade argument was not defined. Ploting results for clade: ",
+        warning("Clade argument was not defined. Plotting results for clade: ",
                 clade,"
                 Use clade = 'clade name' to plot results for other clades")
     }
