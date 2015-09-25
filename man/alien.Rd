@@ -21,8 +21,8 @@ data(alien)
 A comparative dataset containing traits for 94 alien mammal species
 (alien.data) and a multiphylo object with 101 phylogenies matching the
 data (alien.phy). Tip labels are the binomial species names and match
-with data rownames. Data was taken from (REFERENCE) and phylogenies from
-(REFERENCE).
+with data rownames. Data was taken from (Gonzalez-Surez et al. 2015) and phylogenies from
+(Fritz et al 2009).
 }
 \references{
 Alien mammal data: Gonzalez-Suarez, Manuela, Sven Bacher, and Jonathan M. Jeschke.
