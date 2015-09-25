@@ -17,7 +17,7 @@ any sensitivity analysis performed with 'sensiPhy'
 }
 \details{
 sensi_plot recognize and print different sets of graphs depending
-on the function that has generated 'x'. See the links bellow for details about
+on the function that has generated 'x'. See the links below for details about
 the graphs generated for each sensiPhy function:
 \itemize{
  \item{\code{\link[sensiPhy]{sensi_plot.sensiClade}}}

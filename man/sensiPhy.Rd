@@ -25,6 +25,6 @@ You can find instructions to contribute with \bold{sensiPhy} at
 this link: add link!
 }
 \author{
-Gustavo Paterno; Caterina Penoni & Gijsbert D.A. Werner
+Gustavo Paterno; Caterina Penone & Gijsbert D.A. Werner
 }
 
