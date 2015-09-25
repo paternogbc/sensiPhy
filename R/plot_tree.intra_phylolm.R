@@ -34,7 +34,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   
   # nulling variables
   sd <- formula <- slope <- ..density.. <- intercept <- NULL
-  predictor <- response <-  s3 <- NULL
+  predictor <- response <-  s3 <- yy <- linety <- NULL
 
     resp<-all.vars(x$formula)[1]
     pred<-all.vars(x$formula)[2]
