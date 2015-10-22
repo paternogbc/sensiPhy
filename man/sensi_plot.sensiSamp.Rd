@@ -7,7 +7,7 @@
 \method{sensi_plot}{sensiSamp}(x, graphs = "all", param = "slope", ...)
 }
 \arguments{
-\item{x}{output from \code{samp_phylolm}}
+\item{x}{output from \code{samp_phylm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
@@ -16,11 +16,11 @@
 \item{...}{further arguments to methods}
 }
 \description{
-\code{plot_samp_phylolm} Plot results from \code{samp_phylolm} and
+\code{plot_samp_phylm} Plot results from \code{samp_phylm} and
 \code{influ_phyloglm}
 }
 \details{
-For 'x' from samp_phylolm or samp_phyloglm:
+For 'x' from samp_phylm or samp_phyglm:
 
 Graph 1: Estimated slopes or intercepts for each simution across
 percentage of species removed. Colours represent percentage
@@ -46,7 +46,7 @@ If model = "BM", only plots 1, 2 and 4 are printed. Plot 3, phylogenetic
 Gustavo Paterno
 }
 \seealso{
-\code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylolm}}
-\code{\link[sensiPhy]{samp_phyloglm}}
+\code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylm}}
+\code{\link[sensiPhy]{samp_phyglm}}
 }
 
