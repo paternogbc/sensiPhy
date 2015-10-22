@@ -117,7 +117,7 @@ Gustavo Paterno & Gijsbert D.A. Werner
 Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyloglm}},
-\code{\link{influ_phylolm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
+\code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 }
 

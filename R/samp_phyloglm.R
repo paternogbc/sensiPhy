@@ -29,7 +29,7 @@
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#' @return The function \code{samp_phylolm} returns a list with the following
+#' @return The function \code{samp_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -84,8 +84,8 @@
 #' }
 #'
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
-#' \code{\link{influ_phyloglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
+#' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own + some more
 #' background papers.
 #' @export

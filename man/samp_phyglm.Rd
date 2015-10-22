@@ -27,7 +27,7 @@ in \code{phy}.}
 \item{...}{Further arguments to be passed to \code{phylolm}}
 }
 \value{
-The function \code{samp_phylolm} returns a list with the following
+The function \code{samp_phylm} returns a list with the following
 components:
 
 \code{formula}: The formula
@@ -115,7 +115,7 @@ Here still: reference to phylolm paper + our own + some more
 background papers.
 }
 \seealso{
-\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
-\code{\link{influ_phyloglm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
+\code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
 

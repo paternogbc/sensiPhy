@@ -103,7 +103,7 @@ Gustavo Paterno
 Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{influ_phylolm}},
+\code{\link[phylolm]{phylolm}}, \code{\link{influ_phylm}},
 \code{\link{sensi_plot}}
 }
 

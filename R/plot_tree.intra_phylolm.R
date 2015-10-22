@@ -1,20 +1,20 @@
 #' Graphical diagnostics for class 'sensiIntra'
 #'
-#' \code{plot_tree.intra_phylm} Plot results from \code{tree_phylolm},
+#' \code{plot_tree.intra_phylm} Plot results from \code{tree_phylm},
 #' \code{intra_phylm} and \code{intra_phyglm}
-#' @param x output from \code{tree_phylolm}, \code{tree_phyloglm},
+#' @param x output from \code{tree_phylm}, \code{tree_phyglm},
 #' \code{intra_phylm} or \code{intra_phyglm}
 #' @param graphs choose which graph should be printed in the output ("all", 1, 2 or 3)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
 #' geom_vline xlab geom_point theme
 #' @author Caterina Penone and Gustavo Paterno
-#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylm}}
 #' \code{\link[sensiPhy]{intra_phylm}}
-#' @details For 'x' from \code{tree_phylolm}, \code{tree_phyloglm},
+#' @details For 'x' from \code{tree_phylm}, \code{tree_phyglm},
 #' \code{intra_phylm} or \code{intra_phyglm}:
 #' 
-#' Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylolm}) or 
+#' Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylm}) or 
 #' value generated within a given interval (\code{intra_phylm})
 #' Red vertical line represents the mean slope or intercept for all models. 
 #'
@@ -109,21 +109,21 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 
 #' Graphical diagnostics for class 'sensiTree'
 #'
-#' \code{plot_tree.intra_phylm} Plot results from \code{tree_phylolm},
+#' \code{plot_tree.intra_phylm} Plot results from \code{tree_phylm},
 #' \code{intra_phylm} and \code{intra_phyglm}
-#' @param x output from \code{tree_phylolm}, \code{tree_phyloglm},
+#' @param x output from \code{tree_phylm}, \code{tree_phyglm},
 #' \code{intra_phylm} or \code{intra_phyglm}
 #' @param graphs choose which graph should be printed in the output ("all", 1, 2 or 3)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
 #' geom_vline xlab geom_point theme
 #' @author Caterina Penone and Gustavo Paterno
-#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylolm}}
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylm}}
 #' \code{\link[sensiPhy]{intra_phylm}}
-#' @details For 'x' from \code{tree_phylolm}, \code{tree_phyloglm},
+#' @details For 'x' from \code{tree_phylm}, \code{tree_phyglm},
 #' \code{intra_phylm} or \code{intra_phyglm}:
 #' 
-#' Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylolm}) or 
+#' Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylm}) or 
 #' value generated within a given interval (\code{intra_phylm})
 #' Red vertical line represents the mean slope or intercept for all models. 
 #'

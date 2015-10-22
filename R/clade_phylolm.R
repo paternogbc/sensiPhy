@@ -72,7 +72,7 @@
 #' clade.test <- clade_phylm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
 #' }
 #' @author Gustavo Paterno
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylolm}},
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylm}},
 #' \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export

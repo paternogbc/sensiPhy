@@ -46,7 +46,7 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
 #' @author Gustavo Paterno & Gijsbert Werner
-#' @seealso \code{\link[sensiPhy]{clade_phylolm}}, \code{\link{influ_phyloglm}},
+#' @seealso \code{\link[sensiPhy]{clade_phylm}}, \code{\link{influ_phyglm}},
 #' \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export

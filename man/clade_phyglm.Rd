@@ -75,7 +75,7 @@ Gustavo Paterno & Gijsbert Werner
 Here still: reference to phylolm paper + our own?
 }
 \seealso{
-\code{\link[sensiPhy]{clade_phylolm}}, \code{\link{influ_phyloglm}},
+\code{\link[sensiPhy]{clade_phylm}}, \code{\link{influ_phyglm}},
 \code{\link{sensi_plot}}
 }
 

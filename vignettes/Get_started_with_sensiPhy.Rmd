@@ -57,7 +57,7 @@ mod.0$coefficients
 Estimating the impact of sampling effort in parameter estimate:
 
 ```{r, message=F, warning=F}
-samp <- samp_phylolm(log10(range) ~ log10(Mass), data = dat$data, 
+samp <- samp_phylm(log10(range) ~ log10(Mass), data = dat$data, 
                  phy = dat$phy[[1]], model = "lambda", track = F)
 ```
 
@@ -70,7 +70,7 @@ sensi_plot(samp)
 Detecting most influential species:
 
 ```{r, message=F, warning=F, cache=TRUE}
-influ <- influ_phylolm(log10(range) ~ log10(Mass), data = dat$data, 
+influ <- influ_phylm(log10(range) ~ log10(Mass), data = dat$data, 
                  phy = dat$phy[[1]], track = F)
 ```
 
@@ -83,7 +83,7 @@ sensi_plot(influ)
 Detecting most influential clades:
 
 ```{r, message=F, warning=F, cache=TRUE}
-clade <- clade_phylolm(log10(range) ~ log10(Mass), data = dat$data, 
+clade <- clade_phylm(log10(range) ~ log10(Mass), data = dat$data, 
                  phy = dat$phy[[1]], clade.col = "family", n.species = 3)
 summary(clade)
 ```
@@ -96,7 +96,7 @@ sensi_plot(clade, clade = "Bovidae")
 ## Phylogenetic uncertainty
 
 ```{r, message=F, warning=F, cache=TRUE}
-trees <- tree_phylolm(range ~ Mass, data = dat$data, 
+trees <- tree_phylm(range ~ Mass, data = dat$data, 
                  phy = dat$phy, ntree = 100, track = F)
 summary(trees)
 ```
