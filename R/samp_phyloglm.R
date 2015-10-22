@@ -75,11 +75,11 @@
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
 #'
 #' #For both regressions, determine sensitivity of results to species sampled.
-#' fit1<-samp_phyloglm(bin_trait1~pred,data = dat,phy = tree)
-#' fit2<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree)
+#' fit1<-samp_phyglm(bin_trait1~pred,data = dat,phy = tree)
+#' fit2<-samp_phyglm(bin_trait2~pred,data = dat,phy = tree)
 #'
 #' #It is possible to change the species removal percentages and number of repeats
-#' fit3<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree,
+#' fit3<-samp_phyglm(bin_trait2~pred,data = dat,phy = tree,
 #'      breaks = c(0.25,0.5,0.75),times=100)
 #' }
 #'
@@ -90,7 +90,7 @@
 #' background papers.
 #' @export
 
-samp_phyloglm <- function(formula, data, phy, times = 20,
+samp_phyglm <- function(formula, data, phy, times = 20,
                          breaks=seq(.1, .7, .1), btol = 50, track = TRUE, ...)
 {
     

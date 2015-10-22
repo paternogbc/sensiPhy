@@ -40,7 +40,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{intra_phyloglm} returns a list with the following
+#' @return The function \code{intra_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
@@ -57,7 +57,7 @@
 #' @export
 
 
-intra_phyloglm <- function(formula,data,phy,
+intra_phyglm <- function(formula,data,phy,
                           vari.pred=NULL,minmax=FALSE,
                           nintra=2,distrib="uniform",btol=50,track=TRUE,...){
   

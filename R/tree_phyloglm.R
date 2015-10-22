@@ -21,7 +21,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{tree_phyloglm} returns a list with the following
+#' @return The function \code{tree_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
@@ -38,7 +38,7 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-tree_phyloglm <- function(formula,data,phy,
+tree_phyglm <- function(formula,data,phy,
                          ntree=2,btol=50,track=TRUE,...){
   
   #Error check

@@ -1,8 +1,8 @@
 #' Graphical diagnostics for class 'sensiInflu'
 #'
-#' \code{plot_influ_phylolm} Plot results from \code{influ_phylolm} and 
-#' \code{influ_phyloglm}
-#' @param x output from \code{influ_phylolm}
+#' \code{plot_influ_phylm} Plot results from \code{influ_phylm} and 
+#' \code{influ_phyglm}
+#' @param x output from \code{influ_phylm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @param ... further arguments to methods
@@ -11,7 +11,7 @@
 #' ggtitle element_blank
 #' @author Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}
-#' @details For 'x' from influ_phylolm or influ_phyloglm:
+#' @details For 'x' from influ_phylm or influ_phyglm:
 #' 
 #' Graph 1: Distribution of estimated slopes or intercepts for each 
 #' simulation (leave-one-out deletion). Red vertical line represents the original
@@ -48,8 +48,8 @@
 #' dat<-data.frame(pred,cont_trait,bin_trait)
 #'
 #' #Determine influential species for both regressions.
-#' fit1<-influ_phylolm(cont_trait~pred,data = dat,phy = tree)
-#' fit2<-influ_phyloglm(bin_trait~pred,data = dat,phy = tree)
+#' fit1<-influ_phylm(cont_trait~pred,data = dat,phy = tree)
+#' fit2<-influ_phyglm(bin_trait~pred,data = dat,phy = tree)
 #' 
 #' # Plot results:
 #' sensi_plot(fit1)

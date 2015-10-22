@@ -19,7 +19,7 @@
 #' Currently only logistic regression using the "logistic_MPLE"-method from
 #' \code{phyloglm} is implemented.
 #'
-#' \code{clade_phyloglm} detects influential clades based on
+#' \code{clade_phyglm} detects influential clades based on
 #' difference in intercept and/or slope when removing a given clade compared
 #' to the full model including all species.
 #' 
@@ -28,7 +28,7 @@
 #'
 #' Output can be visualised using \code{clade_plot}.
 #'
-#' @return The function \code{clade_phyloglm} returns a list with the following
+#' @return The function \code{clade_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -51,7 +51,7 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-clade_phyloglm <- function(formula, data, phy, btol=50, track = TRUE,
+clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
                            clade.col, n.species = 5, ...){
     
     if(class(formula)!="formula") stop("formula must be class 'formula'")

@@ -25,7 +25,7 @@
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' \code{clade_phylolm} detects influential clades based on
+#' \code{clade_phylm} detects influential clades based on
 #' difference in intercept and/or slope when removing a given clade compared
 #' to the full model including all species.
 #' 
@@ -34,7 +34,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{clade_phylolm} returns a list with the following
+#' @return The function \code{clade_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -69,7 +69,7 @@
 #' dat<-data.frame(pred,cont_trait,fam)
 #'
 #' #Determine influential clades:
-#' clade.test <- clade_phylolm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
+#' clade.test <- clade_phylm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
 #' }
 #' @author Gustavo Paterno
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylolm}},
@@ -77,7 +77,7 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-clade_phylolm <- function(formula, data, phy, model = "lambda", track = TRUE,
+clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
                         clade.col, n.species = 5, ...){
     if(!is.data.frame(data)) stop("data must be class 'data.frame'")
     if(missing(clade.col)) stop("clade.col not defined. Please, define the",

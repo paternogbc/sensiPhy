@@ -20,7 +20,7 @@
 #' Currently only logistic regression using the "logistic_MPLE"-method from
 #' \code{phyloglm} is implemented.
 #'
-#' \code{influ_phyloglm} detects influential species based on the standardised
+#' \code{influ_phyglm} detects influential species based on the standardised
 #' difference in intercept and/or slope when removing a given species compared
 #' to the full model including all species. Species with a standardised difference
 #' above the value of \code{cutoff} are identified as influential. The default
@@ -31,7 +31,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{influ_phyloglm} returns a list with the following
+#' @return The function \code{influ_phyglm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
@@ -78,8 +78,8 @@
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
 #'
 #' #Determine influential species for both regressions.
-#' fit1<-influ_phyloglm(bin_trait1~pred,data = dat,phy = tree)
-#' fit2<-influ_phyloglm(bin_trait2~pred,data = dat,phy = tree)
+#' fit1<-influ_phyglm(bin_trait1~pred,data = dat,phy = tree)
+#' fit2<-influ_phyglm(bin_trait2~pred,data = dat,phy = tree)
 #'
 #' #For purposes of comparison the full model output from phylolm:
 #' summary(phyloglm(bin_trait1~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
@@ -91,7 +91,7 @@
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-influ_phyloglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
+influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")
         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")

@@ -1,3 +1,4 @@
+
 ### decide which plot should be printed (for plot_samp):
 which_plot <- function(param = "slope", graphs = "all",
                        s1 = s1, s2 = s2, opt = opt, s4 = s4,
