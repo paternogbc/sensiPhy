@@ -80,8 +80,10 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     if(length(class(x)) == 1){
       s2.out <- s2 +
         geom_abline(intercept = intercept.0, slope=slope.0, aes(colour="mean"),size=1)+
-        geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
-        geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4], aes(color="sd Tree Uncert"),linetype=2,size=1,show_guide = T)+
+        geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4],
+                    aes(color="sd Tree Uncert"),linetype=2,size=1,show.legend = T)+
+        geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4],
+                    aes(color="sd Tree Uncert"),linetype=2,size=1,show.legend = T)+
         scale_color_manual("",values = c("black","blue"),guide=F)
     }
     
