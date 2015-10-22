@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>clade_phyloglm. sensiPhy 0.2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+Gustavo Paterno &amp; Gijsbert Werner
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">sensiPhy 0.2.0</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Influential clade detection - Phylogenetic Logistic Regression</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>clade_phyloglm(formula, data, phy, btol&nbsp;=&nbsp;50, track&nbsp;=&nbsp;TRUE, clade.col, n.species&nbsp;=&nbsp;5, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>formula</dt>
+      <dd>The model formula</dd>
+      <dt>data</dt>
+      <dd>Data frame containing species traits with row names matching tips
+in <code>phy</code>.</dd>
+      <dt>phy</dt>
+      <dd>A phylogeny (class 'phylo') matching <code>data</code>.</dd>
+      <dt>btol</dt>
+      <dd>Bound on searching space. For details see <code>phyloglm</code></dd>
+      <dt>track</dt>
+      <dd>Print a report tracking function progress (default = TRUE)</dd>
+      <dt>clade.col</dt>
+      <dd>The name of a column in the provided data frame with clades
+specification (a character vector with clade names).</dd>
+      <dt>n.species</dt>
+      <dd>Minimum number of species in the clade in order to include
+this clade in the leave-one-out deletion analyis. Default is <code>5</code>.</dd>
+      <dt>...</dt>
+      <dd>Further arguments to be passed to <code>phyloglm</code></dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+The function <code>clade_phyloglm</code> returns a list with the following
+components:</p>
+  
+      <p><code>formula</code>: The formula</p>
+  
+      <p><code>full.model.estimates</code>: Coefficients, aic and the optimised
+value of the phylogenetic parameter (e.g. <code>alpha</code>) for the full model
+without deleted species.</p>
+  
+      <p><code>clade.model.estimates</code>: A data frame with all simulation
+estimates. Each row represents a deleted clade. Reported are the calculated
+regression intercept (<code>intercept</code>), difference between simulation
+intercept and full model intercept (<code>DFintercept</code>), the percentage change
+ in intercept compared to the full model (<code>intercept.perc</code>) and intercept
+ p-value (<code>pval.intercept</code>). All of these are also reported for the regression
+slope (<code>DFslope</code> etc.). Additonally, model aic value (<code>AIC</code>) and
+the optimised value (<code>optpar</code>) of the phylogenetic parameter are
+reported.</p>
+  
+      <p><code>data</code>: Original full dataset.</p>
+  
+      <p><code>errors</code>: Clades where deletion resulted in errors.
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Estimate the impact on model estimates phylogenetic Logist regression after
+removing clades from the analysis.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>Currently only logistic regression using the "logistic_MPLE"-method from
+<code>phyloglm</code> is implemented.</p>
+  
+      <p><code>clade_phyloglm</code> detects influential clades based on
+difference in intercept and/or slope when removing a given clade compared
+to the full model including all species.</p>
+  
+      <p>Currently, this function can only implement simple linear models (i.e.
+$y = a + bx$). In the future we will implement more complex models.</p>
+  
+      <p>Output can be visualised using <code>clade_plot</code>.</p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+
+      <p>Here still: reference to phylolm paper + our own?</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>clade_phyloglm</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code>clade_phylolm</code>, <code><a href='influ_phyloglm.html'>influ_phyloglm</a></code>,
+<code><a href='sensi_plot.html'>sensi_plot</a></code>
+
+    
+    <h2>Author</h2>
+    
+Gustavo Paterno & Gijsbert Werner
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

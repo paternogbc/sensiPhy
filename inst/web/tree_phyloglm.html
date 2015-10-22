@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>tree_phyloglm. sensiPhy 0.2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+Caterina Penone &amp; Pablo Ariel Martinez
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">sensiPhy 0.2.0</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Phylogenetic uncertainty - Phylogenetic Logistic Regression</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>tree_phyloglm(formula, data, phy, ntree&nbsp;=&nbsp;2, btol&nbsp;=&nbsp;50, track&nbsp;=&nbsp;TRUE, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>formula</dt>
+      <dd>The model formula</dd>
+      <dt>data</dt>
+      <dd>Data frame containing species traits with species as row names.</dd>
+      <dt>phy</dt>
+      <dd>A phylogeny (class 'multiPhylo', see ?<code>ape</code>).</dd>
+      <dt>ntree</dt>
+      <dd>Number of times to repeat the analysis with n different trees picked
+randomly in the multiPhylo file.
+If NULL, <code>ntree</code> = 2</dd>
+      <dt>btol</dt>
+      <dd>Bound on searching space. For details see <code>phyloglm</code>.</dd>
+      <dt>track</dt>
+      <dd>Print a report tracking function progress (default = TRUE)</dd>
+      <dt>...</dt>
+      <dd>Further arguments to be passed to <code>phyloglm</code></dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+The function <code>tree_phyloglm</code> returns a list with the following
+components:</p>
+  
+      <p><code>formula</code>: The formula</p>
+  
+      <p><code>data</code>: Original full dataset</p>
+  
+      <p><code>model_results</code>: Coefficients, aic and the optimised
+value of the phylogenetic parameter (e.g. <code>lambda</code>) for each regression with a
+different phylogenetic tree.</p>
+  
+      <p><code>N.obs</code>: Size of the dataset after matching it with tree tips and removing NA's.</p>
+  
+      <p><code>stats</code>: Statistics for model parameters. <code>sd_tree</code> is the standard deviation
+due to phylogenetic uncertainty.</p>
+  
+      <p>#which example should we put here?
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Performs Phylogenetic logistic regression evaluating
+uncertainty in trees topology.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>This function fits a phylogenetic linear regression model using <code><a href='http://www.inside-r.org/packages/cran/phylolm/docs/phyloglm'>phyloglm</a></code>
+to n trees, randomly picked in a multiPhylo file.</p>
+  
+      <p>Currently, this function can only implement simple logistic models (i.e. $trait~
+predictor$). In the future we will implement more complex models.</p>
+  
+      <p>Output can be visualised using <code>sensi_plot</code>.</p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+
+      <p>Here still: reference to phylolm paper + our own?</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>tree_phyloglm</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='sensi_plot.html'>sensi_plot</a></code>
+
+    
+    <h2>Author</h2>
+    
+Caterina Penone & Pablo Ariel Martinez
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
