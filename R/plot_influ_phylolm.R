@@ -105,32 +105,32 @@ intercept.perc <- sDFintercept <- NULL
                                                   colour="black"))
         
         # Original plot with Standardized DFslope as colour gradient
-        s2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
-                                           eval(parse(text=vars[1])),
-                                           colour=abs(sDFslope)),
+        s2 <- ggplot2::ggplot(result.tab, aes(eval(parse(text=vars[2])),
+                                           eval(parse(text=vars[1]))),
                             environment = environment())+
-            geom_point(size=3,alpha=.8)+
-            scale_colour_gradient( low="black",high="red",name="")+
+            geom_point(data = result.tab,
+                       aes(size = abs(sDFslope)), alpha = .8)+
+            ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
             theme(legend.key.width = unit(.2,"cm"),
-                  panel.background=element_rect(fill="white",colour="black"),
-                  legend.text = element_text(size=14),
+                  panel.background=element_rect(fill="white", colour = "black"),
+                  legend.text = element_text(size = 14),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
             ylab(vars[1])+
             xlab(vars[2])+
             ggtitle("Standardized Difference in slope")+
-            theme(axis.title=element_text(size=16),
-                  axis.text = element_text(size=14),
-                  panel.background = element_rect(fill="white",
-                                                  colour="black"))
+            theme(axis.title = element_text(size = 16),
+                  axis.text = element_text(size = 14),
+                  panel.background = element_rect(fill = "white",
+                                                  colour = "black"))
 
         # Original plot with Standardized DFintercept as colour gradient
         i2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
-                                           eval(parse(text=vars[1])),
-                                           colour=abs(sDFintercept)),
+                                           eval(parse(text=vars[1]))),
                             environment = environment())+
-            geom_point(size=3,alpha=.8)+
-            scale_colour_gradient( low="black",high="red",name="")+
+            geom_point(data = result.tab,
+                       aes(size = abs(sDFintercept)), alpha = .8)+
+            ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
             theme(legend.key.width = unit(.2,"cm"),
                   panel.background=element_rect(fill="white",colour="black"),
                   legend.text = element_text(size=14),
