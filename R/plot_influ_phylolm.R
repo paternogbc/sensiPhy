@@ -18,9 +18,7 @@
 #' slope or intercept from the full model (with all species). 
 #' 
 #' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
-#' difference in slope or intercept is represented by a continous colour scale, 
-#' ranging from black (low \code{sDFintercept} or \code{sDFslope} values) to red
-#' (high \code{sDFintercept} or \code{sDFslope} values).
+#' difference in slope or intercept is represented by a continous size scale.
 #' 
 #' Graph 3: Distribution of Standardized difference in slope or intercept. Red 
 #' colour indicates inbfluential species (with a standardised difference above 
@@ -70,7 +68,9 @@ intercept.perc <- sDFintercept <- NULL
 
         ### Organizing values:
         result <- x$influ.model.estimates
-        vars  <- gsub("list","",attr(stats::terms(x$formula),"variables"))[-1]
+        mappx <- x$formula[[3]]
+        mappy <- x$formula[[2]]
+        vars <- all.vars(x$formula)
         intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
         slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
         cutoff      <-  x$cutoff
@@ -105,9 +105,8 @@ intercept.perc <- sDFintercept <- NULL
                                                   colour="black"))
         
         # Original plot with Standardized DFslope as colour gradient
-        s2 <- ggplot2::ggplot(result.tab, aes(eval(parse(text=vars[2])),
-                                           eval(parse(text=vars[1]))),
-                            environment = environment())+
+        s2 <- ggplot2::ggplot(result.tab, aes_string(y = mappy, x = mappx),
+                              environment = parent.frame())+
             geom_point(data = result.tab,
                        aes(size = abs(sDFslope)), alpha = .8)+
             ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
@@ -116,8 +115,6 @@ intercept.perc <- sDFintercept <- NULL
                   legend.text = element_text(size = 14),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
-            ylab(vars[1])+
-            xlab(vars[2])+
             ggtitle("Standardized Difference in slope")+
             theme(axis.title = element_text(size = 16),
                   axis.text = element_text(size = 14),
@@ -125,9 +122,8 @@ intercept.perc <- sDFintercept <- NULL
                                                   colour = "black"))
 
         # Original plot with Standardized DFintercept as colour gradient
-        i2<-ggplot2::ggplot(result.tab,aes(eval(parse(text=vars[2])),
-                                           eval(parse(text=vars[1]))),
-                            environment = environment())+
+        i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
+                            environment = parent.frame())+
             geom_point(data = result.tab,
                        aes(size = abs(sDFintercept)), alpha = .8)+
             ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
@@ -136,8 +132,6 @@ intercept.perc <- sDFintercept <- NULL
                   legend.text = element_text(size=14),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
-            ylab(vars[1])+
-            xlab(vars[2])+
             ggtitle("Standardized Difference in Intercept")+
             theme(axis.title=element_text(size=16),
                   axis.text = element_text(size=14),
@@ -192,25 +186,25 @@ intercept.perc <- sDFintercept <- NULL
                                                   colour="black"))
 
         ### Ploting:
-        if (param == "slope" & graphs=="all")
-            suppressMessages(return(multiplot(s1,s3,s2,s4,cols=2)))
-        if (param == "slope" & graphs==1)
+        if (param == "slope" & graphs == "all")
+            suppressMessages(return(multiplot(s1, s3, s2, s4, cols = 2)))
+        if (param == "slope" & graphs == 1)
             suppressMessages(return(s1))
-        if (param == "slope" & graphs==2)
+        if (param == "slope" & graphs == 2)
             suppressMessages(return(s2))
-        if (param == "slope" & graphs==3)
+        if (param == "slope" & graphs == 3)
             suppressMessages(return(s3))
-        if (param == "slope" & graphs==4)
+        if (param == "slope" & graphs == 4)
             suppressMessages(return(s4))
-        if (param == "intercept" & graphs=="all")
-            suppressMessages(return(multiplot(i1,i3,i2,i4,cols=2)))
-        if (param == "intercept" & graphs==1)
+        if (param == "intercept" & graphs == "all")
+            suppressMessages(return(multiplot(i1, i3, i2, i4, cols = 2)))
+        if (param == "intercept" & graphs == 1)
             suppressMessages(return(i1))
-        if (param == "intercept" & graphs==2)
+        if (param == "intercept" & graphs == 2)
             suppressMessages(return(i2))
-        if (param == "intercept" & graphs==3)
+        if (param == "intercept" & graphs == 3)
             suppressMessages(return(i3))
-        if (param == "intercept" & graphs==4)
+        if (param == "intercept" & graphs == 4)
             suppressMessages(return(i4))
 
         ### Warnings
