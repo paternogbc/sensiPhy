@@ -14,7 +14,7 @@
 #' @section How to contribute?: 
 #' 
 #' You can find instructions to contribute with \bold{sensiPhy} at
-#' this link: add link!
+#' this link: \url{https://github.com/paternogbc/sensiPhy/wiki/How-to-support-sensiPhy}
 #' @docType package
 NULL
 

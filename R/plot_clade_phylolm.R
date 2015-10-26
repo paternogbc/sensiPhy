@@ -1,7 +1,7 @@
 #' Graphical diagnostics for class 'sensiClade'
 #'
-#' Plot results from \code{clade_phylolm} and \code{clade_phyloglm}
-#' @param x output from \code{clade_phylolm} or \code{clade_phyloglm}
+#' Plot results from \code{clade_phylm} and \code{clade_phyglm}
+#' @param x output from \code{clade_phylm} or \code{clade_phyglm}
 #' @param clade The name of the clade to be evaluated (see details)
 #' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
@@ -10,17 +10,17 @@
 #' guides
 #' 
 #' @author Gustavo Paterno
-#' @seealso \code{\link[sensiPhy]{clade_phylolm}} 
+#' @seealso \code{\link[sensiPhy]{clade_phylm}} 
 #' @details This function plots the original scaterplot \eqn{y = a + bx} (with the 
 #' full dataset), plus a comparison between the regression lines of the full model
 #' and the model without the selected clade (set by \code{clade}). For further
-#' details about this method, see \code{\link[sensiPhy]{clade_phylolm}}.
+#' details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 #' 
 #' Species from the selected clade are represented in red (removed species),
 #' solid line represents the regression with the full model and dashed line represent
 #' the regression of the model without the species from the selected clade.
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
-#' in the objected returned from \code{clade_phylolm} or \code{clade_phyloglm}. 
+#' in the objected returned from \code{clade_phylm} or \code{clade_phyglm}. 
 #' @importFrom ggplot2 aes_string
 #' @export
 

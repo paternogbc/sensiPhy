@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>intra_phylolm. sensiPhy 0.2.0</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+Caterina Penone &amp; Pablo Ariel Martinez
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">sensiPhy 0.2.0</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Intraspecific variability - Phylogenetic Linear Regression</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>intra_phylolm(formula, data, phy, vari.resp&nbsp;=&nbsp;NULL, vari.pred&nbsp;=&nbsp;NULL, minmax&nbsp;=&nbsp;FALSE, nintra&nbsp;=&nbsp;2, distrib&nbsp;=&nbsp;"uniform", model&nbsp;=&nbsp;"lambda", track&nbsp;=&nbsp;TRUE, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>formula</dt>
+      <dd>The model formula: <code>response~predictor</code>.
+If <code>minmax</code>=TRUE the formula should point to the columns containing the minimum values of the response
+and/or predictor variables i.e. <code>min.response~min.predictor</code>.</dd>
+      <dt>data</dt>
+      <dd>Data frame containing species traits with species as row names.</dd>
+      <dt>phy</dt>
+      <dd>A phylogeny (class 'phylo', see ?<code>ape</code>).</dd>
+      <dt>vari.resp</dt>
+      <dd>Name of the column containing the standard error, the standard deviation of the response
+variable or its maximum value (if <code>minmax</code>=TRUE).
+When information is not available for one taxon, the value can be 0 or <code>NA</code>.</dd>
+      <dt>vari.pred</dt>
+      <dd>Name of the column containing the standard error, the standard deviation  of the predictor
+variable or its maximum value (if <code>minmax</code>=TRUE).
+When information is not available for one taxon, the value can be 0 or <code>NA</code></dd>
+      <dt>minmax</dt>
+      <dd>logical; if TRUE, generates a value in the interval [min,max]. If TRUE, please select columns containing minimum
+values in the formula and columns containig maximum values in <code>vari.resp</code> and/or <code>vari.pred</code> (default = FALSE).</dd>
+      <dt>nintra</dt>
+      <dd>Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+If NULL, <code>nintra</code> = 2</dd>
+      <dt>distrib</dt>
+      <dd>A character string indicating which distribution to use to generate a random value for the response
+and/or predictor variables.Default is uniform distribution: "uniform" (<code><a href='http://www.inside-r.org/r-doc/stats/Uniform'>runif</a></code>)
+normal distribution is "normal" (function <code><a href='http://www.inside-r.org/r-doc/stats/Normal'>rnorm</a></code>).
+Warning: normal distribution can be used oly if vari.pred is the standard
+deviation of the mean. If minmax=T, only "uniform" distribution is available.</dd>
+      <dt>model</dt>
+      <dd>The phylogenetic model to use (see Details). Default is <code>lambda</code>.</dd>
+      <dt>track</dt>
+      <dd>Print a report tracking function progress (default = TRUE)</dd>
+      <dt>...</dt>
+      <dd>Further arguments to be passed to <code>phylolm</code></dd>
+    </dl>
+    
+    <div class="Value">
+      <h2>Value</h2>
+
+      <p><dl>
+The function <code>intra_phylolm</code> returns a list with the following
+components:</p>
+  
+      <p><code>formula</code>: The formula</p>
+  
+      <p><code>data</code>: Original full dataset</p>
+  
+      <p><code>model_results</code>: Coefficients, aic and the optimised
+value of the phylogenetic parameter (e.g. <code>lambda</code>) for each regression with a
+different phylogenetic tree.</p>
+  
+      <p><code>N.obs</code>: Size of the dataset after matching it with tree tips and removing NA's.</p>
+  
+      <p><code>stats</code>: Statistics for model parameters. <code>sd_tree</code> is the standard deviation
+due to phylogenetic uncertainty.
+</dl></p>
+  
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+
+      <p>Performs Phylogenetic linear regression evaluating
+intraspecific variability.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+
+      <p>This function fits a phylogenetic linear regression model using <code><a href='http://www.inside-r.org/packages/cran/phylolm/docs/phylolm'>phylolm</a></code>.
+The regression is repeated <code>nintra</code> times. At each iteration the functions generates for each row in the dataset
+a random value in the interval [<code>predictor</code>-<code>vari.pred</code>,<code>predictor</code>+<code>vari.pred</code>] and
+a random value in the interval [<code>response</code>-<code>vari.resp</code>,<code>response</code>+<code>vari.resp</code>].
+If <code>minmax</code>=TRUE the value is randomly generated in the interval [min,max].
+If you log-transform your predictor and/or response variables, make sure that
+vari.pred and/or vari.resp are in a log-scale too.</p>
+  
+      <p>All phylogenetic models from <code>phylolm</code> can be used, i.e. <code>BM</code>,
+<code>OUfixedRoot</code>, <code>OUrandomRoot</code>, <code>lambda</code>, <code>kappa</code>,
+<code>delta</code>, <code>EB</code> and <code>trend</code>. See ?<code>phylolm</code> for details.</p>
+  
+      <p>Currently, this function can only implement simple linear models (i.e. $trait~
+predictor$). In the future we will implement more complex models.</p>
+  
+      <p>Output can be visualised using <code>sensi_plot</code>.</p>
+  
+    </div>
+
+    <div class="References">
+      <h2>References</h2>
+
+      <p>Here still: reference to phylolm paper + our own?</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>intra_phylolm</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    <h2>See also</h2>
+    
+<code><a href='sensi_plot.html'>sensi_plot</a></code>
+
+    
+    <h2>Author</h2>
+    
+Caterina Penone & Pablo Ariel Martinez
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

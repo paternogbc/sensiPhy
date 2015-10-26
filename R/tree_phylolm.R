@@ -25,7 +25,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{tree_phylolm} returns a list with the following
+#' @return The function \code{tree_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
@@ -56,7 +56,6 @@
 
 tree_phylm <- function(formula,data,phy,
                          times=2,model="lambda",track=TRUE,...){
-  
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")

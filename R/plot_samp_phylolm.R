@@ -1,17 +1,17 @@
 #' Graphical diagnostics for class 'sensiSamp'
 #'
-#' \code{plot_samp_phylolm} Plot results from \code{samp_phylolm} and
+#' \code{plot_samp_phylm} Plot results from \code{samp_phylm} and
 #' \code{influ_phyloglm}
-#' @param x output from \code{samp_phylolm}
+#' @param x output from \code{samp_phylm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which model parameter should be ploted  ("intercept" or "slope")
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
 #' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
 #' @author Gustavo Paterno
-#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylolm}}
-#' \code{\link[sensiPhy]{samp_phyloglm}}
-#' @details For 'x' from samp_phylolm or samp_phyloglm:
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylm}}
+#' \code{\link[sensiPhy]{samp_phyglm}}
+#' @details For 'x' from samp_phylm or samp_phyglm:
 #' 
 #' Graph 1: Estimated slopes or intercepts for each simution across  
 #' percentage of species removed. Colours represent percentage 

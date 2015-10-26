@@ -7,7 +7,7 @@
 \method{sensi_plot}{sensiInflu}(x, graphs = "all", param = "slope", ...)
 }
 \arguments{
-\item{x}{output from \code{influ_phylolm}}
+\item{x}{output from \code{influ_phylm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
@@ -16,11 +16,11 @@
 \item{...}{further arguments to methods}
 }
 \description{
-\code{plot_influ_phylolm} Plot results from \code{influ_phylolm} and
-\code{influ_phyloglm}
+\code{plot_influ_phylm} Plot results from \code{influ_phylm} and
+\code{influ_phyglm}
 }
 \details{
-For 'x' from influ_phylolm or influ_phyloglm:
+For 'x' from influ_phylm or influ_phyglm:
 
 Graph 1: Distribution of estimated slopes or intercepts for each
 simulation (leave-one-out deletion). Red vertical line represents the original
@@ -58,8 +58,8 @@ bin_trait <-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
 dat<-data.frame(pred,cont_trait,bin_trait)
 
 #Determine influential species for both regressions.
-fit1<-influ_phylolm(cont_trait~pred,data = dat,phy = tree)
-fit2<-influ_phyloglm(bin_trait~pred,data = dat,phy = tree)
+fit1<-influ_phylm(cont_trait~pred,data = dat,phy = tree)
+fit2<-influ_phyglm(bin_trait~pred,data = dat,phy = tree)
 
 # Plot results:
 sensi_plot(fit1)

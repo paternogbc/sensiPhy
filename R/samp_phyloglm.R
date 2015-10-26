@@ -29,7 +29,7 @@
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#' @return The function \code{samp_phylolm} returns a list with the following
+#' @return The function \code{samp_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -75,22 +75,22 @@
 #' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
 #'
 #' #For both regressions, determine sensitivity of results to species sampled.
-#' fit1<-samp_phyloglm(bin_trait1~pred,data = dat,phy = tree)
-#' fit2<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree)
+#' fit1<-samp_phyglm(bin_trait1~pred,data = dat,phy = tree)
+#' fit2<-samp_phyglm(bin_trait2~pred,data = dat,phy = tree)
 #'
 #' #It is possible to change the species removal percentages and number of repeats
-#' fit3<-samp_phyloglm(bin_trait2~pred,data = dat,phy = tree,
+#' fit3<-samp_phyglm(bin_trait2~pred,data = dat,phy = tree,
 #'      breaks = c(0.25,0.5,0.75),times=100)
 #' }
 #'
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylolm}},
-#' \code{\link{influ_phyloglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
+#' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own + some more
 #' background papers.
 #' @export
 
-samp_phyloglm <- function(formula, data, phy, times = 20,
+samp_phyglm <- function(formula, data, phy, times = 20,
                          breaks=seq(.1, .7, .1), btol = 50, track = TRUE, ...)
 {
     

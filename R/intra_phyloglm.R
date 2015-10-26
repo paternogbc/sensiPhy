@@ -33,7 +33,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{intra_phyloglm} returns a list with the following
+#' @return The function \code{intra_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
@@ -56,7 +56,6 @@
 intra_phyloglm <- function(formula,data,phy,
                           Vx=NULL,times=2,
                           distrib="uniform",btol=50,track=TRUE,...){
-  
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")

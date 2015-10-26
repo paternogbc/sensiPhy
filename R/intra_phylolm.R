@@ -69,7 +69,6 @@ intra_phylm <- function(formula,data,phy,
                         Vy=NULL,Vx=NULL,
                         times=2,distrib="normal",
                         model="lambda",track=TRUE,...){
-  
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")

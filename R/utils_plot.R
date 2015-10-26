@@ -1,3 +1,4 @@
+
 ### decide which plot should be printed (for plot_samp):
 which_plot <- function(param = "slope", graphs = "all",
                        s1 = s1, s2 = s2, opt = opt, s4 = s4,
@@ -39,25 +40,25 @@ if (model == "BM" | model == "trend" & param == "intercept" & graphs == 4)
 
 ### if model != "BM" | SLOPE: ----------------------------------------------
 if (param == "slope" & graphs=="all")
-    suppressMessages(return(multiplot(s1,opt, s2,s4,cols=2)))
+    suppressMessages(return(multiplot(s1,s4, s2,opt, cols=2)))
 if (param == "slope" & graphs==1)
     suppressMessages(return(s1))
 if (param == "slope" & graphs==2)
     suppressMessages(return(s2))
 if (param == "slope" & graphs==3)
-    suppressMessages(return(opt))
-if (param == "slope" & graphs==4)
     suppressMessages(return(s4))
+if (param == "slope" & graphs==4)
+    suppressMessages(return(opt))
 if (param == "intercept" & graphs=="all")
-    suppressMessages(return(multiplot(i1,opt,i2,i4,cols=2)))
+    suppressMessages(return(multiplot(i1,i4,i2,opt,cols=2)))
 if (param == "intercept" & graphs==1)
     suppressMessages(return(i1))
 if (param == "intercept" & graphs==2)
     suppressMessages(return(i2))
 if (param == "intercept" & graphs==3)
-    suppressMessages(return(opt))
-if (param == "intercept" & graphs==4)
     suppressMessages(return(i4))
+if (param == "intercept" & graphs==4)
+    suppressMessages(return(opt))
 }
 
 ### Function to plot multiple ggplo2 graphs:------------------------------------

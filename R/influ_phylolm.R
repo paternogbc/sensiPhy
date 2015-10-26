@@ -21,7 +21,7 @@
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' \code{influ_phylolm} detects influential species based on the standardised
+#' \code{influ_phylm} detects influential species based on the standardised
 #' difference in intercept and/or slope when removing a given species compared
 #' to the full model including all species. Species with a standardised difference
 #' above the value of \code{cutoff} are identified as influential. The default
@@ -32,7 +32,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{influ_phylolm} returns a list with the following
+#' @return The function \code{influ_phylm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
@@ -66,7 +66,7 @@
 #' phy <- alien$phy[[1]]
 #' 
 #' # Run sensitivity analysis (influential species)
-#' out <- influ_phylolm( log10(Mass) ~ log10(range), data = trait, phy = phy) 
+#' out <- influ_phylm( log10(Mass) ~ log10(range), data = trait, phy = phy) 
 #'                      
 #' # Check most influential species for slope and intercept:
 #' summary(out)
@@ -75,12 +75,12 @@
 #' sensi_plot(out)
 
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylolm}},
-#' \code{\link{influ_phyloglm}},\code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
+#' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-influ_phylolm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){
+influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")
         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
