@@ -54,8 +54,8 @@
 #' phy <- alien$phy[[1]]
 #' 
 #' # Running 50 models generating random predictor values with a normal distribution  
-#' mods<-intra_phylm(formula=Mass~gesta,trait,phy,Vx="SD_gesta",times=50)
-#' summary(out)
+#' mods<-intra_phylm(Mass~gesta,trait,phy,Vx="SD_gesta",times=50)
+#' summary(mods)
 #' sensi_plot(mods)
 #' }
 #' 

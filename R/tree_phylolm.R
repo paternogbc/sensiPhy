@@ -6,9 +6,9 @@
 #' @param formula The model formula
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param ntree Number of times to repeat the analysis with n different trees picked 
+#' @param times Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{ntree} = 2
+#' If NULL, \code{times} = 2
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -35,15 +35,27 @@
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty.
+#' @examples
+#' \dontrun{
+#' library(sensiPhy)
 #' 
-#' #which example should we put here?
+#' # Loading data and phylogeny:
+#' data(alien)
+#' trait <- log10(alien$data[,-1]+1)
+#' phy <- alien$phy
+#' 
+#' #Running 50 models using 50 trees picked at random in the multiPhylo file  
+#' mods<-tree_phylolm(Mass~gesta,trait,phy,times=50)
+#' summary(mods)
+#' sensi_plot(mods)
+#' }
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
-tree_phylolm <- function(formula,data,phy,
-                         ntree=2,model="lambda",track=TRUE,...){
+tree_phylm <- function(formula,data,phy,
+                         times=2,model="lambda",track=TRUE,...){
   
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
@@ -56,13 +68,14 @@ tree_phylolm <- function(formula,data,phy,
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
 
-  # If the class of tree is multiphylo pick n=ntree random trees
-  trees<-sample(length(phy),ntree,replace=F)
+  # If the class of tree is multiphylo pick n=times random trees
+  trees<-sample(length(phy),times,replace=F)
 
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                          "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                         "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
+                         "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
+                         "aic"=numeric(),"optpar"=numeric())
 
   #Model calculation
   counter=1
@@ -91,6 +104,8 @@ tree_phylolm <- function(formula,data,phy,
         aic.mod              <- mod$aic
         n                    <- mod$n
         d                    <- mod$d
+        ICs                  <- stats::confint(mod,2)
+        
         if (model == "BM"){
           optpar <- NA
         }
@@ -102,7 +117,7 @@ tree_phylolm <- function(formula,data,phy,
         
         #write in a table
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
-                                 slope, se.slope, pval.slope, aic.mod, optpar,
+                                 slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
                                  stringsAsFactors = F)
         tree.model.estimates[counter, ]  <- estim.simu
         counter=counter+1
