@@ -18,9 +18,9 @@ in \code{phy}.}
 The function \code{match_dataphy} returns a list with the following
 components:
 
-\code{data}: Croped dataset matching phylogeny
+\code{data}: Cropped dataset matching phylogeny
 
-\code{phy}: Croped phylogeny matching data
+\code{phy}: Cropped phylogeny matching data
 }
 \description{
 Combine phylogeny and data to ensure that tips in phylogeny match data and that variables
@@ -39,14 +39,14 @@ with missing values are removed. This function uses variables provided in the
 }
 \details{
 This function uses all variables provided in the `formula` to match
-data and phylogeny. To avoid croping the full dataset, `match_dataphy` searches
+data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 for NA values only on variables provided by formula. Missing values on
 other variables, not included in `formula`, wont be removed from data.
 
 This ensures consistance between data and phylogeny only for the variables
 that are being used in the model (set by `formula`).
 
-If phy is a 'multiphylo' object, all phylogenies will be croped
+If phy is a 'multiphylo' object, all phylogenies will be cropped
 to match data. The returned phyogeny will be a 'multiphylo' object.
 }
 \note{
@@ -56,6 +56,12 @@ details. Further, the final number of species that match data and phy will
 always be informed by a message.
 }
 \author{
-Caterina Penoni
+Caterina Penone
+}
+\references{
+This function is largely inspired by the function \code{comparative.data} in caper package
+David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac and Will Pearse
+(2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
+http://CRAN.R-project.org/package=caper
 }
 

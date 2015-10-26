@@ -18,14 +18,26 @@
 data(alien)
 }
 \description{
-A comarative dataset containing traits for 94 alien mammal species
+A comparative dataset containing traits for 94 alien mammal species
 (alien.data) and a multiphylo object with 101 phylogenies matching the
 data (alien.phy). Tip labels are the binomial species names and match
 with data rownames. Data was taken from (REFERENCE) and phylogenies from
 (REFERENCE).
 }
 \references{
-INCLUDE DATA and PHY citation here!
+Alien mammal data: González-Suárez, Manuela, Sven Bacher, and Jonathan M. Jeschke.
+"Intraspecific trait variation is correlated with establishment success of alien mammals."
+The American Naturalist 185.6 (2015): 737-746  DOI: 10.1086/681105
+
+Downloaded from: González-Suárez M, Bacher S, Jeschke J (2015) Data from: Intraspecific trait
+variation is correlated with establishment success of alien mammals.
+Dryad Digital Repository. http://dx.doi.org/10.5061/dryad.sp963
+
+Phylogeny: Kuhn, Tyler S., Arne Ø. Mooers, and Gavin H. Thomas. "A simple polytomy resolver for
+dated phylogenies." Methods in Ecology and Evolution 2.5 (2011): 427-436.
+
+Fritz, Susanne A., Olaf RP Bininda-Emonds, and Andy Purvis. "Geographical variation in predictors
+of mammalian extinction risk: big is bad, but only in the tropics." Ecology letters 12.6 (2009): 538-549.
 }
 \keyword{datasets}
 

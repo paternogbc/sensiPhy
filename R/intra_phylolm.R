@@ -22,8 +22,7 @@
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
 #' The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
-#' a random value in the interval [\code{predictor}-\code{Vx},\code{predictor}+\code{Vx}] and
-#' a random value in the interval [\code{response}-\code{Vy},\code{response}+\code{Vy}].
+#' a random value in the normal or uniform distribution. 
 #' Warning: if predictor and/or response variables are log-transformed, please make sure that 
 #' Vx and/or Vy are also in a log-scale.
 #'
@@ -45,8 +44,8 @@
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
 #' due to intraspecific variation.
-#' @example
-#' 
+#' @examples
+#' \dontrun{
 #' library(sensiPhy)
 #' 
 #' # Loading data and phylogeny:
@@ -58,6 +57,7 @@
 #' mods<-intra_phylm(formula=Mass~gesta,trait,phy,Vx="SD_gesta",times=50)
 #' summary(out)
 #' sensi_plot(mods)
+#' }
 #' 
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
@@ -78,8 +78,8 @@ intra_phylm <- function(formula,data,phy,
                                  is provided for Vx or Vy")
   else
     
-    #Matching tree and phylogeny using utils.R
-    datphy<-match_dataphy(formula,data,phy)
+  #Matching tree and phylogeny using utils.R
+  datphy<-match_dataphy(formula,data,phy)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
