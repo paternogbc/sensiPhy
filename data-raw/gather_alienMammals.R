@@ -10,12 +10,12 @@ names(alien.data)
 ### Filtering variables:
 alien.data <- dplyr::select(alien.data, 
                      family = Taxonomic_family,
-                     Mass = Mean_adult_body_mass_g,
+                     mass = Mean_adult_body_mass_g,
                      gesta = Mean_gestation_length_d,
-                     range = Mean_home_range_size_km2,
-                     SE_mass = SE_adult_body_mass_g,
-                     SE_gesta = SE_gestation_length_d,
-                     SE_range = SE_home_range_size_km2)
+                     georange = Mean_home_range_size_km2,
+                     SD_mass = SD_adult_body_mass_g,
+                     SD_gesta = SD_gestation_length_d,
+                     SD_range = SD_home_range_size_km2)
 alien <- list(data = alien.data,
               phy = alien.phy)
 devtools::use_data(alien, overwrite = T)

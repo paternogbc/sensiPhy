@@ -25,16 +25,16 @@ with data rownames. Data was taken from (Gonzalez-Surez et al. 2015) and phyloge
 (Fritz et al 2009).
 }
 \references{
-Alien mammal data: Gonzalez-Suarez, Manuela, Sven Bacher, and Jonathan M. Jeschke.
+
+Alien mammal data: Gonz?lez-Su?rez, Manuela, Sven Bacher, and Jonathan M. Jeschke.
 "Intraspecific trait variation is correlated with establishment success of alien mammals."
 The American Naturalist 185.6 (2015): 737-746  DOI: 10.1086/681105
 
-Downloaded from: Gonzalez-Surez M, Bacher S, Jeschke J (2015) Data from: Intraspecific trait
+Downloaded from: Gonz?lez-Su?rez M, Bacher S, Jeschke J (2015) Data from: Intraspecific trait
 variation is correlated with establishment success of alien mammals.
 Dryad Digital Repository. http://dx.doi.org/10.5061/dryad.sp963
 
-Phylogeny: Kuhn, Tyler S., Arne O. Mooers, and Gavin H. Thomas. "A simple polytomy resolver for
-dated phylogenies." Methods in Ecology and Evolution 2.5 (2011): 427-436.
+Phylogeny: Kuhn, Tyler S., Arne ?. Mooers, and Gavin H. Thomas. "A simple polytomy resolver for dated phylogenies." Methods in Ecology and Evolution 2.5 (2011): 427-436.
 
 Fritz, Susanne A., Olaf RP Bininda-Emonds, and Andy Purvis. "Geographical variation in predictors
 of mammalian extinction risk: big is bad, but only in the tropics." Ecology letters 12.6 (2009): 538-549.

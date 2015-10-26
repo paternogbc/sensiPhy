@@ -6,9 +6,9 @@
 #' @param formula The model formula
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param ntree Number of times to repeat the analysis with n different trees picked 
+#' @param times Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{ntree} = 2
+#' If NULL, \code{times} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
@@ -32,15 +32,18 @@
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty.
 #' 
-#' #which example should we put here?
+#' @examples
+#' \dontrun{
+#' library(sensiPhy)
+#' }
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
 #' @export
 
 tree_phyglm <- function(formula,data,phy,
-                         ntree=2,btol=50,track=TRUE,...){
-  
+                         times=2,btol=50,track=TRUE,...){
+
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
@@ -52,13 +55,14 @@ tree_phyglm <- function(formula,data,phy,
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
-  # If the class of tree is multiphylo pick n=ntree random trees
-  trees<-sample(length(phy),ntree,replace=F)
+  # If the class of tree is multiphylo pick n=times random trees
+  trees<-sample(length(phy),times,replace=F)
   
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                                    "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                                   "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
+                                   "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
+                                   "aic"=numeric(),"optpar"=numeric())
   
   #Model calculation
   counter=1
@@ -87,12 +91,13 @@ tree_phyglm <- function(formula,data,phy,
       n                    <- mod$n
       #d                   <- mod$d
       optpar               <- mod$alpha
+      ICs                  <- stats::confint(mod,2)
       
       if(track==TRUE) print(paste("tree: ",j,sep=""))
       
       #write in a table
       estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
                                stringsAsFactors = F)
       tree.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
