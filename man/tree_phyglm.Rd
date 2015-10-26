@@ -4,7 +4,7 @@
 \alias{tree_phyglm}
 \title{Phylogenetic uncertainty - Phylogenetic Logistic Regression}
 \usage{
-tree_phyglm(formula, data, phy, ntree = 2, btol = 50, track = TRUE, ...)
+tree_phyglm(formula, data, phy, times = 2, btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -13,9 +13,9 @@ tree_phyglm(formula, data, phy, ntree = 2, btol = 50, track = TRUE, ...)
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{ntree}{Number of times to repeat the analysis with n different trees picked
+\item{times}{Number of times to repeat the analysis with n different trees picked
 randomly in the multiPhylo file.
-If NULL, \code{ntree} = 2}
+If NULL, \code{times} = 2}
 
 \item{btol}{Bound on searching space. For details see \code{phyloglm}.}
 
@@ -39,8 +39,6 @@ different phylogenetic tree.
 
 \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
 due to phylogenetic uncertainty.
-
-#which example should we put here?
 }
 \description{
 Performs Phylogenetic logistic regression evaluating
@@ -54,6 +52,11 @@ Currently, this function can only implement simple logistic models (i.e. \eqn{tr
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\examples{
+\dontrun{
+library(sensiPhy)
+}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

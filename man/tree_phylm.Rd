@@ -4,7 +4,7 @@
 \alias{tree_phylm}
 \title{Phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_phylm(formula, data, phy, ntree = 2, model = "lambda", track = TRUE,
+tree_phylm(formula, data, phy, times = 2, model = "lambda", track = TRUE,
   ...)
 }
 \arguments{
@@ -14,9 +14,9 @@ tree_phylm(formula, data, phy, ntree = 2, model = "lambda", track = TRUE,
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{ntree}{Number of times to repeat the analysis with n different trees picked
+\item{times}{Number of times to repeat the analysis with n different trees picked
 randomly in the multiPhylo file.
-If NULL, \code{ntree} = 2}
+If NULL, \code{times} = 2}
 
 \item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 
@@ -40,8 +40,6 @@ different phylogenetic tree.
 
 \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
 due to phylogenetic uncertainty.
-
-#which example should we put here?
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -59,6 +57,21 @@ Currently, this function can only implement simple linear models (i.e. \eqn{trai
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\examples{
+\dontrun{
+library(sensiPhy)
+
+# Loading data and phylogeny:
+data(alien)
+trait <- log10(alien$data[,-1]+1)
+phy <- alien$phy
+
+#Running 50 models using 50 trees picked at random in the multiPhylo file
+mods<-tree_phylolm(mass~gesta,trait,phy,times=50)
+summary(mods)
+sensi_plot(mods)
+}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

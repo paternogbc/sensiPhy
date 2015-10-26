@@ -4,38 +4,29 @@
 \alias{intra_phylm}
 \title{Intraspecific variability - Phylogenetic Linear Regression}
 \usage{
-intra_phylm(formula, data, phy, vari.resp = NULL, vari.pred = NULL,
-  minmax = FALSE, nintra = 2, distrib = "uniform", model = "lambda",
-  track = TRUE, ...)
+intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL, times = 2,
+  distrib = "normal", model = "lambda", track = TRUE, ...)
 }
 \arguments{
-\item{formula}{The model formula: \code{response~predictor}.
-If \code{minmax}=TRUE the formula should point to the columns containing the minimum values of the response
-and/or predictor variables i.e. \code{min.response~min.predictor}.}
+\item{formula}{The model formula: \code{response~predictor}.}
 
-\item{data}{Data frame containing species traits with species as row names.}
+\item{data}{Data frame containing species traits and species names as row names.}
 
 \item{phy}{A phylogeny (class 'phylo', see ?\code{ape}).}
 
-\item{vari.resp}{Name of the column containing the standard error, the standard deviation of the response
-variable or its maximum value (if \code{minmax}=TRUE).
-When information is not available for one taxon, the value can be 0 or \code{NA}.}
+\item{Vy}{Name of the column containing the standard deviation or the standard error of the response
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
 
-\item{vari.pred}{Name of the column containing the standard error, the standard deviation  of the predictor
-variable or its maximum value (if \code{minmax}=TRUE).
-When information is not available for one taxon, the value can be 0 or \code{NA}}
+\item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
-\item{minmax}{logical; if TRUE, generates a value in the interval [min,max]. If TRUE, please select columns containing minimum
-values in the formula and columns containig maximum values in \code{vari.resp} and/or \code{vari.pred} (default = FALSE).}
-
-\item{nintra}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-If NULL, \code{nintra} = 2}
+\item{times}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+If NULL, \code{times} = 2}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the response
-and/or predictor variables.Default is uniform distribution: "uniform" (\code{\link{runif}})
-normal distribution is "normal" (function \code{\link{rnorm}}).
-Warning: normal distribution can be used oly if vari.pred is the standard
-deviation of the mean. If minmax=T, only "uniform" distribution is available.}
+and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
+Uniform distribution: "uniform" (\code{\link{runif}})
+Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.}
 
 \item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 
@@ -52,13 +43,12 @@ components:
 \code{data}: Original full dataset
 
 \code{model_results}: Coefficients, aic and the optimised
-value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a
-different phylogenetic tree.
+value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
-\code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
-due to phylogenetic uncertainty.
+\code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation
+due to intraspecific variation.
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -66,12 +56,10 @@ intraspecific variability.
 }
 \details{
 This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-The regression is repeated \code{nintra} times. At each iteration the functions generates for each row in the dataset
-a random value in the interval [\code{predictor}-\code{vari.pred},\code{predictor}+\code{vari.pred}] and
-a random value in the interval [\code{response}-\code{vari.resp},\code{response}+\code{vari.resp}].
-If \code{minmax}=TRUE the value is randomly generated in the interval [min,max].
-If you log-transform your predictor and/or response variables, make sure that
-vari.pred and/or vari.resp are in a log-scale too.
+The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
+a random value in the normal or uniform distribution.
+Warning: if predictor and/or response variables are log-transformed, please make sure that
+Vx and/or Vy are also in a log-scale.
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -81,6 +69,21 @@ Currently, this function can only implement simple linear models (i.e. \eqn{trai
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\examples{
+\dontrun{
+library(sensiPhy)
+
+# Loading data and phylogeny:
+data(alien)
+trait <- log10(alien$data[,-1]+1)
+phy <- alien$phy[[1]]
+
+# Running 50 models generating random predictor values with a normal distribution
+mods<-intra_phylm(mass~gesta,trait,phy,Vx="SD_gesta",times=50)
+summary(mods)
+sensi_plot(mods)
+}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez
