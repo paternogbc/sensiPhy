@@ -41,12 +41,11 @@
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
 #' @return \code{model_results}: Coefficients, aic and the optimised
-#' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
-#' different phylogenetic tree.
+#' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
-#' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
-#' due to phylogenetic uncertainty.
-#' @examples
+#' @return \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
+#' due to intraspecific variation.
+#' @example
 #' 
 #' library(sensiPhy)
 #' 
@@ -102,7 +101,8 @@ intra_phylm <- function(formula,data,phy,
   #Create the results data.frame
   intra.model.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                                     "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                                    "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
+                                    "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
+                                    "aic"=numeric(),"optpar"=numeric())
   
   
   #Model calculation
@@ -148,6 +148,8 @@ intra_phylm <- function(formula,data,phy,
       aic.mod              <- mod$aic
       n                    <- mod$n
       #d                    <- mod$d
+      ICs                  <- stats::confint(mod,2)
+
       
       if (model == "BM"){
         optpar <- NA
@@ -160,7 +162,7 @@ intra_phylm <- function(formula,data,phy,
       
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
                                stringsAsFactors = F)
       intra.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
