@@ -22,6 +22,8 @@
 #' components:
 #' @return \code{data}: Cropped dataset matching phylogeny
 #' @return \code{phy}: Cropped phylogeny matching data
+#' @return \code{dropped}: Species dropped from phylogeny and removed from data.
+#' 
 #' @details This function uses all variables provided in the `formula` to match
 #' data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 #' for NA values only on variables provided by formula. Missing values on 
@@ -68,7 +70,7 @@ match_dataphy <- function(formula, data, phy){
     
     mismatch <- union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
     if (length(mismatch) != 0)   warning("Some phylogeny tips do not match species in data,",
-                                         "species were dropped from phylogeny",
+                                         " species were dropped from phylogeny",
                                          " or data")
     
     #Drop species from tree
@@ -89,5 +91,5 @@ match_dataphy <- function(formula, data, phy){
     data.out <- data.0[rownames(data),]
     
     message(paste("Used dataset has ",nrow(data.out)," species that match data and phylogeny"))
-    return(list(data = data.out, phy = phy))
+    return(list(data = data.out, phy = phy, dropped = mismatch))
 }
