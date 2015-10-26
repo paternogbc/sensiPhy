@@ -45,7 +45,7 @@
 #' phy <- alien$phy
 #' 
 #' #Running 50 models using 50 trees picked at random in the multiPhylo file  
-#' mods<-tree_phylolm(Mass~gesta,trait,phy,times=50)
+#' mods<-tree_phylolm(mass~gesta,trait,phy,times=50)
 #' summary(mods)
 #' sensi_plot(mods)
 #' }
