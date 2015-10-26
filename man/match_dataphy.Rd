@@ -21,6 +21,8 @@ components:
 \code{data}: Cropped dataset matching phylogeny
 
 \code{phy}: Cropped phylogeny matching data
+
+\code{dropped}: Species dropped from phylogeny and removed from data.
 }
 \description{
 Combine phylogeny and data to ensure that tips in phylogeny match data and that variables

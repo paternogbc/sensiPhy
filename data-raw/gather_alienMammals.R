@@ -18,5 +18,5 @@ alien.data <- dplyr::select(alien.data,
                      SD_range = SD_home_range_size_km2)
 alien <- list(data = alien.data,
               phy = alien.phy)
-devtools::use_data(alien, overwrite = T)
+devtools::use_data(alien, overwrite = TRUE)
 
