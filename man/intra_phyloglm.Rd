@@ -4,33 +4,26 @@
 \alias{intra_phyloglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyloglm(formula, data, phy, vari.pred = NULL, minmax = FALSE,
-  nintra = 2, distrib = "uniform", btol = 50, track = TRUE, ...)
+intra_phyloglm(formula, data, phy, Vx = NULL, times = 2,
+  distrib = "uniform", btol = 50, track = TRUE, ...)
 }
 \arguments{
-\item{formula}{The model formula: \code{response~predictor}.
-If \code{minmax}=TRUE the formula should point to the columns containing the minimum values of the
-predictor variables i.e. \code{response~min.predictor}.}
+\item{formula}{The model formula: \code{response~predictor}.}
 
 \item{data}{Data frame containing species traits with species as row names.}
 
 \item{phy}{A phylogeny (class 'phylo', see ?\code{ape}).}
 
-\item{vari.pred}{Name of the column containing the standard error, the standard deviation  of the predictor
-variable or its maximum value (if \code{minmax}=TRUE).
-When information is not available for one taxon, the value can be 0 or \code{NA}}
+\item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
-\item{minmax}{logical; if TRUE, generates a value in the interval [min,max]. If TRUE, please select columns containing minimum
-values in the formula and columns containig maximum values in \code{vari.pred} (default = FALSE).}
+\item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
+If NULL, \code{times} = 2}
 
-\item{nintra}{Number of times to repeat the analysis generating a random value for the predictor variable.
-If NULL, \code{nintra} = 2}
-
-\item{distrib}{A character string indicating which distribution to use to generate a random value for the
-predictor variable.Default is uniform distribution: "uniform" (\code{\link{runif}})
-normal distribution is "normal" (function \code{\link{rnorm}}).
-Warning: normal distribution can be used oly if vari.pred is the standard
-deviation of the mean. If minmax=T, only "uniform" distribution is available.}
+\item{distrib}{A character string indicating which distribution to use to generate a random value for the response
+and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
+Uniform distribution: "uniform" (\code{\link{runif}})
+Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.}
 
 \item{btol}{Bound on searching space. For details see \code{phyloglm}}
 
@@ -47,13 +40,13 @@ components:
 \code{data}: Original full dataset
 
 \code{model_results}: Coefficients, aic and the optimised
-value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a
-different phylogenetic tree.
+value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
-\code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
-due to phylogenetic uncertainty.
+\code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation
+due to intraspecific variation.
+#'
 }
 \description{
 Performs Phylogenetic logistic regression evaluating
@@ -61,11 +54,10 @@ intraspecific variability.
 }
 \details{
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
-The regression is repeated \code{nintra} times. At each iteration the functions generates for each row in the dataset
-a random value in the interval [\code{predictor}-\code{vari.pred},\code{predictor}+\code{vari.pred}].
-If \code{minmax}=TRUE the value is randomly generated in the interval [min,max].
-If you log-transform your predictor variable, make sure that
-vari.pred is in a log-scale too.
+The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
+a random value in the normal or uniform distribution.
+Warning: if predictor and/or response variables are log-transformed, please make sure that
+Vx and/or Vy are also in a log-scale.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -75,6 +67,11 @@ Currently, this function can only implement simple logistic models (i.e. \eqn{tr
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\examples{
+\dontrun{
+library(sensiPhy)
+}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez
