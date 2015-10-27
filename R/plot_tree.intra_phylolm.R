@@ -108,13 +108,13 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     
     ### Plotting:
     if (graphs=="all")
-      suppressMessages(print(multiplot(s1,s2.out,i1,cols=2)))
+      suppressMessages(return(multiplot(s1,s2.out,i1,cols=2)))
     if (graphs==1)
-      suppressMessages(print(s1))
+      suppressMessages(return(s1))
     if (graphs==2)
-      suppressMessages(print(i1))
+      suppressMessages(return(i1))
     if (graphs==3)
-      suppressMessages(print(s2.out))
+      suppressMessages(return(s2.out))
 
 }
 
@@ -143,5 +143,5 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 #' @importFrom grid unit 
 #' @export
 sensi_plot.sensiTree <- function(x, graphs = "all", ...){
-    sensi_plot.sensiIntra(x = x, graphs = graphs, ...)
+    sensi_plot.sensiIntra(x, graphs, ...)
 }
