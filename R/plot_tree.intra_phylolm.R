@@ -35,9 +35,9 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   sd <- formula <- slope <- ..density.. <- intercept <- NULL
   predictor <- response <-  s3 <- yy <- linety <- NULL
 
-    resp<-all.vars(x$formula)[1]
-    pred<-all.vars(x$formula)[2]
-    dat<-data.frame("response"=x$datas[,resp],"predictor"=x$datas[,pred])
+    mappx <- x$formula[[3]]
+    mappy <- x$formula[[2]]
+    full.data <- x$data[all.vars(x$formula)]
     result <- x$model_results
     statm<- x$stats
     slope.0 <-  as.numeric(statm[4,3])
@@ -45,7 +45,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     model_results<-x$model_results
     
     
-    xf <- dat[, 2]
+    xf <- full.data[, 2]
     yf <- plogis(intercept.0 + slope.0 * xf)
     yp <-plogis((intercept.0+statm[1,4]) + (slope.0 * xf + statm[4,4])) 
     ym <-plogis((intercept.0-statm[1,4]) + (slope.0 * xf - statm[4,4]))
@@ -77,7 +77,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                                               colour="black"))
  
     #third plot: data visualisation
-    s2 <- ggplot2::ggplot(dat,aes(x=predictor,y=response))+
+    s2 <- ggplot2::ggplot(full.data, aes_string(y = mappy, x = mappx),
+                          environment = parent.frame())+
       geom_point(size=3,alpha=.8)+
       theme(panel.background=element_rect(fill="white",colour="black"),
             panel.grid.major = element_blank(),
@@ -86,12 +87,13 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 
     if(length(class(x)) == 1){
       s2.out <- s2 +
-        geom_abline(intercept = intercept.0, slope=slope.0, aes(colour="mean"),size=1)+
-        geom_abline(intercept = intercept.0+statm[1,4], slope=slope.0+statm[4,4],
-                    aes(color="sd Tree Uncert"),linetype=2,size=1,show.legend = T)+
-        geom_abline(intercept = intercept.0-statm[1,4], slope=slope.0-statm[4,4],
-                    aes(color="sd Tree Uncert"),linetype=2,size=1,show.legend = T)+
-        scale_color_manual("",values = c("black","blue"),guide=F)
+        geom_abline(intercept = intercept.0, slope = slope.0)+
+        geom_abline(intercept = intercept.0 + statm[1,4], 
+                    slope = slope.0 + statm[4,4], colour = "red",
+                    linetype = 2, size = 1, show.legend = T)+
+        geom_abline(intercept = intercept.0 - statm[1,4],
+                    slope = slope.0 - statm[4,4], colour = "red",
+                    linetype = 2, size = 1, show.legend = T)
     }
     
     
@@ -141,5 +143,5 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 #' @importFrom grid unit 
 #' @export
 sensi_plot.sensiTree <- function(x, graphs = "all", ...){
-    sensi_plot.sensiIntra(x, graphs = "all", ...)
+    sensi_plot.sensiIntra(x = x, graphs = graphs, ...)
 }
