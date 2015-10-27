@@ -31,9 +31,9 @@
 
 sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   
-  # nulling variables
-  sd <- formula <- slope <- ..density.. <- intercept <- NULL
-  predictor <- response <-  s3 <- yy <- linety <- NULL
+    # nulling variables
+    formula <- slope <- ..density.. <- intercept <- NULL
+    s3 <- yy <- linety <- NULL
 
     mappx <- x$formula[[3]]
     mappy <- x$formula[[2]]
