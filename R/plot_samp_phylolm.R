@@ -121,7 +121,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         ### Estimated slopes across n.percent:
         s1 <- ggplot2::ggplot(result,aes(y=slope,x=n.percent,
                                          colour=slope.class),
-                              environment = environment())+
+                              environment = parent.frame())+
 
                 geom_point(size=4,position = "jitter",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
@@ -152,7 +152,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         ### Estimated intercept across n.percent
         i1<- ggplot2::ggplot(result,aes(y=intercept,x=n.percent,
                                    colour=intercept.class),
-                        environment = environment())+
+                             environment = parent.frame())+
 
                 geom_point(size=4,position = "jitter",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
@@ -195,7 +195,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         s2 <- ggplot2::ggplot(slope.perc,
                      aes(y=slope,x=n.percent,
                          fill=factor(slope.class)),
-                     environment = environment())+
+                     environment = parent.frame())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=colS,name="Change in beta")+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
@@ -217,7 +217,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         i2 <- ggplot2::ggplot(intercept.perc,
                      aes(y=intercept,x=n.percent,
                          fill=factor(intercept.class)),
-                     environment = environment())+
+                     environment = parent.frame())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=colI,name="Change in beta")+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
@@ -251,7 +251,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
         s4 <-ggplot2::ggplot(sig.tab,
                              aes(y=perc.sign.slope*100,x=percent_sp_removed),
-                             environment = environment())+
+                             environment = parent.frame())+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 xlab("% Species removed")+
@@ -265,7 +265,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
         i4 <-ggplot2::ggplot(sig.tab,
                              aes(y=perc.sign.intercept*100,x=percent_sp_removed),
-                             environment = environment())+
+                             environment = parent.frame())+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 xlab("% Species removed")+

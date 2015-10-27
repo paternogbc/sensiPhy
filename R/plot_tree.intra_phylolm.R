@@ -55,7 +55,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                             linety = rep(c("Mean","SD1","SD2"),each = length(yf)))
 
     #Distribution of estimated slopes:
-    s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),environment=environment())+
+    s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),
+                          environment = parent.frame())+
       geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
       geom_density(size=.2) +
       geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
@@ -66,7 +67,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                                               colour="black"))
 
     #Distribution of estimated intercepts:
-    i1 <- ggplot2::ggplot(model_results,aes(x=intercept,y=..density..),environment=environment())+
+    i1 <- ggplot2::ggplot(model_results,aes(x=intercept,y=..density..),
+                          environment = parent.frame())+
       geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
       geom_density(size=.2) +
       geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
