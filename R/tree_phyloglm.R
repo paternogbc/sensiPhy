@@ -116,7 +116,7 @@ tree_phyglm <- function(formula,data,phy,
   
   
   res <- list(formula=formula,
-              datas=full.data,
+              data=full.data,
               model_results=tree.model.estimates,N.obs=n,
               stats=statresults)
   class(res) <- c("sensiTree","sensiTreeL")
