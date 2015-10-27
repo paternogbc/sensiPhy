@@ -31,7 +31,6 @@
 
 sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   
-  
   # nulling variables
   sd <- formula <- slope <- ..density.. <- intercept <- NULL
   predictor <- response <-  s3 <- yy <- linety <- NULL
@@ -57,17 +56,25 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
 
     #Distribution of estimated slopes:
     s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),environment=environment())+
-      geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
+      geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
       geom_density(size=.2) +
       geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
-      xlab("Estimated Slopes")
+      xlab("Estimated Slopes")+
+        theme(axis.title=element_text(size=16),
+              axis.text = element_text(size=14),
+              panel.background = element_rect(fill="white",
+                                              colour="black"))
 
     #Distribution of estimated intercepts:
     i1 <- ggplot2::ggplot(model_results,aes(x=intercept,y=..density..),environment=environment())+
-      geom_histogram(fill="lightyellow", alpha=.9,colour="grey60", size=.2) +
+      geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
       geom_density(size=.2) +
       geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
-      xlab("Estimated Intercepts")
+      xlab("Estimated Intercepts")+
+        theme(axis.title=element_text(size=16),
+              axis.text = element_text(size=14),
+              panel.background = element_rect(fill="white",
+                                              colour="black"))
  
     #third plot: data visualisation
     s2 <- ggplot2::ggplot(dat,aes(x=predictor,y=response))+
