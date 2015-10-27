@@ -34,7 +34,8 @@
 #' different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
-#' due to phylogenetic uncertainty.
+#' due to phylogenetic uncertainty. \code{CI_low} and \code{CI_high} are the lower and upper limits 
+#' of the 95% confidence interval.
 #' @examples
 #' \dontrun{
 #' library(sensiPhy)
@@ -45,7 +46,7 @@
 #' phy <- alien$phy
 #' 
 #' #Running 50 models using 50 trees picked at random in the multiPhylo file  
-#' mods<-tree_phylolm(mass~gesta,trait,phy,times=50)
+#' mods<-tree_phylm(mass~gesta,trait,phy,times=50)
 #' summary(mods)
 #' sensi_plot(mods)
 #' }
@@ -73,8 +74,7 @@ tree_phylm <- function(formula,data,phy,
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                          "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                         "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
-                         "aic"=numeric(),"optpar"=numeric())
+                         "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
 
   #Model calculation
   counter=1
@@ -103,8 +103,7 @@ tree_phylm <- function(formula,data,phy,
         aic.mod              <- mod$aic
         n                    <- mod$n
         d                    <- mod$d
-        ICs                  <- stats::confint(mod,2)
-        
+
         if (model == "BM"){
           optpar <- NA
         }
@@ -116,7 +115,7 @@ tree_phylm <- function(formula,data,phy,
         
         #write in a table
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
-                                 slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
+                                 slope, se.slope, pval.slope, aic.mod, optpar,
                                  stringsAsFactors = F)
         tree.model.estimates[counter, ]  <- estim.simu
         counter=counter+1
@@ -133,6 +132,8 @@ tree_phylm <- function(formula,data,phy,
                           mean=apply(tree.model.estimates,2,mean),
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
+  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
+  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
   
   res <- list(formula=formula,
               data=full.data,

@@ -90,12 +90,12 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     if(length(class(x)) == 1){
       s2.out <- s2 +
         geom_abline(intercept = intercept.0, slope = slope.0)+
-        geom_abline(intercept = intercept.0 + statm[1,4], 
-                    slope = slope.0 + statm[4,4], colour = "red",
-                    linetype = 2, size = 1, show.legend = T)+
-        geom_abline(intercept = intercept.0 - statm[1,4],
-                    slope = slope.0 - statm[4,4], colour = "red",
-                    linetype = 2, size = 1, show.legend = T)
+        geom_abline(intercept = statm[1,5], 
+                    slope     = statm[4,5], colour = "red",
+                    linetype  = 2, size = 1, show.legend = T)+
+        geom_abline(intercept = statm[1,6],
+                    slope     = statm[4,6], colour = "red",
+                    linetype  = 2, size = 1, show.legend = T)
     }
     
     

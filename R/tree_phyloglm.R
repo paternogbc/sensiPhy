@@ -30,8 +30,8 @@
 #' different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
-#' due to phylogenetic uncertainty.
-#' 
+#' due to phylogenetic uncertainty.\code{CI_low} and \code{CI_high} are the lower and upper limits 
+#' of the 95% confidence interval.
 #' @examples
 #' \dontrun{
 #' library(sensiPhy)
@@ -61,8 +61,7 @@ tree_phyglm <- function(formula,data,phy,
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                                    "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                                   "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
-                                   "aic"=numeric(),"optpar"=numeric())
+                                   "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
   
   #Model calculation
   counter=1
@@ -91,13 +90,12 @@ tree_phyglm <- function(formula,data,phy,
       n                    <- mod$n
       #d                   <- mod$d
       optpar               <- mod$alpha
-      ICs                  <- stats::confint(mod,2)
-      
+
       if(track==TRUE) print(paste("tree: ",j,sep=""))
       
       #write in a table
       estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
+                               slope, se.slope, pval.slope, aic.mod, optpar,
                                stringsAsFactors = F)
       tree.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
@@ -114,6 +112,8 @@ tree_phyglm <- function(formula,data,phy,
                           mean=apply(tree.model.estimates,2,mean),
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
+  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
+  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
   
   res <- list(formula=formula,
               data=full.data,

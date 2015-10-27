@@ -41,8 +41,9 @@
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
-#' due to intraspecific variation.
-#' #' @examples
+#' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
+#' of the 95% confidence interval.
+#' @examples
 #' \dontrun{
 #' library(sensiPhy)
 #' }
@@ -86,8 +87,7 @@ intra_phyloglm <- function(formula,data,phy,
   #Create the results data.frame
   intra.model.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                                     "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                                    "pval.slope"=numeric(),"IC.slope025"=numeric(),"IC.slope975"=numeric(),
-                                    "aic"=numeric(),"optpar"=numeric())
+                                    "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
   
 
   #Model calculation
@@ -131,14 +131,13 @@ intra_phyloglm <- function(formula,data,phy,
       n                    <- mod$n
       #d                   <- mod$d
       optpar               <- mod$alpha
-      ICs                  <- stats::confint(mod,2)
 
       
       if(track==TRUE) print(paste("intra: ",i,sep=""))
       
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, ICs[1], ICs[2], aic.mod, optpar,
+                               slope, se.slope, pval.slope, aic.mod, optpar,
                                stringsAsFactors = F)
       intra.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
@@ -156,6 +155,8 @@ intra_phyloglm <- function(formula,data,phy,
                           mean=apply(intra.model.estimates,2,mean),
                           sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
+  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   res <- list(formula=formula,
               datas=full.data,
