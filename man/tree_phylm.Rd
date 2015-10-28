@@ -39,7 +39,8 @@ different phylogenetic tree.
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
 \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
-due to phylogenetic uncertainty.
+due to phylogenetic uncertainty. \code{CI_low} and \code{CI_high} are the lower and upper limits
+of the 95% confidence interval.
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -68,7 +69,7 @@ trait <- log10(alien$data[,-1]+1)
 phy <- alien$phy
 
 #Running 50 models using 50 trees picked at random in the multiPhylo file
-mods<-tree_phylolm(mass~gesta,trait,phy,times=50)
+mods<-tree_phylm(mass~gesta,trait,phy,times=50)
 summary(mods)
 sensi_plot(mods)
 }

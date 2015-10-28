@@ -38,7 +38,8 @@ different phylogenetic tree.
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
 \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation
-due to phylogenetic uncertainty.
+due to phylogenetic uncertainty.\code{CI_low} and \code{CI_high} are the lower and upper limits
+of the 95% confidence interval.
 }
 \description{
 Performs Phylogenetic logistic regression evaluating

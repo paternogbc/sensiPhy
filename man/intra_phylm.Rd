@@ -48,7 +48,8 @@ value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
 \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation
-due to intraspecific variation.
+due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits
+of the 95% confidence interval.
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -79,7 +80,8 @@ data(alien)
 trait <- log10(alien$data[,-1]+1)
 phy <- alien$phy[[1]]
 
-# Running 50 models generating random predictor values with a normal distribution
+# Running 50 models generating random predictor values
+with a normal distribution
 mods<-intra_phylm(mass~gesta,trait,phy,Vx="SD_gesta",times=50)
 summary(mods)
 sensi_plot(mods)
