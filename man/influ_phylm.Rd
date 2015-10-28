@@ -90,7 +90,7 @@ trait <- alien$data
 phy <- alien$phy[[1]]
 
 # Run sensitivity analysis (influential species)
-out <- influ_phylm( log10(Mass) ~ log10(range), data = trait, phy = phy)
+out <- influ_phylm( log10(mass) ~ log10(georange), data = trait, phy = phy)
 
 # Check most influential species for slope and intercept:
 summary(out)

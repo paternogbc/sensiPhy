@@ -69,7 +69,7 @@ sensi_plot(samp)
 ### Influential species
 Detecting most influential species:
 
-```{r, message=F, warning=F, cache=TRUE}
+```{r, message=F, warning=F}
 influ <- influ_phylm(log10(georange) ~ log10(mass), data = dat$data, 
                  phy = dat$phy[[1]], track = F)
 ```
@@ -82,7 +82,7 @@ sensi_plot(influ)
 ### Influential clades
 Detecting most influential clades:
 
-```{r, message=F, warning=F, cache=TRUE}
+```{r, message=F, warning=F}
 clade <- clade_phylm(log10(georange) ~ log10(mass), data = dat$data, 
                  phy = dat$phy[[1]], clade.col = "family", n.species = 3)
 summary(clade)
@@ -95,7 +95,7 @@ sensi_plot(clade, clade = "Bovidae")
 
 ## Phylogenetic uncertainty
 
-```{r, message=F, warning=F, cache=TRUE}
+```{r, message=F, warning=F}
 trees <- tree_phylm(log(georange) ~ log(mass), data = dat$data, 
                  phy = dat$phy, times = 100, track = F)
 summary(trees)
