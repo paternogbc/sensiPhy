@@ -168,8 +168,7 @@ for (i in limit){
         #rep <- j
         
         if(track == TRUE) (
-            print(paste("Break = ",n.percent,". Repetition = ",j,sep="")))
-
+            cat("\r", "Break = ", n.percent,"Repetition =", j))
         # Stores values for each simulation
         estim.simu <- data.frame(n.remov, n.percent, intercept, 
                                  DFintercept, intercept.perc,

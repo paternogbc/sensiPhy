@@ -156,7 +156,7 @@ intra_phylm <- function(formula,data,phy,
         optpar               <- mod$optpar
       }
       
-      if(track==TRUE) print(paste("intra: ",i,sep=""))
+      if(track==TRUE) cat("\r","Simu = ", i," / ", times)
       
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,

@@ -150,7 +150,8 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                         aic.mod              <- mod$aic
                         optpar               <- mod$alpha
 
-                        if(track==TRUE) (print(paste(i," / ",N,sep="")))
+                        if(track==TRUE)
+                            cat("\r", i," / ", N)
 
                         #Stores values for eacht simulation
                         estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,

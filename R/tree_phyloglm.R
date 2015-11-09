@@ -91,7 +91,7 @@ tree_phyglm <- function(formula,data,phy,
       #d                   <- mod$d
       optpar               <- mod$alpha
 
-      if(track==TRUE) print(paste("tree: ",j,sep=""))
+      if(track==TRUE) cat("\r", "Tree = ", j, " ")
       
       #write in a table
       estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,

@@ -54,7 +54,7 @@
 #' @export
 
 
-intra_phyloglm <- function(formula,data,phy,
+intra_phyglm <- function(formula,data,phy,
                           Vx=NULL,times=2,
                           distrib="uniform",btol=50,track=TRUE,...){
   #Error check
@@ -133,8 +133,8 @@ intra_phyloglm <- function(formula,data,phy,
       optpar               <- mod$alpha
 
       
-      if(track==TRUE) print(paste("intra: ",i,sep=""))
-      
+      if(track==TRUE) cat("\r","Simu = ", i," / ", times)
+
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
                                slope, se.slope, pval.slope, aic.mod, optpar,
