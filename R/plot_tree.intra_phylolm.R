@@ -45,14 +45,14 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     model_results<-x$model_results
     
     
-    xf <- full.data[, 2]
+    xf <- model.frame(formula = x$formula, data = full.data)[,2]
     yf <- plogis(intercept.0 + slope.0 * xf)
-    yp <-plogis((intercept.0+statm[1,4]) + (slope.0 * xf + statm[4,4])) 
-    ym <-plogis((intercept.0-statm[1,4]) + (slope.0 * xf - statm[4,4]))
+    yp <- plogis((statm[1,6]) + (statm[4,6] * xf)) 
+    ym <- plogis((statm[1,5]) + (statm[4,5] * xf))
     
     plot_data <- data.frame("xf" = c(xf,xf,xf),
                             "yy" = c(yf, yp, ym),
-                            linety = rep(c("Mean","SD1","SD2"),each = length(yf)))
+                            linety = rep(c("Mean","High","Low"),each = length(yf)))
 
     #Distribution of estimated slopes:
     s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),
@@ -101,8 +101,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     
     if(length(class(x)) == 2){
       s2.out <- s2 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype=linety, col=linety),size=1)+
-        scale_linetype_manual(values = c(1,2,2)) +
-        scale_color_manual("",values = c("black","blue","blue"),guide=F)
+        scale_linetype_manual(values = c(2,2,1)) +
+        scale_color_manual("",values = c("red","red","black"),guide=F)
                    
     }
     
