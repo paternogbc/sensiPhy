@@ -54,17 +54,15 @@
 #' @export
 
 
-intra_phyglm <- function(formula,data,phy,
-                          Vx=NULL,times=2,
-                          distrib="uniform",btol=50,track=TRUE,...){
+intra_phyglm <- function(formula, data, phy,
+                          Vx=NULL, Vy = NULL, times=2,
+                          distrib="uniform", btol=50, track=TRUE,...){
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx or Vy")
-  else
-  
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
   full.data<-datphy[[1]]
@@ -76,8 +74,6 @@ intra_phyglm <- function(formula,data,phy,
   
   if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
     full.data[is.na(full.data[,Vx]),] <- 0}
-  
-  
   
   #Function to pick a random value in the interval
   if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
