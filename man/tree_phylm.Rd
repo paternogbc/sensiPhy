@@ -59,21 +59,6 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
-\examples{
-\dontrun{
-library(sensiPhy)
-
-# Loading data and phylogeny:
-data(alien)
-trait <- log10(alien$data[,-1]+1)
-phy <- alien$phy
-
-#Running 50 models using 50 trees picked at random in the multiPhylo file
-mods<-tree_phylm(mass~gesta,trait,phy,times=50)
-summary(mods)
-sensi_plot(mods)
-}
-}
 \author{
 Caterina Penone & Pablo Ariel Martinez
 }

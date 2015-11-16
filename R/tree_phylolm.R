@@ -36,20 +36,6 @@
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
-#' @examples
-#' \dontrun{
-#' library(sensiPhy)
-#' 
-#' # Loading data and phylogeny:
-#' data(alien)
-#' trait <- log10(alien$data[,-1]+1)
-#' phy <- alien$phy
-#' 
-#' #Running 50 models using 50 trees picked at random in the multiPhylo file  
-#' mods<-tree_phylm(mass~gesta,trait,phy,times=50)
-#' summary(mods)
-#' sensi_plot(mods)
-#' }
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
@@ -111,7 +97,7 @@ tree_phylm <- function(formula,data,phy,
           optpar               <- mod$optpar
         }
         
-        if(track==TRUE) print(paste("tree: ",j,sep=""))
+        if(track==TRUE) cat("\r", "Tree = ", j, " ")
         
         #write in a table
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
