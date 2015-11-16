@@ -110,7 +110,6 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     p1 <- ggplot2::ggplot(model_results,aes(x=pval.slope),
                           environment = parent.frame())+
         geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
-        geom_vline(xintercept = 0.05,color="red",linetype=2,size=.7)+
         xlab("Distribution of P-values")+
         theme(axis.title=element_text(size=16),
               axis.text = element_text(size=14),
