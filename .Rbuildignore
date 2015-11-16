@@ -1,8 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 NEWS\.md
-^developing$
+devloping
 
 ^\.travis\.yml$
 ^data-raw$
 CODE_OF_CONDUCT.md
+

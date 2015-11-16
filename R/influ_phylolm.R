@@ -141,7 +141,8 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
                             optpar               <- mod$optpar
                         }
 
-                        if(track==TRUE) (print(paste(i," / ",N,sep="")))
+                        if(track==TRUE)
+                        cat("\r", i," / ", N)
 
                         # Stores values for each simulation
                         estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,

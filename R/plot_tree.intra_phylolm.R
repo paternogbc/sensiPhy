@@ -33,7 +33,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
   
     # nulling variables
     formula <- slope <- ..density.. <- intercept <- NULL
-    s3 <- yy <- linety <- NULL
+    s3 <- yy <- linety <- pval.slope <- NULL
 
     mappx <- x$formula[[3]]
     mappy <- x$formula[[2]]
@@ -45,14 +45,14 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     model_results<-x$model_results
     
     
-    xf <- full.data[, 2]
+    xf <- model.frame(formula = x$formula, data = full.data)[,2]
     yf <- plogis(intercept.0 + slope.0 * xf)
-    yp <-plogis((intercept.0+statm[1,4]) + (slope.0 * xf + statm[4,4])) 
-    ym <-plogis((intercept.0-statm[1,4]) + (slope.0 * xf - statm[4,4]))
+    yp <- plogis((statm[1,6]) + (statm[4,6] * xf)) 
+    ym <- plogis((statm[1,5]) + (statm[4,5] * xf))
     
     plot_data <- data.frame("xf" = c(xf,xf,xf),
                             "yy" = c(yf, yp, ym),
-                            linety = rep(c("Mean","SD1","SD2"),each = length(yf)))
+                            linety = rep(c("Mean","High","Low"),each = length(yf)))
 
     #Distribution of estimated slopes:
     s1 <- ggplot2::ggplot(model_results,aes(x=slope,y=..density..),
@@ -101,22 +101,34 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     
     if(length(class(x)) == 2){
       s2.out <- s2 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype=linety, col=linety),size=1)+
-        scale_linetype_manual(values = c(1,2,2)) +
-        scale_color_manual("",values = c("black","blue","blue"),guide=F)
+        scale_linetype_manual(values = c(2,2,1)) +
+        scale_color_manual("",values = c("red","red","black"),guide=F)
                    
     }
+    
+    #Distribution of p-values (slope)
+    p1 <- ggplot2::ggplot(model_results,aes(x=pval.slope),
+                          environment = parent.frame())+
+        geom_histogram(fill="lightyellow", colour="grey60", size=.2) +
+        xlab("Distribution of P-values")+
+        theme(axis.title=element_text(size=16),
+              axis.text = element_text(size=14),
+              panel.background = element_rect(fill="white",
+                                              colour="black"))
     
     
     
     ### Plotting:
     if (graphs=="all")
-      suppressMessages(return(multiplot(s1,s2.out,i1,cols=2)))
+      suppressMessages(return(multiplot(s1,s2.out,i1,p1, cols=2)))
     if (graphs==1)
       suppressMessages(return(s1))
     if (graphs==2)
       suppressMessages(return(i1))
     if (graphs==3)
       suppressMessages(return(s2.out))
+    if (graphs==4)
+        suppressMessages(return(p1))
 
 }
 
