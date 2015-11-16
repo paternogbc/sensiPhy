@@ -8,6 +8,8 @@
 #' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
+#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
+#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param times Number of times to repeat the analysis generating a random value for the predictor variable.
 #' If NULL, \code{times} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
