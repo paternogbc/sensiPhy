@@ -1,5 +1,5 @@
 ---
-title: "sensiPhy: an R package to perform sensitivity analysis for comparative methods"
+title: "Introduction to sensiPhy statistical reasoning"
 author: "Gustavo Paterno; Caterina Penoni; Gijsbert Werner"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -10,45 +10,71 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Conclusions drawn from phylogenetic comparative methods can be sensitive to uncertainty in data, phylogenetic, sampling design.
-The robustness of (key) conclusions to these various forms of uncertainty must be addressed and quantified in order to be confident about the biological conclusions. 
-We present SensiPhy, an R-package to easily and rapidly perform sensitivity analysis in phylogenetic regression models, both for linear and logistic phylogenetic regression. 
-SensiPhy allows researchers to assess species uncertainty, detect influential species and clades, quantify sampling effort and evaluate effects of intraspecific variation and phylogenetic uncertainty. 
-By providing a single, one-stop, package that takes into account various sources of uncertainty, SensiPhy allows for phylogenetic sensitivity analysis in a quick and user-firendly way. 
-Using real datasets we show how conclusions from phylogenetic comparative methods can be affected by uncertainty and how SensiPhy can help determine if a conclusion is robust. 
+The sensiPhy package provides simple tools to perform sensitivity analysis in phylogenetic comparative methods in a quick and user-friendly way. It uses several simulation methods to estimate the impact of different types of uncertainty that affect parameter estimation and significance of PGLS models: (i) Species sampling (sample size; influential species and clades); (ii) Phylogenetic uncertainty and (iii) Data uncertainty (intraspecific variation and measurement error). 
+
+Each function in the package provides several graphic outputs for model diagnostic and sensitivity analysis. The sensiPhy package take advantage of the R package phylolm (Ho et al. 2014) which allows for different types of evolutionary models for the covariance matrix (eg. Pagel's lambda; Brownian motion model, the Ornstein-Uhlenbeck model) and is much faster them alternative packages for PGLS.
+
+Until now sensiPhy only works with simple linear regression and logistic regression (Fig. 1 for a general view of available functions and types of uncertainty). Future versions of sensiPhy will implement more complex models and other sensitivity analysis (eg. sensitivity analysis phylogenetic signal estimation). 
+
+## sensiPhy work-flow
+To estimate sensitivity to uncertainty in PGLS models, we use the following work-flow (Fig. 2 ) for all functions:
+
+1. Fit full model (with all species and original data points)
+2. Fit alternative model (different approach for each type of uncertainty, see below)
+3. Extract model parameters (full model & alternative model)  
+    * slope  
+    * intercept  
+    * P-value (slope)  
+    * P-value (intercept)  
+    * phylogenetic optimization parameter (eg. lambda, kapa)   	
+    * AIC  
+4. Calculate impact measures (differences between full & alternative model, see below)
+5. Iterate many times
+
+## Impact measures
+
+Besides estimating basic parameters for all alternative models we have implemented three impact measures that estimate the influence of model uncertainties in PGLS parameters (differences between the full model and alternative models)
 
 
-## Types of uncertainty
+I. dbi (raw difference in model parameters):
 
-The R package `sensiPhy` can estimate the impact of different types of uncertainty 
-on PGLS models (Fig. 1). Until now only linear and logist regressions are supported. 
 
-![Fig. 1](workflow.resized.jpg)
-__Figure 1:__ Types of uncertainty and related `sensiPhy` functions. The sufix '_phylm' 
-works with linear regressions while `_phyglm` works for logist regressions.
+where bi is the estimated parameter for the alternative model (slope or intercept) and b0 is the estimated parameter for the full model.  
 
-## Background
+II. Pdbi (the percentage of change in model parameter):  
 
-Describe the methods to deal with each type of uncertainty.
 
-## Types of uncertainty:
- * Phylogentic
- * Species sampling
- * Data
+where |dbi| is the absolute difference between alternative and full model parameters. This measure represents the percentage of change in slope or intercept due to uncertainty.
 
-### Phylogentic
+III. SDdbi (standardized difference in model parameter):  
 
-Include exmplae here.
+
+
+ 
+
+where SDdbi is the standard deviation of dbi, thus SDdbi is a simple z-transformation of dbi and is given in standard deviation units.  
+
+
+## Types of uncertainty (statistical approach)
 
 ### Species sampling
 
-Include exmplae here.
+Sampling effort: Performs analysis of sensitivity to species sampling by randomly removing species and detecting the effects on parameter estimates in a phylogenetic linear regression model.
+Functions: samp_phylm & samp_phyglm
 
-### Data
+Influential species: Performs leave-one-out deletion analyis for phylogenetic linear regression, and detects influential species.
+Functions: influ_phylm & influ_phyglm
 
-Include exmplae here.
+Influential clades: Performs leave-one-out deletion analysis for phylogenetic linear regression (removing clades instead of species), and detects influential clades.
+Functions: clade_phylm & clade_phyglm
 
-## References
+### Phylogenetic uncertainty
 
-Include references here.
+Tree uncertainty: Performs phylogenetic linear regression evaluating the influence of phylogenetic uncertainty in model parameters.
+Functions: tree_phylm & tree_phyglm
 
+
+### Data uncertainty
+
+Intraspecific variation & measurement error: Performs phylogenetic linear regression evaluating the influence of intraspecific variation and measurement error in model parameters. 
+Functions: tree_phylm & tree_phyglm
