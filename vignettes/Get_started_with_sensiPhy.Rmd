@@ -88,8 +88,8 @@ summary(clade)
 ```
 
 Ploting results:
-```{r, fig.height=4, fig.width=7.5, warning=F}
-sensi_plot(clade, clade = "Bovidae", eval=F)
+```{r, fig.height=4, fig.width=7.5, warning=F, eval=F}
+sensi_plot(clade, clade = "Bovidae")
 ```
 
 ## Phylogenetic uncertainty
