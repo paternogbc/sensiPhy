@@ -28,12 +28,6 @@ Red vertical line represents the mean slope or intercept for all models.
 
 Graph 3: Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
 }
-\examples{
-\dontrun{
-library(sensiPhy)
-
-}
-}
 \author{
 Caterina Penone and Gustavo Paterno
 }

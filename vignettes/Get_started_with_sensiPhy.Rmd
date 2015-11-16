@@ -16,7 +16,6 @@ Loading sensiphy and data:
 ```{r loading_package, message=FALSE}
 library(sensiPhy)
 library(knitr)
-library(rmarkdown)
 data(alien)
 ```
 

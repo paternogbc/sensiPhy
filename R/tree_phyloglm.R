@@ -32,10 +32,6 @@
 #' @return \code{stats}: Statistics for model parameters. \code{sd_tree} is the standard deviation 
 #' due to phylogenetic uncertainty.\code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
-#' @examples
-#' \dontrun{
-#' library(sensiPhy)
-#' }
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?

@@ -71,22 +71,6 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
-\examples{
-\dontrun{
-library(sensiPhy)
-
-# Loading data and phylogeny:
-data(alien)
-trait <- log10(alien$data[,-1]+1)
-phy <- alien$phy[[1]]
-
-# Running 50 models generating random predictor values
-with a normal distribution
-mods<-intra_phylm(mass~gesta,trait,phy,Vx="SD_gesta",times=50)
-summary(mods)
-sensi_plot(mods)
-}
-}
 \author{
 Caterina Penone & Pablo Ariel Martinez
 }

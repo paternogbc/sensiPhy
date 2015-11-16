@@ -56,24 +56,6 @@
 #' reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
-#' @examples
-#' 
-#' library(sensiPhy)
-#' 
-#' # Loading data and phylogeny:
-#' data(alien)
-#' trait <- alien$data
-#' phy <- alien$phy[[1]]
-#' 
-#' # Run sensitivity analysis (influential species)
-#' out <- influ_phylm( log10(mass) ~ log10(georange), data = trait, phy = phy) 
-#'                      
-#' # Check most influential species for slope and intercept:
-#' summary(out)
-#' 
-#' # Plot results:
-#' sensi_plot(out)
-
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
 #' \code{\link{influ_phylm}},\code{\link{sensi_plot}}

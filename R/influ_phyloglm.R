@@ -54,37 +54,6 @@
 #' (i.e. \code{alpha}) are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
-#' @examples
-#' \dontrun{
-#' library(sensiPhy)
-#'
-#' #Generate a random tree
-#' set.seed(2468)
-#' tree <- rtree(100)
-#'
-#' #Generate random predictor variable (pred), evolving according to a BM model.
-#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
-#'
-#' #Generate two continous traits, one evolving highly correlated with the
-#' #predictor (trait 1), and one evolving more randomly (trait 2)
-#' cont_trait1 <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-#' cont_trait2 <- pred + rTraitCont(tree,model="BM",sigma=10)
-#'
-#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
-#' bin_trait1<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
-#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
-#' bin_trait2<-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=5,
-#'                       X=cbind(rep(1,length(tree$tip.label)),pred))
-#' dat<-data.frame(pred,cont_trait1,cont_trait2,bin_trait1,bin_trait2)
-#'
-#' #Determine influential species for both regressions.
-#' fit1<-influ_phyglm(bin_trait1~pred,data = dat,phy = tree)
-#' fit2<-influ_phyglm(bin_trait2~pred,data = dat,phy = tree)
-#'
-#' #For purposes of comparison the full model output from phylolm:
-#' summary(phyloglm(bin_trait1~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
-#' summary(phyloglm(bin_trait2~pred,data = dat,phy = tree,method = "logistic_MPLE"),btol=50)
-#' }
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
 #' \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
