@@ -52,25 +52,6 @@
 #' reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
-#' @examples
-#' \dontrun{
-#' library(sensiPhy);library(phylolm)
-#'
-#' #Generate a random tree
-#' set.seed(2468)
-#' tree <- rtree(100)
-#'
-#' #Generate random predictor variable (pred), evolving according to a BM model.
-#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
-#'
-#' #Generate one continous traits
-#' cont_trait <- pred + rTraitCont(tree,model="BM",sigma=2.5)
-#' fam <- rep(c("fam1","fam2","fam3","fam4","fam5"),each=20)
-#' dat<-data.frame(pred,cont_trait,fam)
-#'
-#' #Determine influential clades:
-#' clade.test <- clade_phylm(cont_trait~pred,data=dat,phy=tree,clade.col="fam")
-#' }
 #' @author Gustavo Paterno
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylm}},
 #' \code{\link{sensi_plot}}

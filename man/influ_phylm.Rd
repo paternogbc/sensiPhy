@@ -81,23 +81,6 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
-\examples{
-library(sensiPhy)
-
-# Loading data and phylogeny:
-data(alien)
-trait <- alien$data
-phy <- alien$phy[[1]]
-
-# Run sensitivity analysis (influential species)
-out <- influ_phylm( log10(mass) ~ log10(georange), data = trait, phy = phy)
-
-# Check most influential species for slope and intercept:
-summary(out)
-
-# Plot results:
-sensi_plot(out)
-}
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
 }

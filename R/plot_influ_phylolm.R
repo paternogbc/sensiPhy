@@ -25,37 +25,6 @@
 #' the value of \code{cutoff}).
 #' 
 #' Graph 4: Ditribution of the percentage of change in slope or intercept.
-#' @examples
-#' \dontrun{
-#' library(sensiPhy)
-#'
-#' #Generate a random tree
-#' set.seed(2468)
-#' tree <- rtree(100)
-#'
-#' #Generate random predictor variable (pred), evolving according to a BM model.
-#' pred<- rTraitCont(tree,root.value=0,sigma=1,model="BM")
-#'
-#' #Generate two continous traits, one evolving highly correlated with the
-#' #predictor (trait 1), and one evolving more randomly (trait 2)
-#' cont_trait <- pred + rTraitCont(tree,model="BM",sigma=0.1)
-#'
-#' #Generate two binary traits, one highly correlated to pred (trait 1), the other less.
-#' bin_trait <-rbinTrait(n=1,tree,beta=c(-1,0.5),alpha=0.1,
-#'                      X=cbind(rep(1,length(tree$tip.label)),pred))
-#' dat<-data.frame(pred,cont_trait,bin_trait)
-#'
-#' #Determine influential species for both regressions.
-#' fit1<-influ_phylm(cont_trait~pred,data = dat,phy = tree)
-#' fit2<-influ_phyglm(bin_trait~pred,data = dat,phy = tree)
-#' 
-#' # Plot results:
-#' sensi_plot(fit1)
-#' sensi_plot(fit2)
-#' # You can also choose which graph and parameter should be ploted:
-#' sensi_plot(fit1, graphs = 1, param = "intercept")
-#' sensi_plot(fit2, graphs = "all", param = "slope")
-#' }
 #' @importFrom grid unit 
 #' @export
 
