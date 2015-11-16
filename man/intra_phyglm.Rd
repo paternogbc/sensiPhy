@@ -17,6 +17,9 @@ intra_phyglm(formula, data, phy, Vx = NULL, Vy = NULL, times = 2,
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
+\item{Vy}{Name of the column containing the standard deviation or the standard error of the response
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
+
 \item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
 If NULL, \code{times} = 2}
 
