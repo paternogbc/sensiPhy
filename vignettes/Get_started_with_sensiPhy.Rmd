@@ -62,7 +62,7 @@ samp <- samp_phylm(log10(georange) ~ log10(mass), data = dat$data,
 ```
 
 Ploting results:
-```{r, fig.height=5.5, fig.width=7.5, warning=F}
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
 sensi_plot(samp)
 ```
 
@@ -75,7 +75,7 @@ influ <- influ_phylm(log10(georange) ~ log10(mass), data = dat$data,
 ```
 
 Ploting results:
-```{r, fig.height=5.5, fig.width=7.5, warning=F}
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
 sensi_plot(influ)
 ```
 
@@ -90,7 +90,7 @@ summary(clade)
 
 Ploting results:
 ```{r, fig.height=4, fig.width=7.5, warning=F}
-sensi_plot(clade, clade = "Bovidae")
+sensi_plot(clade, clade = "Bovidae", eval=F)
 ```
 
 ## Phylogenetic uncertainty
@@ -102,8 +102,6 @@ summary(trees)
 ```
 
 Ploting results:
-```{r, fig.height=5.5, fig.width=7.5, warning=F}
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
 sensi_plot(trees)
 ```
-
-## Phylogenetic uncertainty
