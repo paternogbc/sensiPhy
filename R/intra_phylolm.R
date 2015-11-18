@@ -21,7 +21,7 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-#' The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
+#' The regression is repeated \code{times} times. At each iteration the function generates for each row in the dataset
 #' a random value in the normal or uniform distribution. 
 #' Warning: if predictor and/or response variables are log-transformed, please make sure that 
 #' Vx and/or Vy are also in a log-scale.
