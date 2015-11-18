@@ -1,6 +1,6 @@
 #' Influential clade detection - Phylogenetic Linear Regression
 #'
-#' Estimate the impact on model estimates phylogenetic linear regression after 
+#' Estimate the impact on model estimates of phylogenetic linear regression after 
 #' removing clades from the analysis. 
 #'
 #' @param formula The model formula
@@ -18,8 +18,8 @@
 #' This function sequentially removes one clade at a time, fits a phylogenetic
 #' linear regression model using \code{\link[phylolm]{phylolm}} and stores the
 #' results. The impact of of a specific clade on model estimates is calculated by the
-#'  comparison between the full model (with all species) and the model without 
-#'  the species belonging to a clade.
+#' comparison between the full model (with all species) and the model without 
+#' the species belonging to a clade.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
