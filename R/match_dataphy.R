@@ -1,12 +1,12 @@
 #' Match data and phylogeny based on model formula
 #'
-#' Combine phylogeny and data to ensure that tips in phylogeny match data and that variables
+#' Combine phylogeny and data to ensure that tips in phylogeny match data and that observations
 #' with missing values are removed. This function uses variables provided in the 
 #' `formula` argument to:
 #' \itemize{
 #'  \item{Remove NA`s:   } {Check if there is any row with NA in the variables included in 
 #'  the formula. All rows containing NA will be removed from the data}
-#'  \item{Match data and phy:   } {Check if tips from phylogeny matches rownames in
+#'  \item{Match data and phy:   } {Check if tips from phylogeny match rownames in
 #'  data. Tips not present in data and phy will be removed from the phylogeny and
 #'  data}
 #'  \item{Return matched data and phy:   } {The returned data
@@ -27,7 +27,7 @@
 #' @details This function uses all variables provided in the `formula` to match
 #' data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 #' for NA values only on variables provided by formula. Missing values on 
-#' other variables, not included in `formula`, wont be removed from data. 
+#' other variables, not included in `formula`, will not be removed from data. 
 #' 
 #' This ensures consistance between data and phylogeny only for the variables 
 #' that are being used in the model (set by `formula`).
@@ -39,7 +39,7 @@
 #' details. Further, the final number of species that match data and phy will
 #' always be informed by a message.
 #' 
-#' @author Caterina Penone
+#' @author Caterina Penone & Gustavo Paterno
 #' @references This function is largely inspired by the function \code{comparative.data} in caper package
 #' David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac and Will Pearse
 #' (2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
@@ -49,7 +49,7 @@ match_dataphy <- function(formula, data, phy){
     
     # original data set:
     data.0 <- data
-    # Croping data frame by formula variables:
+    # Cropping data frame by formula variables:
     mf <- stats::model.frame(formula = formula, data = data.0, na.action = stats::na.exclude)
     if (nrow(data.0) > nrow(mf)) warning("NA's in response or predictor,", 
                                          " rows with NA's were removed")
