@@ -1,6 +1,6 @@
 #' Influential clade detection - Phylogenetic Logistic Regression
 #'
-#' Estimate the impact on model estimates phylogenetic Logist regression after 
+#' Estimate the impact on model estimates of phylogenetic logistic regression after 
 #' removing clades from the analysis. 
 #'
 #' @param formula The model formula
