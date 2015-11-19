@@ -20,11 +20,11 @@
 #' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
 #' difference in slope or intercept is represented by a continous size scale.
 #' 
-#' Graph 3: Distribution of Standardized difference in slope or intercept. Red 
+#' Graph 3: Distribution of standardized difference in slope or intercept. Red 
 #' colour indicates inbfluential species (with a standardised difference above 
 #' the value of \code{cutoff}).
 #' 
-#' Graph 4: Ditribution of the percentage of change in slope or intercept.
+#' Graph 4: Distribution of the percentage of change in slope or intercept.
 #' @importFrom grid unit 
 #' @export
 
@@ -154,7 +154,7 @@ intercept.perc <- sDFintercept <- NULL
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
 
-        ### Ploting:
+        ### Plotting:
         if (param == "slope" & graphs == "all")
             suppressMessages(return(multiplot(s1, s3, s2, s4, cols = 2)))
         if (param == "slope" & graphs == 1)
