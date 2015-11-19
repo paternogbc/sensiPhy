@@ -14,7 +14,7 @@
 #' @details For 'x' from samp_phylm or samp_phyglm:
 #' 
 #' Graph 1: Estimated slopes or intercepts for each simution across  
-#' percentage of species removed. Colours represent percentage 
+#' percentages of species removed. Colours represent percentage 
 #' of change in comparison with the full model (blue = lower than 5, orange = 
 #' between 5 and 10 and red = higher than 10).
 #' The red horizontal line represents the original slope or 
