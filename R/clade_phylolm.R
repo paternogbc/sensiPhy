@@ -97,6 +97,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
     counter <- 1
     errors <- NULL
     
+    all.clades <- levels(full.data[ ,clade.col])
     k <- names(which(table(full.data[,clade.col]) > n.species ))
     if (length(k) == 0) stop(paste("There is no clade with more than ",
                           n.species," species. Change 'n.species' to fix this
@@ -105,8 +106,8 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
 
     for (i in k){
         if (length(k) > 1) {
-            crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(k,i),]
-            crop.sp <-   which(!full.data[ ,clade.col] %in% setdiff(k,i))
+            crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(all.clades,i),]
+            crop.sp <-   which(!full.data[ ,clade.col] %in% setdiff(all.clades,i))
         }
         if (length(k) == 1) {
             crop.data <- full.data[!full.data[ ,clade.col] %in% k,]
