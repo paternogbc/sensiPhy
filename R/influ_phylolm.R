@@ -50,9 +50,9 @@
 #' difference (\code{sDFintercept}), the percentage of change in intercept compared
 #' to the full model (\code{intercept.perc}) and intercept p-value
 #' (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
+#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
-#' (e.g. \code{kappa} or \code{lambda}, depending on phylogenetic model used) are
+#' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) are
 #' reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
