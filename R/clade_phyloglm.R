@@ -98,6 +98,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
     counter <- 1
     errors <- NULL
     
+    all.clades <- levels(full.data[ ,clade.col])
     k <- names(which(table(full.data[ ,clade.col]) > n.species ))
     if (length(k) == 0) stop(paste("There is no clade with more than ",
                                    n.species," species. Change 'n.species' 
@@ -105,8 +106,8 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
     # Loop:
     for (i in k){
         if (length(k) > 1) {
-            crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(k,i), ]
-            crop.sp <-   which(!full.data[ ,clade.col] %in% setdiff(k,i))
+            crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(all.clades,i), ]
+            crop.sp <-   which(!full.data[ ,clade.col] %in% setdiff(all.clades,i))
         }
         if (length(k) == 1) {
             crop.data <- full.data[!full.data[ ,clade.col] %in% k, ]
