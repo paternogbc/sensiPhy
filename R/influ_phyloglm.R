@@ -43,13 +43,13 @@
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
 #' @return \code{influ.model.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted species. Reported are the calculated
+#' estimates. Each row represents a deleted clade. #' Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage change in intercept compared
+#' difference (\code{sDFintercept}), the percentage of change in intercept compared
 #' to the full model (\code{intercept.perc}) and intercept p-value
-#' (\code{pval.intercept}). All of these are also reported for the regression
-#' slope (\code{DFslope} etc.). Additonally, model aic value (\code{AIC}) and
+#' (\code{pval.intercept}). All these parameters are also reported for the regression
+#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (i.e. \code{alpha}) are reported.
 #' @return \code{data}: Original full dataset.

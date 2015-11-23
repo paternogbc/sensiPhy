@@ -66,7 +66,8 @@ match_dataphy <- function(formula, data, phy){
     in.both <- intersect(taxa.nam, tiplabl)
     
     if (length(in.both) == 0)
-        stop("No tips are common to the dataset and phylogeny")
+        stop("No tips are common to the dataset and phylogeny, 
+        Please check if row names of your dataset contain species/tip names")
     
     mismatch <- union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
     if (length(mismatch) != 0)   warning("Some phylogeny tips do not match species in data,",
