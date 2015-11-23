@@ -17,16 +17,16 @@
 Plot results from \code{clade_phylm} and \code{clade_phyglm}
 }
 \details{
-This function plots the original scaterplot \eqn{y = a + bx} (with the
-full dataset), plus a comparison between the regression lines of the full model
+This function plots the original scatterplot \eqn{y = a + bx} (with the
+full dataset) and a comparison between the regression lines of the full model
 and the model without the selected clade (set by \code{clade}). For further
 details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 
 Species from the selected clade are represented in red (removed species),
-solid line represents the regression with the full model and dashed line represent
+solid line represents the regression with the full model and dashed line represents
 the regression of the model without the species from the selected clade.
 To check the available clades to plot, see \code{x$clade.model.estimates$clade}
-in the objected returned from \code{clade_phylm} or \code{clade_phyglm}.
+in the object returned from \code{clade_phylm} or \code{clade_phyglm}.
 }
 \author{
 Gustavo Paterno

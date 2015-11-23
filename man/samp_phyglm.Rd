@@ -64,7 +64,7 @@ logistic regression.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
 logistic regression model without these species using \code{\link[phylolm]{phyloglm}},
-repeates this many times (controlled by \code{times}), stores the results and
+repeats this many times (controlled by \code{times}), stores the results and
 calculates the effects on model parameters.
 
 Only logistic regression using the "logistic_MPLE"-method from

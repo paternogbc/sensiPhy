@@ -52,7 +52,7 @@ reported.
 \code{errors}: Clades where deletion resulted in errors.
 }
 \description{
-Estimate the impact on model estimates phylogenetic Logist regression after
+Estimate the impact on model estimates of phylogenetic logistic regression after
 removing clades from the analysis.
 }
 \details{

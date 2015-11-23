@@ -29,11 +29,11 @@ slope or intercept from the full model (with all species).
 Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized
 difference in slope or intercept is represented by a continous size scale.
 
-Graph 3: Distribution of Standardized difference in slope or intercept. Red
+Graph 3: Distribution of standardized difference in slope or intercept. Red
 colour indicates inbfluential species (with a standardised difference above
 the value of \code{cutoff}).
 
-Graph 4: Ditribution of the percentage of change in slope or intercept.
+Graph 4: Distribution of the percentage of change in slope or intercept.
 }
 \author{
 Gustavo Paterno

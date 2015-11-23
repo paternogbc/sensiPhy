@@ -25,13 +25,13 @@ components:
 \code{dropped}: Species dropped from phylogeny and removed from data.
 }
 \description{
-Combine phylogeny and data to ensure that tips in phylogeny match data and that variables
+Combine phylogeny and data to ensure that tips in phylogeny match data and that observations
 with missing values are removed. This function uses variables provided in the
 `formula` argument to:
 \itemize{
  \item{Remove NA`s:   } {Check if there is any row with NA in the variables included in
  the formula. All rows containing NA will be removed from the data}
- \item{Match data and phy:   } {Check if tips from phylogeny matches rownames in
+ \item{Match data and phy:   } {Check if tips from phylogeny match rownames in
  data. Tips not present in data and phy will be removed from the phylogeny and
  data}
  \item{Return matched data and phy:   } {The returned data
@@ -43,7 +43,7 @@ with missing values are removed. This function uses variables provided in the
 This function uses all variables provided in the `formula` to match
 data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 for NA values only on variables provided by formula. Missing values on
-other variables, not included in `formula`, wont be removed from data.
+other variables, not included in `formula`, will not be removed from data.
 
 This ensures consistance between data and phylogeny only for the variables
 that are being used in the model (set by `formula`).
@@ -58,7 +58,7 @@ details. Further, the final number of species that match data and phy will
 always be informed by a message.
 }
 \author{
-Caterina Penone
+Caterina Penone & Gustavo Paterno
 }
 \references{
 This function is largely inspired by the function \code{comparative.data} in caper package
