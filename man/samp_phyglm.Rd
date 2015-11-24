@@ -39,13 +39,13 @@ the full model without deleted species.
 \code{samp.model.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
-Reported are the calculated regression intercept (\code{intercept}),
+Columns report the calculated regression intercept (\code{intercept}),
 difference between simulation intercept and full model intercept (\code{DFintercept}),
-the percentage change in intercept compared to the full model (\code{intercept.perc})
-and intercept p-value (\code{pval.intercept}). All of these are also reported
-for the regression slope (\code{DFslope} etc.). Additonally, model aic value
+the percentage of change in intercept compared to the full model (\code{intercept.perc})
+and intercept p-value (\code{pval.intercept}). All these parameters are also reported
+for the regression slope (\code{DFslope} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
-parameter (e.g. \code{kappa} or \code{lambda}, depends on phylogeneticmodel
+parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 used) are reported.
 
 \code{sign.analysis} For each break (i.e. each percentage of species
