@@ -46,17 +46,17 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         # classes of slope.perc:
         result$slope.class <- "class"
         ### Within 5%:
-        if (length(result[result$slope.perc <= 5 ,]$slope.class) > 1){
+        if (length(result[result$slope.perc <= 5 ,]$slope.class) >= 1){
                 result[result$slope.perc <= 5,]$slope.class <- "within 5%"
         }
         ### Higher than 5%
         if (length(result[result$slope.perc > 5
-                & result$slope.perc <= 10 ,]$slope.class) > 1){
+                & result$slope.perc <= 10 ,]$slope.class) >= 1){
                 result[result$slope.perc > 5
                        & result$slope.perc <= 10 ,]$slope.class <- "higher than 5%"
         }
         ### Higher than 10%
-        if (length(result[result$slope.perc > 10,]$slope.class) > 1){
+        if (length(result[result$slope.perc > 10,]$slope.class) >= 1){
                 result[result$slope.perc > 10,]$slope.class <- "higher than 10%"
         }
 
@@ -68,17 +68,17 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         # classes of intercept.perc:
         result$intercept.class <- "class"
         ### Within 5%:
-        if (length(result[result$intercept.perc <= 5 ,]$intercept.class) > 1){
+        if (length(result[result$intercept.perc <= 5 ,]$intercept.class) >= 1){
                 result[result$intercept.perc <= 5,]$intercept.class <- "within 5%"
         }
         ### Higher than 5%
         if (length(result[result$intercept.perc > 5
-                          & result$intercept.perc <= 10 ,]$intercept.class) > 1){
+                          & result$intercept.perc <= 10 ,]$intercept.class) >= 1){
                 result[result$intercept.perc > 5
                        & result$intercept.perc <= 10 ,]$intercept.class <- "higher than 5%"
         }
         ### Higher than 10%
-        if (length(result[result$intercept.perc > 10,]$intercept.class) > 1){
+        if (length(result[result$intercept.perc > 10,]$intercept.class) >= 1){
                 result[result$intercept.perc > 10,]$intercept.class <- "higher than 10%"
         }
 
