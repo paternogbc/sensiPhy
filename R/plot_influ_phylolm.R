@@ -90,7 +90,7 @@ intercept.perc <- sDFintercept <- NULL
                   panel.background = element_rect(fill = "white",
                                                   colour = "black"))
 
-        # Original plot with Standardized DFintercept as colour gradient
+        # Original plot with Standardized DFintercept as size gradient
         i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
                             environment = parent.frame())+
             geom_point(data = result.tab,
