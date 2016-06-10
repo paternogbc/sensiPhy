@@ -25,7 +25,7 @@ summary.sensiInflu <- function(object, ...){
     sp.slope <- object$influential.species$influ.sp.slope
     rows.slope <- match(sp.slope, object$influ.model.estimates$species)
     slope <- object$influ.model.estimates[rows.slope, c(1,6,7,8,9)]
-    ord.slope <- order(slope$DFslope, 
+    ord.slope <- order(slope$slope.perc, 
                        decreasing = TRUE)
     slope <- slope[ord.slope, ]
     rownames(slope) <- NULL
@@ -34,7 +34,7 @@ summary.sensiInflu <- function(object, ...){
     sp.inter <-object$influential.species$influ.sp.intercept
     rows.inter <- match(sp.inter, object$influ.model.estimates$species)
     inter <- object$influ.model.estimates[rows.inter, c(1,2,3,4,5)]
-    ord.inter <- order(inter$DFintercept, 
+    ord.inter <- order(inter$intercept.perc, 
                        decreasing = TRUE)
     inter <- inter[ord.inter, ]
     rownames(inter) <- NULL

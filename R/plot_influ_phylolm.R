@@ -90,7 +90,7 @@ intercept.perc <- sDFintercept <- NULL
                   panel.background = element_rect(fill = "white",
                                                   colour = "black"))
 
-        # Original plot with Standardized DFintercept as colour gradient
+        # Original plot with Standardized DFintercept as size gradient
         i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
                             environment = parent.frame())+
             geom_point(data = result.tab,
@@ -121,7 +121,7 @@ intercept.perc <- sDFintercept <- NULL
                                                   colour="black"))
 
         # Influential points for intercept estimate
-        i3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
+        i3 <- ggplot2::ggplot(result,aes(x=sDFintercept))+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Intercept")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
@@ -136,7 +136,7 @@ intercept.perc <- sDFintercept <- NULL
         # Distribution of slope.perc:
 
         s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..))+
-                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
+                geom_histogram(data = result,
                                colour="black", fill="lightyellow")+
                 xlab("% of change in Slope")+
                 theme(axis.title=element_text(size=16),
@@ -146,8 +146,8 @@ intercept.perc <- sDFintercept <- NULL
 
         # Distribution of slope.perc:
         i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
-                geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
-                               colour="black", fill="lightyellow")+
+                geom_histogram(
+                              colour="black", fill="lightyellow")+
                 xlab("% of change in Intercept")+
                 theme(axis.title=element_text(size=16),
                     axis.text = element_text(size=14),
