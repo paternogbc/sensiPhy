@@ -19,3 +19,4 @@ BugReports: https://github.com/paternogbc/sensiPhy/issues
 LazyData: true
 Suggests:
     testthat
+RoxygenNote: 5.0.1
