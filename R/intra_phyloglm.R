@@ -148,8 +148,8 @@ intra_phyglm <- function(formula, data, phy,
                           mean=apply(intra.model.estimates,2,mean),
                           sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
-  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   res <- list(formula=formula,
               datas=full.data,
