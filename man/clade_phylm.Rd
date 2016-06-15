@@ -76,6 +76,22 @@ Currently, this function can only implement simple linear models (i.e.
 
 Output can be visualised using \code{sensi_plot}.
 }
+\examples{
+\dontrun{
+# Load data:
+data(primates)
+# run analysis:
+clade <- clade_phylm(log(sexMaturity) ~ log(adultMass), 
+phy = primates$phy[[1]], data = primates$data, clade.col = "family")
+# To check summary results and most influential clades:
+summary(clade)
+# Visual diagnostics for clade removal:
+sensi_plot(clade)
+# Specify which clade removal to plot:
+sensi_plot(clade, "Cercopithecidae")
+sensi_plot(clade, "Cebidae")
+}
+}
 \author{
 Gustavo Paterno
 }
