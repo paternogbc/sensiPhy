@@ -39,6 +39,23 @@
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#' \dontrun{
+#'# Load data:
+#'data(alien)
+#'# This analysis needs a multiphylo file:
+#'class(alien$phy)
+#'alien$phy
+#'# run PGLS accounting for phylogenetic uncertain:
+#'tree <- tree_phylm(log(mass) ~ log(gesta), phy = alien$phy, 
+#'data = alien$data, times = 30)
+#'# To check summary results:
+#'summary(tree)
+#'# Visual diagnostics
+#'sensi_plot(tree)
+#'# You can specify which graph to print: 
+#'sensi_plot(tree, graphs = 3)
+#'}
 #' @export
 
 tree_phylm <- function(formula,data,phy,
