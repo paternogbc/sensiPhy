@@ -86,7 +86,7 @@ Output can be visualised using \code{sensi_plot}.
 # Load data:
 data(alien)
 # run analysis:
-influ <- influ_phylm(log(mass) ~ log(gesta), phy = alien$phy[[1]], 
+influ <- influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
 data = alien$data)
 # To check summary results:
 summary(influ)

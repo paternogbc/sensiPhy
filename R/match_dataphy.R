@@ -49,8 +49,8 @@
 #'data(alien)
 #'head(alien$data)
 #'# Match data and phy based on model formula:
-#'comp.data <- match_dataphy(mass ~ gesta, data = alien$data, alien$phy)
-#'comp.data2 <- match_dataphy(georange ~ mass, data = alien$data, alien$phy)
+#'comp.data <- match_dataphy(gestaLen ~ adultMass, data = alien$data, alien$phy)
+#'comp.data2 <- match_dataphy(homeRange ~ adultMass, data = alien$data, alien$phy)
 #'# Check data:
 #'comp.data$data
 #'# Check phy:

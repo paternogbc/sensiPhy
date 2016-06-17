@@ -81,7 +81,7 @@ Output can be visualised using \code{sensi_plot}.
 # Load data:
 data(alien)
 # Run analysis:
-samp <- samp_phylm(log(mass) ~ log(gesta), phy = alien$phy[[1]], 
+samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
 data = alien$data)
 summary(samp)
 head(samp$samp.model.estimates)

@@ -76,7 +76,7 @@ Output can be visualised using \code{sensi_plot}.
 # Load data:
 data(alien)
 # run PGLS accounting for intraspecific variation:
-intra <- intra_phylm(mass ~ gesta, phy = alien$phy[[1]], data = alien$data,
+intra <- intra_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data,
 Vy = "SD_mass", times = 100)
 # To check summary results:
 summary(intra)
