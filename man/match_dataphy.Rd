@@ -57,6 +57,20 @@ missing values are removed from data, a message will be printed with the
 details. Further, the final number of species that match data and phy will
 always be informed by a message.
 }
+\examples{
+# Load data:
+data(alien)
+head(alien$data)
+# Match data and phy based on model formula:
+comp.data <- match_dataphy(mass ~ gesta, data = alien$data, alien$phy)
+comp.data2 <- match_dataphy(georange ~ mass, data = alien$data, alien$phy)
+# Check data:
+comp.data$data
+# Check phy:
+comp.data$phy
+# See species dropped from phy or data:
+comp.data$dropped
+}
 \author{
 Caterina Penone & Gustavo Paterno
 }

@@ -60,6 +60,22 @@
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
 #' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#' \dontrun{
+#' # Load data:
+#' data(alien)
+#' # run analysis:
+#' influ <- influ_phylm(log(mass) ~ log(gesta), phy = alien$phy[[1]], 
+#' data = alien$data)
+#' # To check summary results:
+#'summary(influ)
+#'# Most influential speciesL
+#'influ$influential.species
+#'# Visual diagnostics
+#'sensi_plot(influ)
+#'# You can specify which graph and parameter ("slope" or "intercept") to print: 
+#'sensi_plot(influ, param = "slope", graphs = 2)
+#' }
 #' @export
 
 influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){

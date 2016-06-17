@@ -49,6 +49,26 @@
 #' @seealso \code{\link[sensiPhy]{clade_phylm}}, \code{\link{influ_phyglm}},
 #' \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#' \dontrun{
+#'# Simulate Data:
+#'set.seed(6987)
+#'phy = rtree(150)
+#'x = rTrait(n=1,phy=phy)
+#'X = cbind(rep(1,150),x)
+#'y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#'cla <- rep(c("A","B","C","D","E"), each = 30)
+#'dat = data.frame(y, x, cla)
+#'# Run sensitivity analysis:
+#'clade <- clade_phyglm(y ~ x, phy = phy, data = dat, clade.col = "cla")
+#'# To check summary results and most influential clades:
+#'summary(clade)
+#'# Visual diagnostics for clade removal:
+#'sensi_plot(clade)
+#'# Specify which clade removal to plot:
+#'sensi_plot(clade, "B")
+#'sensi_plot(clade, "C")
+#'}
 #' @export
 
 clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,

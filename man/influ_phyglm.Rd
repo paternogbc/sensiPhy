@@ -78,6 +78,23 @@ Currently, this function can only implement simple models (i.e.
 
 Output can be visualised using \code{sensi_plot}.
 }
+\examples{
+\dontrun{
+# Simulate Data:
+set.seed(6987)
+phy = rtree(150)
+x = rTrait(n=1,phy=phy)
+X = cbind(rep(1,150),x)
+y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+dat = data.frame(y, x)
+# Run sensitivity analysis:
+influ <- influ_phyglm(y ~ x, data = dat, phy = phy) 
+# To check summary results and most influential species:
+summary(influ)
+# Visual diagnostics for clade removal:
+sensi_plot(influ)
+}
+}
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
 }

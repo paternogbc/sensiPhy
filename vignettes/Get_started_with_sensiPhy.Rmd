@@ -1,0 +1,106 @@
+---
+title: "Get started with sensiPhy"
+author: "Gustavo Paterno; Caterina Penoni; Gijsbert Werner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Example data and phylogeny
+
+Loading sensiphy and data:
+```{r loading_package, message=FALSE}
+library(sensiPhy)
+library(knitr)
+data(alien)
+```
+
+The __alien__ dataset comprises four variables for 94 species of alien mammal 
+species (family, adult body mass, home range 
+and gestation length; see `?alien` for details) and their respective standard 
+deviation for intraspecific variation.
+
+
+```{r data, echo=FALSE}
+kable(head(alien$data))
+```
+
+### Matching data and phylogeny:
+
+The 'match_dataphy; function combine phylogeny and data to ensure that tips in
+phylogeny match data and that variables with missing values are removed. 
+It uses the variables provided in the 'formula' to seach for imcomplete cases 
+(NA's). If species are removed from data or phylogeny a warning message will 
+be printed in the console.
+
+```{r, crop.data, message=FALSE, warning=FALSE}
+dat <- match_dataphy(log10(georange) ~ log10(mass), data = alien$data, 
+                 phy = alien$phy)
+```
+
+### Fitting the Full model:
+
+```{r}
+mod.0 <- phylolm(log10(georange) ~ log10(mass), data = dat$data, 
+                 phy = dat$phy[[1]], model = "lambda")
+mod.0$coefficients
+```
+
+## Species sampling
+
+### Sampling effort
+Estimating the impact of sampling effort in parameter estimate:
+
+```{r, message=F, warning=F}
+samp <- samp_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+                 phy = dat$phy[[1]], model = "lambda", track = F)
+```
+
+Ploting results:
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
+sensi_plot(samp)
+```
+
+### Influential species
+Detecting most influential species:
+
+```{r, message=F, warning=F}
+influ <- influ_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+                 phy = dat$phy[[1]], track = F)
+```
+
+Ploting results:
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
+sensi_plot(influ)
+```
+
+### Influential clades
+Detecting most influential clades:
+
+```{r, message=F, warning=F}
+clade <- clade_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+                 phy = dat$phy[[1]], clade.col = "family", n.species = 3)
+summary(clade)
+```
+
+Ploting results:
+```{r, fig.height=4, fig.width=7.5, warning=F, eval=F}
+sensi_plot(clade, clade = "Bovidae")
+```
+
+## Phylogenetic uncertainty
+
+```{r, message=F, warning=F}
+trees <- tree_phylm(log(georange) ~ log(mass), data = dat$data, 
+                 phy = dat$phy, times = 100, track = F)
+summary(trees)
+```
+
+Ploting results:
+```{r, fig.height=5.5, fig.width=7.5, warning=F, eval=F}
+sensi_plot(trees)
+```

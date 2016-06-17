@@ -58,6 +58,22 @@
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
 #' \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#'\dontrun{
+#'# Simulate Data:
+#'set.seed(6987)
+#'phy = rtree(150)
+#'x = rTrait(n=1,phy=phy)
+#'X = cbind(rep(1,150),x)
+#'y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#'dat = data.frame(y, x)
+#'# Run sensitivity analysis:
+#'influ <- influ_phyglm(y ~ x, data = dat, phy = phy) 
+#'# To check summary results and most influential species:
+#'summary(influ)
+#'# Visual diagnostics for clade removal:
+#'sensi_plot(influ)
+#'}
 #' @export
 
 influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
