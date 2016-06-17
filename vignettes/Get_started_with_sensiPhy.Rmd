@@ -38,14 +38,14 @@ It uses the variables provided in the 'formula' to seach for imcomplete cases
 be printed in the console.
 
 ```{r, crop.data, message=FALSE, warning=FALSE}
-dat <- match_dataphy(log10(georange) ~ log10(mass), data = alien$data, 
+dat <- match_dataphy(log10(homeRange) ~ log10(adultMass), data = alien$data, 
                  phy = alien$phy)
 ```
 
 ### Fitting the Full model:
 
 ```{r}
-mod.0 <- phylolm(log10(georange) ~ log10(mass), data = dat$data, 
+mod.0 <- phylolm(log10(homeRange) ~ log10(adultMass), data = dat$data, 
                  phy = dat$phy[[1]], model = "lambda")
 mod.0$coefficients
 ```
@@ -56,7 +56,7 @@ mod.0$coefficients
 Estimating the impact of sampling effort in parameter estimate:
 
 ```{r, message=F, warning=F}
-samp <- samp_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+samp <- samp_phylm(log10(homeRange) ~ log10(adultMass), data = dat$data, 
                  phy = dat$phy[[1]], model = "lambda", track = F)
 ```
 
@@ -69,7 +69,7 @@ sensi_plot(samp)
 Detecting most influential species:
 
 ```{r, message=F, warning=F}
-influ <- influ_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+influ <- influ_phylm(log10(homeRange) ~ log10(adultMass), data = dat$data, 
                  phy = dat$phy[[1]], track = F)
 ```
 
@@ -82,21 +82,21 @@ sensi_plot(influ)
 Detecting most influential clades:
 
 ```{r, message=F, warning=F}
-clade <- clade_phylm(log10(georange) ~ log10(mass), data = dat$data, 
+clade <- clade_phylm(log10(homeRange) ~ log10(adultMass), data = dat$data, 
                  phy = dat$phy[[1]], clade.col = "family", n.species = 3)
 summary(clade)
 ```
 
 Ploting results:
 ```{r, fig.height=4, fig.width=7.5, warning=F, eval=F}
-sensi_plot(clade, clade = "Bovidae")
+sensi_plot(clade, clade = "Cervidae")
 ```
 
 ## Phylogenetic uncertainty
 
 ```{r, message=F, warning=F}
-trees <- tree_phylm(log(georange) ~ log(mass), data = dat$data, 
-                 phy = dat$phy, times = 100, track = F)
+trees <- tree_phylm(log(homeRange) ~ log(adultMass), data = dat$data, 
+                 phy = dat$phy, times = 30, track = F)
 summary(trees)
 ```
 
