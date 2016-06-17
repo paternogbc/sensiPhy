@@ -16,7 +16,7 @@ Loading sensiphy and data:
 ```{r loading_package, message=FALSE}
 library(sensiPhy)
 library(knitr)
-data(alien)
+data("alien")
 ```
 
 The __alien__ dataset comprises four variables for 94 species of alien mammal 

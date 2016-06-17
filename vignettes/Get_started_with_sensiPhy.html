@@ -12,7 +12,7 @@
 
 <meta name="author" content="Gustavo Paterno; Caterina Penoni; Gijsbert Werner" />
 
-<meta name="date" content="2016-06-16" />
+<meta name="date" content="2016-06-17" />
 
 <title>Get started with sensiPhy</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Get started with sensiPhy</h1>
 <h4 class="author"><em>Gustavo Paterno; Caterina Penoni; Gijsbert Werner</em></h4>
-<h4 class="date"><em>2016-06-16</em></h4>
+<h4 class="date"><em>2016-06-17</em></h4>
 
 
 
@@ -79,16 +79,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Loading sensiphy and data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(sensiPhy)
 <span class="kw">library</span>(knitr)
-<span class="kw">data</span>(alien)</code></pre></div>
+<span class="kw">data</span>(<span class="st">&quot;alien&quot;</span>)</code></pre></div>
 <p>The <strong>alien</strong> dataset comprises four variables for 94 species of alien mammal species (family, adult body mass, home range and gestation length; see <code>?alien</code> for details) and their respective standard deviation for intraspecific variation.</p>
 <table>
 <thead>
 <tr class="header">
 <th align="left"></th>
 <th align="left">family</th>
-<th align="right">mass</th>
-<th align="right">gesta</th>
-<th align="right">georange</th>
+<th align="right">adultMass</th>
+<th align="right">gestaLen</th>
+<th align="right">homeRange</th>
 <th align="right">SD_mass</th>
 <th align="right">SD_gesta</th>
 <th align="right">SD_range</th>
@@ -160,16 +160,16 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="matching-data-and-phylogeny" class="section level3">
 <h3>Matching data and phylogeny:</h3>
 <p>The ‘match_dataphy; function combine phylogeny and data to ensure that tips in phylogeny match data and that variables with missing values are removed. It uses the variables provided in the ’formula’ to seach for imcomplete cases (NA’s). If species are removed from data or phylogeny a warning message will be printed in the console.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">match_dataphy</span>(<span class="kw">log10</span>(georange) ~<span class="st"> </span><span class="kw">log10</span>(mass), <span class="dt">data =</span> alien$data, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dat &lt;-<span class="st"> </span><span class="kw">match_dataphy</span>(<span class="kw">log10</span>(homeRange) ~<span class="st"> </span><span class="kw">log10</span>(adultMass), <span class="dt">data =</span> alien$data, 
                  <span class="dt">phy =</span> alien$phy)</code></pre></div>
 </div>
 <div id="fitting-the-full-model" class="section level3">
 <h3>Fitting the Full model:</h3>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod<span class="fl">.0</span> &lt;-<span class="st"> </span><span class="kw">phylolm</span>(<span class="kw">log10</span>(georange) ~<span class="st"> </span><span class="kw">log10</span>(mass), <span class="dt">data =</span> dat$data, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod<span class="fl">.0</span> &lt;-<span class="st"> </span><span class="kw">phylolm</span>(<span class="kw">log10</span>(homeRange) ~<span class="st"> </span><span class="kw">log10</span>(adultMass), <span class="dt">data =</span> dat$data, 
                  <span class="dt">phy =</span> dat$phy[[<span class="dv">1</span>]], <span class="dt">model =</span> <span class="st">&quot;lambda&quot;</span>)
 mod<span class="fl">.0</span>$coefficients</code></pre></div>
-<pre><code>## (Intercept) log10(mass) 
-##  -3.5845593   0.8599865</code></pre>
+<pre><code>##      (Intercept) log10(adultMass) 
+##       -3.5845593        0.8599865</code></pre>
 </div>
 </div>
 <div id="species-sampling" class="section level2">
@@ -177,7 +177,7 @@ mod<span class="fl">.0</span>$coefficients</code></pre></div>
 <div id="sampling-effort" class="section level3">
 <h3>Sampling effort</h3>
 <p>Estimating the impact of sampling effort in parameter estimate:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp &lt;-<span class="st"> </span><span class="kw">samp_phylm</span>(<span class="kw">log10</span>(georange) ~<span class="st"> </span><span class="kw">log10</span>(mass), <span class="dt">data =</span> dat$data, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">samp &lt;-<span class="st"> </span><span class="kw">samp_phylm</span>(<span class="kw">log10</span>(homeRange) ~<span class="st"> </span><span class="kw">log10</span>(adultMass), <span class="dt">data =</span> dat$data, 
                  <span class="dt">phy =</span> dat$phy[[<span class="dv">1</span>]], <span class="dt">model =</span> <span class="st">&quot;lambda&quot;</span>, <span class="dt">track =</span> F)</code></pre></div>
 <p>Ploting results:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensi_plot</span>(samp)</code></pre></div>
@@ -185,7 +185,7 @@ mod<span class="fl">.0</span>$coefficients</code></pre></div>
 <div id="influential-species" class="section level3">
 <h3>Influential species</h3>
 <p>Detecting most influential species:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">influ &lt;-<span class="st"> </span><span class="kw">influ_phylm</span>(<span class="kw">log10</span>(georange) ~<span class="st"> </span><span class="kw">log10</span>(mass), <span class="dt">data =</span> dat$data, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">influ &lt;-<span class="st"> </span><span class="kw">influ_phylm</span>(<span class="kw">log10</span>(homeRange) ~<span class="st"> </span><span class="kw">log10</span>(adultMass), <span class="dt">data =</span> dat$data, 
                  <span class="dt">phy =</span> dat$phy[[<span class="dv">1</span>]], <span class="dt">track =</span> F)</code></pre></div>
 <p>Ploting results:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensi_plot</span>(influ)</code></pre></div>
@@ -193,7 +193,7 @@ mod<span class="fl">.0</span>$coefficients</code></pre></div>
 <div id="influential-clades" class="section level3">
 <h3>Influential clades</h3>
 <p>Detecting most influential clades:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clade &lt;-<span class="st"> </span><span class="kw">clade_phylm</span>(<span class="kw">log10</span>(georange) ~<span class="st"> </span><span class="kw">log10</span>(mass), <span class="dt">data =</span> dat$data, 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">clade &lt;-<span class="st"> </span><span class="kw">clade_phylm</span>(<span class="kw">log10</span>(homeRange) ~<span class="st"> </span><span class="kw">log10</span>(adultMass), <span class="dt">data =</span> dat$data, 
                  <span class="dt">phy =</span> dat$phy[[<span class="dv">1</span>]], <span class="dt">clade.col =</span> <span class="st">&quot;family&quot;</span>, <span class="dt">n.species =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>## [1] &quot;Bovidae&quot;
 ## [1] &quot;Canidae&quot;
@@ -214,32 +214,32 @@ mod<span class="fl">.0</span>$coefficients</code></pre></div>
 ## 2       Canidae -3.480654  0.10390542        2.9 4.111252e-06
 ## 4     Sciuridae -3.614676 -0.03011645        0.8 4.589412e-06</code></pre>
 <p>Ploting results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensi_plot</span>(clade, <span class="dt">clade =</span> <span class="st">&quot;Bovidae&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensi_plot</span>(clade, <span class="dt">clade =</span> <span class="st">&quot;Cervidae&quot;</span>)</code></pre></div>
 </div>
 </div>
 <div id="phylogenetic-uncertainty" class="section level2">
 <h2>Phylogenetic uncertainty</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">trees &lt;-<span class="st"> </span><span class="kw">tree_phylm</span>(<span class="kw">log</span>(georange) ~<span class="st"> </span><span class="kw">log</span>(mass), <span class="dt">data =</span> dat$data, 
-                 <span class="dt">phy =</span> dat$phy, <span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">track =</span> F)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">trees &lt;-<span class="st"> </span><span class="kw">tree_phylm</span>(<span class="kw">log</span>(homeRange) ~<span class="st"> </span><span class="kw">log</span>(adultMass), <span class="dt">data =</span> dat$data, 
+                 <span class="dt">phy =</span> dat$phy, <span class="dt">times =</span> <span class="dv">30</span>, <span class="dt">track =</span> F)
 <span class="kw">summary</span>(trees)</code></pre></div>
 <pre><code>##                          min           max          mean      sd_tree
-## intercept      -8.257861e+00 -8.211720e+00 -8.247178e+00 1.377632e-02
-## se.intercept    1.532460e+00  1.541664e+00  1.536741e+00 2.322102e-03
-## pval.intercept  2.089923e-06  2.381409e-06  2.176687e-06 7.066529e-08
-## slope           8.536050e-01  8.606103e-01  8.590000e-01 2.101540e-03
-## se.slope        1.434110e-01  1.442790e-01  1.440316e-01 2.478931e-04
-## pval.slope      2.603940e-07  2.814845e-07  2.659916e-07 5.164984e-09
-## aic             1.971888e+02  1.975240e+02  1.974092e+02 9.885817e-02
-## optpar          8.254998e-01  8.321648e-01  8.279341e-01 2.047014e-03
+## intercept      -8.257244e+00 -8.212099e+00 -8.246458e+00 1.409544e-02
+## se.intercept    1.532479e+00  1.540821e+00  1.536713e+00 2.192455e-03
+## pval.intercept  2.102745e-06  2.381409e-06  2.179627e-06 7.539554e-08
+## slope           8.536582e-01  8.605388e-01  8.588870e-01 2.151198e-03
+## se.slope        1.434503e-01  1.442790e-01  1.440174e-01 2.438330e-04
+## pval.slope      2.604933e-07  2.814845e-07  2.661850e-07 5.606255e-09
+## aic             1.971888e+02  1.975034e+02  1.974064e+02 1.007544e-01
+## optpar          8.256872e-01  8.321540e-01  8.279874e-01 2.031029e-03
 ##                       CI_low       CI_high
-## intercept      -8.249912e+00 -8.244445e+00
-## se.intercept    1.536280e+00  1.537202e+00
-## pval.intercept  2.162666e-06  2.190709e-06
-## slope           8.585830e-01  8.594170e-01
-## se.slope        1.439824e-01  1.440807e-01
-## pval.slope      2.649668e-07  2.670164e-07
-## aic             1.973896e+02  1.974288e+02
-## optpar          8.275279e-01  8.283403e-01</code></pre>
+## intercept      -8.251721e+00 -8.241194e+00
+## se.intercept    1.535894e+00  1.537532e+00
+## pval.intercept  2.151474e-06  2.207781e-06
+## slope           8.580838e-01  8.596903e-01
+## se.slope        1.439263e-01  1.441084e-01
+## pval.slope      2.640916e-07  2.682784e-07
+## aic             1.973687e+02  1.974440e+02
+## optpar          8.272290e-01  8.287458e-01</code></pre>
 <p>Ploting results:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sensi_plot</span>(trees)</code></pre></div>
 </div>
