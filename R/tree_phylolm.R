@@ -47,6 +47,7 @@ tree_phylm <- function(formula,data,phy,
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
+  if(length(phy)<times) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   else
   
   #Matching tree and phylogeny using utils.R
