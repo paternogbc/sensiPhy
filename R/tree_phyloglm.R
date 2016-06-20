@@ -80,6 +80,7 @@ tree_phyglm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
+  pb <- txtProgressBar(min = 0, max = times, style = 3)
   for (j in trees){
     
     #phyloglm model
@@ -104,7 +105,7 @@ tree_phyglm <- function(formula,data,phy,
       #d                   <- mod$d
       optpar               <- mod$alpha
 
-      if(track==TRUE) cat("\r", "Tree = ", j, " ")
+      if(track==TRUE) setTxtProgressBar(pb, counter)
       
       #write in a table
       estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
@@ -115,7 +116,7 @@ tree_phyglm <- function(formula,data,phy,
       
     }
   }
-  
+  on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
   mean_by_tree<-stats::aggregate(.~n.tree, data=tree.model.estimates, mean)

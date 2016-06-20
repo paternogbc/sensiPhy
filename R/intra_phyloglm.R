@@ -87,7 +87,7 @@ intra_phyglm <- function(formula, data, phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  
+  pb <- txtProgressBar(min = 0, max = times, style = 3)
   for (i in 1:times) {
     
     ##Set predictor variable
@@ -126,7 +126,7 @@ intra_phyglm <- function(formula, data, phy,
       optpar               <- mod$alpha
 
       
-      if(track==TRUE) cat("\r","Simu = ", i," / ", times)
+      if(track==TRUE) setTxtProgressBar(pb, i)
 
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
@@ -137,7 +137,7 @@ intra_phyglm <- function(formula, data, phy,
       
     }
   }
-  
+  on.exit(close(pb))
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
