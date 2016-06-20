@@ -111,7 +111,9 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
         #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
+        pb <- txtProgressBar(min = 0, max = N, style = 3)
         for (i in 1:N){
+                
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
                 mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
@@ -140,8 +142,7 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
                         }
 
                         if(track==TRUE)
-                        cat("\r", i," / ", N)
-
+                            setTxtProgressBar(pb, i)
                         # Stores values for each simulation
                         estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
                                                  pval.intercept, slope, DFslope, slope.perc,
@@ -151,7 +152,7 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
                         counter=counter+1
                 }
         }
-
+        on.exit(close(pb))
         #Calculates Standardized DFbeta and DFintercept
         sDFintercept <- influ.model.estimates$DFintercept/
                 stats::sd(influ.model.estimates$DFintercept)

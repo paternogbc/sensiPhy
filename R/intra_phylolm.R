@@ -53,8 +53,8 @@
 #'# Load data:
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
-#'intra <- intra_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data,
-#' Vy = "SD_mass", times = 100)
+#'intra <- intra_phylm(gestaLen ~ log(adultMass), phy = alien$phy[[1]], data = alien$data,
+#' Vy = "SD_gesta", times = 30)
 #'# To check summary results:
 #'summary(intra)
 #'# Visual diagnostics
@@ -107,7 +107,7 @@ intra_phylm <- function(formula, data, phy,
   counter = 1
   errors <- NULL
   c.data <- list()
-  
+  pb <- txtProgressBar(min = 0, max = times, style = 3)
   for (i in 1:times) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
@@ -153,7 +153,7 @@ intra_phylm <- function(formula, data, phy,
       if (model != "BM") {
         optpar <- mod$optpar
       }
-      if(track == TRUE) cat("\r","Simu = ", i," / ", times)
+      if(track == TRUE) setTxtProgressBar(pb, i)
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
                                slope, se.slope, pval.slope, aic.mod, optpar,
@@ -163,7 +163,7 @@ intra_phylm <- function(formula, data, phy,
       
     }
   }
-  
+  on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
   mean_by_randomval <- stats::aggregate(.~n.intra, data = intra.model.estimates,

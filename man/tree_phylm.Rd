@@ -67,7 +67,7 @@ data(alien)
 class(alien$phy)
 alien$phy
 # run PGLS accounting for phylogenetic uncertain:
-tree <- tree_phylm(log(mass) ~ log(gesta), phy = alien$phy, 
+tree <- tree_phylm(log(gestaLen) ~ log(aultMass), phy = alien$phy, 
 data = alien$data, times = 30)
 # To check summary results:
 summary(tree)

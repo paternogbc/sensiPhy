@@ -124,6 +124,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
                                    n.species," species. Change 'n.species' 
                                    to fix this problem",sep = ""))
     # Loop:
+    pb <- txtProgressBar(min = 0, max = length(k), style = 3)
     for (i in k){
         if (length(k) > 1) {
             crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(all.clades,i), ]
@@ -156,7 +157,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
             aic.mod         <- mod$aic
             optpar          <- mod$alpha
             
-            if(track==TRUE) (print(i))
+            if(track==TRUE) (setTxtProgressBar(pb, counter))
             
             # Stores values for each simulation
             estim.simu <- data.frame(i, intercept, DFintercept, intercept.perc,
@@ -167,7 +168,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
             counter=counter+1
         }
     }
-    
+    on.exit(close(pb))
     #Creates a list with full model estimates:
     param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
                    aic=phylolm::summary.phylolm(mod.0)$aic,

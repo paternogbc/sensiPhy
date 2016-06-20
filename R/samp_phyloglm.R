@@ -117,6 +117,8 @@ samp.model.estimates<-
 #and repeat determined by 'times'.
 counter=1
 limit <- sort(round((breaks) * nrow(full.data), digits = 0))
+NL <- length(breaks) * times
+pb <- txtProgressBar(min = 0, max = NL, style = 3)
 for (i in limit){
     for (j in 1:times){
             exclude <- sample(1:N, i)
@@ -146,9 +148,7 @@ for (i in limit){
                 n.percent <- round((n.remov/N)*100,digits=0)
                 rep <- j
                 
-                if(track==TRUE) (
-                    cat("\r", "Break = ", n.percent,"Repetition =", j))
-                
+                if(track==TRUE) setTxtProgressBar(pb, counter)
                     # Stores values for each simulation
                     estim.simu <- data.frame(n.remov, n.percent, intercept, 
                                              DFintercept, intercept.perc,
@@ -161,7 +161,7 @@ for (i in limit){
             }
     }
 }
-
+on.exit(close(pb))
 #Calculates percentages of signficant intercepts & slopes within breaks.
 res                     <- samp.model.estimates
 times                   <- table(res$n.remov)
