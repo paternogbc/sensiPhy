@@ -120,7 +120,7 @@ samp.model.estimates <-
 counter <- 1
 limit <- sort(round( (breaks) * nrow(full.data),digits=0))
 NL <- length(breaks) * times
-pb <- txtProgressBar(min = 0, max = NL, style = 3)
+pb <- txtProgressBar(min = 0, max = NL, style = 1)
 for (i in limit){
     for (j in 1:times){
         exclude <- sample(1:N,i)
