@@ -87,7 +87,7 @@ intra_phyglm <- function(formula, data, phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  pb <- txtProgressBar(min = 0, max = times, style = 3)
+  pb <- txtProgressBar(min = 0, max = times, style = 1)
   for (i in 1:times) {
     
     ##Set predictor variable

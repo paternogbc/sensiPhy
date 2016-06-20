@@ -111,7 +111,7 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
         #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
-        pb <- txtProgressBar(min = 0, max = N, style = 3)
+        pb <- txtProgressBar(min = 0, max = N, style = 1)
         for (i in 1:N){
                 
                 crop.data <- full.data[c(1:N)[-i],]

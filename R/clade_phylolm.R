@@ -118,7 +118,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
                           n.species," species. Change 'n.species' to fix this
                           problem",sep=""))
     # Loop:
-    pb <- txtProgressBar(min = 0, max = length(k), style = 3)
+    pb <- txtProgressBar(min = 0, max = length(k), style = 1)
     for (i in k){
         if (length(k) > 1) {
             crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(all.clades,i),]
