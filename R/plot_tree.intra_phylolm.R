@@ -20,6 +20,7 @@
 #'
 #' Graph 3: Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
 #' @importFrom grid unit 
+#' @importFrom stats plogis
 #' @export
 
 sensi_plot.sensiIntra <- function(x, graphs="all", ...){
@@ -76,6 +77,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                           environment = parent.frame())+
       geom_point(size=3,alpha=.8)+
       theme(panel.background=element_rect(fill="white",colour="black"),
+            axis.title=element_text(size=16),
+            axis.text = element_text(size=14),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             legend.position="none")

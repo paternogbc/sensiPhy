@@ -17,7 +17,7 @@ data(primates)
 A comparative dataset containing traits for 95 Primates species 
 (primates$data) and a multiphylo object with 101 phylogenies matching the 
 data (primates$phy). Tip labels are the binomial species names and match 
-with data rownames. Data was taken from (REF) and phylogenies from
+with data rownames. Data was taken from (Jones et al. 2009) and phylogenies from
 (Fritz et al 2009) and (Kuhn et al 2011).
 }
 \references{

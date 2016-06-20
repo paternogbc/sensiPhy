@@ -22,6 +22,7 @@
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
 #' @importFrom ggplot2 aes_string
+#' @importFrom stats model.frame qt plogis 
 #' @export
 
 sensi_plot.sensiClade <- function(x, clade = NULL, ...){

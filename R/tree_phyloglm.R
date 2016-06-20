@@ -35,6 +35,22 @@
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#' \dontrun{
+#'### Simulating Data:
+#'set.seed(6987)
+#'mphy = rmtree(150, N = 30)
+#'x = rTrait(n=1,phy=mphy[[1]])
+#'X = cbind(rep(1,150),x)
+#'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
+#'dat = data.frame(y, x)
+#'# Run sensitivity analysis:
+#'tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, times = 30)
+#'# summary results:
+#'summary(tree)
+#'# Visual diagnostics for phylogenetic uncertainty:
+#'sensi_plot(tree)
+#' }
 #' @export
 
 tree_phyglm <- function(formula,data,phy,

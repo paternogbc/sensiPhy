@@ -58,6 +58,22 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @import ape phylolm
+#' 
+#' @examples 
+#' \dontrun{
+#' # Load data:
+#' data(alien)
+#' # Run analysis:
+#' samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
+#' data = alien$data)
+#' summary(samp)
+#' head(samp$samp.model.estimates)
+#' # Visual diagnostics
+#' sensi_plot(samp)
+#' # You can specify which graph and parameter ("slope" or "intercept") to print: 
+#' sensi_plot(samp, graphs = 1, param = "slope")
+#' sensi_plot(samp, graphs = 2, param = "intercept")
+#' }
 #' @export
 
 samp_phylm <- function(formula,data,phy,times=20,

@@ -48,6 +48,19 @@
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link{sensi_plot}}
 #' @references Here still: reference to phylolm paper + our own?
+#' @examples 
+#' \dontrun{
+#'# Load data:
+#'data(alien)
+#'# run PGLS accounting for intraspecific variation:
+#'intra <- intra_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data,
+#' Vy = "SD_mass", times = 100)
+#'# To check summary results:
+#'summary(intra)
+#'# Visual diagnostics
+#'sensi_plot(intra)
+#'}
+#'
 #' @export
 
 
@@ -99,7 +112,7 @@ intra_phylm <- function(formula, data, phy,
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
-        {full.data$respV <- model.frame(formula, data = full.data)[,1]}
+        {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
     
     #choose a random value in [mean-se,mean+se] if Vy is provided
     if (!is.null(Vy))
@@ -107,7 +120,7 @@ intra_phylm <- function(formula, data, phy,
     
     #Vx is not provided or is not numeric, do not pick random value
     if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
-        {full.data$predV <- model.frame(formula, data = full.data)[,2]}
+        {full.data$predV <- stats::model.frame(formula, data = full.data)[,2]}
     
     #choose a random value in [mean-se,mean+se] if Vx is provided
     if(!is.null(Vx))
@@ -161,8 +174,8 @@ intra_phylm <- function(formula, data, phy,
                           mean = apply(intra.model.estimates, 2, mean),
                           sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
   
-  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   res <- list(formula = formula,
               datas = full.data,
