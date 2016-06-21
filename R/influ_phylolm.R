@@ -190,7 +190,6 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
         if (length(res$errors) >0){
                 warning("Some species deletion presented errors, please check: output$errors")}
         else {
-                message("No errors found. All single deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
                 res$errors <- "No errors found."
         }
 
