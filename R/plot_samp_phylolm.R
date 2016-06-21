@@ -35,7 +35,8 @@
 
 sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
 {
-    
+
+   # x <- samp
 # nulling variables:
 slope <- n.percent <- slope.class <- intercept <- model <- intercept.class <- NULL
 optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
@@ -198,7 +199,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                      environment = parent.frame())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=colS,name="Change in beta")+
-                scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
+                scale_y_continuous(breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
                        legend.direction = "horizontal",
@@ -211,7 +212,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("Proportion of estimated slope")
+                ylab("Proportion of estimated slopes (%)")
 
         ### Graph: Intercept
         i2 <- ggplot2::ggplot(intercept.perc,
@@ -220,7 +221,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                      environment = parent.frame())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=colI,name="Change in beta")+
-                scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
+                scale_y_continuous(breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
                        legend.direction = "horizontal",
@@ -233,7 +234,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("Proportion of estimated intercept")
+                ylab("Proportion of estimated intercepts (%)")
 
         ### Optpar acros % removed species:
         opt <- ggplot2::ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
