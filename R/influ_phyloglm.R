@@ -185,7 +185,6 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         if (length(res$errors) >0){
                 warning("Some species deletion presented errors, please check: output$errors")}
         else {
-                message("No errors found. All single deletions were performed and stored successfully. Please, check outpu$influ.model.estimates.")
                 res$errors <- "No errors found."
         }
 

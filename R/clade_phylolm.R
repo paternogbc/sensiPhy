@@ -188,7 +188,6 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
     if (length(res$errors) >0){
         warning("Some clades deletion presented errors, please check: output$errors")}
     else {
-        message("No errors found. All deletions were performed and stored successfully. Please, check outpu$clade.model.estimates.")
         res$errors <- "No errors found."
     }
     return(res)
