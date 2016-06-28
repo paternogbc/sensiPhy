@@ -52,22 +52,24 @@ intercept.perc <- sDFintercept <- NULL
 
         ### Plots:
         # Distribution of estimated slopes:
-        s1 <- ggplot2::ggplot(result,aes(x=slope,y=..density..))+
-                geom_histogram(fill="lightyellow",colour="grey60", size=.2) +
-                geom_density(size=.2) +
+        s1 <- ggplot2::ggplot(result,aes(x=slope))+
+                geom_histogram(fill="yellow",colour="black", size=.2,
+                               alpha = .3) +
                 geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated slopes")+
+                ylab("Frequency")+
                 theme(axis.title=element_text(size=16),
                     axis.text = element_text(size=14),
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
         
         # Distribution of estimated intercepts:
-        i1 <- ggplot2::ggplot(result,aes(x=intercept,y=..density..))+
-                geom_histogram(fill="lightyellow",colour="grey60", size=.2) +
-                geom_density(size=.2) +
+        i1 <- ggplot2::ggplot(result,aes(x=intercept))+
+                geom_histogram(fill="yellow",colour="black", size=.2,
+                               alpha = .3) +
                 geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated Intercepts")+
+                ylab("Frequency")+
                 theme(axis.title=element_text(size=16),
                     axis.text = element_text(size=14),
                     panel.background = element_rect(fill="white",
@@ -111,6 +113,7 @@ intercept.perc <- sDFintercept <- NULL
         s3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Slope")+
+                ylab("Frequency")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
@@ -124,6 +127,7 @@ intercept.perc <- sDFintercept <- NULL
         i3 <- ggplot2::ggplot(result,aes(x=sDFintercept))+
                 geom_histogram(fill="red",color="black",binwidth=.5) +
                 xlab("Standardized Difference in Intercept")+
+                ylab("Frequency")+
                 geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
                                colour="black", fill="white",binwidth=.5)+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
@@ -137,8 +141,10 @@ intercept.perc <- sDFintercept <- NULL
 
         s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..))+
                 geom_histogram(data = result,
-                               colour="black", fill="lightyellow")+
+                               colour="black", fill="yellow",
+                               alpha = .3)+
                 xlab("% of change in Slope")+
+                ylab("Frequency") +
                 theme(axis.title=element_text(size=16),
                        axis.text = element_text(size=14),
                        panel.background = element_rect(fill="white",
@@ -147,8 +153,10 @@ intercept.perc <- sDFintercept <- NULL
         # Distribution of slope.perc:
         i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
                 geom_histogram(
-                              colour="black", fill="lightyellow")+
+                              colour="black", fill="yellow",
+                              alpha = .3)+
                 xlab("% of change in Intercept")+
+                ylab("Frequency")+
                 theme(axis.title=element_text(size=16),
                     axis.text = element_text(size=14),
                     panel.background = element_rect(fill="white",

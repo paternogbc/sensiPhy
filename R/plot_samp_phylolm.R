@@ -212,7 +212,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("Proportion of estimated slopes (%)")
+                ylab("% of estimated slopes")
 
         ### Graph: Intercept
         i2 <- ggplot2::ggplot(intercept.perc,
@@ -234,7 +234,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("Proportion of estimated intercepts (%)")
+                ylab("% of estimated intercepts")
 
         ### Optpar acros % removed species:
         opt <- ggplot2::ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
@@ -258,7 +258,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 xlab("% Species removed")+
                 geom_point(size=5,colour="red")+
                 geom_line(colour="red")+
-                ylab("% of significant Slopes")+
+                ylab("% of significant slopes")+
                 theme(axis.text=element_text(size=14),
                       axis.title=element_text(size=16),
                       panel.background = element_rect(fill="white",
@@ -272,7 +272,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 xlab("% Species removed")+
                 geom_point(size=5,colour="red")+
                 geom_line(colour="red")+
-                ylab("% of significant Intercept")+
+                ylab("% of significant intercepts")+
                 theme(axis.text=element_text(size=14),
                       axis.title=element_text(size=16),
                       panel.background = element_rect(fill="white",
