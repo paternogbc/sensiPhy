@@ -76,12 +76,15 @@ intra_phylm <- function(formula, data, phy,
                         times = 2, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
+  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
   if(class(formula) != "formula") stop("formula must be class 'formula'")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx or Vy")
+  
 
+    
   #Matching tree and phylogeny using utils.R
   datphy <- match_dataphy(formula, data, phy)
   full.data <- datphy[[1]]
