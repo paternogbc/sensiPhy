@@ -4,7 +4,7 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, Vy = NULL, times = 2,
+intra_phyglm(formula, data, phy, Vx = NULL, Vy = NULL, times = 30,
   distrib = "uniform", btol = 50, track = TRUE, ...)
 }
 \arguments{
