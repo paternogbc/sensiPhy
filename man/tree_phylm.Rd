@@ -81,9 +81,14 @@ sensi_plot(tree, graphs = 3)
 Caterina Penone & Pablo Ariel Martinez
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
+Sensitivity Analyses in Comparative Biology. Philosophical Transactions:
+ Biological Sciences, pp. 1241-1249.
+ 
+Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
 }
 

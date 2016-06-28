@@ -23,6 +23,9 @@ for each function in the package.
 
 You can find instructions on how to contribute to \bold{sensiPhy} at
 this link: \url{https://github.com/paternogbc/sensiPhy/wiki/How-to-support-sensiPhy}
+
+A quick tutorial is available at this link: 
+\url{https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial}
 }
 \author{
 Gustavo Paterno; Caterina Penone & Gijsbert D.A. Werner

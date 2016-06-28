@@ -37,8 +37,14 @@
 #' due to phylogenetic uncertainty. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
 #' @author Caterina Penone & Pablo Ariel Martinez
-#' @seealso \code{\link{sensi_plot}}
-#' @references Here still: reference to phylolm paper + our own?
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+#' @references 
+#' Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
+#' Sensitivity Analyses in Comparative Biology. Philosophical Transactions:
+#'  Biological Sciences, pp. 1241-1249.
+#'  
+#' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+#' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
 #' \dontrun{
 #'# Load data:

@@ -4,7 +4,7 @@
 \alias{samp_phylm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Linear Regression}
 \usage{
-samp_phylm(formula, data, phy, times = 20, breaks = seq(0.1, 0.7, 0.1),
+samp_phylm(formula, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
   model = "lambda", track = TRUE, ...)
 }
 \arguments{

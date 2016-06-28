@@ -9,9 +9,9 @@
 #' @format A data frame with 94 rows and 7 variables:
 #' \itemize{
 #'   \item family: Taxonomic family
-#'   \item Mass: Mean adult body mass (g)
-#'   \item gesta: Mean gestation length (days)
-#'   \item range: Mean home range (km)
+#'   \item adultMass: Mean adult body mass (g)
+#'   \item gestaLen: Mean gestation length (days)
+#'   \item homeRange: Mean home range (km)
 #'   \item SE_mass: Standard deviation (intraspecific) for mean adult body mass (g)
 #'   \item SE_gesta: Standard deviation (intraspecific) for mean gestation length (days)
 #'   \item SE_range: Standard deviation (intraspecific) for mean home range (km)
@@ -48,6 +48,7 @@
 #'   \item family: Taxonomic family
 #'   \item adultMass: Mean adult body mass (g)
 #'   \item sexMaturity: Age when individuals are first physically capable of reproducing (days)
+#'   \item homeRange: Mean home range (km)
 #'   }
 #' @format A multiphylo containing 101 trees for 95 primate species.
 #' @references 

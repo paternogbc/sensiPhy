@@ -93,10 +93,11 @@ sensi_plot(clade, "C")
 Gustavo Paterno & Gijsbert Werner
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[sensiPhy]{clade_phylm}}, \code{\link{influ_phyglm}},
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{clade_phylm}},
+ \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
 

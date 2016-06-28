@@ -74,8 +74,8 @@
 #'}
 #' @export
 
-samp_phyglm <- function(formula, data, phy, times = 20,
-                         breaks=seq(.1, .7, .1), btol = 50, track = TRUE, ...)
+samp_phyglm <- function(formula, data, phy, times = 30,
+                         breaks=seq(.1, .5, .1), btol = 50, track = TRUE, ...)
 {
     
 if(class(formula) != "formula") stop("formula must be class 'formula'")

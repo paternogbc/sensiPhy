@@ -76,8 +76,8 @@
 #' }
 #' @export
 
-samp_phylm <- function(formula,data,phy,times=20,
-                         breaks=seq(.1,.7,.1),model="lambda",track=TRUE,...){
+samp_phylm <- function(formula,data,phy,times=30,
+                         breaks=seq(.1,.5,.1),model="lambda",track=TRUE,...){
 # Basic error checking:
 if(class(formula) != "formula") 
     stop("formula must be class 'formula'")
