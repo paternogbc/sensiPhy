@@ -99,7 +99,8 @@ sensi_plot(influ)
 Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},

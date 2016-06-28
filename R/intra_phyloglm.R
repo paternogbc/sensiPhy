@@ -46,8 +46,15 @@
 #' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
 #' @author Caterina Penone & Pablo Ariel Martinez
-#' @seealso \code{\link{sensi_plot}}
-#' @references Here still: reference to phylolm paper + our own?
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
+#' @references
+#' Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
+#' Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 
+#' fishes is related to body size and depth range. Molecular Phylogenetics and 
+#' Evolution, 93, 1-4
+#' 
+#' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+#' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @export
 
 

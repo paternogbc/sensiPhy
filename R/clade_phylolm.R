@@ -53,9 +53,11 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
 #' @author Gustavo Paterno
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{influ_phylm}},
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
+#'  \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 #' \code{\link{sensi_plot}}
-#' @references Here still: reference to phylolm paper + our own?
+#' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+#' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
 #' \dontrun{
 #'# Load data:

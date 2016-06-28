@@ -75,9 +75,15 @@ Output can be visualised using \code{sensi_plot}.
 Caterina Penone & Pablo Ariel Martinez
 }
 \references{
-Here still: reference to phylolm paper + our own?
+Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
+Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 
+fishes is related to body size and depth range. Molecular Phylogenetics and 
+Evolution, 93, 1-4
+
+Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
 }
 

@@ -9,6 +9,7 @@
   \item family: Taxonomic family
   \item adultMass: Mean adult body mass (g)
   \item sexMaturity: Age when individuals are first physically capable of reproducing (days)
+  \item homeRange: Mean home range (km)
   }}
 \usage{
 data(primates)
