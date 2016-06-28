@@ -59,7 +59,7 @@
 
 
 intra_phyglm <- function(formula, data, phy,
-                          Vx=NULL, Vy = NULL, times=2,
+                          Vx=NULL, Vy = NULL, times = 30,
                           distrib="uniform", btol=50, track=TRUE,...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")

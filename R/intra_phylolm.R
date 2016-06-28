@@ -73,7 +73,7 @@
 
 intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
-                        times = 2, distrib = "normal",
+                        times = 30, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
