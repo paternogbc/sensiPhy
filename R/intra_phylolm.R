@@ -94,10 +94,10 @@ intra_phylm <- function(formula, data, phy,
   pred <- all.vars(formula)[2]
   
   if(!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
-    full.data[is.na(full.data[, Vy]), ] <- 0}
+    full.data[is.na(full.data[, Vy]), Vy] <- 0}
   
   if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
-    full.data[is.na(full.data[, Vx]), ] <- 0}
+    full.data[is.na(full.data[, Vx]), Vx] <- 0}
   
   
   
