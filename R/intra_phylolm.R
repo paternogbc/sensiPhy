@@ -1,7 +1,7 @@
 #' Intraspecific variability - Phylogenetic Linear Regression
 #'
 #' Performs Phylogenetic linear regression evaluating
-#' intraspecific variability.
+#' intraspecific variability in response and/or predictor variables.
 #'
 #' @param formula The model formula: \code{response~predictor}. 
 #' @param data Data frame containing species traits and species names as row names.
