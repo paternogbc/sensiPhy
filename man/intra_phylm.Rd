@@ -53,7 +53,7 @@ of the 95% confidence interval.
 }
 \description{
 Performs Phylogenetic linear regression evaluating
-intraspecific variability.
+intraspecific variability in response and/or predictor variables.
 }
 \details{
 This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.

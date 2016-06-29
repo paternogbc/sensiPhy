@@ -7,12 +7,18 @@ Authors@R: c(
     person("Gijsbert", "Werner", email = "g.d.a.werner@vu.nl", role = "aut"),
     person("Caterina", "Perone", email = "caterina.perone@gmail.com", role = "aut"))
 Maintainer: Gustavo Paterno <paternogbc@gmail.com>
-Description: This package performs sensitivity analysis for comparative methods.
+Description: An implementation of sensitivity analysis in phylogenetic regression models,
+    both for linear and logistic phylogenetic regression. The package uses several
+    bootstrapping methods to quantify and account for different types of 
+    uncertainty in PGLS models:
+    (i) Sampling uncertainty (sample size; influential species and clades)
+    (ii) Phylogenetic uncertainty
+    (iii) Data uncertainty (intraspecific variation and measurement error)
 Depends:
-    R (>= 3.0.0),
+    R (>= 3.1.0),
     ape (>= 3.3),
-    phylolm (>= 2.2),
-    ggplot2 (>= 2.0.0)
+    phylolm (>= 2.4),
+    ggplot2 (>= 2.1.0)
 License: GPL-2
 URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues

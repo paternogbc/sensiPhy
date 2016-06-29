@@ -4,7 +4,7 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, Vy = NULL, times = 30,
+intra_phyglm(formula, data, phy, Vx = NULL, times = 30,
   distrib = "uniform", btol = 50, track = TRUE, ...)
 }
 \arguments{
@@ -17,16 +17,13 @@ intra_phyglm(formula, data, phy, Vx = NULL, Vy = NULL, times = 30,
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
-\item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
-variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
-
 \item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
 If NULL, \code{times} = 2}
 
-\item{distrib}{A character string indicating which distribution to use to generate a random value for the response 
-and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
+\item{distrib}{A character string indicating which distribution to use to generate a random value for the
+predictor variable. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 Uniform distribution: "uniform" (\code{\link{runif}})
-Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.}
+Warning: we recommend to use normal distribution with Vx = standard deviation of the mean.}
 
 \item{btol}{Bound on searching space. For details see \code{phyloglm}}
 
@@ -53,14 +50,13 @@ of the 95% confidence interval.
 }
 \description{
 Performs Phylogenetic logistic regression evaluating
-intraspecific variability.
+intraspecific variability in predictor variables.
 }
 \details{
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
 The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
 a random value in the normal or uniform distribution.
-Warning: if predictor and/or response variables are log-transformed, please make sure that 
-Vx and/or Vy are also in a log-scale.
+Warning: if predictor variable is log-transformed, please make sure that Vx is also in a log-scale.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
