@@ -81,6 +81,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
         guides(shape = guide_legend(override.aes = list(linetype = 0)))+
         scale_linetype_manual(name = "Model", values = c("Full model" = "solid",
                                                     "Without clade" = "dashed"))+
+        scale_color_manual(name = "Model", values = c("Full model" = "black",
+                                                    "Without clade" = "red"))+
         theme(axis.text = element_text(size = 18),
               axis.title = element_text(size = 18),
               legend.text = element_text(size = 16),
@@ -91,11 +93,11 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
         g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
-                                      linetype = factor(model)),
+                                      linetype = factor(model),color=factor(model)),
                 size=.8)
     }
     if(length(class(x)) == 2){
-        g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model)))
+        g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model),color=factor(model)))
     }
     return(g.out)
 }
