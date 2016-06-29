@@ -1,21 +1,19 @@
 #' Intraspecific variability - Phylogenetic Logistic Regression
 #'
 #' Performs Phylogenetic logistic regression evaluating
-#' intraspecific variability.
+#' intraspecific variability in predictor variables.
 #'
 #' @param formula The model formula: \code{response~predictor}. 
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
-#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
-#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param times Number of times to repeat the analysis generating a random value for the predictor variable.
 #' If NULL, \code{times} = 2
-#' @param distrib A character string indicating which distribution to use to generate a random value for the response 
-#' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
+#' @param distrib A character string indicating which distribution to use to generate a random value for the
+#' predictor variable. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
-#' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
+#' Warning: we recommend to use normal distribution with Vx = standard deviation of the mean.
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
@@ -23,8 +21,7 @@
 #' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
 #' The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
 #' a random value in the normal or uniform distribution.
-#' Warning: if predictor and/or response variables are log-transformed, please make sure that 
-#' Vx and/or Vy are also in a log-scale.
+#' Warning: if predictor variable is log-transformed, please make sure that Vx is also in a log-scale.
 #'
 #' All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -59,15 +56,15 @@
 
 
 intra_phyglm <- function(formula, data, phy,
-                          Vx=NULL, Vy = NULL, times = 30,
+                          Vx=NULL, times = 30,
                           distrib="uniform", btol=50, track=TRUE,...){
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
+  if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
-                                 is provided for Vx or Vy")
+                                 is provided for Vx")
 
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
