@@ -4,7 +4,7 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, times = 30,
+intra_phyglm(formula, data, phy, Vx = NULL, times = 30, x.transf = NULL,
   distrib = "uniform", btol = 50, track = TRUE, ...)
 }
 \arguments{
@@ -19,6 +19,9 @@ variable. When information is not available for one taxon, the value can be 0 or
 
 \item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
 If NULL, \code{times} = 2}
+
+\item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
+argument instead of transform data in the formula directly.}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the
 predictor variable. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -56,7 +59,7 @@ intraspecific variability in predictor variables.
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
 The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
 a random value in the normal or uniform distribution.
-Warning: if predictor variable is log-transformed, please make sure that Vx is also in a log-scale.
+To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
