@@ -27,7 +27,7 @@
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
 #' The regression is repeated \code{times} times. At each iteration the function generates for each row in the dataset
 #' a random value in the normal or uniform distribution.
-#'To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
+#' To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -144,10 +144,10 @@ intra_phylm <- function(formula, data, phy,
     
     #transform Vy and/or Vx if x.transf and/or y.transf are provided
     if(!is.null(y.transf)) 
-    {full.data$predV <- y.transf(full.data$predV)}
+    {full.data$respV <- y.transf(full.data$respV)}
     
     if(!is.null(x.transf)) 
-    {full.data$respV <- x.transf(full.data$respV)}
+    {full.data$predV <- x.transf(full.data$predV)}
     
     #model
     mod = try(phylolm::phylolm(respV ~ predV, data = full.data, model = model,
