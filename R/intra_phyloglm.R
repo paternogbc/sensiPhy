@@ -8,6 +8,8 @@
 #' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
+#' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
+#' argument instead of transform data in the formula directly.
 #' @param times Number of times to repeat the analysis generating a random value for the predictor variable.
 #' If NULL, \code{times} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the
@@ -21,7 +23,7 @@
 #' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
 #' The regression is repeated \code{times} times. At each iteration the functions generates for each row in the dataset
 #' a random value in the normal or uniform distribution.
-#' Warning: if predictor variable is log-transformed, please make sure that Vx is also in a log-scale.
+#' To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
 #'
 #' All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -57,12 +59,15 @@
 
 intra_phyglm <- function(formula, data, phy,
                           Vx=NULL, times = 30,
+                          x.transf = NULL,
                           distrib="uniform", btol=50, track=TRUE,...){
   #Error check
   if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
+  if(formula[[2]]!=all.vars(formula)[1] | formula[[3]]!=all.vars(formula)[2])
+     stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx")
 
@@ -106,6 +111,9 @@ intra_phyglm <- function(formula, data, phy,
     
     full.data$resp1<-full.data[,resp1] #try to improve this in future
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
+   #transform Vy and/or Vx if x.transf and/or y.transf are provided
+   if(!is.null(x.transf)) 
+   {full.data$predV <- x.transf(full.data$predV)}
   
     #model
     if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)}
