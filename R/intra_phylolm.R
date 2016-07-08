@@ -10,6 +10,10 @@
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
+#' @param y.transf Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
+#' argument instead of transform data in the formula directly.
+#' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
+#' argument instead of transform data in the formula directly.
 #' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
 #' If NULL, \code{times} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
@@ -22,9 +26,8 @@
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
 #' The regression is repeated \code{times} times. At each iteration the function generates for each row in the dataset
-#' a random value in the normal or uniform distribution. 
-#' Warning: if predictor and/or response variables are log-transformed, please make sure that 
-#' Vx and/or Vy are also in a log-scale.
+#' a random value in the normal or uniform distribution.
+#'To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -60,7 +63,7 @@
 #'# Load data:
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
-#'intra <- intra_phylm(gestaLen ~ log(adultMass), phy = alien$phy[[1]], data = alien$data,
+#'intra <- intra_phylm(gestaLen ~ adultMass, transf.x = log, phy = alien$phy[[1]], data = alien$data,
 #' Vy = "SD_gesta", times = 30)
 #'# To check summary results:
 #'summary(intra)
@@ -73,6 +76,7 @@
 
 intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
+                        y.transf = NULL, x.transf = NULL,
                         times = 30, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
@@ -80,8 +84,10 @@ intra_phylm <- function(formula, data, phy,
   if(class(formula) != "formula") stop("formula must be class 'formula'")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
+    if(formula[[2]]!=all.vars(formula)[1] | formula[[3]]!=all.vars(formula)[2])
+    stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
-                                 is provided for Vx or Vy")
+                                 is provided for Vx and/or Vy")
   
 
     
@@ -135,6 +141,13 @@ intra_phylm <- function(formula, data, phy,
     #choose a random value in [mean-se,mean+se] if Vx is provided
     if(!is.null(Vx))
     {full.data$predV <- apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    
+    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    if(!is.null(y.transf)) 
+    {full.data$predV <- y.transf(full.data$predV)}
+    
+    if(!is.null(x.transf)) 
+    {full.data$respV <- x.transf(full.data$respV)}
     
     #model
     mod = try(phylolm::phylolm(respV ~ predV, data = full.data, model = model,
