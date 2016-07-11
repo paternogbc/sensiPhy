@@ -11,9 +11,9 @@
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param y.transf Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
-#' argument instead of transform data in the formula directly.
+#' argument instead of transforming data in the formula directly.
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
-#' argument instead of transform data in the formula directly.
+#' argument instead of transforming data in the formula directly.
 #' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
 #' If NULL, \code{times} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
@@ -25,8 +25,8 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-#' The regression is repeated \code{times} times. At each iteration the function generates for each row in the dataset
-#' a random value in the normal or uniform distribution.
+#' The regression is repeated \code{times} times. At each iteration the function generates a random value
+#' for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
