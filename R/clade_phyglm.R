@@ -26,7 +26,7 @@
 #' Currently, this function can only implement simple linear models (i.e. 
 #' \eqn{y = a + bx}). In the future we will implement more complex models.
 #'
-#' Output can be visualised using \code{clade_plot}.
+#' Output can be visualised using \code{sensi_plot}.
 #'
 #' @return The function \code{clade_phyglm} returns a list with the following
 #' components:
