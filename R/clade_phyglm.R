@@ -69,6 +69,7 @@
 #'# Specify which clade removal to plot:
 #'sensi_plot(clade, "B")
 #'sensi_plot(clade, "C")
+#'sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
 #'}
 #' @export
 
