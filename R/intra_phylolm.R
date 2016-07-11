@@ -63,7 +63,7 @@
 #'# Load data:
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
-#'intra <- intra_phylm(gestaLen ~ adultMass, transf.x = log, phy = alien$phy[[1]], data = alien$data,
+#'intra <- intra_phylm(gestaLen ~ adultMass, y.transf = log, x.transf = log, phy = alien$phy[[1]], data = alien$data,
 #' Vy = "SD_gesta", times = 30)
 #'# To check summary results:
 #'summary(intra)
@@ -201,6 +201,8 @@ intra_phylm <- function(formula, data, phy,
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   res <- list(formula = formula,
+              y.transf = y.transf, 
+              x.transf = x.transf,
               datas = full.data,
               model_results = intra.model.estimates, N.obs = n,
               stats = statresults)

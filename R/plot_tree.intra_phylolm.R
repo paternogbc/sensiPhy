@@ -32,12 +32,18 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     mappx <- x$formula[[3]]
     mappy <- x$formula[[2]]
     full.data <- x$data[all.vars(x$formula)]
+    
+    if(!is.null(x$y.transf))
+    {full.data[,1] <- x$y.transf(full.data[,1])}
+    
+    if(!is.null(x$x.transf))
+    {full.data[,2] <- x$x.transf(full.data[,2])}
+    
     result <- x$model_results
     statm<- x$stats
     slope.0 <-  as.numeric(statm[4,3])
     intercept.0 <-  as.numeric(statm[1,3])
     model_results<-x$model_results
-    
     
     xf <- model.frame(formula = x$formula, data = full.data)[,2]
     yf <- plogis(intercept.0 + slope.0 * xf)
