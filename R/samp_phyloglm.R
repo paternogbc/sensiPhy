@@ -54,8 +54,9 @@
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
 #' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
-#' @references Here still: reference to phylolm paper + our own + some more
-#' background papers.
+#' @references 
+#' #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
+#' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples
 #'\dontrun{
 #'# Simulate Data:
