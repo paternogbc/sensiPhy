@@ -203,7 +203,7 @@ intra_phylm <- function(formula, data, phy,
   res <- list(formula = formula,
               y.transf = y.transf, 
               x.transf = x.transf,
-              datas = full.data,
+              data = full.data,
               model_results = intra.model.estimates, N.obs = n,
               stats = statresults)
   class(res) <- "sensiIntra"

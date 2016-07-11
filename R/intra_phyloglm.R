@@ -166,7 +166,7 @@ intra_phyglm <- function(formula, data, phy,
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   res <- list(formula=formula,
-              datas=full.data,
+              data=full.data,
               model_results=intra.model.estimates,N.obs=n,
               stats=statresults)
   class(res) <- c("sensiIntra","sensiIntraL")
