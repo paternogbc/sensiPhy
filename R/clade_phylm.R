@@ -120,7 +120,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
                           n.species," species. Change 'n.species' to fix this
                           problem",sep=""))
     # Loop:
-    pb <- txtProgressBar(min = 0, max = length(k), style = 1)
+    pb <- utils::txtProgressBar(min = 0, max = length(k), style = 1)
     for (i in k){
         if (length(k) > 1) {
             crop.data <- full.data[full.data[ ,clade.col] %in% setdiff(all.clades,i),]
@@ -159,7 +159,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
                 optpar               <- mod$optpar
             }
             
-            if(track==TRUE) setTxtProgressBar(pb, counter)
+            if(track==TRUE) utils::setTxtProgressBar(pb, counter)
             
             # Stores values for each simulation
             estim.simu <- data.frame(i, intercept, DFintercept, intercept.perc,

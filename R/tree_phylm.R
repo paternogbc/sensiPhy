@@ -90,7 +90,7 @@ tree_phylm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  pb <- txtProgressBar(min = 0, max = times, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
   for (j in trees){
       
       #phylolm model
@@ -122,7 +122,7 @@ tree_phylm <- function(formula,data,phy,
           optpar               <- mod$optpar
         }
         
-        if(track==TRUE) setTxtProgressBar(pb, counter)
+        if(track==TRUE) utils::setTxtProgressBar(pb, counter)
         
         #write in a table
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
