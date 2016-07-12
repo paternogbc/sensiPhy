@@ -45,7 +45,9 @@
 #' @return \code{model_results}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
-#' @return \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
+#' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
+#' and upper limits of the 95% confidence interval.
+#' @return \code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
 #' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
 #' @author Caterina Penone & Pablo Ariel Martinez
@@ -205,7 +207,8 @@ intra_phylm <- function(formula, data, phy,
               x.transf = x.transf,
               data = full.data,
               model_results = intra.model.estimates, N.obs = n,
-              stats = statresults)
+              stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
+              all.stats = statresults)
   class(res) <- "sensiIntra"
   return(res)
 }

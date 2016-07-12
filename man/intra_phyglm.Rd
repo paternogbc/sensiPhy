@@ -47,7 +47,10 @@ value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
-\code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
+\code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
+and upper limits of the 95% confidence interval.
+
+\code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
 due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 of the 95% confidence interval.
 }
