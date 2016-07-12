@@ -123,7 +123,7 @@ intra_phylm <- function(formula, data, phy,
   counter = 1
   errors <- NULL
   c.data <- list()
-  pb <- txtProgressBar(min = 0, max = times, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
   for (i in 1:times) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
@@ -176,7 +176,7 @@ intra_phylm <- function(formula, data, phy,
       if (model != "BM") {
         optpar <- mod$optpar
       }
-      if(track == TRUE) setTxtProgressBar(pb, i)
+      if(track == TRUE) utils::setTxtProgressBar(pb, i)
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
                                slope, se.slope, pval.slope, aic.mod, optpar,

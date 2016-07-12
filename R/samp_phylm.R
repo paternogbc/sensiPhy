@@ -121,7 +121,7 @@ samp.model.estimates <-
 counter <- 1
 limit <- sort(round( (breaks) * nrow(full.data),digits=0))
 NL <- length(breaks) * times
-pb <- txtProgressBar(min = 0, max = NL, style = 1)
+pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
 for (i in limit){
     for (j in 1:times){
         exclude <- sample(1:N,i)
@@ -155,7 +155,7 @@ for (i in limit){
         #rep <- j
         
         if(track == TRUE) (
-            setTxtProgressBar(pb, counter))
+          utils::setTxtProgressBar(pb, counter))
         # Stores values for each simulation
         estim.simu <- data.frame(n.remov, n.percent, intercept, 
                                  DFintercept, intercept.perc,

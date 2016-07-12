@@ -25,7 +25,7 @@ components:
 \code{dropped}: Species dropped from phylogeny and removed from data.
 }
 \description{
-Combine phylogeny and data to ensure that tips in phylogeny match data and that observations
+Combines phylogeny and data to ensure that tips in phylogeny match data and that observations
 with missing values are removed. This function uses variables provided in the 
 `formula` argument to:
 \itemize{
@@ -38,6 +38,9 @@ with missing values are removed. This function uses variables provided in the
  has no NA in the variables included in `formula` and only rows that match phylogeny
  tips. Returned phy has only tips that match data}
  }
+ Used internally in \code{\link{samp_phylm}},\code{\link{samp_phyglm}},\code{\link{clade_phylm}},
+ \code{\link{clade_phyglm}},\code{\link{intra_phylm}},\code{\link{intra_phyglm}} and \code{\link{tree_phylm}}.
+ Users can also directly use this function to combine a phylogeny and a dataset.
 }
 \details{
 This function uses all variables provided in the `formula` to match
@@ -55,7 +58,7 @@ to match data. The returned phyogeny will be a 'multiphylo' object.
 If tips are removed from the phylogeny and data or if rows containing
 missing values are removed from data, a message will be printed with the 
 details. Further, the final number of species that match data and phy will
-always be informed by a message.
+always be reported by a message.
 }
 \examples{
 # Load data:
