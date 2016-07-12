@@ -39,8 +39,8 @@ with missing values are removed. This function uses variables provided in the
  tips. Returned phy has only tips that match data}
  }
  Used internally in \code{\link{samp_phylm}},\code{\link{samp_phyglm}},\code{\link{clade_phylm}},
- \code{\link{clade_phyglm}},\code{\link{intra_phylm}},\code{\link{intra_phyglm}},\code{\link{tree_phylm}}
- and \code{\link{clade_tree_phyglm}}. Users can also directly use this function to combine a phylogeny and a dataset.
+ \code{\link{clade_phyglm}},\code{\link{intra_phylm}},\code{\link{intra_phyglm}} and \code{\link{tree_phylm}}.
+ Users can also directly use this function to combine a phylogeny and a dataset.
 }
 \details{
 This function uses all variables provided in the `formula` to match

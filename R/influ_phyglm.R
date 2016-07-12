@@ -113,7 +113,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
-        pb <- txtProgressBar(min = 0, max = N, style = 1)
+        pb <- utils::txtProgressBar(min = 0, max = N, style = 1)
         for (i in 1:N){
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
@@ -137,7 +137,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                         aic.mod              <- mod$aic
                         optpar               <- mod$alpha
 
-                        if(track==TRUE) setTxtProgressBar(pb, i)
+                        if(track==TRUE) utils::setTxtProgressBar(pb, i)
 
                         #Stores values for eacht simulation
                         estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,

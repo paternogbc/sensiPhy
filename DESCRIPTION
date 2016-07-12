@@ -5,11 +5,11 @@ Date: 2016-28-06
 Authors@R: c(
     person("Gustavo","Paterno", email = "paternogbc@gmail.com", role = c("cre","aut")),
     person("Gijsbert", "Werner", email = "g.d.a.werner@vu.nl", role = "aut"),
-    person("Caterina", "Perone", email = "caterina.perone@gmail.com", role = "aut"))
+    person("Caterina", "Penone", email = "caterina.penone@gmail.com", role = "aut"))
 Maintainer: Gustavo Paterno <paternogbc@gmail.com>
 Description: An implementation of sensitivity analysis in phylogenetic regression models,
-    both for linear and logistic phylogenetic regression. The package uses several
-    bootstrapping methods to quantify and account for different types of 
+    for both linear and logistic phylogenetic regressions. The package is an umbrella
+    of statistical and graphical methods that estimate and report different types of
     uncertainty in PGLS models:
     (i) Sampling uncertainty (sample size; influential species and clades)
     (ii) Phylogenetic uncertainty
