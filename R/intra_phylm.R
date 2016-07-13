@@ -212,7 +212,7 @@ intra_phylm <- function(formula, data, phy,
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
   #species with transformation problems
-  nr <- nrow(intra.model.estimates)
+  nr <- times - nrow(intra.model.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
   warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
