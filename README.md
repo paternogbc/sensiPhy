@@ -7,7 +7,7 @@
 > R package to perform sensitivity analysis for comparative methods
 
 
-#### Instalation:
+#### Installation:
 
 ```{r}
 # First install the package `devtools` (you should skip this if you have `devtools`)
