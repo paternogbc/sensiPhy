@@ -22,10 +22,10 @@ variable. When information is not available for one taxon, the value can be 0 or
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
 \item{y.transf}{Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly.}
+argument instead of transforming data in the formula directly (see also details below).}
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly.}
+argument instead of transforming data in the formula directly (see also details below).}
 
 \item{times}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
 If NULL, \code{times} = 2}
@@ -60,6 +60,8 @@ and upper limits of the 95% confidence interval.
 \code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
 due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 of the 95% confidence interval.
+
+\code{sp.pb}: Species that caused problems with data transformation (see details above).
 }
 \description{
 Performs Phylogenetic linear regression evaluating
@@ -70,7 +72,10 @@ This function fits a phylogenetic linear regression model using \code{\link[phyl
 The regression is repeated \code{times} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
-
+Warning: when Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+ 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.

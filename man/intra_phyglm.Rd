@@ -21,7 +21,7 @@ variable. When information is not available for one taxon, the value can be 0 or
 If NULL, \code{times} = 2}
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly.}
+argument instead of transforming data in the formula directly (see also details below).}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the
 predictor variable. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -53,6 +53,8 @@ and upper limits of the 95% confidence interval.
 \code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
 due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 of the 95% confidence interval.
+
+\code{sp.pb}: Species that caused problems with data transformation (see details above).
 }
 \description{
 Performs Phylogenetic logistic regression evaluating
@@ -63,6 +65,9 @@ This function fits a phylogenetic logistic regression model using \code{\link[ph
 The regression is repeated \code{times} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
 To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
+Warning: when Vx exceeds X, negative (or null) values can be generated, this might cause problems
+for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
