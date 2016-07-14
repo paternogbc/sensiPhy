@@ -9,7 +9,7 @@
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
-#' argument instead of transforming data in the formula directly.
+#' argument instead of transforming data in the formula directly (see also details below).
 #' @param times Number of times to repeat the analysis generating a random value for the predictor variable.
 #' If NULL, \code{times} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the
@@ -24,6 +24,9 @@
 #' The regression is repeated \code{times} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
+#' Warning: when Vx exceeds X, negative (or null) values can be generated, this might cause problems
+#' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'
 #' All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -41,9 +44,13 @@
 #' @return \code{model_results}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
-#' @return \code{stats}: Statistics for model parameters. \code{sd_intra} is the standard deviation 
+#' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
+#' and upper limits of the 95% confidence interval.
+#' @return \code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
 #' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
+#' @return \code{sp.pb}: Species that caused problems with data transformation (see details above).
+#' 
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
 #' @references
@@ -66,7 +73,7 @@ intra_phyglm <- function(formula, data, phy,
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if(formula[[2]]!=all.vars(formula)[1] | formula[[3]]!=all.vars(formula)[2])
+  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
      stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx")
@@ -97,7 +104,7 @@ intra_phyglm <- function(formula, data, phy,
   #Model calculation
   counter=1
   errors <- NULL
-  c.data<-list()
+  species.NA <- list()
   pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
   for (i in 1:times) {
     
@@ -111,9 +118,14 @@ intra_phyglm <- function(formula, data, phy,
     
     full.data$resp1<-full.data[,resp1] #try to improve this in future
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
-   #transform Vy and/or Vx if x.transf and/or y.transf are provided
-   if(!is.null(x.transf)) 
-   {full.data$predV <- x.transf(full.data$predV)}
+    
+    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    if(!is.null(x.transf)) 
+    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    
+    #skip iteration if there are NA's in the dataset
+    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
+    if(sum(is.na(full.data[,c("respV","predV")])>0)) next
   
     #model
     if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)}
@@ -122,7 +134,6 @@ intra_phyglm <- function(formula, data, phy,
 
     if(isTRUE(class(mod)=="try-error")) {
       error <- i
-      names(error) <- rownames(c.data$full.data)[i]
       errors <- c(errors,error)
       next }
     
@@ -165,10 +176,18 @@ intra_phyglm <- function(formula, data, phy,
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
   
+  #species with transformation problems
+  nr <- times - nrow(intra.model.estimates)
+  sp.pb <- unique(unlist(species.NA))
+  if (length(sp.pb) >0) 
+    warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
+  for x.transf and check output$sp.pb",sep=" "))
+  
   res <- list(formula=formula,
               data=full.data,
               model_results=intra.model.estimates,N.obs=n,
-              stats=statresults)
+              stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
+              all.stats = statresults,sp.pb=sp.pb)
   class(res) <- c("sensiIntra","sensiIntraL")
   return(res)
 }

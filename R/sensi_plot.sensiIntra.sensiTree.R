@@ -40,7 +40,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     {full.data[,2] <- x$x.transf(full.data[,2])}
     
     result <- x$model_results
-    statm<- x$stats
+    statm<- x$all.stats
     slope.0 <-  as.numeric(statm[4,3])
     intercept.0 <-  as.numeric(statm[1,3])
     model_results<-x$model_results
