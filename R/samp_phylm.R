@@ -169,6 +169,16 @@ for (i in limit){
     }
 }
 close(pb)
+
+#Calculates Standardized DFbeta and DFintercept
+sDFintercept <- samp.model.estimates$DFintercept/
+  stats::sd(samp.model.estimates$DFintercept)
+sDFslope     <- samp.model.estimates$DFslope/
+  stats::sd(samp.model.estimates$DFslope)
+
+samp.model.estimates$sDFslope     <- sDFslope
+samp.model.estimates$sDFintercept <- sDFintercept
+
 #Calculates percentages of signficant intercepts & slopes within breaks.
 res                 <- samp.model.estimates
 times               <- table(res$n.remov)
@@ -179,9 +189,13 @@ res$sign.intercept  <- sign.intercept
 res$sign.slope      <- sign.slope
 perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / times
 perc.sign.slope     <- 1-(with(res,tapply(sign.slope,n.remov,sum))) / times
+mean.sDFslope       <- with(res,tapply(sDFslope,n.remov,mean))
+mean.sDFintercept   <- with(res,tapply(sDFintercept,n.remov,mean))
 perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
-                        perc.sign.intercept = as.numeric(perc.sign.intercept),
-                            perc.sign.slope = as.numeric(perc.sign.slope))
+                                  perc.sign.intercept = as.numeric(perc.sign.intercept),
+                                  perc.sign.slope = as.numeric(perc.sign.slope),
+                                  mean.sDFslope = as.numeric(mean.sDFslope),
+                                  mean.sDFintercept = as.numeric(mean.sDFintercept))
 
 #Creates a list with full model estimates:
 param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
