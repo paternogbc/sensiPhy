@@ -148,8 +148,9 @@ tree_phylm <- function(formula,data,phy,
   statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
   statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
   
-  res <- list(formula=formula,
-              data=full.data,
+  res <- list(   call = match.call(),
+                 formula=formula,
+                 data=full.data,
                  model_results=tree.model.estimates,N.obs=n,
                  stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
                  all.stats = statresults)

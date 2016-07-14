@@ -183,7 +183,8 @@ intra_phyglm <- function(formula, data, phy,
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
   for x.transf and check output$sp.pb",sep=" "))
   
-  res <- list(formula=formula,
+  res <- list(call = match.call(),
+              formula=formula,
               data=full.data,
               model_results=intra.model.estimates,N.obs=n,
               stats = round(statresults[c(1:6),c(3,5,6)],digits=3),

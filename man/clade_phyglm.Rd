@@ -66,7 +66,7 @@ to the full model including all species.
 Currently, this function can only implement simple linear models (i.e. 
 \eqn{y = a + bx}). In the future we will implement more complex models.
 
-Output can be visualised using \code{clade_plot}.
+Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 \dontrun{
@@ -87,6 +87,7 @@ sensi_plot(clade)
 # Specify which clade removal to plot:
 sensi_plot(clade, "B")
 sensi_plot(clade, "C")
+sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
 }
 }
 \author{

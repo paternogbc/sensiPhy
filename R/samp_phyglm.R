@@ -201,7 +201,8 @@ param0<-list(coef = phylolm::summary.phyloglm(mod.0)$coefficients,
              optpar = mod.0$alpha)
 
 #Generates output:
-res <- list(model = "logistic_MPLE",
+res <- list(call = match.call(),
+            model = "logistic_MPLE",
             formula = formula,
             full.model.estimates = param0,
             samp.model.estimates = samp.model.estimates,

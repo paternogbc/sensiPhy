@@ -219,7 +219,8 @@ intra_phylm <- function(formula, data, phy,
   for x.transf or y.transf and check output$sp.pb",sep=" "))
   
                                        
-  res <- list(formula = formula,
+  res <- list(call = match.call(),
+              formula = formula,
               y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
