@@ -54,9 +54,13 @@ summary.sensiSamp <- function(object, ...){
     sig <- object$sign.analysis
     sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
     sig$perc.sign.slope <- sig$perc.sign.slope * 100
-    names(sig) <- c("% of Species Removed", 
-                    "% of Significant Intercept",
-                    "% of Significant Slope")
+    names(sig) <- c("% Species Removed", 
+                    "% Significant Intercepts",
+                    "Mean Intercept Change (%)",
+                    "Mean sDFintercept",
+                    "% Significant Slopes",
+                    "Mean Slope Change (%)",
+                    "Mean sDFslope")
     message(paste(simu, "simulations saved," ,
                   "see output$samp.model.estimates to acess all simulations"))
     return(sig)
