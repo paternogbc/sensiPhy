@@ -176,8 +176,8 @@ sDFintercept <- samp.model.estimates$DFintercept/
 sDFslope     <- samp.model.estimates$DFslope/
   stats::sd(samp.model.estimates$DFslope)
 
-samp.model.estimates$sDFslope     <- sDFslope
 samp.model.estimates$sDFintercept <- sDFintercept
+samp.model.estimates$sDFslope     <- sDFslope
 
 #Calculates percentages of signficant intercepts & slopes within breaks.
 res                 <- samp.model.estimates
