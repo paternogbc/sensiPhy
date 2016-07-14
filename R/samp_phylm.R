@@ -191,10 +191,14 @@ perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / times
 perc.sign.slope     <- 1-(with(res,tapply(sign.slope,n.remov,sum))) / times
 mean.sDFslope       <- with(res,tapply(sDFslope,n.remov,mean))
 mean.sDFintercept   <- with(res,tapply(sDFintercept,n.remov,mean))
+mean.perc.intercept <- with(res,tapply(intercept.perc,n.remov,mean))
+mean.perc.slope     <- with(res,tapply(slope.perc,n.remov,mean))
 perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
                                   perc.sign.intercept = as.numeric(perc.sign.intercept),
+                                  mean.perc.intercept = as.numeric(mean.perc.intercept),
                                   mean.sDFintercept = as.numeric(mean.sDFintercept),
                                   perc.sign.slope = as.numeric(perc.sign.slope),
+                                  mean.perc.slope = as.numeric(mean.perc.slope),
                                   mean.sDFslope = as.numeric(mean.sDFslope))
 
 #Creates a list with full model estimates:
