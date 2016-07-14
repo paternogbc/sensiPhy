@@ -89,7 +89,7 @@ print.sensiInflu <- function (x, ...)
     cat("Call:\n")
     print(x$call)
     cat("\n")
-    cat("Number of simulations:", nrow(influ$influ.model.estimates), "\n")
+    cat("Number of simulations:", nrow(x$influ.model.estimates), "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
     
 }
