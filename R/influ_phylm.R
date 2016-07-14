@@ -179,7 +179,8 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...)
                reorder.on.intercept$sDFintercept)>cutoff])
 
         #Generates output:
-        res <- list(cutoff=cutoff,
+        res <- list(call = match.call(),
+                    cutoff=cutoff,
                     formula=formula,
                     full.model.estimates=param0,
                     influential.species= list(influ.sp.slope=influ.sp.slope,
