@@ -187,9 +187,9 @@ mean.sDFslope       <- with(res,tapply(sDFslope,n.remov,mean))
 mean.sDFintercept   <- with(res,tapply(sDFintercept,n.remov,mean))
 perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
                                   perc.sign.intercept = as.numeric(perc.sign.intercept),
+                                  mean.sDFintercept = as.numeric(mean.sDFintercept),
                                   perc.sign.slope = as.numeric(perc.sign.slope),
-                                  mean.sDFslope = as.numeric(mean.sDFslope),
-                                  mean.sDFintercept = as.numeric(mean.sDFintercept))
+                                  mean.sDFslope = as.numeric(mean.sDFslope))
 
 #Creates a list with full model estimates:
 param0<-list(coef = phylolm::summary.phyloglm(mod.0)$coefficients,
