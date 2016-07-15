@@ -8,7 +8,7 @@ print.data.phy <- function (x, ...)
         cat("-Phylogeny:", "\n")
         cat("   ", length(x$phy$tip.label), " tips, ", x$phy$Nnode, 
             " internal nodes\n  ", sep = "")
-        str(x$phy$tip.label)
+        stats::str(x$phy$tip.label)
     }
     if(class(x$phy) == "multiPhylo"){
         cat("-Multiphylo: \n")
