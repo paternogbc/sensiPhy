@@ -10,8 +10,8 @@ There were no ERRORs or WARNINGs.
 
 There were 3 NOTES:
 
-* New submission
-Possibly mis-spelled words in DESCRIPTION:
+* New submission  
+Possibly mis-spelled words in DESCRIPTION:  
   PGLS (13:20)
   Phylogenetic (15:10)
   clades (14:68)
