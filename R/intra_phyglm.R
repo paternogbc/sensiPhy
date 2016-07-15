@@ -125,7 +125,7 @@ intra_phyglm <- function(formula, data, phy,
     
     #skip iteration if there are NA's in the dataset
     species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
-    if(sum(is.na(full.data[,c("respV","predV")])>0)) next
+    if(sum(is.na(full.data[,"predV"])>0)) next
   
     #model
     if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)}
