@@ -5,3 +5,4 @@ devloping
 ^\.travis\.yml$
 ^data-raw$
 CODE_OF_CONDUCT.md
+cran-comments.md
