@@ -23,8 +23,4 @@ License: GPL-2
 URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues
 LazyData: true
-Suggests:
-    knitr,
-    rmarkdown
 RoxygenNote: 5.0.1
-VignetteBuilder: knitr
