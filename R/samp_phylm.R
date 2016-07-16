@@ -53,6 +53,10 @@
 #' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
 #' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
 #' @return \code{data}: Original full dataset.
+#' #' @note Please be aware that dropping species may reduce power to detect 
+#' significant slopes/intercepts and may partially be responsible for a potential 
+#' effect of species removal on p-values. Please also consult standardised differences
+#' in the (summary) output.
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
 #' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
