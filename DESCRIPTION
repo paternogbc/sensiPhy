@@ -11,9 +11,9 @@ Description: An implementation of sensitivity analysis in phylogenetic regressio
     for both linear and logistic phylogenetic regressions. The package is an umbrella
     of statistical and graphical methods that estimate and report different types of
     uncertainty in PGLS models:
-    (i) Sampling uncertainty (sample size; influential species and clades)
-    (ii) Phylogenetic uncertainty
-    (iii) Data uncertainty (intraspecific variation and measurement error)
+    (i) Sampling uncertainty (sample size; influential species and clades).
+    (ii) Phylogenetic uncertainty.
+    (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
     R (>= 3.1.0),
     ape (>= 3.3),

@@ -8,7 +8,7 @@
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There were 3 NOTES:
+There were 1 NOTES:
 
 * New submission  
 Possibly mis-spelled words in DESCRIPTION:  
@@ -18,11 +18,4 @@ Possibly mis-spelled words in DESCRIPTION:
   intraspecific (16:29)
   phylogenetic (10:59, 11:34)
   
-  R: These words are not mis-spelled.
-  
-* checking DESCRIPTION meta-information ... NOTE
-Malformed Description field: should contain one or more complete sentences.
-
-* checking R code for possible problems ... NOTE
-  print.data.phy: no visible global function definition for 'str'
-  Undefined global functions or variables:
+  __R:__ These words are not misspelled.
