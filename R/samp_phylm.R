@@ -46,7 +46,8 @@
 #' for the regression slope (\code{DFslope} etc.). Additionally, model aic value
 #' (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 #' parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
-#' used) are reported.
+#' used) are reported. Lastly we reported the standardised difference in intercept 
+#' (\code{sDFintercept}) and slope (\code{sDFslope}). 
 #' @return \code{sign.analysis} For each break (i.e. each percentage of species
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
