@@ -46,7 +46,8 @@ and intercept p-value (\code{pval.intercept}). All these parameters are also rep
 for the regression slope (\code{DFslope} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
-used) are reported.
+used) are reported. Lastly we reported the standardised difference in intercept 
+(\code{sDFintercept}) and slope (\code{sDFslope}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
 removed) this reports the percentage of statistically signficant (at p<0.05)
@@ -54,6 +55,10 @@ intercepts (\code{perc.sign.intercept}) over all repititions as well as the
 percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
 
 \code{data}: Original full dataset.
+#' @note Please be aware that dropping species may reduce power to detect 
+significant slopes/intercepts and may partially be responsible for a potential 
+effect of species removal on p-values. Please also consult standardised differences
+in the (summary) output.
 }
 \description{
 Performs analyses of sensitivity to species sampling by randomly removing

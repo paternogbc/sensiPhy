@@ -78,6 +78,27 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
+\examples{
+\dontrun{ 
+# Simulate Data:
+set.seed(6987)
+phy = rtree(150)
+x = rTrait(n=1,phy=phy)
+x_sd = rnorm(150,mean = 0.8,sd=0.2)
+X = cbind(rep(1,150),x)
+y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+dat = data.frame(y, x, x_sd)
+
+# Run phylogenetic logistic regression accounting for intraspecific variation:
+intra_glm <- intra_phyglm(y~x,Vx = "x_sd",data = dat,phy=phy,distrib = "normal")
+
+#Print summary of sensitivity analysis
+summary(intra_glm)
+head(intra_glm$model_results)
+#Visual output
+sensi_plot(intra_glm)
+}
+}
 \author{
 Caterina Penone & Pablo Ariel Martinez
 }
