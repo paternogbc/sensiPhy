@@ -1,5 +1,7 @@
 ### Summary method for class: data.phy:-----------------------------------------
+#' @importFrom utils str
 #' @export
+
 print.data.phy <- function (x, ...) 
 {
     cat("Comparative dataset of", nrow(x$data), "taxa with", 
