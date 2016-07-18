@@ -1,5 +1,5 @@
 ## Test environments
-* local ubuntu 16.04 install, R 3.2.3
+* local ubuntu 16.04 install, R 3.3.1
 * local Windows 8 install, R 3.3.1
 * local OS X 10.11.15 install, R 3.3.0
 * win-builder (devel and release)
