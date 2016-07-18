@@ -86,14 +86,16 @@ Output can be visualised using \code{sensi_plot}.
 data(alien)
 # Run analysis:
 samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
-data = alien$data)
+data = alien$data, times = 10)
 summary(samp)
 head(samp$samp.model.estimates)
 # Visual diagnostics
+\dontrun{
 sensi_plot(samp)
 # You can specify which graph and parameter ("slope" or "intercept") to print: 
 sensi_plot(samp, graphs = 1, param = "slope")
 sensi_plot(samp, graphs = 2, param = "intercept")
+}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
