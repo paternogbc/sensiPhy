@@ -81,9 +81,9 @@ Output can be visualised using \code{sensi_plot}.
 \examples{
 # Simulate Data:
 set.seed(6987)
-phy = rtree(150)
+phy = rtree(100)
 x = rTrait(n=1,phy=phy)
-X = cbind(rep(1,150),x)
+X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
