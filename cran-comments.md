@@ -1,6 +1,6 @@
 ## Test environments
 * local ubuntu 16.04 install, R 3.2.3
-* local Windows XXXXX install, R XXXX
+* local Windows 8 install, R 3.3.1
 * local OS XXXX install, R XXXXX
 * win-builder (devel and release)
 * travis Ubuntu 12.04.5 LTS 
