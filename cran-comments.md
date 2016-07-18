@@ -6,16 +6,9 @@
 * travis Ubuntu 12.04.5 LTS 
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+There were no ERRORs or WARNINGs or NOTES.
 
-There were 1 NOTES:
+## Resubmission
+This is a resubmission. In this version I have:
 
-* New submission  
-Possibly mis-spelled words in DESCRIPTION:  
-  PGLS (13:20)
-  Phylogenetic (15:10)
-  clades (14:68)
-  intraspecific (16:29)
-  phylogenetic (10:59, 11:34)
-  
-  __R:__ These words are not misspelled.
+* Included examples that are executed during R CMD check
