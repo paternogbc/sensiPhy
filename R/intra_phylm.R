@@ -66,7 +66,6 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
-#' \dontrun{
 #'# Load data:
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
@@ -76,7 +75,6 @@
 #'summary(intra)
 #'# Visual diagnostics
 #'sensi_plot(intra)
-#'}
 #'
 #' @export
 

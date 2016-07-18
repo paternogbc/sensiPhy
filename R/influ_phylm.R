@@ -62,7 +62,6 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
-#' \dontrun{
 #' # Load data:
 #' data(alien)
 #' # run analysis:
@@ -76,7 +75,6 @@
 #'sensi_plot(influ)
 #'# You can specify which graph and parameter ("slope" or "intercept") to print: 
 #'sensi_plot(influ, param = "slope", graphs = 2)
-#' }
 #' @export
 
 influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){

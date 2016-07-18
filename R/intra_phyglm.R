@@ -62,7 +62,6 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples
-#' \dontrun{ 
 #' # Simulate Data:
 #' set.seed(6987)
 #' phy = rtree(150)
@@ -80,7 +79,6 @@
 #' head(intra_glm$model_results)
 #' #Visual output
 #' sensi_plot(intra_glm)
-#' }
 #' @export
 
 

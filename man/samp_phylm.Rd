@@ -82,7 +82,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # Run analysis:
@@ -95,7 +94,6 @@ sensi_plot(samp)
 # You can specify which graph and parameter ("slope" or "intercept") to print: 
 sensi_plot(samp, graphs = 1, param = "slope")
 sensi_plot(samp, graphs = 2, param = "intercept")
-}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

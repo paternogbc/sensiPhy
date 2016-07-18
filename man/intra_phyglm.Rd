@@ -79,7 +79,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{ 
 # Simulate Data:
 set.seed(6987)
 phy = rtree(150)
@@ -97,7 +96,6 @@ summary(intra_glm)
 head(intra_glm$model_results)
 #Visual output
 sensi_plot(intra_glm)
-}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

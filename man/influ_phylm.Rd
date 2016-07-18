@@ -82,7 +82,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # run analysis:
@@ -96,7 +95,6 @@ influ$influential.species
 sensi_plot(influ)
 # You can specify which graph and parameter ("slope" or "intercept") to print: 
 sensi_plot(influ, param = "slope", graphs = 2)
-}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

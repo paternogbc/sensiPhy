@@ -86,7 +86,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # run PGLS accounting for intraspecific variation:
@@ -96,7 +95,6 @@ phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", times = 30)
 summary(intra)
 # Visual diagnostics
 sensi_plot(intra)
-}
 
 }
 \author{

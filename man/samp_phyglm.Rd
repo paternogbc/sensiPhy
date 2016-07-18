@@ -83,7 +83,6 @@ effect of species removal on p-values. Please also consult standardised differen
 in the (summary) output.
 }
 \examples{
-\dontrun{
 # Simulate Data:
 set.seed(6987)
 phy = rtree(150)
@@ -97,7 +96,6 @@ samp <- samp_phyglm(y ~ x, data = dat, phy = phy, times = 30)
 summary(samp)
 # Visual diagnostics for clade removal:
 sensi_plot(samp)
-}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

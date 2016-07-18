@@ -63,7 +63,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # This analysis needs a multiphylo file:
@@ -78,7 +77,6 @@ summary(tree)
 sensi_plot(tree)
 # You can specify which graph to print: 
 sensi_plot(tree, graphs = 3)
-}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

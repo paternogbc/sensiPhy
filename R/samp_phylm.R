@@ -72,7 +72,6 @@
 #' @import ape phylolm
 #' 
 #' @examples 
-#' \dontrun{
 #' # Load data:
 #' data(alien)
 #' # Run analysis:
@@ -85,7 +84,6 @@
 #' # You can specify which graph and parameter ("slope" or "intercept") to print: 
 #' sensi_plot(samp, graphs = 1, param = "slope")
 #' sensi_plot(samp, graphs = 2, param = "intercept")
-#' }
 #' @export
 
 samp_phylm <- function(formula,data,phy,times=30,

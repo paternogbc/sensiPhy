@@ -48,7 +48,6 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
-#' \dontrun{
 #'# Load data:
 #'data(alien)
 #'# This analysis needs a multiphylo file:
@@ -63,7 +62,6 @@
 #'sensi_plot(tree)
 #'# You can specify which graph to print: 
 #'sensi_plot(tree, graphs = 3)
-#'}
 #' @export
 
 tree_phylm <- function(formula,data,phy,

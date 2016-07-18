@@ -58,7 +58,6 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 ### Simulating Data:
 set.seed(6987)
 mphy = rmtree(150, N = 30)
@@ -72,7 +71,6 @@ tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, times = 30)
 summary(tree)
 # Visual diagnostics for phylogenetic uncertainty:
 sensi_plot(tree)
-}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

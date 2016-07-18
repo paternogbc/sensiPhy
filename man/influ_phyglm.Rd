@@ -79,7 +79,6 @@ Currently, this function can only implement simple models (i.e.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Simulate Data:
 set.seed(6987)
 phy = rtree(150)
@@ -93,7 +92,6 @@ influ <- influ_phyglm(y ~ x, data = dat, phy = phy)
 summary(influ)
 # Visual diagnostics for clade removal:
 sensi_plot(influ)
-}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
