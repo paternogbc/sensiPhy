@@ -18,7 +18,7 @@ Install development version from github:
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
-#### Quick turorial
+## Quick turorial
 
 Get started with [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial)
 
