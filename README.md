@@ -1,4 +1,5 @@
-# sensiPhy
+# sensiPhy  
+Sensitivity Analysis for Comparative Methods
 
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/sensiPhy)](http://cran.r-project.org/package=sensiPhy)
 [![Travis-CI Build Status](https://travis-ci.org/paternogbc/sensiPhy.svg?branch=master)](https://travis-ci.org/paternogbc/sensiPhy)
@@ -6,12 +7,15 @@
 > R package to perform sensitivity analysis for comparative methods
 
 
-#### Installation:
+## Installation:
 
+Install CRAN version:
 ```{r}
 install.packages("sensiPhy")
+```
 
-# Install development version from github: 
+Install development version from github: 
+```{r}
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
