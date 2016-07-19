@@ -9,10 +9,9 @@
 #### Installation:
 
 ```{r}
-# First install the package `devtools` (you should skip this if you have `devtools`)
-install.packages("devtools")
+install.packages("sensiPhy")
 
-# Install `sensiPhy` from github: 
+# Install development version from github: 
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
