@@ -87,7 +87,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
               axis.title = element_text(size = 18),
               legend.text = element_text(size = 16),
               plot.title = element_text(size = 20),
-              panel.background = element_rect(fill = "white", colour = "black"))+
+              panel.background = element_rect(fill = "white", colour = "black"),
+              legend.position="bottom", legend.box = "horizontal")+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
     
     ### Permuation Test plot:
