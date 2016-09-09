@@ -3,7 +3,6 @@
 #' @export
 summary.sensiClade <- function(object, perm.test = TRUE, ...){
   
-    object <- clade2
     ord.inter <- order(object$clade.model.estimates$intercept.perc, 
                        decreasing = TRUE)
     inter <- object$clade.model.estimates[ord.inter, c(1,2,3,4,5, 6)]
