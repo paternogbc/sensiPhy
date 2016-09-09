@@ -99,7 +99,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     dfob <- ces[ces$clade == clade ,]$DFslope
     
     ### P.value permutation test:
-    p.values <- summary(clade2)[[2]]
+    p.values <- summary(x)[[2]]
     P <- p.values[p.values$clade.removed == clade, ]$p.value
     
     g2 <- ggplot2::ggplot(nes ,aes(x=DFslope))+
