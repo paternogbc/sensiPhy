@@ -90,6 +90,27 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
               panel.background = element_rect(fill = "white", colour = "black"))+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
     
+    ### Permuation Test plot:
+    nd <- x$null.dist
+    ces <- x$clade.model.estimates
+    
+    nes <- nd[nd$clade == clade, ]
+    dfob <- ces[ces$clade == clade ,]$DFslope
+    
+    g2 <- ggplot2::ggplot(nes ,aes(x=DFslope))+
+      geom_histogram(fill="yellow",colour="black", size=.2,
+                     alpha = .3) +
+      geom_vline(xintercept = dfob,color="red",linetype=2,size=.7)+
+      xlab(paste("Simulated DFslopes | N.species = ", 
+                 ces[ces$clade==clade, ]$N.species))+
+      ylab("Frequency")+
+      theme(axis.title=element_text(size=16),
+            axis.text = element_text(size=14),
+            panel.background = element_rect(fill="white",
+                                            colour="black"))+
+      ggtitle(paste("Permutation test for ", clade))
+    
+    
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
         g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
@@ -99,6 +120,6 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     if(length(class(x)) == 2){
         g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model),color=factor(model)))
     }
-    return(g.out)
+    return(multiplot(g.out, g2, cols=2))
 }
 
