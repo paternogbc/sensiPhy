@@ -86,7 +86,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
         theme(axis.text = element_text(size = 18),
               axis.title = element_text(size = 18),
               legend.text = element_text(size = 16),
-              plot.title = element_text(size = 20),
+              plot.title = element_text(size = 16),
               panel.background = element_rect(fill = "white", colour = "black"),
               legend.position="bottom", legend.box = "horizontal")+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
@@ -110,8 +110,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
                  ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
                  nrow(nes))) +
       ylab("Frequency")+
-      theme(axis.title=element_text(size=16),
-            axis.text = element_text(size=14),
+      theme(axis.title=element_text(size=18),
+            axis.text = element_text(size=16),
             panel.background = element_rect(fill="white",
                                             colour="black"))+
       ggtitle(paste("Permutation test for ", clade, " | ", 
@@ -126,6 +126,6 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     if(length(class(x)) == 2){
         g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model),color=factor(model)))
     }
-    return(multiplot(g.out, g2, cols=2))
+    return(suppressMessages(multiplot(g.out, g2, cols=2)))
 }
 
