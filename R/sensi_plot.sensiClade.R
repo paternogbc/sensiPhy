@@ -96,17 +96,17 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     ces <- x$clade.model.estimates
     
     nes <- nd[nd$clade == clade, ]
-    dfob <- ces[ces$clade == clade ,]$DFslope
+    dfob <- ces[ces$clade == clade ,]$slope
     
     ### P.value permutation test:
     p.values <- summary(x)[[2]]
     P <- p.values[p.values$clade.removed == clade, ]$p.value
     
-    g2 <- ggplot2::ggplot(nes ,aes(x=DFslope))+
+    g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
       geom_histogram(fill="yellow",colour="black", size=.2,
                      alpha = .3) +
       geom_vline(xintercept = dfob,color="red",linetype=2,size=.7)+
-      xlab(paste("Simulated DFslopes | N.species = ", 
+      xlab(paste("Simulated slopes | N.species = ", 
                  ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
                  nrow(nes))) +
       ylab("Frequency")+
