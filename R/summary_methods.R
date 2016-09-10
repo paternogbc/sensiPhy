@@ -44,11 +44,12 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     
     ### Permutation test SLOPE:
     if (ces$DFslope > 0){
-      p.slo <- sum(nes$DFslope >= ces$DFslope)/times
+      p.slo <- sum(nes$slope >= ces$slope)/times
     }
     if (ces$DFslope < 0){
-      p.slo <- sum(nes$DFslope <= ces$DFslope)/times
+      p.slo <- sum(nes$slope <= ces$slope)/times
     }
+
     stats.slo[aa, -c(1:2)] <- data.frame(
                               slope = ces$slope,
                               DFslope = ces$DFslope,
@@ -59,10 +60,10 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
 
     ### Permutation test intercept:
     if (ces$DFintercept > 0){
-      p.int <- sum(nes$DFintercept >= ces$DFintercept)/times
+      p.int <- sum(nes$intercept >= ces$intercept)/times
     }
     if (ces$DFintercept < 0){
-      p.int <- sum(nes$DFintercept <= ces$DFintercept)/times
+      p.int <- sum(nes$intercept <= ces$intercept)/times
     }
     stats.int[aa, -c(1:2)] <- data.frame(
                                   intercept = ces$intercept,
