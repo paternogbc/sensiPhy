@@ -11,7 +11,9 @@
 #' 
 #' @author Gustavo Paterno
 #' @seealso \code{\link[sensiPhy]{clade_phylm}} 
-#' @details This function plots the original scatterplot \eqn{y = a + bx} (with the 
+#' @details For 'x' from clade_phylm or clade_phyglm:
+#' 
+#' Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
 #' full dataset) and a comparison between the regression lines of the full model
 #' and the model without the selected clade (set by \code{clade}). For further
 #' details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
@@ -21,6 +23,10 @@
 #' the regression of the model without the species from the selected clade.
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
+#' 
+#' Graph 2: Distribution of the simulated slopes (controling for clade sample size).
+#' The vertical red line represent slope estimated of the reduced model 
+#' (without the focal clade)
 #' @importFrom ggplot2 aes_string
 #' @importFrom stats model.frame qt plogis 
 #' @export
@@ -29,7 +35,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     
     #x <- clade
     #clade <- NULL
-    yy <- NULL
+    yy <- NULL; slope <- NULL
     # start:
     full.data <- x$data
     mappx <- x$formula[[3]]
@@ -96,16 +102,18 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     ces <- x$clade.model.estimates
     
     nes <- nd[nd$clade == clade, ]
-    dfob <- ces[ces$clade == clade ,]$slope
+    slob <- ces[ces$clade == clade ,]$slope
+    slfu <- x$full.model.estimates$coef[[2]]
     
     ### P.value permutation test:
-    p.values <- summary(x)[[2]]
+    p.values <- summary(x)[[1]]
     P <- p.values[p.values$clade.removed == clade, ]$p.value
     
     g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
       geom_histogram(fill="yellow",colour="black", size=.2,
                      alpha = .3) +
-      geom_vline(xintercept = dfob,color="red",linetype=2,size=.7)+
+      geom_vline(xintercept = slob, color="red",linetype=2,size=.7)+
+      geom_vline(xintercept = slfu, color="black",linetype=1,size=.7)+
       xlab(paste("Simulated slopes | N.species = ", 
                  ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
                  nrow(nes))) +

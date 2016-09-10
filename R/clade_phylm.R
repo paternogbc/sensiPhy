@@ -13,6 +13,7 @@
 #' specification (a character vector with clade names).
 #' @param n.species Minimum number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{5}.
+#' @param times Number of simulations for the randomization test.
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function sequentially removes one clade at a time, fits a phylogenetic
