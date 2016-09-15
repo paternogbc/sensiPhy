@@ -18,7 +18,8 @@ Depends:
     R (>= 3.1.0),
     ape (>= 3.3),
     phylolm (>= 2.4),
-    ggplot2 (>= 2.1.0),
+    ggplot2 (>= 2.1.0)
+Imports:
     caper (>= 0.2)
 License: GPL-2
 URL: https://github.com/paternogbc/sensiPhy
