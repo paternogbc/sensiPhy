@@ -77,7 +77,6 @@ intercept.perc <- sDFintercept <- NULL
         
         # Original plot with Standardized DFslope as colour gradient
         s2 <- ggplot2::ggplot(result.tab, aes_string(y = mappy, x = mappx),
-                              aes(label = species),
                               environment = parent.frame())+
             geom_point(data = result.tab,
                        aes(size = abs(sDFslope)), alpha = .8)+
@@ -91,6 +90,7 @@ intercept.perc <- sDFintercept <- NULL
                   legend.text = element_text(size = 14),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
+            scale_x_continuous(expand = c(.2, .2)) +
             ggtitle("Standardized Difference in slope")+
             theme(axis.title = element_text(size = 16),
                   axis.text = element_text(size = 14),
@@ -99,20 +99,20 @@ intercept.perc <- sDFintercept <- NULL
              
         # Original plot with Standardized DFintercept as size gradient
         i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
-                            environment = parent.frame(),
-                            aes(label = species))+
-            geom_point(data = result.tab,
-                       aes(size = abs(sDFintercept)), alpha = .8)+
-            ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
-            geom_text(aes(label = ifelse(abs(sDFintercept) >= cutoff, 
+                            environment = parent.frame())+
+          geom_text(aes(label = ifelse(abs(sDFintercept) >= cutoff, 
                                        as.character(species), ""), 
                         vjust = 0, hjust = 0, color = "red",
                         size = 1.8), show.legend = F) +
+            geom_point(data = result.tab,
+                       aes(size = abs(sDFintercept)), alpha = .8)+
+            ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
             theme(legend.key.width = unit(.2,"cm"),
                   panel.background=element_rect(fill="white",colour="black"),
                   legend.text = element_text(size=14),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
+          scale_x_continuous(expand = c(.2, .2)) +
             ggtitle("Standardized Difference in Intercept")+
             theme(axis.title=element_text(size=16),
                   axis.text = element_text(size=14),
