@@ -49,7 +49,6 @@ data<-primates$data
 phy=primates$phy[[1]]
 NAsignal <- miss.phylo.d(data,phy,binvar=sexMaturity)
 print(NAsignal)
-plot(NAsignal)
 }
 \author{
 Caterina Penone &..
