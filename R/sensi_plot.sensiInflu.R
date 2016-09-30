@@ -81,7 +81,7 @@ intercept.perc <- sDFintercept <- NULL
             geom_point(data = result.tab,
                        aes(size = abs(sDFslope)), alpha = .8)+
             ggplot2::scale_size_continuous(name = "|sDF|", range = c(1, 6))+
-            geom_text(aes(label = ifelse(abs(sDFslope) >= cutoff, 
+            ggplot2::geom_text(data = result.tab, aes(label = ifelse(abs(sDFslope) >= cutoff, 
                                        as.character(species), ""), 
                         vjust = 0, hjust = 0,
                         color = "red", size = 1.8), show.legend = F) + 
@@ -100,7 +100,7 @@ intercept.perc <- sDFintercept <- NULL
         # Original plot with Standardized DFintercept as size gradient
         i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
                             environment = parent.frame())+
-          geom_text(aes(label = ifelse(abs(sDFintercept) >= cutoff, 
+            ggplot2::geom_text(data = result.tab, aes(label = ifelse(abs(sDFintercept) >= cutoff, 
                                        as.character(species), ""), 
                         vjust = 0, hjust = 0, color = "red",
                         size = 1.8), show.legend = F) +
