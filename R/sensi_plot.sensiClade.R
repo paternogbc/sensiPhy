@@ -18,15 +18,17 @@
 #' and the model without the selected clade (set by \code{clade}). For further
 #' details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 #' 
-#' Species from the selected clade are represented in red (removed species),
-#' solid line represents the regression with the full model and dashed line represents
+#' Species from the selected clade are represented in red (removed species), black
+#' solid line represents the regression with the full model and red dashed line represents
 #' the regression of the model without the species from the selected clade.
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
 #' 
 #' Graph 2: Distribution of the simulated slopes (controling for clade sample size).
-#' The vertical red line represent slope estimated of the reduced model 
-#' (without the focal clade)
+#' The vertical red dashed line represents the estimated slope for the reduced model 
+#' (without the focal clade) and the verticla black line represent the slope for the 
+#' full model.
+#'  
 #' @importFrom ggplot2 aes_string
 #' @importFrom stats model.frame qt plogis 
 #' @export
@@ -108,6 +110,9 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     ### P.value permutation test:
     p.values <- summary(x)[[1]]
     P <- p.values[p.values$clade.removed == clade, ]$p.value
+    if(P <= 0.05) {Ps <- "P.value < 0.05"}
+    if(P <= 0.01) {Ps <- "P.value < 0.01"}
+    if(P > 0.05) {Ps <- "NS (P > 0.05)"}
     
     g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
       geom_histogram(fill="yellow",colour="black", size=.2,
@@ -122,8 +127,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
             axis.text = element_text(size=16),
             panel.background = element_rect(fill="white",
                                             colour="black"))+
-      ggtitle(paste("Permutation test for ", clade, " | ", 
-                    "P.value = ", P))
+      ggtitle(paste("Permutation test for", clade, " | ", 
+                    Ps))
      
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
