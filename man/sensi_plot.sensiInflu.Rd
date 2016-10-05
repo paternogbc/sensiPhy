@@ -27,7 +27,9 @@ simulation (leave-one-out deletion). Red vertical line represents the original
 slope or intercept from the full model (with all species). 
 
 Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
-difference in slope or intercept is represented by a continous size scale.
+difference in slope or intercept is represented by a continous size scale. 
+The names of the most influential species (sDF > cutoff) are ploted in the
+graph. 
 
 Graph 3: Distribution of standardized difference in slope or intercept. Red 
 colour indicates inbfluential species (with a standardised difference above 
