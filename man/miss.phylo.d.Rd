@@ -12,9 +12,6 @@ miss.phylo.d(data, phy, ...)
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
 \item{...}{Further arguments to be passed to \code{phylo.d}.}
-
-\item{binvar}{The name of the variable in \code{data} holding the variable of interest with 
-missing data.}
 }
 \value{
 The function \code{miss.phylo.d} returns an object of class "phylo.d" with the following
