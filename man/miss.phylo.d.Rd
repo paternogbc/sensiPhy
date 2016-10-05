@@ -9,7 +9,7 @@ miss.phylo.d(data, phy, ...)
 \arguments{
 \item{data}{Data frame containing species traits with species as row names.}
 
-\item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
+\item{phy}{A phylogeny (class 'phylo', see ?\code{ape}).}
 
 \item{...}{Further arguments to be passed to \code{phylo.d}.}
 }

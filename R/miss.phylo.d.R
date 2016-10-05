@@ -6,9 +6,11 @@
 #' \code{\link[caper]{phylo.d}} for missing data.
 #'
 #' @param data Data frame containing species traits with species as row names.
-#' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @permut Number of permutations to be used in the randomisation test.
+#' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
 #' @inheritParams caper::phylo.d
+#' \code{permut} Number of permutations to be used in the randomisation test.
+#' \code{binvar} The name of the variable in \code{data} holding the variable of interest with
+#' missing data.
 #' @param ... Further arguments to be passed to \code{phylo.d}.
 #' @details
 #' This function builds on \code{\link[caper]{phylo.d}} to calculate a phylogenetic signal
@@ -44,8 +46,10 @@
 #' @export
 miss.phylo.d<-function(data, phy,...){
 
-  #if names.col exists stop
-  
+  #error check
+  if (class(data) != "data.frame") stop("data must be class 'data.frame'")
+  if (class(phy) != "phylo") stop("phy must be class 'phylo'")
+
   #calculate % of NAs per trait
   tot.sp <- nrow(data)
   nNA <- colSums(is.na(data))
@@ -62,8 +66,13 @@ miss.phylo.d<-function(data, phy,...){
   data[is.na(data)] <- 1
 
   #match with phylogeny
-  data$sp.nam<-row.names(data)
-  compdat<-caper::comparative.data(phy,data,names.col=sp.nam)
+  if(exists("names.col")){
+    compdat<-caper::comparative.data(phy,data,names.col=names.col)}
+  
+  if(!exists("names.col")){
+    data$sp.nam<-row.names(data)
+    compdat<-caper::comparative.data(phy,data,names.col=sp.nam)}
+
   
   #calculate d statistic using caper::phylo.d
   d.stat<-caper::phylo.d(compdat,...)
