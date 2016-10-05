@@ -1,16 +1,9 @@
 # Sample .travis.yml for R projects
 
 language: r
-cache: packages
 warnings_are_errors: true
 sudo: required
-before_install:
-  - Rscript -e 'install.packages(c("stringi","magrittr"), repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages(c("stringr",  "colorspace"), repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("reshape2", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("munsell", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("scales", repos = "http://cran.rstudio.com")'
-  - Rscript -e 'install.packages("ggplot2", repos = "http://cran.rstudio.com")'
+
 env:
  global:
    - CRAN: http://cran.rstudio.com
