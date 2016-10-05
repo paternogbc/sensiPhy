@@ -11,16 +11,24 @@
 #' 
 #' @author Gustavo Paterno
 #' @seealso \code{\link[sensiPhy]{clade_phylm}} 
-#' @details This function plots the original scatterplot \eqn{y = a + bx} (with the 
+#' @details For 'x' from clade_phylm or clade_phyglm:
+#' 
+#' Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
 #' full dataset) and a comparison between the regression lines of the full model
 #' and the model without the selected clade (set by \code{clade}). For further
 #' details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 #' 
-#' Species from the selected clade are represented in red (removed species),
-#' solid line represents the regression with the full model and dashed line represents
+#' Species from the selected clade are represented in red (removed species), black
+#' solid line represents the regression with the full model and red dashed line represents
 #' the regression of the model without the species from the selected clade.
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
+#' 
+#' Graph 2: Distribution of the simulated slopes (controling for clade sample size).
+#' The vertical red dashed line represents the estimated slope for the reduced model 
+#' (without the focal clade) and the verticla black line represent the slope for the 
+#' full model.
+#'  
 #' @importFrom ggplot2 aes_string
 #' @importFrom stats model.frame qt plogis 
 #' @export
@@ -29,7 +37,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     
     #x <- clade
     #clade <- NULL
-    yy <- NULL
+    yy <- NULL; slope <- NULL
     # start:
     full.data <- x$data
     mappx <- x$formula[[3]]
@@ -86,10 +94,42 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
         theme(axis.text = element_text(size = 18),
               axis.title = element_text(size = 18),
               legend.text = element_text(size = 16),
-              plot.title = element_text(size = 20),
-              panel.background = element_rect(fill = "white", colour = "black"))+
+              plot.title = element_text(size = 16),
+              panel.background = element_rect(fill = "white", colour = "black"),
+              legend.position="bottom", legend.box = "horizontal")+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
     
+    ### Permuation Test plot:
+    nd <- x$null.dist
+    ces <- x$clade.model.estimates
+    
+    nes <- nd[nd$clade == clade, ]
+    slob <- ces[ces$clade == clade ,]$slope
+    slfu <- x$full.model.estimates$coef[[2]]
+    
+    ### P.value permutation test:
+    p.values <- summary(x)[[1]]
+    P <- p.values[p.values$clade.removed == clade, ]$p.value
+    if(P <= 0.05) {Ps <- "P.value < 0.05"}
+    if(P <= 0.01) {Ps <- "P.value < 0.01"}
+    if(P > 0.05) {Ps <- "NS (P > 0.05)"}
+    
+    g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
+      geom_histogram(fill="yellow",colour="black", size=.2,
+                     alpha = .3) +
+      geom_vline(xintercept = slob, color="red",linetype=2,size=.7)+
+      geom_vline(xintercept = slfu, color="black",linetype=1,size=.7)+
+      xlab(paste("Simulated slopes | N.species = ", 
+                 ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
+                 nrow(nes))) +
+      ylab("Frequency")+
+      theme(axis.title=element_text(size=18),
+            axis.text = element_text(size=16),
+            panel.background = element_rect(fill="white",
+                                            colour="black"))+
+      ggtitle(paste("Permutation test for", clade, " | ", 
+                    Ps))
+     
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
         g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
@@ -99,6 +139,6 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     if(length(class(x)) == 2){
         g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model),color=factor(model)))
     }
-    return(g.out)
+    return(suppressMessages(multiplot(g.out, g2, cols=2)))
 }
 

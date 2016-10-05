@@ -5,7 +5,7 @@
 \title{Influential clade detection - Phylogenetic Logistic Regression}
 \usage{
 clade_phyglm(formula, data, phy, btol = 50, track = TRUE, clade.col,
-  n.species = 5, ...)
+  n.species = 5, times = 100, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -24,6 +24,8 @@ specification (a character vector with clade names).}
 
 \item{n.species}{Minimum number of species in the clade in order to include
 this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+
+\item{times}{Number of simulations for the randomization test.}
 
 \item{...}{Further arguments to be passed to \code{phyloglm}}
 }
