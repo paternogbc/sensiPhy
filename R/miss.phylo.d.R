@@ -7,9 +7,8 @@
 #'
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param binvar The name of the variable in \code{data} holding the variable of interest with 
-#' missing data.
 #' @permut Number of permutations to be used in the randomisation test.
+#' @inheritParams caper::phylo.d
 #' @param ... Further arguments to be passed to \code{phylo.d}.
 #' @details
 #' This function builds on \code{\link[caper]{phylo.d}} to calculate a phylogenetic signal
