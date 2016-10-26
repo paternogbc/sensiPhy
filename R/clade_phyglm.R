@@ -24,6 +24,14 @@
 #' difference in intercept and/or slope when removing a given clade compared
 #' to the full model including all species.
 #' 
+#' #' Additionally, to account for the influence of the number of species on each 
+#' clade (clade sample size), this function also estimate a null distribution of slopes
+#' expected for the number of species in a given clade. This is done by fitting
+#'  models without the same number of species in the given clade. 
+#'  The number of simulations to be performed is set by ‘times’. To test if the 
+#'  clade influence differs from the null expectation, a randomization test can
+#'  be performed using 'summary(x)'. 
+#' 
 #' Currently, this function can only implement simple linear models (i.e. 
 #' \eqn{y = a + bx}). In the future we will implement more complex models.
 #'

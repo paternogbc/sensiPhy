@@ -21,6 +21,14 @@
 #' results. The impact of of a specific clade on model estimates is calculated by the
 #' comparison between the full model (with all species) and the model without 
 #' the species belonging to a clade.
+#' 
+#' Additionally, to account for the influence of the number of species on each 
+#' clade (clade sample size), this function also estimate a null distribution of slopes
+#' expected for the number of species in a given clade. This is done by fitting
+#'  models without the same number of species in the given clade. 
+#'  The number of simulations to be performed is set by ‘times’. To test if the 
+#'  clade influence differs from the null expectation, a randomization test can
+#'  be performed using 'summary(x)'. 
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
