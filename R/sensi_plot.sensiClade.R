@@ -111,10 +111,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     ### P.value permutation test:
     p.values <- summary(x)[[1]]
     P <- p.values[p.values$clade.removed == clade, ]$p.value
-    if(P <= 0.05) {Ps <- "P.value < 0.05"}
-    if(P <= 0.01) {Ps <- "P.value < 0.01"}
-    if(P > 0.05) {Ps <- "NS (P > 0.05)"}
-    
+  
     g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
       geom_histogram(fill="yellow",colour="black", size=.2,
                      alpha = .3) +
@@ -128,8 +125,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
             axis.text = element_text(size=16),
             panel.background = element_rect(fill="white",
                                             colour="black"))+
-      ggtitle(paste("Randomization test for", clade, " | ", 
-                    Ps))
+      ggtitle(paste("Randomization test for", clade, " | P = ", 
+                    P))
      
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
