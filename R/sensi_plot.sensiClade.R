@@ -26,8 +26,8 @@
 #' 
 #' Graph 2: Distribution of the simulated slopes (Null distribution
 #' for a given clade sample size).
-#' The vertical red dashed line represent the estimated slope for the reduced model 
-#' (without the focal clade) and the vertical black line represent the slope for the 
+#' The red dashed line represents the estimated slope for the reduced model 
+#' (without the focal clade) and the black line represents the slope for the 
 #' full model.
 #'  
 #' @importFrom ggplot2 aes_string
