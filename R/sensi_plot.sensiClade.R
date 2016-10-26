@@ -24,9 +24,10 @@
 #' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 #' in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
 #' 
-#' Graph 2: Distribution of the simulated slopes (controling for clade sample size).
-#' The vertical red dashed line represents the estimated slope for the reduced model 
-#' (without the focal clade) and the verticla black line represent the slope for the 
+#' Graph 2: Distribution of the simulated slopes (Null distribution
+#' for a given clade sample size).
+#' The vertical red dashed line represent the estimated slope for the reduced model 
+#' (without the focal clade) and the vertical black line represent the slope for the 
 #' full model.
 #'  
 #' @importFrom ggplot2 aes_string
@@ -127,7 +128,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
             axis.text = element_text(size=16),
             panel.background = element_rect(fill="white",
                                             colour="black"))+
-      ggtitle(paste("Permutation test for", clade, " | ", 
+      ggtitle(paste("Randomization test for", clade, " | ", 
                     Ps))
      
     ### plot lines: linear or logistic depending on output class
