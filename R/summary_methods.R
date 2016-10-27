@@ -14,7 +14,7 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     colnames(slope) <- c("Clade removed", "N.species", "Slope", "DFslope", 
                          "change (%)", "Pval")
     res <- list(slope, inter)
-    names(res) <- c("Summary for Slope", "Summary for Intercept")
+    names(res) <- c("Slope", "Intercept")
     
     ### Permutation test:
     ce <- object$clade.model.estimates
@@ -77,11 +77,15 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     }
     
     res2 <- list(stats.slo[ord.slope, ], stats.int[ord.inter, ])
-    names(res2) <- c("Permutation test for Slope", "Permutation test for Intercept")
+    names(res2) <- c("Slope", "Intercept")
     
-    if(perm.test == TRUE) return(res2)  
-    if(perm.test == FALSE) return(res)
-}
+    #if(perm.test == TRUE) return(res2)  
+    #if(perm.test == FALSE) return(res)
+    res.out <- list(res, res2)
+    names(res.out) <- c("Summary of clade influence on model parameters", 
+                        "Randomization test against null distribution (controling for clade size)")
+    res.out
+    }
 
 ### Summary method for class: sensiInflu:--------------------------------------
 

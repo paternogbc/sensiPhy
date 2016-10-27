@@ -38,11 +38,13 @@
 #' https://CRAN.R-project.org/package=caper
 #' @examples 
 #'# Load data:
+#'library(caper)
 #'data(primates)
 #'data<-primates$data
 #'phy=primates$phy[[1]]
 #'NAsignal <- miss.phylo.d(data,phy,binvar=sexMaturity)
 #'print(NAsignal)
+#'plot(NAsignal)
 #' @export
 miss.phylo.d<-function(data, phy,...){
 
