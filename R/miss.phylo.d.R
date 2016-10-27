@@ -37,15 +37,23 @@
 #' caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
 #' https://CRAN.R-project.org/package=caper
 #' @examples 
-#'# Load data:
+#'# Load caper:
 #'library(caper)
+#'# Load data
 #'data(primates)
 #'data<-primates$data
 #'phy=primates$phy[[1]]
-#'NAsignal <- miss.phylo.d(data,phy,binvar=sexMaturity)
-#'print(NAsignal)
-#'plot(NAsignal)
+#'
+#'# Test phylogenetic signal for missing data:
+#'sexNAsig <- miss.phylo.d(data,phy,binvar=sexMaturity)
+#'print(sexNAsig)
+#'plot(sexNAsig)
+#'
+#'massNAsig <- miss.phylo.d(data,phy,binvar=adultMass)
+#'print(massNAsig)
+#'plot(massNAsig)
 #' @export
+
 miss.phylo.d<-function(data, phy,...){
 
   #error check
