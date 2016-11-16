@@ -66,10 +66,11 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
       p.int <- sum(nes$intercept <= ces$intercept)/times
     }
     stats.int[aa, -c(1:2)] <- data.frame(
+                                  null.DFslope = mean((nes$intercept)),
                                   intercept = ces$intercept,
                                   DFintercept = ces$DFintercept,
                                   ces$intercept.perc,
-                                  null.DFslope = mean((nes$intercept)),
+                                  
                                   Pvalue = p.int)
     names(stats.int)[5] <- "Change (%)"
     
@@ -82,8 +83,8 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     #if(perm.test == TRUE) return(res2)  
     #if(perm.test == FALSE) return(res)
     res.out <- list(res, res2)
-    names(res.out) <- c("Summary of clade influence on model parameters", 
-                        "Randomization test against null distribution (controling for clade size)")
+    names(res.out) <- c("summary", 
+                        "Randomization.test")
     res.out
     }
 

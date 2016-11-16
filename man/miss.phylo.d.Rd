@@ -40,12 +40,21 @@ evolution threshold model (Fritz & Purvis, 2010).
 Output can be visualised using \code{print()} and \code{plot()}
 }
 \examples{
-# Load data:
+# Load caper:
+library(caper)
+# Load data
 data(primates)
 data<-primates$data
 phy=primates$phy[[1]]
-NAsignal <- miss.phylo.d(data,phy,binvar=sexMaturity)
-print(NAsignal)
+
+# Test phylogenetic signal for missing data:
+sexNAsig <- miss.phylo.d(data,phy,binvar=sexMaturity)
+print(sexNAsig)
+plot(sexNAsig)
+
+massNAsig <- miss.phylo.d(data,phy,binvar=adultMass)
+print(massNAsig)
+plot(massNAsig)
 }
 \author{
 Caterina Penone &..

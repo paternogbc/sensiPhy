@@ -30,9 +30,10 @@ the regression of the model without the species from the selected clade.
 To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
 in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
 
-Graph 2: Distribution of the simulated slopes (controling for clade sample size).
-The vertical red dashed line represents the estimated slope for the reduced model 
-(without the focal clade) and the verticla black line represent the slope for the 
+Graph 2: Distribution of the simulated slopes (Null distribution
+for a given clade sample size).
+The red dashed line represents the estimated slope for the reduced model 
+(without the focal clade) and the black line represents the slope for the 
 full model.
 }
 \author{
