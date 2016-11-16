@@ -124,7 +124,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
             panel.background = element_rect(fill="white",
                                             colour="black"))+
       ggtitle(paste("Randomization test for", clade, " | P = ", 
-                    P))
+                    sprintf("%.3f", P)))
      
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
