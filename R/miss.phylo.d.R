@@ -55,7 +55,8 @@
 #' @export
 
 miss.phylo.d<-function(data, phy,...){
-
+  
+  sp.nam <- NULL
   #error check
   if (class(data) != "data.frame") stop("data must be class 'data.frame'")
   if (class(phy) != "phylo") stop("phy must be class 'phylo'")
