@@ -15,6 +15,7 @@ install.packages("sensiPhy")
 
 Install development version from github: 
 ```{r}
+install.packages("caper") 
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
