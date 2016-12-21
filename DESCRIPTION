@@ -16,10 +16,12 @@ Description: An implementation of sensitivity analysis in phylogenetic regressio
     (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
     R (>= 3.1.0),
+    ggplot2 (>= 2.1.0),
     ape (>= 3.3),
-    phylolm (>= 2.4),
-    ggplot2 (>= 2.1.0)
-    caper (>= 0.5.2)
+    caper (>= 0.5.2),
+    phylolm (>= 2.4)
+   
+    
 License: GPL-2
 URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues
