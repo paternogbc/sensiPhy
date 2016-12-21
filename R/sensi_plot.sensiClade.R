@@ -35,7 +35,6 @@
 #' @export
 
 sensi_plot.sensiClade <- function(x, clade = NULL, ...){
-    
     yy <- NULL; slope <- NULL
     # start:
     full.data <- x$data
@@ -107,8 +106,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     slfu <- x$full.model.estimates$coef[[2]]
     
     ### P.value permutation test:
-    p.values <- summary(x)[[2]][[1]]
-    P <- p.values[p.values$clade.removed == clade, ]$p.value
+    p.values <- summary(x)[[1]]
+    P <- p.values[p.values$clade.removed == clade, ]$p.randomization
   
     g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
       geom_histogram(fill="yellow",colour="black", size=.2,

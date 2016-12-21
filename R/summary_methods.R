@@ -2,67 +2,78 @@
 
 #' @export
 summary.sensiClade <- function(object, ...){
-    ord.inter <- order(object$clade.model.estimates$intercept.perc, 
-                       decreasing = TRUE)
-    inter <- object$clade.model.estimates[ord.inter, c(1,2,3,4,5, 6)]
-    colnames(inter) <- c("Clade removed", "N.species", "Intercept", "DFintercept",
-                         "change (%)", "Pval")
-    ord.slope <- order(object$clade.model.estimates$slope.perc, 
-                       decreasing = TRUE)
-    slope <- object$clade.model.estimates[ord.slope, c(1,2,7,8,9,10)]
-    colnames(slope) <- c("Clade removed", "N.species", "Slope", "DFslope", 
-                         "change (%)", "Pval")
-   
     ### Permutation test:
     ce <- object$clade.model.estimates
     nd <- object$null.dist
     c <- levels(nd$clade)
     
-    stats.slo <- data.frame(slope,
+    
+    stats.slo <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "slope" = numeric(length(c)),
+                            "DFslope" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "Pval" = numeric(length(c)),
                             "m.null.slope" = numeric(length(c)),
                             "p.randomization" = numeric(length(c)))
-    colnames(stats.slo)[5] <- "change (%)"
-    stats.int <- data.frame(inter,
+    stats.int <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "intercept" = numeric(length(c)),
+                            "DFintercept" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "Pval" = numeric(length(c)),
                             "m.null.intercept" = numeric(length(c)),
                             "p.randomization" = numeric(length(c)))
-    colnames(stats.int)[5] <- "change (%)"
-    
     aa <- 1
     for(j in c) {
-    
-    nes <- nd[nd$clade == j, ] # null estimates
-    ces <- ce[ce$clade == j, ] # reduced model estimates
-    times <- nrow(nes)
-    
-    ### Permutation test SLOPE:
-    if (ces$DFslope > 0){
-      p.slo <- sum(nes$slope >= ces$slope)/times
+      
+      nes <- nd[nd$clade == j, ] # null estimates
+      ces <- ce[ce$clade == j, ] # reduced model estimates
+      times <- nrow(nes)
+      
+      ### Permutation test SLOPE:
+      if (ces$DFslope > 0){
+        p.slo <- sum(nes$slope >= ces$slope)/times
+      }
+      if (ces$DFslope < 0){
+        p.slo <- sum(nes$slope <= ces$slope)/times
+      }
+      
+      stats.slo[aa, -c(1:2)] <- data.frame(
+            slope = ces$slope,
+            DFslope = ces$DFslope,
+            ces$slope.perc,
+            Pval = ces$pval.slope,
+            m.null.slope = mean((nes$slope)),
+            p.randomization = p.slo)
+      names(stats.slo)[5] <- "Change (%)"      
+      
+      ### Permutation test intercept:
+      if (ces$DFintercept > 0){
+        p.int <- sum(nes$intercept >= ces$intercept)/times
+      }
+      if (ces$DFintercept < 0){
+        p.int <- sum(nes$intercept <= ces$intercept)/times
+      }
+      
+      stats.int[aa, -c(1:2)] <- data.frame(
+          intercept = ces$intercept,
+          DFintercept = ces$DFintercept,
+          ces$intercept.perc,
+          Pval = ces$pval.slope,
+          m.null.intercept = mean((nes$intercept)),
+          p.randomization = p.int)
+      
+      names(stats.int)[5] <- "Change (%)"
+      
+      aa <- aa+1
     }
-    if (ces$DFslope < 0){
-      p.slo <- sum(nes$slope <= ces$slope)/times
-    }
-
-    stats.slo[aa, c(7,8)] <- c(
-                              null.DFslope = mean((nes$slope)),
-                              p.randomization = p.slo)
-    names(stats.slo)[5] <- "Change (%)"      
-
-    ### Permutation test intercept:
-    if (ces$DFintercept > 0){
-      p.int <- sum(nes$intercept >= ces$intercept)/times
-    }
-    if (ces$DFintercept < 0){
-      p.int <- sum(nes$intercept <= ces$intercept)/times
-    }
     
-    stats.int[aa, c(7,8)] <- c(null.DFintercept = mean((nes$intercept)),
-                               p.randomization = p.int)
-    colnames(stats.int)[5] <- "Change (%)"
     
-    aa <- aa+1
-    }
+    ### Sort by % of change:
+    ord.slo <- order(object$clade.model.estimates$slope.perc, decreasing = TRUE)
     
-    res <- list(stats.slo, stats.int)
+    res <- list(stats.slo[ord.slo, ], stats.int[ord.slo, ])
     names(res) <- c("Slope", "Intercept")
     res
     }
