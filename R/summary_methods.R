@@ -1,8 +1,8 @@
 ### Summary method for class: sensiClade:--------------------------------------
 
 #' @export
-summary.sensiClade <- function(object, perm.test = TRUE, ...){
-  
+summary.sensiClade <- function(object, ...){
+    object = clade
     ord.inter <- order(object$clade.model.estimates$intercept.perc, 
                        decreasing = TRUE)
     inter <- object$clade.model.estimates[ord.inter, c(1,2,3,4,5, 6)]
@@ -13,28 +13,21 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     slope <- object$clade.model.estimates[ord.slope, c(1,2,7,8,9,10)]
     colnames(slope) <- c("Clade removed", "N.species", "Slope", "DFslope", 
                          "change (%)", "Pval")
-    res <- list(slope, inter)
-    names(res) <- c("Slope", "Intercept")
-    
+   
     ### Permutation test:
     ce <- object$clade.model.estimates
     nd <- object$null.dist
     c <- levels(nd$clade)
     
-    stats.slo <- data.frame("clade removed" = c, 
-                            "N.species" = ce$N.species,
-                            "slope" = numeric(length(c)),
-                            "DFslope" = numeric(length(c)),
-                            "change" = numeric(length(c)),
+    stats.slo <- data.frame(slope,
                             "m.null.slope" = numeric(length(c)),
-                            "p.value" = numeric(length(c)))
-    stats.int <- data.frame("clade removed" = c, 
-                            "N.species" = ce$N.species,
-                            "intercept" = numeric(length(c)),
-                            "DFintercept" = numeric(length(c)),
-                            "change" = numeric(length(c)),
+                            "p.randomization" = numeric(length(c)))
+    colnames(stats.slo)[5] <- "change (%)"
+    stats.int <- data.frame(inter,
                             "m.null.intercept" = numeric(length(c)),
-                            "p.value" = numeric(length(c)))
+                            "p.randomization" = numeric(length(c)))
+    colnames(stats.int)[5] <- "change (%)"
+    
     aa <- 1
     for(j in c) {
     
@@ -50,12 +43,9 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
       p.slo <- sum(nes$slope <= ces$slope)/times
     }
 
-    stats.slo[aa, -c(1:2)] <- data.frame(
-                              slope = ces$slope,
-                              DFslope = ces$DFslope,
-                              ces$slope.perc,
+    stats.slo[aa, c(7,8)] <- c(
                               null.DFslope = mean((nes$slope)),
-                              Pvalue = p.slo)
+                              p.randomization = p.slo)
     names(stats.slo)[5] <- "Change (%)"      
 
     ### Permutation test intercept:
@@ -65,27 +55,17 @@ summary.sensiClade <- function(object, perm.test = TRUE, ...){
     if (ces$DFintercept < 0){
       p.int <- sum(nes$intercept <= ces$intercept)/times
     }
-    stats.int[aa, -c(1:2)] <- data.frame(
-                                  null.DFslope = mean((nes$intercept)),
-                                  intercept = ces$intercept,
-                                  DFintercept = ces$DFintercept,
-                                  ces$intercept.perc,
-                                  
-                                  Pvalue = p.int)
-    names(stats.int)[5] <- "Change (%)"
+    
+    stats.int[aa, c(7,8)] <- c(null.DFintercept = mean((nes$intercept)),
+                               p.randomization = p.int)
+    colnames(stats.int)[5] <- "Change (%)"
     
     aa <- aa+1
     }
     
-    res2 <- list(stats.slo[ord.slope, ], stats.int[ord.inter, ])
-    names(res2) <- c("Slope", "Intercept")
-    
-    #if(perm.test == TRUE) return(res2)  
-    #if(perm.test == FALSE) return(res)
-    res.out <- list(res, res2)
-    names(res.out) <- c("summary", 
-                        "Randomization.test")
-    res.out
+    res <- list(stats.slo, stats.int)
+    names(res) <- c("Slope", "Intercept")
+    res
     }
 
 ### Summary method for class: sensiInflu:--------------------------------------
