@@ -2,8 +2,7 @@
 
 #' @export
 summary.sensiClade <- function(object, ...){
-
-      ord.inter <- order(object$clade.model.estimates$intercept.perc, 
+    ord.inter <- order(object$clade.model.estimates$intercept.perc, 
                        decreasing = TRUE)
     inter <- object$clade.model.estimates[ord.inter, c(1,2,3,4,5, 6)]
     colnames(inter) <- c("Clade removed", "N.species", "Intercept", "DFintercept",
