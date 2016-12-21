@@ -1,4 +1,4 @@
-## sensiPhy 0.5.0.9000
+## sensiPhy 0.6.0
 
 #### New Functions
 
