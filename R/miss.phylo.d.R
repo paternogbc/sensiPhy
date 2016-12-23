@@ -79,10 +79,10 @@ miss.phylo.d<-function(data, phy,...){
   data[is.na(data)] <- 1
 
   #match with phylogeny
-  if(exists("names.col")){
+  if(is.null("names.col")){
     compdat<-caper::comparative.data(phy,data,names.col=names.col)}
   
-  if(!exists("names.col")){
+  if(!is.null("names.col")){
     data$sp.nam<-row.names(data)
     compdat<-caper::comparative.data(phy,data,names.col=sp.nam)}
 
