@@ -71,12 +71,10 @@ intraspecific variability in response and/or predictor variables.
 This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
 The regression is repeated \code{times} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
-To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
-Warning: when Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
-for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
- 
-All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
+To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
+package \code{Rmisc}.
+
+#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 
@@ -84,6 +82,12 @@ Currently, this function can only implement simple linear models (i.e. \eqn{trai
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\section{Warning}{
+  
+When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 }
 \examples{
 # Load data:
