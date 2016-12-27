@@ -60,8 +60,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                 geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated slopes")+
                 ylab("Frequency")+
-                theme(axis.title=element_text(size=16),
-                    axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                    axis.text = element_text(size=12),
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
         
@@ -72,8 +72,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                 geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
                 xlab("Estimated Intercepts")+
                 ylab("Frequency")+
-                theme(axis.title=element_text(size=16),
-                    axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                    axis.text = element_text(size=12),
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
         
@@ -86,16 +86,17 @@ intercept.perc <- sDFintercept <- species <-  NULL
             ggplot2::geom_text(aes(label =  ifelse(abs(sDFslope) > cutoff, 
                                   as.character(species), ""),
                         vjust = 0, hjust = 0,
-                        color = "red", size = 1.8), show.legend = F) + 
+                        color = "red", size = .7), show.legend = F,
+                        fontface = "bold") + 
             theme(legend.key.width = unit(.2,"cm"),
                   panel.background=element_rect(fill="white", colour = "black"),
-                  legend.text = element_text(size = 14),
+                  legend.text = element_text(size = 12),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
             scale_x_continuous(expand = c(.2, .2)) +
             ggtitle("Standardized Difference in slope")+
-            theme(axis.title = element_text(size = 16),
-                  axis.text = element_text(size = 14),
+            theme(axis.title = element_text(size = 12),
+                  axis.text = element_text(size = 12),
                   panel.background = element_rect(fill = "white",
                                                   colour = "black"))
              
@@ -108,16 +109,16 @@ intercept.perc <- sDFintercept <- species <-  NULL
             ggplot2::geom_text(aes(label = ifelse(abs(sDFintercept) > cutoff, 
                                                 as.character(species), ""), 
                                  vjust = 0, hjust = 0, color = "red",
-                                 size = 1.8), show.legend = F) +
+                                 size = .7), show.legend = F,  fontface = "bold") +
             theme(legend.key.width = unit(.2,"cm"),
                   panel.background=element_rect(fill="white",colour="black"),
-                  legend.text = element_text(size=14),
+                  legend.text = element_text(size=12),
                   panel.grid.major = element_blank(),
                   panel.grid.minor = element_blank())+
           scale_x_continuous(expand = c(.2, .2)) +
             ggtitle("Standardized Difference in Intercept")+
-            theme(axis.title=element_text(size=16),
-                  axis.text = element_text(size=14),
+            theme(axis.title=element_text(size=12),
+                  axis.text = element_text(size=12),
                   panel.background = element_rect(fill="white",
                                                   colour="black"))
 
@@ -130,8 +131,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                                colour="black", fill="white",binwidth=.5)+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
                 geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
-                theme(axis.title=element_text(size=16),
-                    axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                    axis.text = element_text(size=12),
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
 
@@ -144,8 +145,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                                colour="black", fill="white",binwidth=.5)+
                 geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
                 geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
-                theme(axis.title=element_text(size=16),
-                    axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                    axis.text = element_text(size=12),
                     panel.background = element_rect(fill="white",
                                               colour="black"))                
 
@@ -157,8 +158,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                                alpha = .3)+
                 xlab("% of change in Slope")+
                 ylab("Frequency") +
-                theme(axis.title=element_text(size=16),
-                       axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                       axis.text = element_text(size=12),
                        panel.background = element_rect(fill="white",
                                                        colour="black"))
 
@@ -169,8 +170,8 @@ intercept.perc <- sDFintercept <- species <-  NULL
                               alpha = .3)+
                 xlab("% of change in Intercept")+
                 ylab("Frequency")+
-                theme(axis.title=element_text(size=16),
-                    axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                    axis.text = element_text(size=12),
                     panel.background = element_rect(fill="white",
                                                   colour="black"))
 

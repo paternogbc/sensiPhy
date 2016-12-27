@@ -142,10 +142,10 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                            alpha=.6)+
                 theme( legend.position = "none",
                        legend.direction = "horizontal",
-                       legend.text=element_text(size=14),
-                       legend.title=element_text(size=14),
-                       axis.text=element_text(size=14),
-                       axis.title=element_text(size=16),
+                       legend.text=element_text(size=12),
+                       legend.title=element_text(size=12),
+                       axis.text=element_text(size=12),
+                       axis.title=element_text(size=12),
                        legend.key.width=unit(.5,"line"),
                        legend.key.size = unit(.5,"cm"),
                        panel.background = element_rect(fill="white",
@@ -173,10 +173,10 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                            alpha=.6)+
                 theme( legend.position = "none",
                        legend.direction = "horizontal",
-                       legend.text=element_text(size=14),
-                       legend.title=element_text(size=14),
-                       axis.text=element_text(size=14),
-                       axis.title=element_text(size=16),
+                       legend.text=element_text(size=12),
+                       legend.title=element_text(size=12),
+                       axis.text=element_text(size=12),
+                       axis.title=element_text(size=12),
                        legend.key.width=unit(.5,"line"),
                        legend.key.size = unit(.5,"cm"),
                        panel.background = element_rect(fill="white",
@@ -203,10 +203,10 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
                        legend.direction = "horizontal",
-                       legend.text=element_text(size=14),
+                       legend.text=element_text(size=12),
                        legend.title = element_text(size=12),
-                       axis.text=element_text(size=14),
-                       axis.title=element_text(size=16),
+                       axis.text=element_text(size=12),
+                       axis.title=element_text(size=12),
                        legend.key.width=unit(.5,"line"),
                        legend.key.size = unit(.5,"cm"),
                        panel.background = element_rect(fill="white",
@@ -225,10 +225,10 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 scale_x_continuous(breaks=result$n.percent)+
                 theme( legend.position = "top",
                        legend.direction = "horizontal",
-                       legend.text=element_text(size=14),
+                       legend.text=element_text(size=12),
                        legend.title = element_text(size=12),
-                       axis.text=element_text(size=14),
-                       axis.title=element_text(size=16),
+                       axis.text=element_text(size=12),
+                       axis.title=element_text(size=12),
                        legend.key.width=unit(.5,"line"),
                        legend.key.size = unit(.5,"cm"),
                        panel.background = element_rect(fill="white",
@@ -241,8 +241,8 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 geom_point()+
                 geom_boxplot(fill="red",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
-                theme(axis.title=element_text(size=16),
-                      axis.text = element_text(size=14),
+                theme(axis.title=element_text(size=12),
+                      axis.text = element_text(size=12),
                       panel.background = element_rect(fill="white",
                                                       colour="black"))+
                 xlab("% of Species Removed")+
@@ -259,8 +259,8 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 geom_point(size=5,colour="red")+
                 geom_line(colour="red")+
                 ylab("% of significant slopes")+
-                theme(axis.text=element_text(size=14),
-                      axis.title=element_text(size=16),
+                theme(axis.text=element_text(size=12),
+                      axis.title=element_text(size=12),
                       panel.background = element_rect(fill="white",
                                                       colour="black"))
 
@@ -273,8 +273,8 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                 geom_point(size=5,colour="red")+
                 geom_line(colour="red")+
                 ylab("% of significant intercepts")+
-                theme(axis.text=element_text(size=14),
-                      axis.title=element_text(size=16),
+                theme(axis.text=element_text(size=12),
+                      axis.title=element_text(size=12),
                       panel.background = element_rect(fill="white",
                                                       colour="black"))
         

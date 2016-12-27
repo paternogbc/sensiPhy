@@ -61,8 +61,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
       geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
       xlab("Estimated Slopes")+
       ylab("Frequency")+
-        theme(axis.title=element_text(size=16),
-              axis.text = element_text(size=14),
+        theme(axis.title=element_text(size=12),
+              axis.text = element_text(size=12),
               panel.background = element_rect(fill="white",
                                               colour="black"))
 
@@ -73,8 +73,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
       geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
       xlab("Estimated Intercepts")+
       ylab("Frequency")+
-        theme(axis.title=element_text(size=16),
-              axis.text = element_text(size=14),
+        theme(axis.title=element_text(size=12),
+              axis.text = element_text(size=12),
               panel.background = element_rect(fill="white",
                                               colour="black"))
  
@@ -83,8 +83,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                           environment = parent.frame())+
       geom_point(size=3,alpha=.8)+
       theme(panel.background=element_rect(fill="white",colour="black"),
-            axis.title=element_text(size=16),
-            axis.text = element_text(size=14),
+            axis.title=element_text(size=12),
+            axis.text = element_text(size=12),
             panel.grid.major = element_blank(),
             panel.grid.minor = element_blank(),
             legend.position="none")
@@ -114,8 +114,8 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
         geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
         xlab("Distribution of P-values")+
         ylab("Frequency")+
-        theme(axis.title=element_text(size=16),
-              axis.text = element_text(size=14),
+        theme(axis.title=element_text(size=12),
+              axis.text = element_text(size=12),
               panel.background = element_rect(fill="white",
                                               colour="black"))
     
