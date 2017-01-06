@@ -83,7 +83,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
         geom_point(data = full.data[match.y, ],alpha = .5,
                    size = 4, aes(shape = "Removed species"), colour = "red")+
         
-        scale_shape_manual(name = "", values = c("Removed species" = 12))+
+        scale_shape_manual(name = "", values = c("Removed species" = 16))+
         guides(shape = guide_legend(override.aes = list(linetype = 0)))+
         scale_linetype_manual(name = "Model", values = c("Full model" = "solid",
                                                     "Without clade" = "dashed"))+
