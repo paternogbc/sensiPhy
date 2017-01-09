@@ -20,6 +20,8 @@ is within the null distribution - one-tailed test).
 * `sensi_plot()` for influential species analysis (`influ_phylm` / `influ_phyglm`) now prints the names
 of the most influential species on the regression plot.
 
+* The package now includes a __Vignette__ with a quick introduction to all sensiPhy functions.
+
 ## sensiPhy 0.5.0
 
 Fixed all issues before submission to CRAN.
