@@ -89,10 +89,10 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
                                                     "Without clade" = "dashed"))+
         scale_color_manual(name = "Model", values = c("Full model" = "black",
                                                     "Without clade" = "red"))+
-        theme(axis.text = element_text(size = 18),
-              axis.title = element_text(size = 18),
-              legend.text = element_text(size = 16),
-              plot.title = element_text(size = 16),
+        theme(axis.text = element_text(size = 12),
+              axis.title = element_text(size = 12),
+              legend.text = element_text(size = 12),
+              plot.title = element_text(size = 12),
               panel.background = element_rect(fill = "white", colour = "black"),
               legend.position="bottom", legend.box = "horizontal")+
         ggtitle(paste("Clade removed: ", clade, sep = ""))
@@ -118,8 +118,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
                  ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
                  nrow(nes))) +
       ylab("Frequency")+
-      theme(axis.title=element_text(size=18),
-            axis.text = element_text(size=16),
+      theme(axis.title=element_text(size=12),
+            axis.text = element_text(size=12),
             panel.background = element_rect(fill="white",
                                             colour="black"))+
       ggtitle(paste("Randomization test for", clade, " | P = ", 

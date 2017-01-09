@@ -26,3 +26,6 @@ URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues
 LazyData: true
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

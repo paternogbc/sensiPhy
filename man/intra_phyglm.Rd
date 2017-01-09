@@ -64,10 +64,8 @@ intraspecific variability in predictor variables.
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
 The regression is repeated \code{times} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
-To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
-Warning: when Vx exceeds X, negative (or null) values can be generated, this might cause problems
-for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
+package \code{Rmisc}.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -77,6 +75,12 @@ Currently, this function can only implement simple logistic models (i.e. \eqn{tr
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
+}
+\section{Warning}{
+  
+When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 }
 \examples{
 # Simulate Data:

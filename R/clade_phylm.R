@@ -72,7 +72,7 @@
 #'data(primates)
 #'# run analysis:
 #'clade <- clade_phylm(log(sexMaturity) ~ log(adultMass), 
-#'phy = primates$phy[[1]], data = primates$data, clade.col = "family")
+#'phy = primates$phy[[1]], data = primates$data, times = 30, clade.col = "family")
 #'# To check summary results and most influential clades:
 #'summary(clade)
 #'# Visual diagnostics for clade removal:
