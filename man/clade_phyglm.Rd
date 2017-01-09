@@ -88,7 +88,7 @@ y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 cla <- rep(c("A","B","C","D","E"), each = 30)
 dat = data.frame(y, x, cla)
 # Run sensitivity analysis:
-clade <- clade_phyglm(y ~ x, phy = phy, data = dat, clade.col = "cla")
+clade <- clade_phyglm(y ~ x, phy = phy, data = dat, times = 30, clade.col = "cla")
 # To check summary results and most influential clades:
 summary(clade)
 # Visual diagnostics for clade removal:
