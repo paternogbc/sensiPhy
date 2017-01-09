@@ -68,6 +68,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#' \dontrun{
 #'# Load data:
 #'data(primates)
 #'# run analysis:
@@ -80,6 +81,7 @@
 #'# Specify which clade removal to plot:
 #'sensi_plot(clade, "Cercopithecidae")
 #'sensi_plot(clade, "Cebidae")
+#'}
 #' @export
 
 clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,

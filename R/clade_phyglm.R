@@ -60,6 +60,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#' \dontrun{
 #'# Simulate Data:
 #'set.seed(6987)
 #'phy = rtree(150)
@@ -78,6 +79,7 @@
 #'sensi_plot(clade, "B")
 #'sensi_plot(clade, "C")
 #'sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
+#'}
 #' @export
 
 clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,

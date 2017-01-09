@@ -79,6 +79,7 @@ Currently, this function can only implement simple linear models (i.e.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Simulate Data:
 set.seed(6987)
 phy = rtree(150)
@@ -97,6 +98,7 @@ sensi_plot(clade)
 sensi_plot(clade, "B")
 sensi_plot(clade, "C")
 sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
+}
 }
 \author{
 Gustavo Paterno & Gijsbert Werner

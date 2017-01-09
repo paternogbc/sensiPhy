@@ -87,6 +87,7 @@ Currently, this function can only implement simple linear models (i.e.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Load data:
 data(primates)
 # run analysis:
@@ -99,6 +100,7 @@ sensi_plot(clade)
 # Specify which clade removal to plot:
 sensi_plot(clade, "Cercopithecidae")
 sensi_plot(clade, "Cebidae")
+}
 }
 \author{
 Gustavo Paterno
