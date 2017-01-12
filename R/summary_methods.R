@@ -15,7 +15,7 @@ summary.sensiClade <- function(object, ...){
                             "change" = numeric(length(c)),
                             "Pval" = numeric(length(c)),
                             "m.null.slope" = numeric(length(c)),
-                            "p.randomization" = numeric(length(c)))
+                            "Pval.randomization" = numeric(length(c)))
     stats.int <- data.frame("clade removed" = c, 
                             "N.species" = ce$N.species,
                             "intercept" = numeric(length(c)),
@@ -23,7 +23,7 @@ summary.sensiClade <- function(object, ...){
                             "change" = numeric(length(c)),
                             "Pval" = numeric(length(c)),
                             "m.null.intercept" = numeric(length(c)),
-                            "p.randomization" = numeric(length(c)))
+                            "Pval.randomization" = numeric(length(c)))
     aa <- 1
     for(j in c) {
       
@@ -45,7 +45,7 @@ summary.sensiClade <- function(object, ...){
             ces$slope.perc,
             Pval = ces$pval.slope,
             m.null.slope = mean((nes$slope)),
-            p.randomization = p.slo)
+            Pval.randomization = p.slo)
       names(stats.slo)[5] <- "Change (%)"      
       
       ### Permutation test intercept:
@@ -62,7 +62,7 @@ summary.sensiClade <- function(object, ...){
           ces$intercept.perc,
           Pval = ces$pval.slope,
           m.null.intercept = mean((nes$intercept)),
-          p.randomization = p.int)
+          Pval.randomization = p.int)
       
       names(stats.int)[5] <- "Change (%)"
       
