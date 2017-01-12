@@ -214,15 +214,15 @@ a binary variable (1=missing, 0=non missing).
 # Load caper:
 library(caper)
 # Load data
-data(primates)
-knitr::kable(head(primates$data))
-data <- primates$data
-phy = primates$phy[[1]]
+data(alien)
+knitr::kable(head(alien.data))
+data <- alien.data
+phy = alien.phy[[1]]
 
 # Test phylogenetic signal for missing data:
-sexNAsig <- miss.phylo.d(data, phy, binvar = sexMaturity)
-print(sexNAsig)
-plot(sexNAsig)
+homeNAsig <- miss.phylo.d(data, phy, binvar = homeRange)
+print(homeNAsig)
+plot(homeNAsig)
 
 massNAsig <- miss.phylo.d(data, phy, binvar = adultMass)
 print(massNAsig)
