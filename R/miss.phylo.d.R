@@ -41,11 +41,11 @@
 #'library(caper)
 #'# Load data
 #'data(primates)
-#'data<-primates$data
-#'phy=primates$phy[[1]]
+#'data<-alien$data
+#'phy=alien$phy[[1]]
 #'
 #'# Test phylogenetic signal for missing data:
-#'sexNAsig <- miss.phylo.d(data,phy,binvar=sexMaturity)
+#'sexNAsig <- miss.phylo.d(data,phy,binvar=homeRange)
 #'print(sexNAsig)
 #'plot(sexNAsig)
 #'
