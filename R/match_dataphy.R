@@ -48,18 +48,26 @@
 #' (2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
 #' http://CRAN.R-project.org/package=caper
 #' @examples 
-#'# Load data:
-#'data(alien)
-#'head(alien$data)
-#'# Match data and phy based on model formula:
-#'comp.data <- match_dataphy(gestaLen ~ adultMass, data = alien$data, alien$phy[[1]])
-#'comp.data2 <- match_dataphy(homeRange ~ adultMass, data = alien$data, alien$phy)
-#'# Check data:
-#'comp.data$data
-#'# Check phy:
-#'comp.data$phy
-#'# See species dropped from phy or data:
-#'comp.data$dropped
+#' # Load data:
+#' data(alien)
+#' head(alien$data)
+#' # Match data and phy based on model formula:
+#' comp.data <- match_dataphy(gestaLen ~ homeRange, data = alien$data, alien$phy[[1]])
+#' # Check data:
+#' head(comp.data$data)
+#' # Check phy:
+#' comp.data$phy
+#' # See species dropped from phy or data:
+#' comp.data$dropped
+#' # Example2:
+#' # Match data and phy based on model formula:
+#' comp.data2 <- match_dataphy(gestaLen ~ adultMass, data = alien$data, alien$phy)
+#' # Check data (missing data on variables not included in the formula are preserved)
+#' head(comp.data2$data)
+#' # Check phy:
+#' comp.data2$phy
+#' # See species dropped from phy or data:
+#' comp.data2$dropped
 #' @export
 match_dataphy <- function(formula, data, phy){
     
