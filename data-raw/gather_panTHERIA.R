@@ -27,7 +27,7 @@ primates <- list(data = primates.data,
               phy  = primates.phy)
 
 ### Match data and Phy and remove missing data:
-primates <- sensiPhy::match_dataphy(adultMass ~ sexMaturity + homeRange,
+primates <- sensiPhy::match_dataphy(adultMass ~ sexMaturity,
                                     data = primates.data, phy = primates.phy)
 primates.data <- primates$data
 primates.phy  <- primates$phy
