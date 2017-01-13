@@ -20,11 +20,12 @@ knitr::opts_chunk$set(fig.height = 6.5, fig.width = 10)
 
 ### Sensitivity Analysis for Comparative Methods
 
+#### Functions for sensitivity analysis  
 The __sensiPhy__ package provides simple functions to perform sensitivity analysis
 in phylogenetic comparative methods. It uses several simulation methods to 
 estimate the impact of different types of uncertainty on PGLS models:  
 
-(i) Sampling uncertainty (sample size; influential species and clades)  
+(i) Species Sampling uncertainty (sample size; influential species and clades)  
 (ii) Phylogenetic uncertainty    
 (iii) Data uncertainty (intraspecific variation and measurement error)  
 
@@ -35,25 +36,36 @@ sensiPhy functions use a common syntax that combines the type of uncertainty and
 ----------- | ----------- | -----------
  samp_phylm | sample size | linear regression 
  samp_phyglm | sample size | logistic regression 
+ influ_phylm | influential species | linear regression |
+ influ_phyglm | influential species | logistic regression |
+ clade_phylm | influential clade | linear regression |
+ clade_phyglm | influential clades | logistic regression |
  tree_phylm | phylogenetic uncertain | linear regression 
  tree_phylm | phylogenetic uncertain | logistic regression 
  intra_phylm | Data uncertainty | linear regression 
  intra_phylm | Data uncertainty | logistic regression 
 
-Mandatory arguments of sensiPhy functions include: `function(formula , data, phy, ...)`  
+Mandatory arguments of these functions include: `function(formula , data, phy, ...)`  
+
+#### Additional functions  
+ **Function** | Description  
+----------- | ----------- | 
+match_dataphy | Match data and phylogeny based on model formula | 
+miss.phylo.d | Calculates the phylogenetic signal for missing data |
+
 The following examples describes the basic usage of __sensiPhy__ functions. 
+
+## Examples:
 
 Loading the package and data 
 ```{r message=T}
-set.seed(12345)
+set.seed(1234)
 library(sensiPhy)
 
 ### Loading data:
 data(alien)
-data(primates) # se ?alien & ?primates for details about the data.
+data(primates) # see ?alien & ?primates for details about the data.
 ```
-
-<br><br> 
 
 ## 1.Sampling uncertainty
 
@@ -74,7 +86,7 @@ samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]],
 
 # You can change the number of repetitions and break intervals:
 samp2 <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], track = F,
-                    data = alien$data, times = 10, breaks = c(0.1, 0.2, 0.3, 0.4))
+                    data = alien$data, times = 100, breaks = c(0.1, 0.2, 0.3, 0.4))
 # You can change the phylogenetic model:
 samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
                    data = alien$data, model = "kappa", track = F)
