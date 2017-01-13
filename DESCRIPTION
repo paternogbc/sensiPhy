@@ -1,7 +1,7 @@
 Package: sensiPhy
 Title: Sensitivity Analysis for Comparative Methods
 Version: 0.6.0
-Date: 2016-07-18
+Date: 2017-01-13
 Authors@R: c(
     person("Gustavo","Paterno", email = "paternogbc@gmail.com", role = c("cre","aut")),
     person("Gijsbert", "Werner", email = "gijsbert.werner@zoo.ox.ac.uk", role = "aut"),
@@ -11,8 +11,8 @@ Description: An implementation of sensitivity analysis in phylogenetic regressio
     for both linear and logistic phylogenetic regressions. The package is an umbrella
     of statistical and graphical methods that estimate and report different types of
     uncertainty in PGLS models:
-    (i) Sampling uncertainty (sample size; influential species and clades).
-    (ii) Phylogenetic uncertainty.
+    (i) Species Sampling uncertainty (sample size; influential species and clades).
+    (ii) Phylogenetic uncertainty (different topologies and/or branch lengths).
     (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
     R (>= 3.1.0),
