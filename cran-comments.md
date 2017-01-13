@@ -1,12 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Included examples that are executed during R CMD check
+* Updated the package to v0.6.0 and included new features and functions. Please see 'NEWS.md' for details.
 
 ## Test environments
-* local ubuntu 16.04 install, R 3.3.1
-* local Windows 8 install, R 3.3.1
-* local OS X 10.11.15 install, R 3.3.0
+* local ubuntu 16.10 install, R 3.3.1
 * win-builder (devel and release)
 * travis Ubuntu 12.04.5 LTS 
 
