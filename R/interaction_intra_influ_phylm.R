@@ -143,9 +143,10 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   species.NA <- list()
   pb <- utils::txtProgressBar(min = 0, max = total_iteration, style = 1)
   
-  for (j in 1:total_iteration){ #Create a nested for-loop. 
+ #Create a nested for-loop. 
     for (i in 1:times) { #First create the new datset, and then drop all the species on that as previously. 
-      ##Set response and predictor variables
+     
+       ##Set response and predictor variables
       #Vy is not provided or is not numeric, do not pick random value
       if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
       {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
@@ -173,54 +174,53 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
       if(sum(is.na(full.data[,c("respV","predV")])>0)) next
       
-      #Here, go into the species-drop loop:
-      for (k in 1:N){
-      crop.data <- full.data[c(1:N)[-k],]
-      crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
-      mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
-                               phy=crop.phy),
-              TRUE)
-      if(isTRUE(class(mod)=="try-error")) {
-        error <- k
-        names(error) <- rownames(full.data$data)[k]
-        errors <- c(errors,error)
-        next }
-      else {  sp                   <- phy$tip.label[k]
-      intercept            <- mod$coefficients[[1]]
-      slope                <- mod$coefficients[[2]]
-      DFintercept          <- intercept - intercept.0
-      DFslope              <- slope - slope.0
-      intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
-      slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
-      pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-      pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
-      aic.mod              <- mod$aic
-      if (model == "BM" | model == "trend"){
-        optpar <- NA
+          #Here, go into the species-drop loop:
+          for (k in 1:N){
+          crop.data <- full.data[c(1:N)[-k],]
+          crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
+          mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
+                                   phy=crop.phy),
+                  TRUE)
+          if(isTRUE(class(mod)=="try-error")) {
+            error <- k
+            names(error) <- rownames(full.data$data)[k]
+            errors <- c(errors,error)
+            next }
+          else {  sp                   <- phy$tip.label[k]
+          intercept            <- mod$coefficients[[1]]
+          slope                <- mod$coefficients[[2]]
+          DFintercept          <- intercept - intercept.0
+          DFslope              <- slope - slope.0
+          intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
+          slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
+          pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
+          pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+          aic.mod              <- mod$aic
+          if (model == "BM" | model == "trend"){
+            optpar <- NA
+          }
+          if (model != "BM" & model != "trend" ){
+            optpar               <- mod$optpar
+          }
+          
+          # Stores values for each simulation
+          estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
+                                   pval.intercept, slope, DFslope, slope.perc,
+                                   pval.slope, aic.mod, optpar,
+                                   stringsAsFactors = F)
+          influ.model.estimates[counter, ]  <- estim.simu
+          
+          counter=counter+1
+          
+          if(track==TRUE)
+            utils::setTxtProgressBar(pb, counter)
+          
+          }
       }
-      if (model != "BM" & model != "trend" ){
-        optpar               <- mod$optpar
-      }
-      
-      # Stores values for each simulation
-      estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
-                               pval.intercept, slope, DFslope, slope.perc,
-                               pval.slope, aic.mod, optpar,
-                               stringsAsFactors = F)
-      influ.model.estimates[counter, ]  <- estim.simu
-      
-      counter=counter+1
-      
-      if(track==TRUE)
-        utils::setTxtProgressBar(pb, counter)
-      
-      }
-      }
-    }
-  }
-   
+}
 
-  on.exit(close(pb))
+   
+on.exit(close(pb))
   
   
   #Calculates Standardized DFbeta and DFintercept
