@@ -102,17 +102,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
     datphy <- match_dataphy(formula, data, phy)
     full.data <- datphy[[1]]
     phy <- datphy[[2]]
-  
-  N               <- nrow(full.data)
-  mod.0           <- phylolm::phylolm(formula, data=full.data,
-                                      model=model,phy=phy)
-  intercept.0      <- mod.0$coefficients[[1]]
-  slope.0          <- mod.0$coefficients[[2]]
-  pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
-  pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-  optpar.0 <- mod.0$optpar
-  total_iteration <- N * times #I.e. how often are we going resimulate the dataset, times the # of species to drop. 
-  
+    
   #To loop over iterations of the dataset based on intraspecific variation. 
   resp <- all.vars(formula)[1]
   pred <- all.vars(formula)[2]
@@ -126,6 +116,27 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   #Function to pick a random value in the interval
   if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
+  
+  #Caculate the null model, i.e. no species deleted and no data uncertainty considered. 
+  #transform if x.transf and/or y.transf are provided
+  if(is.null(y.transf) & is.null(x.transf))
+    {formula.0<-formula} ####This is what happens when there is no transformations. Solve for the other two cases too. 
+  
+  if(!is.null(y.transf)) 
+  {suppressWarnings (resp.0 <- y.transf(resp))}
+  
+  if(!is.null(x.transf)) 
+  {suppressWarnings (pred.0 <- x.transf(pred))}
+  
+  N               <- nrow(full.data)
+  mod.0           <- phylolm::phylolm(formula.0, data=full.data,
+                                      model=model,phy=phy)
+  intercept.0      <- mod.0$coefficients[[1]]
+  slope.0          <- mod.0$coefficients[[2]]
+  pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
+  pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
+  optpar.0 <- mod.0$optpar
+  total_iteration <- N * times #I.e. how often are we going resimulate the dataset, times the # of species to drop. 
   
   
   #Creates empty data frame to store model outputs
@@ -175,6 +186,17 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
       if(sum(is.na(full.data[,c("respV","predV")])>0)) next
       
+      #Here, calculate the null-model for this particular resimulated dataset, 
+      #i.e. no species deleted, but within this resimlated dataset / data unceratinty. 
+      mod.0.resim           <- phylolm::phylolm(respV ~ predV, data=full.data,
+                                          model=model,phy=phy)
+      intercept.0.resim      <- mod.0.resim$coefficients[[1]]
+      slope.0.resim          <- mod.0.resim$coefficients[[2]]
+      pval.intercept.0.resim <- phylolm::summary.phylolm(mod.0.resim)$coefficients[[1,4]]
+      pval.slope.0.resim     <- phylolm::summary.phylolm(mod.0.resim)$coefficients[[2,4]]
+      optpar.0.resim <- mod.0.resim$optpar
+      #Question, do we want to store these values too in the ultimate data frame for the user? 
+      
           #Here, go into the species-drop loop:
           for (k in 1:N){
           crop.data <- full.data[c(1:N)[-k],]
@@ -190,10 +212,10 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
           else {  sp                   <- phy$tip.label[k]
           intercept            <- mod$coefficients[[1]]
           slope                <- mod$coefficients[[2]]
-          DFintercept          <- intercept - intercept.0
-          DFslope              <- slope - slope.0
-          intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
-          slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
+          DFintercept          <- intercept - intercept.0.resim
+          DFslope              <- slope - slope.0.resim
+          intercept.perc       <- round((abs(DFintercept/intercept.0.resim))*100,digits=1)
+          slope.perc           <- round((abs(DFslope/slope.0.resim))*100,digits=1)
           pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
           pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
           aic.mod              <- mod$aic
