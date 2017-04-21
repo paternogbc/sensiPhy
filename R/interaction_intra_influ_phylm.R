@@ -140,6 +140,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   #Loops over all species, and removes each one individually
   counter <- 1
   errors <- NULL
+  species.NA <- list()
   pb <- utils::txtProgressBar(min = 0, max = total_iteration, style = 1)
   
   for (j in 1:total_iteration){ #Create a nested for-loop. 
