@@ -141,6 +141,7 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx =
   counter <- 1
   errors <- NULL
   pb <- utils::txtProgressBar(min = 0, max = total_iteration, style = 1)
+  
   for (j in 1:total_iteration){ #Create a nested for-loop. 
     for (i in 1:times) { #First create the new datset, and then drop all the species on that as previously. 
       ##Set response and predictor variables
@@ -200,15 +201,18 @@ influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx =
         optpar               <- mod$optpar
       }
       
-      if(track==TRUE)
-        utils::setTxtProgressBar(pb, k)
       # Stores values for each simulation
       estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
                                pval.intercept, slope, DFslope, slope.perc,
                                pval.slope, aic.mod, optpar,
                                stringsAsFactors = F)
       influ.model.estimates[counter, ]  <- estim.simu
+      
       counter=counter+1
+      
+      if(track==TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      
       }
       }
     }
