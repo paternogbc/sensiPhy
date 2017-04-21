@@ -97,11 +97,12 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   else
     
-    # Check match between data and phy 
-    data_phy <- match_dataphy(formula, data, phy)
-  #Calculates the full model, extracts model parameters
-  full.data <- data_phy$data
-  phy <- data_phy$phy
+    
+    #Matching tree and phylogeny using utils.R
+    datphy <- match_dataphy(formula, data, phy)
+  full.data <- datphy[[1]]
+  phy <- datphy[[2]]
+  
   N               <- nrow(full.data)
   mod.0           <- phylolm::phylolm(formula, data=full.data,
                                       model=model,phy=phy)
@@ -178,7 +179,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
           for (k in 1:N){
           crop.data <- full.data[c(1:N)[-k],]
           crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
-          mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
+          mod=try(phylolm::phylolm(respV ~ predV, data=crop.data,model=model,
                                    phy=crop.phy),
                   TRUE)
           if(isTRUE(class(mod)=="try-error")) {
