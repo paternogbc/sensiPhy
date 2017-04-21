@@ -78,7 +78,7 @@
 #'sensi_plot(influ, param = "slope", graphs = 2)
 #' @export
 
-influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx = NULL,
+interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
                         times = 10, distrib = "normal",
                         track=TRUE,...){
