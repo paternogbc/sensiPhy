@@ -100,8 +100,8 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
     
     #Matching tree and phylogeny using utils.R
     datphy <- match_dataphy(formula, data, phy)
-  full.data <- datphy[[1]]
-  phy <- datphy[[2]]
+    full.data <- datphy[[1]]
+    phy <- datphy[[2]]
   
   N               <- nrow(full.data)
   mod.0           <- phylolm::phylolm(formula, data=full.data,
