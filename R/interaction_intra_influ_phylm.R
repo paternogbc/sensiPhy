@@ -81,7 +81,7 @@
 influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
                         times = 10, distrib = "normal",
-                        model = "lambda",track=TRUE,...){
+                        track=TRUE,...){
   
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
