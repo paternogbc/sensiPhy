@@ -136,8 +136,8 @@ summary.sensiInflu_Intra <- function(object, ...){
   rownames(inter) <- NULL
   colnames(inter) <- c("Species removed", "Intercept", "DFintercept", "Change(%)", "Pval")
   
-  res <- list("Influential species for the Slope" = sp.slope, "Slope Estimates" = slope,
-              "Influential species for the Intercept" = sp.inter, "Intercept Estimates" = inter)
+  res <- list("Most Common Influential species for the Slope" = sp.slope, "Mean Slope Estimates" = slope,
+              "Most Common Influential species for the Intercept" = sp.inter, "Mean Intercept Estimates" = inter)
   return(res)
   
 }
