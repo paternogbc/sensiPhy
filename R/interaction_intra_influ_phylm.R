@@ -180,10 +180,12 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       
       #transform Vy and/or Vx if x.transf and/or y.transf are provided
       if(!is.null(y.transf)) 
-      {suppressWarnings (full.data$respV <- y.transf(full.data$respV))}
+      {suppressWarnings (full.data$respV <- 
+                           do.call(y.transf,list(x=full.data$respV)))}
       
       if(!is.null(x.transf)) 
-      {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+      {suppressWarnings (full.data$predV <- 
+                           do.call(x.transf,list(x=full.data$predV)))}
       
       #skip iteration if there are NA's in the dataset
       species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
