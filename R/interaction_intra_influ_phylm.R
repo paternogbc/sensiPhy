@@ -305,7 +305,7 @@ on.exit(close(pb))
                                         influ.sp.intercept=influ.sp.intercept),
               influ.model.estimates=influ.model.estimates,
               data=full.data,errors=errors)
-  class(res) <- "sensiInflu"
+  class(res) <- "sensiInflu_Intra"
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some species deletion presented errors, please check: output$errors")}
