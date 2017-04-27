@@ -11,12 +11,25 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
+#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
+#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
+#' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
+#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
+#' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
+#' argument instead of transforming data in the formula directly (see also details below).
+#' @param x.transf Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
+#' argument instead of transforming data in the formula directly (see also details below).
+#' @param distrib A character string indicating which distribution to use to generate a random value for the response 
+#' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
+#' Uniform distribution: "uniform" (\code{\link{runif}})
+#' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
-#' This function sequentially removes one species at a time, fits a phylogenetic
-#' linear regression model using \code{\link[phylolm]{phylolm}}, stores the
-#' results and detects influential species.
+#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}, and detects
+#' influential species by sequentially deleting one at a time. The regression is repeated \code{times} times. 
+#' At each iteration the function generates a random value for each row in the dataset using the standard 
+#' deviation or errors supplied, and detect the influential species within that iteration. 
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -32,8 +45,15 @@
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
+#' 
+#' @section Warning:  
+#' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+#' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+#' 
+#' Setting \code{times} at high values can take a long time to exectue, since the total number of iterations equals \code{times * nrow(data)}.
 #'
-#' @return The function \code{influ_phylm} returns a list with the following
+#' @return The function \code{interaction_intra_influ_phylm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{formula}: The formula
@@ -66,8 +86,9 @@
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#' influ <- influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
-#' data = alien$data)
+#' influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
+#' data=alien$data,model="lambda",y.transf = "log",NULL,Vy="SD_gesta",Vx=NULL,times=10,
+#' distrib = "normal")
 #' # To check summary results:
 #'summary(influ)
 #'# Most influential speciesL
