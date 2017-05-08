@@ -1,6 +1,6 @@
 #' Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
+#' Performs leave-one-out deletion analyis for phylogenetic logistic regression,
 #' and detects influential species, while taking into account potential
 #' interactions with intraspecific variability.
 #'
@@ -11,18 +11,15 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
-#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
-#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
-#' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
-#' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
+#' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
@@ -31,10 +28,6 @@
 #' simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
 #' generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
 #' detect the influential species within that iteration. 
-#'
-#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
-#' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
-#' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
 #' \code{influ_phylm} detects influential species based on the standardised
 #' difference in intercept and/or slope when removing a given species compared
@@ -48,7 +41,7 @@
 #' Output can be visualised using \code{sensi_plot}.
 #' 
 #' @section Warning:  
-#' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+#' When Vx exceed X negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #' 
