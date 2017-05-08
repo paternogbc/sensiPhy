@@ -8,7 +8,6 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
@@ -35,7 +34,7 @@
 #' above the value of \code{cutoff} are identified as influential. The default
 #' value for the cutoff is 2 standardised differences change.
 #'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' Currently, this function can only implement simple models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
@@ -95,7 +94,7 @@
 #'sensi_plot(intra_influ, param = "slope", graphs = 2)
 #' @export
 
-interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2, Vx = NULL,
+interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
                         x.transf = NULL,
                         times = 10, distrib = "normal",btol=50,
                         track=TRUE,...){
@@ -143,7 +142,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   
   N               <- nrow(full.data)
   mod.0           <- phylolm::phyloglm(formula.0, data=full.data,
-                                      model=model,phy=phy,method="logistic_MPLE",btol=btol,...)
+                                     phy=phy,method="logistic_MPLE",btol=btol,...)
   intercept.0      <- mod.0$coefficients[[1]]
   slope.0          <- mod.0$coefficients[[2]]
   pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
@@ -194,7 +193,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       #Here, calculate the null-model for this particular resimulated dataset, 
       #i.e. no species deleted, but within this resimlated dataset / data unceratinty. 
       mod.0.resim           <- phylolm::phyloglm(respV ~ predV, data=full.data,
-                                          model=model,phy=phy,method="logistic_MPLE",btol=btol)
+                                          phy=phy,method="logistic_MPLE",btol=btol)
       intercept.0.resim      <- mod.0.resim$coefficients[[1]]
       slope.0.resim          <- mod.0.resim$coefficients[[2]]
       pval.intercept.0.resim <- phylolm::summary.phylolm(mod.0.resim)$coefficients[[1,4]]
@@ -206,7 +205,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
           for (k in 1:N){
           crop.data <- full.data[c(1:N)[-k],]
           crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
-          mod=try(phylolm::phylolm(respV ~ predV, data=crop.data,model=model,
+          mod=try(phylolm::phylolm(respV ~ predV, data=crop.data,
                                    phy=crop.phy),
                   TRUE)
           if(isTRUE(class(mod)=="try-error")) {
@@ -224,12 +223,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
           pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
           pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
           aic.mod              <- mod$aic
-          if (model == "BM" | model == "trend"){
-            optpar <- NA
-          }
-          if (model != "BM" & model != "trend" ){
-            optpar               <- mod$optpar
-          }
+          optpar               <- mod$alpha
           
           # Stores values for each simulation
           estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
