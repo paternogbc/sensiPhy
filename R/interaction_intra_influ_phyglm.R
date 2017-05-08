@@ -13,18 +13,16 @@
 #' (see Details)
 #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
+#' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
+#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
+#' argument instead of transforming data in the formula directly (see also details below).
+#' @param x.transf Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
-#' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
-#' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
-#' and upper limits of the 95% confidence interval.
-#' @return \code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
-#' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
-#' of the 95% confidence interval.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
@@ -50,7 +48,7 @@
 #' Output can be visualised using \code{sensi_plot}.
 #' 
 #' @section Warning:  
-#' When Vx exceeds X negative (or null) values can be generated, this might cause problems
+#' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #' 
