@@ -143,7 +143,7 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   
   N               <- nrow(full.data)
   mod.0           <- phylolm::phylolm(formula.0, data=full.data,
-                                      model=model,phy=phy)
+                                      model=model,phy=phy,method="logistic_MPLE",btol=btol,...)
   intercept.0      <- mod.0$coefficients[[1]]
   slope.0          <- mod.0$coefficients[[2]]
   pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
@@ -171,15 +171,8 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
  #Create a nested for-loop. 
     for (i in 1:times) { #First create the new datset, and then drop all the species on that as previously. 
      
-       ##Set response and predictor variables
-      #Vy is not provided or is not numeric, do not pick random value
-      if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
-      {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
-      
-      #choose a random value in [mean-se,mean+se] if Vy is provided
-      if (!is.null(Vy))
-      {full.data$respV <- apply(full.data[,c(resp,Vy)],1,function(x)funr(x[1],x[2]))}
-      
+       ##Set predictor variables
+
       #Vx is not provided or is not numeric, do not pick random value
       if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
       {full.data$predV <- stats::model.frame(formula, data = full.data)[,2]}
