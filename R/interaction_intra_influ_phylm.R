@@ -27,9 +27,10 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}, and detects
-#' influential species by sequentially deleting one at a time. The regression is repeated \code{times} times. 
-#' At each iteration the function generates a random value for each row in the dataset using the standard 
-#' deviation or errors supplied, and detect the influential species within that iteration. 
+#' influential species by sequentially deleting one at a time. The regression is repeated \code{times} times for 
+#' simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
+#' generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
+#' detect the influential species within that iteration. 
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -56,14 +57,15 @@
 #' @return The function \code{interaction_intra_influ_phylm} returns a list with the following
 #' components:
 #' @return \code{cutoff}: The value selected for \code{cutoff}
-#' @return \code{formula}: The formula
+#' @return \code{formula}: The model formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
 #' @return \code{influential_species}: List of influential species, both
 #' based on standardised difference in interecept and in the slope of the
-#' regression. Species are ordered from most influential to less influential and
-#' only include species with a standardised difference > \code{cutoff}.
+#' regression. Species are ordered from the species that was influential in most
+#' of the iterations to the ones least commonly included influential,
+#' only including species with a standardised difference > \code{cutoff}.
 #' @return \code{influ.model.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. #' Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
@@ -280,6 +282,8 @@ on.exit(close(pb))
   
   influ.model.estimates$sDFslope     <- sDFslope
   influ.model.estimates$sDFintercept <- sDFintercept
+  
+  
   
   #Creates a list with full model estimates:
   param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
