@@ -142,13 +142,13 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
 
   
   N               <- nrow(full.data)
-  mod.0           <- phylolm::phylolm(formula.0, data=full.data,
+  mod.0           <- phylolm::phyloglm(formula.0, data=full.data,
                                       model=model,phy=phy,method="logistic_MPLE",btol=btol,...)
   intercept.0      <- mod.0$coefficients[[1]]
   slope.0          <- mod.0$coefficients[[2]]
   pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
   pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-  optpar.0 <- mod.0$optpar
+  optpar.0          <- mod.0$alpha
   total_iteration <- N * times #I.e. how often are we going resimulate the dataset, times the # of species to drop. 
   
   
@@ -182,9 +182,6 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       {full.data$predV <- apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
       
       #transform Vy and/or Vx if x.transf and/or y.transf are provided
-      if(!is.null(y.transf)) 
-      {suppressWarnings (full.data$respV <- 
-                           do.call(y.transf,list(x=full.data$respV)))}
       
       if(!is.null(x.transf)) 
       {suppressWarnings (full.data$predV <- 
@@ -196,13 +193,13 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
       
       #Here, calculate the null-model for this particular resimulated dataset, 
       #i.e. no species deleted, but within this resimlated dataset / data unceratinty. 
-      mod.0.resim           <- phylolm::phylolm(respV ~ predV, data=full.data,
-                                          model=model,phy=phy)
+      mod.0.resim           <- phylolm::phyloglm(respV ~ predV, data=full.data,
+                                          model=model,phy=phy,method="logistic_MPLE",btol=btol)
       intercept.0.resim      <- mod.0.resim$coefficients[[1]]
       slope.0.resim          <- mod.0.resim$coefficients[[2]]
       pval.intercept.0.resim <- phylolm::summary.phylolm(mod.0.resim)$coefficients[[1,4]]
       pval.slope.0.resim     <- phylolm::summary.phylolm(mod.0.resim)$coefficients[[2,4]]
-      optpar.0.resim <- mod.0.resim$optpar
+      optpar.0.resim        <- mod.0.resim$alpha
       #Question, do we want to store these values too in the ultimate data frame for the user? 
       
           #Here, go into the species-drop loop:
