@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression
+#' Interaction of intraspecific variability & influential species - Phylogenetic Logistic Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic logistic regression,
 #' and detects influential species, while taking into account potential
@@ -40,7 +40,7 @@
 #' Output can be visualised using \code{sensi_plot}.
 #' 
 #' @section Warning:  
-#' When Vx exceed X negative (or null) values can be generated, this might cause problems
+#' When Vx exceeds X negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #' 
@@ -92,6 +92,21 @@
 #'sensi_plot(intra_influ)
 #'# You can specify which graph and parameter ("slope" or "intercept") to print: 
 #'sensi_plot(intra_influ, param = "slope", graphs = 2)
+#'
+#'set.seed(6987)
+#'phy = rtree(100)
+#'x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
+#'X = cbind(rep(1,100),x)
+#'y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#'z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
+#'dat = data.frame(y, x, z)
+#'# Run sensitivity analysis:
+#'influ_test <- interaction_intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
+#'                                             times = 3,track = T,distrib="normal",x.transf=NULL) 
+#'# To check summary results and most influential species:
+#'summary(influ_test)
+#'# Visual diagnostics for clade removal:
+#'sensi_plot(influ_test)
 #' @export
 
 interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
@@ -100,7 +115,7 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
                         track=TRUE,...){
   
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
+  if(is.null(Vx) ) stop("Vx or Vy must be defined")
   if(class(formula) != "formula") stop("formula must be class 'formula'")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
@@ -142,7 +157,7 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
   
   N               <- nrow(full.data)
   mod.0           <- phylolm::phyloglm(formula.0, data=full.data,
-                                     phy=phy,method="logistic_MPLE",btol=btol,...)
+                                     phy=phy,method="logistic_MPLE",btol=btol)
   intercept.0      <- mod.0$coefficients[[1]]
   slope.0          <- mod.0$coefficients[[2]]
   pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
@@ -171,6 +186,8 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
     for (i in 1:times) { #First create the new datset, and then drop all the species on that as previously. 
      
        ##Set predictor variables
+      #Vy is not provided or is not numeric, do not pick random value
+      full.data$respV <- stats::model.frame(formula, data = full.data)[,1]
 
       #Vx is not provided or is not numeric, do not pick random value
       if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
@@ -205,7 +222,7 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
           for (k in 1:N){
           crop.data <- full.data[c(1:N)[-k],]
           crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
-          mod=try(phylolm::phylolm(respV ~ predV, data=crop.data,
+          mod=try(phylolm::phyloglm(respV ~ predV, data=crop.data,
                                    phy=crop.phy,method="logistic_MPLE"),
                   TRUE)
           if(isTRUE(class(mod)=="try-error")) {
@@ -213,7 +230,8 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
             names(error) <- rownames(full.data$data)[k]
             errors <- c(errors,error)
             next }
-          else {  sp                   <- phy$tip.label[k]
+          else {  
+          sp                   <- phy$tip.label[k]
           intercept            <- mod$coefficients[[1]]
           slope                <- mod$coefficients[[2]]
           DFintercept          <- intercept - intercept.0.resim
