@@ -67,7 +67,8 @@
 #' of the iterations to the ones least commonly included influential,
 #' only including species with a standardised difference > \code{cutoff}.
 #' @return \code{influ.model.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted clade. #' Columns report the calculated
+#' estimates. Each row represents a deleted clade within an interaction (i.e. 
+#' there are \code{times} report per removed species. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DFintercept}), the standardised
 #' difference (\code{sDFintercept}), the percentage of change in intercept compared
@@ -81,24 +82,24 @@
 #' @return \code{errors}: Species where deletion resulted in errors.
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
-#' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
+#' \code{\link{influ_phylm}},\code{\link{intra_phylm}},\code{\link{sensi_plot}}.
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#' influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
-#' data=alien$data,model="lambda",y.transf = "log",NULL,Vy="SD_gesta",Vx=NULL,times=10,
-#' distrib = "normal")
+#' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
+#' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vy="SD_gesta",Vx=NULL,
+#' times=3,distrib = "normal")
 #' # To check summary results:
-#'summary(influ)
+#'summary(intra_influ)
 #'# Most influential speciesL
-#'influ$influential.species
+#'intra_influ$influential.species
 #'# Visual diagnostics
-#'sensi_plot(influ)
+#'sensi_plot(intra_influ)
 #'# You can specify which graph and parameter ("slope" or "intercept") to print: 
-#'sensi_plot(influ, param = "slope", graphs = 2)
+#'sensi_plot(intra_influ, param = "slope", graphs = 2)
 #' @export
 
 interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx = NULL,
