@@ -283,7 +283,7 @@ on.exit(close(pb))
   influ.model.estimates$sDFslope     <- sDFslope
   influ.model.estimates$sDFintercept <- sDFintercept
   
-  
+  influ.model.estimates$iteration <- i
   
   #Creates a list with full model estimates:
   param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
