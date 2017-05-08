@@ -206,7 +206,7 @@ interaction_intra_influ_phyglm <- function(formula,data,phy,cutoff=2, Vx = NULL,
           crop.data <- full.data[c(1:N)[-k],]
           crop.phy <-  ape::drop.tip(phy,phy$tip.label[k])
           mod=try(phylolm::phylolm(respV ~ predV, data=crop.data,
-                                   phy=crop.phy),
+                                   phy=crop.phy,method="logistic_MPLE"),
                   TRUE)
           if(isTRUE(class(mod)=="try-error")) {
             error <- k
