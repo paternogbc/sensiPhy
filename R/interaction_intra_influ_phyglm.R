@@ -95,9 +95,9 @@
 #'sensi_plot(intra_influ, param = "slope", graphs = 2)
 #' @export
 
-interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,Vy = NULL, Vx = NULL,
-                        y.transf = NULL, x.transf = NULL,
-                        times = 10, distrib = "normal",
+interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2, Vx = NULL,
+                        x.transf = NULL,
+                        times = 10, distrib = "normal",btol=50,
                         track=TRUE,...){
   
   #Error check
@@ -124,8 +124,6 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   resp <- all.vars(formula)[1]
   pred <- all.vars(formula)[2]
   
-  if(!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
-    full.data[is.na(full.data[, Vy]), Vy] <- 0}
   
   if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
     full.data[is.na(full.data[, Vx]), Vx] <- 0}
@@ -135,18 +133,13 @@ interaction_intra_influ_phylm <- function(formula,data,phy,model="lambda",cutoff
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
   
   #Caculate the null model, i.e. no species deleted and no data uncertainty considered. 
-  #transform if x.transf and/or y.transf are provided
-  if(is.null(y.transf) & is.null(x.transf))
+  #transform if x.transf is provided
+  if(is.null(x.transf))
     {formula.0<-formula} ####This is what happens when there is no transformations. Solve for the other two cases too. 
   
-  if(!is.null(y.transf) & is.null(x.transf)) #When there is only a transformation for the response variable
-  {formula.0<-as.formula(paste0(y.transf,"(",resp,") ~ ",pred))}
-  
-  if(is.null(y.transf) & !is.null(x.transf)) #When there is only a transformation for the predictor variable
+  if(!is.null(x.transf)) #When there is  a transformation for the predictor variable
   {formula.0<-as.formula(paste0(resp," ~ ",x.transf,"(",pred,")"))}
-  
-  if(!is.null(y.transf) & !is.null(x.transf)) #When they both have a transformation.
-  {formula.0<-as.formula(paste0(y.transf,"(",resp,") ~ ",x.transf,"(",pred,")"))}
+
   
   N               <- nrow(full.data)
   mod.0           <- phylolm::phylolm(formula.0, data=full.data,
