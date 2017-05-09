@@ -102,7 +102,7 @@
 #'dat = data.frame(y, x, z)
 #'# Run sensitivity analysis:
 #'influ_test <- interaction_intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
-#'                                             times = 3,track = T,distrib="normal",x.transf=NULL) 
+#'                                             times = 3,track = TRUE,distrib="normal",x.transf=NULL) 
 #'# To check summary results and most influential species:
 #'summary(influ_test)
 #'# Visual diagnostics for clade removal:
