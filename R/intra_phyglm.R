@@ -36,7 +36,7 @@
 #' Output can be visualised using \code{sensi_plot}.
 #'
 #' @section Warning:  
-#' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+#' When Vx exceeds X negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'  
