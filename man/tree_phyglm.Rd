@@ -72,9 +72,6 @@ summary(tree)
 # Visual diagnostics for phylogenetic uncertainty:
 sensi_plot(tree)
 }
-\author{
-Caterina Penone & Pablo Ariel Martinez
-}
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
 Sensitivity Analyses in Comparative Biology. Philosophical Transactions:
@@ -86,4 +83,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}

@@ -96,9 +96,6 @@ sensi_plot(influ)
 # You can specify which graph and parameter ("slope" or "intercept") to print: 
 sensi_plot(influ, param = "slope", graphs = 2)
 }
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
-}
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
@@ -107,4 +104,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
 \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

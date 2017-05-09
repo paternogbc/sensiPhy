@@ -78,10 +78,11 @@ Output can be visualised using \code{sensi_plot}.
 }
 \section{Warning}{
   
-When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+When Vx exceeds X negative (or null) values can be generated, this might cause problems
 for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 }
+
 \examples{
 # Simulate Data:
 set.seed(6987)
@@ -101,9 +102,6 @@ head(intra_glm$model_results)
 #Visual output
 sensi_plot(intra_glm)
 }
-\author{
-Caterina Penone & Pablo Ariel Martinez
-}
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 
@@ -116,4 +114,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}

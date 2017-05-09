@@ -99,9 +99,6 @@ summary(samp)
 sensi_plot(samp)
 }
 }
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
-}
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
  A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation
@@ -114,4 +111,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
 \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

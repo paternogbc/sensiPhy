@@ -97,9 +97,6 @@ sensi_plot(samp, graphs = 1, param = "slope")
 sensi_plot(samp, graphs = 2, param = "intercept")
 }
 }
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
-}
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
  A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation
@@ -112,4 +109,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
 \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

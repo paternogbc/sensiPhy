@@ -36,10 +36,9 @@ The red dashed line represents the estimated slope for the reduced model
 (without the focal clade) and the black line represents the slope for the 
 full model.
 }
-\author{
-Gustavo Paterno
-}
 \seealso{
 \code{\link[sensiPhy]{clade_phylm}}
 }
-
+\author{
+Gustavo Paterno
+}

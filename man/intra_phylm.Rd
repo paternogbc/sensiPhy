@@ -89,6 +89,7 @@ When Vy or Vx exceed Y or X, respectively, negative (or null) values can be gene
 for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 }
+
 \examples{
 # Load data:
 data(alien)
@@ -100,9 +101,6 @@ summary(intra)
 # Visual diagnostics
 sensi_plot(intra)
 
-}
-\author{
-Caterina Penone & Pablo Ariel Martinez
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
@@ -116,4 +114,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}

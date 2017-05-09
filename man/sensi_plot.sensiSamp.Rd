@@ -42,11 +42,10 @@ percentage of species removed.
 If model = "BM", only plots 1, 2 and 4 are printed. Plot 3, phylogenetic
  model parameter is not available for model = "BM"
 }
-\author{
-Gustavo Paterno
-}
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylm}}
 \code{\link[sensiPhy]{samp_phyglm}}
 }
-
+\author{
+Gustavo Paterno
+}

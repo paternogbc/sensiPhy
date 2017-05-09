@@ -56,9 +56,6 @@ massNAsig <- miss.phylo.d(data,phy,binvar=adultMass)
 print(massNAsig)
 plot(massNAsig)
 }
-\author{
-Caterina Penone &..
-}
 \references{
 Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of 
 phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042-1051.
@@ -67,4 +64,6 @@ David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick I
 caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
 https://CRAN.R-project.org/package=caper
 }
-
+\author{
+Caterina Penone &..
+}

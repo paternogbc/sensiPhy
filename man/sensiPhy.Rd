@@ -27,7 +27,7 @@ this link: \url{https://github.com/paternogbc/sensiPhy/wiki/How-to-support-sensi
 A quick tutorial is available at this link: 
 \url{https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial}
 }
+
 \author{
 Gustavo Paterno; Caterina Penone & Gijsbert D.A. Werner
 }
-

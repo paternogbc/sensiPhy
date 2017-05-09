@@ -37,10 +37,9 @@ the value of \code{cutoff}).
 
 Graph 4: Distribution of the percentage of change in slope or intercept.
 }
-\author{
-Gustavo Paterno
-}
 \seealso{
 \code{\link[ggplot2]{ggplot}}
 }
-
+\author{
+Gustavo Paterno
+}

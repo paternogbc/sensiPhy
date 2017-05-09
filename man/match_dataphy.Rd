@@ -82,13 +82,12 @@ comp.data2$phy
 # See species dropped from phy or data:
 comp.data2$dropped
 }
-\author{
-Caterina Penone & Gustavo Paterno
-}
 \references{
 This function is largely inspired by the function \code{comparative.data} in caper package
 David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick Isaac and Will Pearse
 (2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
 http://CRAN.R-project.org/package=caper
 }
-
+\author{
+Caterina Penone & Gustavo Paterno
+}

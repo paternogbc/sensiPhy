@@ -37,4 +37,3 @@ Fritz, Susanne A., Olaf RP Bininda-Emonds, and Andy Purvis. "Geographical variat
 of mammalian extinction risk: big is bad, but only in the tropics." Ecology letters 12.6 (2009): 538-549.
 }
 \keyword{datasets}
-

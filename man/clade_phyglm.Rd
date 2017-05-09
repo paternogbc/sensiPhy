@@ -100,9 +100,6 @@ sensi_plot(clade, "C")
 sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
 }
 }
-\author{
-Gustavo Paterno & Gijsbert Werner
-}
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
@@ -111,4 +108,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{clade_phylm}},
  \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert Werner
+}
