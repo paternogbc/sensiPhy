@@ -204,3 +204,62 @@ summary.influ.physig <- function(object, ...){
                   paste("Summary for", method, sep = " "))
   return(res)
 }
+
+### Summary method for class: clade.physig -------------------------------------
+
+#' @export
+summary.clade.physig <- function(object, ...){
+  ce <- object$clade.physig.estimates
+  nd <- object$null.dist
+  c <- levels(nd$clade)
+  
+  method <- object$call$method
+  if(is.null(method)) method <- "K"
+  
+  stats <- data.frame("clade removed" = c, 
+                      "N.species" = ce$N.species,
+                      "estimate" = numeric(length(c)),
+                      "DF" = numeric(length(c)),
+                      "change" = numeric(length(c)),
+                      "Pval" = numeric(length(c)),
+                      "m.null.slope" = numeric(length(c)),
+                      "Pval.randomization" = numeric(length(c)))
+  aa <- 1
+  for(j in c) {
+    
+    nes <- nd[nd$clade == j, ] # null estimates
+    ces <- ce[ce$clade == j, ] # reduced model estimates
+    times <- nrow(nes)
+    
+    ### Permutation test K:
+    if (ces$DF > 0){
+      p <- sum(nes$estimate  >= ces$estimate)/times
+    }
+    if (ces$DF < 0){
+      p <- sum(nes$estimate <= ces$estimate)/times
+    }
+    
+    stats[aa, -c(1:2)] <- data.frame(
+      estimate = ces$estimate,
+      DF = ces$DF,
+      ces$perc,
+      Pval = ces$pval,
+      m.null = mean((nes$estimate)),
+      Pval.randomization = p)
+    names(stats)[5] <- "Change (%)"      
+    
+    aa <- aa+1
+  }
+  
+  
+  ### Sort by % of change:
+  ord <- order(object$clade.physig.estimates$perc, decreasing = TRUE)
+  res.0 <- data.frame(Trait = object$trait, N.species = nrow(object$data), 
+                      estimate = object$full.physig.estimates$estimate,
+                      Pval = object$full.physig.estimates$Pval)
+  res.1 <- stats[ord, ]
+  res <- list(res.0, res.1)
+  names(res)[[1]] <- paste("Full data:", method, "phylogenetic signal estimate", sep = " ")
+  names(res)[[2]] <- "Summary by clade removal"
+  return(res)
+}
