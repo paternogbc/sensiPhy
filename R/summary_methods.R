@@ -177,3 +177,30 @@ summary.sensiTree <- function(object, ...){
     res <- object$stats
     return(res)
 }
+
+### METHODS for: Phylogenetic signal--------------------------------------------
+# Summary method for class influ.physig-----------------------------------------
+#' @export
+summary.influ.physig <- function(object, ...){
+  
+  method <- object$call$method
+  if(is.null(object$call$method)) method <- "K"
+  sp <- object$influential.species
+  rows <- match(sp, object$influ.physig.estimates$species)
+  estim <- object$influ.physig.estimates[rows, -6]
+  ord <- order(estim$perc, decreasing = TRUE)
+  sta <- estim[ord, ] # Output oredered summay.
+  rownames(sta) <- NULL
+  colnames(sta) <- c("Species removed", method, "DF", "Change(%)", "Pval")
+  
+  res.0 <- data.frame(Trait = object$trait, N.species = nrow(object$data), 
+                      estimate = object$full.data.estimates[[1]],
+                      Pval = object$full.data.estimates[[2]])
+  colnames(res.0)[3] <- method
+  ### Output list:
+  res <- list(res.0, sp, sta)
+  names(res) <- c(paste("Full data estimate", sep = " "),
+                  paste("Influential species for", method, sep = " "), 
+                  paste("Summary for", method, sep = " "))
+  return(res)
+}
