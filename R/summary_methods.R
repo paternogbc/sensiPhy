@@ -292,3 +292,13 @@ summary.tree.physig <- function(object, ...){
   names(res) <- c("Call", "Summary")
   return(res)
 }
+
+### Summary method for class: intra.physig:--------------------------------------
+
+#' @export
+summary.intra.physig <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+  return(res)
+}
