@@ -52,7 +52,8 @@ This ensures consistance between data and phylogeny only for the variables
 that are being used in the model (set by `formula`).
 
 If phy is a 'multiphylo' object, all phylogenies will be cropped
-to match data. The returned phyogeny will be a 'multiphylo' object.
+to match data. But the dataset order will only match the first tree provided.
+The returned phyogeny will be a 'multiphylo' object.
 }
 \note{
 If tips are removed from the phylogeny and data or if rows containing

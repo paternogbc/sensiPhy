@@ -1,3 +1,7 @@
+## sensiPhy 0.7.0
+* `match_data_phy()` now accepts datasets with no information on species names as row names. If the number of species corresponds to the number of tips a warning informs the user that the function assumes that the dataset and the phylogeny are in the same order.
+
+
 ## sensiPhy 0.6.0
 
 #### New Functions

@@ -30,13 +30,17 @@
 #' @details This function uses all variables provided in the `formula` to match
 #' data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 #' for NA values only on variables provided by formula. Missing values on 
-#' other variables, not included in `formula`, will not be removed from data. 
+#' other variables, not included in `formula`, will not be removed from data.
+#' If no species names are provided as row names in the dataset but the number of rows in the dataset
+#' is the same as the number of tips in the phylogeny, the function assumes that the dataset and the 
+#' phylogeny are in the same order.
 #' 
 #' This ensures consistance between data and phylogeny only for the variables 
 #' that are being used in the model (set by `formula`).
 #' 
 #' If phy is a 'multiphylo' object, all phylogenies will be cropped
-#' to match data. The returned phyogeny will be a 'multiphylo' object.
+#' to match data. But the dataset order will only match the first tree provided.
+#' The returned phyogeny will be a 'multiphylo' object.
 #' @note If tips are removed from the phylogeny and data or if rows containing
 #' missing values are removed from data, a message will be printed with the 
 #' details. Further, the final number of species that match data and phy will
@@ -73,28 +77,44 @@ match_dataphy <- function(formula, data, phy){
     
     # original data set:
     data.0 <- data
-    # Cropping data frame by formula variables:
-    mf <- stats::model.frame(formula = formula, data = data.0, na.action = stats::na.exclude)
-    if (nrow(data.0) > nrow(mf)) warning("NA's in response or predictor,", 
-                                         " rows with NA's were removed")
     
-    #Match data and phylogeny in comparative.data style
+    # Use only first tree in multiphylo files
     if(inherits(phy, "multiPhylo")){  
-        phy1 <- phy[[1]]}
+      phy1 <- phy[[1]]}
     else
-        phy1<-phy
+      phy1<-phy
     
     tiplabl <- phy1$tip.label
-    taxa.nam <- as.character(rownames(mf))
     
+    # Add row names if not provided
+    taxa.nam.0 <- as.character(rownames(data.0))
+    if (length(intersect(tiplabl,taxa.nam.0)) == 0 &
+        length(tiplabl) == nrow(data.0)){
+      warning ("Data has no row names", 
+               " assuming data is in the same order as phylo tip names!")
+      row.names(data.0) <- row.names(data) <- tiplabl}
+    
+     
+    # Cropping data frame by formula variables:
+    mf <- stats::model.frame(formula = formula, data = data.0, na.action = stats::na.exclude)
+    
+
+    #Match data and phylogeny in comparative.data style
+    taxa.nam <- as.character(rownames(mf))
     in.both <- intersect(taxa.nam, tiplabl)
     
-    if (length(in.both) == 0)
-        stop("No tips are common to the dataset and phylogeny, 
-        Please check if row names of your dataset contain species/tip names")
+
+    if (length(in.both) == 0 & length(tiplabl) != nrow(data.0))
+        stop("No names common to data and phylo tips AND different dimensions in data and phylo.",
+              " Please check if row names of your dataset contain species or tip names")
     
+    if (nrow(data.0) > nrow(mf)) warning("NA's in response or predictor,", 
+                                         " rows with NA's were removed")
+
     mismatch <- union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
-    if (length(mismatch) != 0)   warning("Some phylogeny tips do not match species in data,",
+    
+    if (length(mismatch) != 0)   warning("Some phylo tips do not match species in data",
+                                         " (this can be due to NA removal)",
                                          " species were dropped from phylogeny",
                                          " or data")
     
@@ -112,6 +132,7 @@ match_dataphy <- function(formula, data, phy){
     
     if (any(is.na(tip.order)))
         stop("Problem with sorting data frame: mismatch between tip labels and data frame labels")
+    
     data <- data[tip.order, , drop = FALSE]
     data.out <- data.0[rownames(data),]
     
