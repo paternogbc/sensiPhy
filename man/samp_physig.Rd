@@ -5,7 +5,7 @@
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic signal}
 \usage{
 samp_physig(trait.col, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
-  method = "K", track = TRUE, test = FALSE, ...)
+  method = "K", track = TRUE, ...)
 }
 \arguments{
 \item{trait.col}{Column name containing values for a single
@@ -73,10 +73,10 @@ calculates the effect of random species removal on phylogenetic siganl estimates
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-# Load data:
-#XXXXXXXXXXX
-#XXXXXXXXXXX
-#XXXXXXXXXXX
+data("alien")
+fit  <- samp_physig(trait.col = "adultMass", data = alien.data, phy = alien.phy[[1]])
+summary(fit)
+sensi_plot(fit)
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
