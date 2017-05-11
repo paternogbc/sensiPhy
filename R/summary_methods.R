@@ -282,3 +282,23 @@ summary.samp.physig <- function(x, ...){
                 "see output$samp.physig.estimates to acess all simulations"))
   return(res)
 }
+
+### Summary method for class: tree.physig:--------------------------------------
+
+#' @export
+summary.tree.physig <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+  return(res)
+}
+
+### Summary method for class: intra.physig:--------------------------------------
+
+#' @export
+summary.intra.physig <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+  return(res)
+}
