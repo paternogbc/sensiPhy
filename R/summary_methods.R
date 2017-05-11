@@ -263,3 +263,22 @@ summary.clade.physig <- function(object, ...){
   names(res)[[2]] <- "Summary by clade removal"
   return(res)
 }
+
+### Summary method for class: samp.physig:--------------------------------------
+#' @export
+summary.samp.physig <- function(x, ...){
+  method <- x$call$method
+  if(is.null(x$call$method)) method <- "K"
+  
+  simu <- nrow(x$samp.physig.estimates)
+  res <- x$sign.analysis
+  res$perc.sign <- res$perc.sign * 100
+  names(res) <- c("Species Removed (%)", 
+                  paste("Significant", method, "(%)"),
+                  "Mean Change (%)",
+                  "Mean sDFestimate")
+  
+  message(paste(simu, "simulations saved," ,
+                "see output$samp.physig.estimates to acess all simulations"))
+  return(res)
+}
