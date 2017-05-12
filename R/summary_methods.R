@@ -178,6 +178,15 @@ summary.sensiTree <- function(object, ...){
     return(res)
 }
 
+### Summary method for class: sensiIntra_Tree:--------------------------------------
+
+#' @export
+summary.sensiIntra <- function(object, ...){
+  res <- object$stats
+  return(res)
+}
+
+
 ### METHODS for: Phylogenetic signal--------------------------------------------
 # Summary method for class influ.physig-----------------------------------------
 #' @export
