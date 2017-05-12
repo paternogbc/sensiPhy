@@ -83,8 +83,8 @@ tree_phylm <- function(formula,data,phy,
 
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
-                         "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                         "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
+                         "pval.intercept"=numeric(),"estimate"=numeric(),"se.estimate"=numeric(),
+                         "pval.estimate"=numeric(),"aic"=numeric(),"optpar"=numeric())
 
   #Model calculation
   counter=1
@@ -107,10 +107,10 @@ tree_phylm <- function(formula,data,phy,
       else{
         intercept            <- phylolm::summary.phylolm(mod)$coefficients[[1,1]]
         se.intercept         <- phylolm::summary.phylolm(mod)$coefficients[[1,2]]
-        slope                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
-        se.slope             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
+        estimate                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
+        se.estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
         pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-        pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+        pval.estimate           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
         aic.mod              <- mod$aic
         n                    <- mod$n
         d                    <- mod$d
@@ -126,7 +126,7 @@ tree_phylm <- function(formula,data,phy,
         
         #write in a table
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
-                                 slope, se.slope, pval.slope, aic.mod, optpar,
+                                 estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                  stringsAsFactors = F)
         tree.model.estimates[counter, ]  <- estim.simu
         counter=counter+1

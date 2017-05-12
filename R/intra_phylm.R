@@ -15,7 +15,7 @@
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{times} = 30
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -123,9 +123,9 @@ intra_phylm <- function(formula, data, phy,
   intra.model.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
                                     "se.intercept" = numeric(), 
                                     "pval.intercept" = numeric(),
-                                    "slope" = numeric(),
-                                    "se.slope" = numeric(),
-                                    "pval.slope" = numeric(),"aic" = numeric(),
+                                    "estimate" = numeric(),
+                                    "se.estimate" = numeric(),
+                                    "pval.estimate" = numeric(),"aic" = numeric(),
                                     "optpar" = numeric())
   #Model calculation
   counter = 1
@@ -174,10 +174,10 @@ intra_phylm <- function(formula, data, phy,
     else{
       intercept            <- phylolm::summary.phylolm(mod)$coefficients[[1,1]]
       se.intercept         <- phylolm::summary.phylolm(mod)$coefficients[[1,2]]
-      slope                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
-      se.slope             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
+      estimate                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
+      se.estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
       pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-      pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+      pval.estimate           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
       aic.mod              <- mod$aic
       n                    <- mod$n
 
@@ -190,7 +190,7 @@ intra_phylm <- function(formula, data, phy,
       if(track == TRUE) utils::setTxtProgressBar(pb, i)
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                stringsAsFactors = F)
       intra.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
