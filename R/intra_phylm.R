@@ -174,10 +174,10 @@ intra_phylm <- function(formula, data, phy,
     else{
       intercept            <- phylolm::summary.phylolm(mod)$coefficients[[1,1]]
       se.intercept         <- phylolm::summary.phylolm(mod)$coefficients[[1,2]]
-      estimate                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
-      se.estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
+      estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
+      se.estimate          <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
       pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-      pval.estimate           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+      pval.estimate        <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
       aic.mod              <- mod$aic
       n                    <- mod$n
 

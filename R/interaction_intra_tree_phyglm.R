@@ -1,6 +1,6 @@
-#' Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic logistic Regression
 #'
-#' Performs Phylogenetic linear regression evaluating
+#' Performs Phylogenetic logistic regression evaluating
 #' intraspecific variability in response and/or predictor variables
 #' and uncertainty in trees topology.
 #'
@@ -28,7 +28,7 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
-#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{times.tree}), 
+#' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{times.tree}), 
 #' randomly picked in a multiPhylo file. The regression is also repeated \code{times.intra} times.
 #' At each iteration the function generates a random value for each row in the dataset using the standard deviation 
 #' or errors supplied and assuming a normal or uniform distribution. To calculate means and se for your raw data, 
@@ -38,7 +38,7 @@
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phyloglm} for details.
 #'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
@@ -77,16 +77,17 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#'# Simulate data
 #'set.seed(6987)
-#'mphy = rmtree(150, N = 30)
-#'x = rTrait(n=1,phy=mphy[[1]])
+#'mphy = ape::rmtree(150, N = 30)
+#'x = phylolm::rTrait(n=1,phy=mphy[[1]])
 #'x_sd = rnorm(150,mean = 0.8,sd=0.2)
 #'X = cbind(rep(1,150),x)
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x, x_sd)
 # Run sensitivity analysis:
 #'intra.tree <- interaction_intra_tree_phyglm(y ~ x, data = dat, phy = mphy, times.intra = 10, 
-                                            times.tree = 10, Vx = "x_sd")
+#'                                            times.tree = 10, Vx = "x_sd")
 #'# summary results:
 #'summary(intra.tree)
 #'# Visual diagnostics for phylogenetic uncertainty:
@@ -203,14 +204,9 @@ interaction_intra_tree_phyglm <- function(formula, data, phy,
         pval.estimate        <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
         aic.mod              <- mod$aic
         n                    <- mod$n
+        optpar               <- mod$alpha
         
-        if (model == "BM") {
-          optpar <- NA
-        }
-        if (model != "BM") {
-          optpar <- mod$optpar
-        }
-        
+
         #write in a table
         estim.simu <- data.frame(j, i, intercept, se.intercept, pval.intercept,
                                  estimate, se.estimate, pval.estimate, aic.mod, optpar,
@@ -279,4 +275,3 @@ interaction_intra_tree_phyglm <- function(formula, data, phy,
   class(res) <- c("sensiIntra_Tree","sensiIntra_TreeL")
   return(res)
 }
-
