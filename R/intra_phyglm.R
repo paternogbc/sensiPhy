@@ -118,8 +118,8 @@ intra_phyglm <- function(formula, data, phy,
   
   #Create the results data.frame
   intra.model.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
-                                    "pval.intercept"=numeric(),"slope"=numeric(),"se.slope"=numeric(),
-                                    "pval.slope"=numeric(),"aic"=numeric(),"optpar"=numeric())
+                                    "pval.intercept"=numeric(),"estimate"=numeric(),"se.estimate"=numeric(),
+                                    "pval.estimate"=numeric(),"aic"=numeric(),"optpar"=numeric())
   
 
   #Model calculation
@@ -162,10 +162,10 @@ intra_phyglm <- function(formula, data, phy,
     else{
       intercept            <- phylolm::summary.phyloglm(mod)$coefficients[[1,1]]
       se.intercept         <- phylolm::summary.phyloglm(mod)$coefficients[[1,2]]
-      slope                <- phylolm::summary.phyloglm(mod)$coefficients[[2,1]]
-      se.slope             <- phylolm::summary.phyloglm(mod)$coefficients[[2,2]]
+      estimate             <- phylolm::summary.phyloglm(mod)$coefficients[[2,1]]
+      se.estimate          <- phylolm::summary.phyloglm(mod)$coefficients[[2,2]]
       pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-      pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+      pval.estimate        <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
       aic.mod              <- mod$aic
       n                    <- mod$n
       #d                   <- mod$d
@@ -176,7 +176,7 @@ intra_phyglm <- function(formula, data, phy,
 
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                stringsAsFactors = F)
       intra.model.estimates[counter, ]  <- estim.simu
       counter=counter+1
