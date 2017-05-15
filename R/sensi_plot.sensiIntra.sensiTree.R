@@ -14,7 +14,7 @@
 #' @details For 'x' from \code{tree_phylm}, \code{tree_phyglm},
 #' \code{intra_phylm} or \code{intra_phyglm}:
 #' 
-#' Graphs 1 and 2: Distribution of estimated estimates and intercepts for each tree (for \code{tree_phylm}) or 
+#' Graphs 1 and 2: Distribution of estimated slopes (estimates) and intercepts for each tree (for \code{tree_phylm}) or 
 #' value generated within a given interval (\code{intra_phylm})
 #' Red vertical line represents the mean estimate or intercept for all models. 
 #'
@@ -59,7 +59,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                           environment = parent.frame())+
       geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
       geom_vline(xintercept = estimate.0,color="red",linetype=2,size=.7)+
-      xlab("Estimated estimates")+
+      xlab("Estimated slopes")+
       ylab("Frequency")+
         theme(axis.title=element_text(size=12),
               axis.text = element_text(size=12),
