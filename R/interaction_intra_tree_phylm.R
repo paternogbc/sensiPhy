@@ -146,8 +146,11 @@ interaction_intra_tree_phylm <- function(formula, data, phy,
   
   for (j in 1:times.tree) {
       for (i in 1:times.intra) {
+        
+    #Match data order to tip order
+    full.data <- full.data[phy[[j]]$tip.label,]
     
-        ##Set response and predictor variables
+    ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
     {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}

@@ -93,6 +93,9 @@ tree_phylm <- function(formula,data,phy,
   pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
   for (j in trees){
       
+      #Match data order to tip order
+      full.data <- full.data[phy[[j]]$tip.label,]
+    
       #phylolm model
       mod = try(phylolm::phylolm(formula, data=full.data,model=model,phy=phy[[j]]),FALSE)
 
