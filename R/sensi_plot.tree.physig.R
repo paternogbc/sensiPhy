@@ -39,7 +39,6 @@ sensi_plot.tree.physig <- function(x, graphs="all", ...){
                                           colour="black"))
   
   ### Distribution of Values estimated
-  x <- intra
   e2 <- ggplot2::ggplot(x$physig_results, aes(x = pval))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
