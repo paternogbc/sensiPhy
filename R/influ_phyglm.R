@@ -89,7 +89,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         #Calculates the full model, extracts model parameters
         N               <- nrow(full.data)
         mod.0           <- phylolm::phyloglm(formula, data=full.data,
-                                   phy=phy,method="logistic_MPLE",btol=btol,...)
+                                   phy=phy,method="logistic_MPLE",btol=btol)
         intercept.0      <- mod.0$coefficients[[1]]
         slope.0          <- mod.0$coefficients[[2]]
         pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]]
@@ -116,7 +116,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
                 mod=try(phylolm::phyloglm(formula, data=crop.data,phy=crop.phy,
-                                          method="logistic_MPLE",btol=btol,...),
+                                          method="logistic_MPLE",btol=btol),
                         TRUE)
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
