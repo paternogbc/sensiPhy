@@ -125,7 +125,6 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
   
   #Start tree loop here
   errors <- NULL
-  counter = 1
   pb <- utils::txtProgressBar(min = 0, max = length(uc)*times.clade*times.tree, style = 1)
   
   for (j in trees){
@@ -139,8 +138,7 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
     clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model = "lambda", track = FALSE,
                          clade.col, n.species = 5, times.clade, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + 1
+    if(track==TRUE) utils::setTxtProgressBar(pb, j)
   }
   
   on.exit(close(pb))
