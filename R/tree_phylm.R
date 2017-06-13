@@ -74,7 +74,7 @@ tree_phylm <- function(formula,data,phy,
   else
   
   #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy)
+  datphy<-match_dataphy(formula,data,phy, ...)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
 
