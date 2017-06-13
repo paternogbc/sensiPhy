@@ -82,7 +82,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         else
         
         # Check match between data and phy 
-        data_phy <- match_dataphy(formula, data, phy)
+        data_phy <- match_dataphy(formula, data, phy, ...)
         #Calculates the full model, extracts model parameters
         full.data <- data_phy$data
         phy <- data_phy$phy

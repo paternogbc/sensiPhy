@@ -24,16 +24,16 @@
 #' difference in intercept and/or slope when removing a given clade compared
 #' to the full model including all species.
 #' 
-#' #' Additionally, to account for the influence of the number of species on each 
+#' Additionally, to account for the influence of the number of species on each 
 #' clade (clade sample size), this function also estimate a null distribution of slopes
 #' expected for the number of species in a given clade. This is done by fitting
-#'  models without the same number of species in the given clade. 
-#'  The number of simulations to be performed is set by 'times'. To test if the 
-#'  clade influence differs from the null expectation, a randomization test can
-#'  be performed using 'summary(x)'. 
+#' models without the same number of species in the given clade. 
+#' The number of simulations to be performed is set by 'times'. To test if the 
+#' clade influence differs from the null expectation, a randomization test can
+#' be performed using 'summary(x)'. 
 #' 
-#' Currently, this function can only implement simple linear models (i.e. 
-#' \eqn{y = a + bx}). In the future we will implement more complex models.
+#' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
+#' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
@@ -94,7 +94,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   
   #Calculates the full model, extracts model parameters
-  data_phy <- match_dataphy(formula, data, phy)
+  data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
   if (is.na(match(clade.col, names(full.data)))) {

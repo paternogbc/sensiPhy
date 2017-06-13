@@ -25,7 +25,7 @@
 #' Only logistic regression using the "logistic_MPLE"-method from
 #' \code{phyloglm} is implemented.
 #'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
@@ -96,7 +96,7 @@ if(length(breaks) < 2) stop("Please include more than one break,
 else
 
 # Check match between data and phy 
-data_phy <- match_dataphy(formula, data, phy)
+data_phy <- match_dataphy(formula, data, phy, ...)
 
 full.data <- data_phy$data
 phy <- data_phy$phy

@@ -13,7 +13,7 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
-#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phyloglm}}
+#' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}
 #' to n trees, randomly picked in a multiPhylo file.
 #'
 #' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
@@ -70,7 +70,7 @@ tree_phyglm <- function(formula,data,phy,
   else
     
     #Matching tree and phylogeny using utils.R
-    datphy<-match_dataphy(formula,data,phy)
+    datphy<-match_dataphy(formula,data,phy,...)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
