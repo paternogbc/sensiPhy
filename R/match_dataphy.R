@@ -21,7 +21,8 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo' or 'multiphylo')
-#' @param track Print the number of species that match data and phylogeny
+#' @param track Print the number of species that match data and phylogeny and warnings. We highly recommend to use the 
+#' default (track = T), but warning and information can be silenced for advanced use.
 #' @return The function \code{match_dataphy} returns a list with the following
 #' components:
 #' @return \code{data}: Cropped dataset matching phylogeny
@@ -74,7 +75,7 @@
 #' # See species dropped from phy or data:
 #' comp.data2$dropped
 #' @export
-match_dataphy <- function(formula, data, phy, track = T){
+match_dataphy <- function(formula, data, phy, track = TRUE){
     
     # original data set:
     data.0 <- data
@@ -90,7 +91,7 @@ match_dataphy <- function(formula, data, phy, track = T){
     # Add row names if not provided
     taxa.nam.0 <- as.character(rownames(data.0))
     if (length(intersect(tiplabl,taxa.nam.0)) == 0 &
-        length(tiplabl) == nrow(data.0)){
+        length(tiplabl) == nrow(data.0) & track == TRUE){
       warning ("Data has no row names", 
                " assuming data is in the same order as phylo tip names!")
       row.names(data.0) <- row.names(data) <- tiplabl}
@@ -109,12 +110,12 @@ match_dataphy <- function(formula, data, phy, track = T){
         stop("No names common to data and phylo tips AND different dimensions in data and phylo.",
               " Please check if row names of your dataset contain species or tip names")
     
-    if (nrow(data.0) > nrow(mf)) warning("NA's in response or predictor,", 
+    if (nrow(data.0) > nrow(mf) & track == TRUE) warning("NA's in response or predictor,", 
                                          " rows with NA's were removed")
 
     mismatch <- union(setdiff(tiplabl,taxa.nam),setdiff(taxa.nam,tiplabl))
     
-    if (length(mismatch) != 0)   warning("Some phylo tips do not match species in data",
+    if (length(mismatch) != 0 & track == TRUE)   warning("Some phylo tips do not match species in data",
                                          " (this can be due to NA removal)",
                                          " species were dropped from phylogeny",
                                          " or data")
@@ -137,7 +138,7 @@ match_dataphy <- function(formula, data, phy, track = T){
     data <- data[tip.order, , drop = FALSE]
     data.out <- data.0[rownames(data),]
     
-    message(paste("Used dataset has ",nrow(data.out)," species that match data and phylogeny"))
+    if (track == TRUE) message(paste("Used dataset has ",nrow(data.out)," species that match data and phylogeny"))
     res <- list(data = data.out, phy = phy, dropped = mismatch)
     class(res) <- "data.phy"
     return(res)
