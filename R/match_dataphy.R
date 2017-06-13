@@ -21,6 +21,7 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo' or 'multiphylo')
+#' @param track Print the number of species that match data and phylogeny
 #' @return The function \code{match_dataphy} returns a list with the following
 #' components:
 #' @return \code{data}: Cropped dataset matching phylogeny
@@ -73,7 +74,7 @@
 #' # See species dropped from phy or data:
 #' comp.data2$dropped
 #' @export
-match_dataphy <- function(formula, data, phy){
+match_dataphy <- function(formula, data, phy, track = T){
     
     # original data set:
     data.0 <- data
