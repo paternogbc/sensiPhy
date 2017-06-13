@@ -11,7 +11,7 @@
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{phylolm}
+#' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
 #' This function sequentially removes one species at a time, fits a phylogenetic
 #' logistic regression model using \code{\link[phylolm]{phyloglm}}, stores the
@@ -26,8 +26,8 @@
 #' above the value of \code{cutoff} are identified as influential. The default
 #' value for the cutoff is 2 standardised differences change.
 #'
-#' Currently, this function can only implement simple models (i.e. 
-#' \eqn{y = a + bx}). In the future we will implement more complex models.
+#' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
+#' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
