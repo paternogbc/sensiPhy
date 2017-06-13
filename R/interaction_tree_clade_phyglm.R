@@ -128,7 +128,7 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
                                   problem",sep=""))
   
   #List to store information
-  clade.tree <- list ()
+  tree.clade <- list ()
   
   #Start tree loop here
   errors <- NULL
@@ -143,7 +143,7 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
     #Select tree
     tree <- phy[[j]]
     
-    clade.tree[[j]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
+    tree.clade[[j]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
                                    clade.col, n.species, times.clade, verbose = FALSE, ...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)

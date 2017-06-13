@@ -135,7 +135,7 @@ interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.specie
     #Select tree
     tree <- phy[[j]]
     
-    clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model = "lambda", track = FALSE,
+    clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model, track = FALSE,
                          clade.col, n.species, times.clade, verbose = FALSE, ...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
