@@ -76,7 +76,7 @@
 #'# Load data:
 #'data(primates)
 #'# run analysis:
-#'clade_tree <- interaction_clade_tree_phylm(log(sexMaturity) ~ log(adultMass), 
+#'clade_tree <- interaction_tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
 #'phy = primates$phy, data = primates$data, clade.col = "family", times.clade = 30, times.tree = 5)
 #'# To check summary results and most influential clades:
 #'summary(clade_tree)
@@ -88,7 +88,7 @@
 #'}
 #' @export
 
-interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.species = 5, 
+interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5, 
                                          times.clade = 100, times.tree = 2, model = "lambda", track = TRUE,...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
@@ -149,7 +149,7 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
   #To be completed!!
   res <- list()
 
-  class(res) <- "sensiClade_Tree"
+  class(res) <- "sensiTree_Clade"
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some clades deletion presented errors, please check: output$errors")}
