@@ -76,7 +76,7 @@
 #'# Load data:
 #'data(primates)
 #'# run analysis:
-#'clade_tree <- clade_phylm(log(sexMaturity) ~ log(adultMass), 
+#'clade_tree <- interaction_clade_tree_phylm(log(sexMaturity) ~ log(adultMass), 
 #'phy = primates$phy, data = primates$data, clade.col = "family", times.clade = 30, times.tree = 5)
 #'# To check summary results and most influential clades:
 #'summary(clade_tree)
@@ -126,9 +126,9 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
   #Start tree loop here
   errors <- NULL
   pb <- utils::txtProgressBar(min = 0, max = length(uc)*times.clade*times.tree, style = 1)
-  
-  for (j in trees){
-    
+  counter = length(uc)*times.clade
+ 
+   for (j in trees){
     #Match data order to tip order
     full.data <- full.data[phy[[j]]$tip.label,]
     
@@ -136,18 +136,19 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
     tree <- phy[[j]]
     
     clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model = "lambda", track = FALSE,
-                         clade.col, n.species = 5, times.clade, verbose = FALSE, ...)
+                         clade.col, n.species, times.clade, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, j)
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + length(uc)*times.clade
   }
   
   on.exit(close(pb))
   
-  #Do something with clade.tree
-  
+
   #Generates output:
+  #To be completed!!
   res <- list()
-  
+
   class(res) <- "sensiClade_Tree"
   ### Warnings:
   if (length(res$errors) >0){
