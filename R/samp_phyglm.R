@@ -13,7 +13,7 @@
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{phylolm}
+#' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
 #'
 #' This function randomly removes a given percentage of species (controlled by
