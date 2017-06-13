@@ -99,7 +99,7 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
   if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   
   #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy)
+  data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
   if (is.na(match(clade.col, names(full.data)))) {
@@ -125,6 +125,7 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
   
   #Start tree loop here
   errors <- NULL
+  counter = 1
   pb <- utils::txtProgressBar(min = 0, max = length(uc)*times.clade*times.tree, style = 1)
   
   for (j in trees){
@@ -136,8 +137,10 @@ interaction_clade_tree_phylm <- function(formula, data, phy, clade.col, n.specie
     tree <- phy[[j]]
     
     clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model = "lambda", track = FALSE,
-                         clade.col, n.species = 5, times.clade, ...)
+                         clade.col, n.species = 5, times.clade, verbose = FALSE, ...)
     
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + 1
   }
   
   on.exit(close(pb))

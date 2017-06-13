@@ -93,7 +93,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   
   #Calculates the full model, extracts model parameters
-  data_phy <- match_dataphy(formula, data, phy)
+  data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
   if (is.na(match(clade.col, names(full.data)))) {
