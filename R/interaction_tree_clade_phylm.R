@@ -90,6 +90,7 @@
 
 interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5, 
                                          times.clade = 100, times.tree = 2, model = "lambda", track = TRUE,...) {
+
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
@@ -125,8 +126,7 @@ interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.specie
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = length(uc)*times.clade*times.tree, style = 1)
-  counter = length(uc)*times.clade
+  counter = 1
  
    for (j in trees){
     #Match data order to tip order
@@ -135,21 +135,32 @@ interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.specie
     #Select tree
     tree <- phy[[j]]
     
-    clade.tree[[j]] <- clade_phylm(formula, data=full.data, phy=tree, model, track = FALSE,
+    clade.tree[[counter]] <- clade_phylm(formula, data=full.data, phy=tree, model, track = FALSE,
                          clade.col, n.species, times.clade, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + length(uc)*times.clade
+    counter = counter + 1
   }
   
-  on.exit(close(pb))
+  names(clade.tree) <- trees
   
-
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- recombine(clade.tree, slot1 = 4, slot2 = 1)
+  clade.estimates <- recombine(clade.tree, slot1 = 5)
+  null.dist       <- recombine(clade.tree, slot1 = 6)
+  
   #Generates output:
-  #To be completed!!
-  res <- list()
-
+  res <- list(call = match.call(),
+              model = model,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              clade.model.estimates = clade.estimates,
+              null.dist = null.dist, 
+              data = full.data,
+              errors = errors,
+              clade.col = clade.col)
+  
   class(res) <- "sensiTree_Clade"
+  
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some clades deletion presented errors, please check: output$errors")}
