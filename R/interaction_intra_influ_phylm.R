@@ -35,19 +35,14 @@ interaction_intra_phylm <- function(formula, data, phy,
   if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
   
-  #Create the results data.frame
-  intra.model.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
-                                      "se.intercept" = numeric(), 
-                                      "pval.intercept" = numeric(),
-                                      "estimate" = numeric(),
-                                      "se.estimate" = numeric(),
-                                      "pval.estimate" = numeric(),"aic" = numeric(),
-                                      "optpar" = numeric())
-  #Model calculation
-  counter = 1
+  #List to store information
+  intra.influ <- list ()
+  
+  #Start intra loop here
   errors <- NULL
-  species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 1)
+  counter = 1
+
   for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
@@ -77,73 +72,26 @@ interaction_intra_phylm <- function(formula, data, phy,
     species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
     if(sum(is.na(full.data[,c("respV","predV")])>0)) next
     
-    #model
-    mod = try(phylolm::phylolm(respV ~ predV, data = full.data, model = model,
-                               phy = phy), FALSE)
+    #Run the model
+    intra.influ[[j]] <- influ_phylm(formula, data = full.data, phy=phy, 
+                                   model, cutoff, track = FALSE, verbose = FALSE, ...)
     
-    if(isTRUE(class(mod) == "try-error")) {
-      error <- i
-      errors <- c(errors,error)
-      next }
-    
-    
-    else{
-      intercept            <- phylolm::summary.phylolm(mod)$coefficients[[1,1]]
-      se.intercept         <- phylolm::summary.phylolm(mod)$coefficients[[1,2]]
-      estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
-      se.estimate          <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
-      pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-      pval.estimate        <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
-      aic.mod              <- mod$aic
-      n                    <- mod$n
-      
-      if (model == "BM") {
-        optpar <- NA
-      }
-      if (model != "BM") {
-        optpar <- mod$optpar
-      }
-      if(track == TRUE) utils::setTxtProgressBar(pb, i)
-      #write in a table
-      estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               estimate, se.estimate, pval.estimate, aic.mod, optpar,
-                               stringsAsFactors = F)
-      intra.model.estimates[counter, ]  <- estim.simu
-      counter=counter+1
-      
-    }
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + N
   }
+  
   on.exit(close(pb))
   
-  #calculate mean and sd for each parameter
-  #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = intra.model.estimates,
-                                        mean)
+  #Generates output:
+  #To be completed!!
+  res <- intra.influ
   
-  statresults <- data.frame(min = apply(intra.model.estimates, 2, min),
-                            max = apply(intra.model.estimates, 2, max),
-                            mean = apply(intra.model.estimates, 2, mean),
-                            sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
-  
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  
-  #species with transformation problems
-  nr <- n.intra - nrow(intra.model.estimates)
-  sp.pb <- unique(unlist(species.NA))
-  if (length(sp.pb) >0) 
-    warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
-                   for x.transf or y.transf and check output$sp.pb",sep=" "))
-  
-  
-  res <- list(call = match.call(),
-              formula = formula,
-              y.transf = y.transf, 
-              x.transf = x.transf,
-              data = full.data,
-              model_results = intra.model.estimates, N.obs = n,
-              stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
-              all.stats = statresults,sp.pb=sp.pb)
-  class(res) <- "sensiIntra"
+  class(res) <- "sensiIntra_Influ"
+  ### Warnings:
+  if (length(res$errors) >0){
+    warning("Some species deletion presented errors, please check: output$errors")}
+  else {
+    res$errors <- "No errors found."
+  }
   return(res)
 }
