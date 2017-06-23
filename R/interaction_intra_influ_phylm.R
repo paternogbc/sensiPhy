@@ -41,7 +41,7 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
   
   #Start intra loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
   counter = 1
 
   for (i in 1:n.intra) {
@@ -84,15 +84,8 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
   on.exit(close(pb))
   
   #Generates output:
-  #To be completed!!
   res <- intra.influ
   
   class(res) <- "sensiIntra_Influ"
-  ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
-  else {
-    res$errors <- "No errors found."
-  }
   return(res)
 }
