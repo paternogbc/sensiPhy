@@ -55,6 +55,14 @@
 #' Setting \code{n.intra} at high values can take a long time to exectue, since the total number of iterations 
 #' equals \code{n.intra * nrow(data)}.
 #'
+#' The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
+#' of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
+#' regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
+#' species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
+#' Percentage change and P-value across all species that occured as most influential species in at least one simulation.
+#' 
+#' Alternatively, users can evaluate each element in the list as a regula \code{sensiInflu}-object. 
+#'
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
 #' \code{\link{influ_phylm}},\code{\link{intra_phylm}},\code{\link{sensi_plot}}.
