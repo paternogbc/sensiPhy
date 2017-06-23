@@ -8,7 +8,7 @@ recombine <- function(list, slot1, slot2 = NULL){
     
     if(is(x[[1]],"list"))
       stop("Please also provide a value for slot2")
-    if(is.na(match(class(x[[1]]), c("data.frame", "matrix"))))
+    if(is.na(match(class(x[[1]]), c("data.frame", "matrix","character"))))
       stop("Check if slot indexing returns a valid data.frame or numeric value withn your list")
     
     n.rows<- nrow(x[[1]])
@@ -22,7 +22,7 @@ recombine <- function(list, slot1, slot2 = NULL){
     nam<-c(1:length(list))
     x <- lapply(list, function(x) x[[slot1]][[slot2]])
     
-    if(class(x[[1]]) == "data.frame" | class(x[[1]]) == "matrix" | class(x[[1]]) == "numeric" ){
+    if(class(x[[1]]) == "data.frame" | class(x[[1]]) == "matrix" | class(x[[1]]) == "numeric" | class(x[[1]]) == "character"){
       n.rows<- nrow(x[[1]])
       
       ### If there is only a single value (e.g. AIC, optpar)
