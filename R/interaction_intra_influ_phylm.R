@@ -73,7 +73,7 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
     if(sum(is.na(full.data[,c("respV","predV")])>0)) next
     
     #Run the model
-    intra.influ[[j]] <- influ_phylm(formula, data = full.data, phy=phy, 
+    intra.influ[[i]] <- influ_phylm(formula, data = full.data, phy=phy, 
                                    model, cutoff, track = FALSE, verbose = FALSE, ...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
