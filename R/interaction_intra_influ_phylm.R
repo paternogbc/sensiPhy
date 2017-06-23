@@ -37,6 +37,7 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
   
   #List to store information
   intra.influ <- list ()
+  N  <- nrow(full.data)
   
   #Start intra loop here
   errors <- NULL
