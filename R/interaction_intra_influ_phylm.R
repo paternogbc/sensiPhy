@@ -3,7 +3,8 @@ interaction_intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
                         n.intra = 30, distrib = "normal",
-                        model = "lambda", track = TRUE, ...){
+                        model = "lambda", cutoff=2,
+                        track = TRUE, ...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
   if(class(formula) != "formula") stop("formula must be class 'formula'")
@@ -13,8 +14,6 @@ interaction_intra_phylm <- function(formula, data, phy,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
                                    is provided for Vx and/or Vy")
-  
-  
   
   #Matching tree and phylogeny using utils.R
   datphy <- match_dataphy(formula, data, phy, ...)
