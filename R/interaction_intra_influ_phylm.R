@@ -85,7 +85,7 @@
 interaction_intra_influ_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
-                        n.intra = 30, distrib = "normal",
+                        n.intra = 10, distrib = "normal",
                         model = "lambda", cutoff=2,
                         track = TRUE, ...){
   #Error check
