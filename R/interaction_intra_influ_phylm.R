@@ -74,7 +74,7 @@
 #' # run analysis:
 #' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
 #' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-#' n.intra=10,distrib = "normal")
+#' n.intra=30,distrib = "normal")
 #' # To check summary results:
 #'summary(intra_influ)
 #'# Most influential speciesL
