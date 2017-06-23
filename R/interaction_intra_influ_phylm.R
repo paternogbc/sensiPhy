@@ -94,7 +94,7 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
                                    is provided for Vx and/or Vy")
   
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy, ...)
+  datphy <- match_dataphy(formula, data, phy)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
@@ -153,8 +153,8 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
     if(sum(is.na(full.data[,c("respV","predV")])>0)) next
     
     #Run the model
-    intra.influ[[i]] <- influ_phylm(formula, data = full.data, phy=phy, 
-                                   model, cutoff, track = FALSE, verbose = FALSE, ...)
+    intra.influ[[i]] <- influ_phylm(respV~predV, data = full.data, phy=phy, 
+                                   model, cutoff, track = FALSE, verbose = FALSE)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
     counter = counter + N
