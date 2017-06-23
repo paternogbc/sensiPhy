@@ -75,14 +75,11 @@
 #' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
 #' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vy="SD_gesta",Vx=NULL,
 #' n.intra=30,distrib = "normal")
-#' # To check summary results:
-#'summary(intra_influ)
-#'# Most influential speciesL
-#'intra_influ$influential.species
-#'# Visual diagnostics
-#'sensi_plot(intra_influ)
-#'# You can specify which graph and parameter ("slope" or "intercept") to print: 
-#'sensi_plot(intra_influ, param = "slope", graphs = 2)
+#' # To check summary results across all simulatoins:
+#' summary(intra_influ)
+#' #Or, for a given resimulation. 
+#' summary(intra_influ[[1]]
+#' ##Plotting possible? --> Still write code. 
 #' @export
 
 interaction_intra_influ_phylm <- function(formula, data, phy,
