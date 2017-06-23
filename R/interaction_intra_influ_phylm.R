@@ -1,5 +1,5 @@
 
-interaction_intra_phylm <- function(formula, data, phy,
+interaction_intra_influ_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
                         n.intra = 30, distrib = "normal",
