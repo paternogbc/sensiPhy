@@ -109,7 +109,7 @@ summary.sensiInflu <- function(object, ...){
 ### Summary method for class: sensiInflu_Intra:--------------------------------------
 
 #' @export
-summary.sensiInflu_Intra <- function(object, ...){
+summary.sensiIntra_Influ <- function(object, ...){
   sp.slope <- object$influential.species$influ.sp.slope
   sp.slope.tab <- table(sp.slope)
   sp.slope <- names(sp.slope.tab[order(sp.slope.tab,decreasing=T)]) #Consider giving the counts, rather than just order> 
