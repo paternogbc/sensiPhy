@@ -2,7 +2,7 @@
 interaction_intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
-                        times = 30, distrib = "normal",
+                        n.intra = 30, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
@@ -48,8 +48,8 @@ interaction_intra_phylm <- function(formula, data, phy,
   counter = 1
   errors <- NULL
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
-  for (i in 1:times) {
+  pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
@@ -126,11 +126,11 @@ interaction_intra_phylm <- function(formula, data, phy,
                             mean = apply(intra.model.estimates, 2, mean),
                             sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- times - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(intra.model.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
