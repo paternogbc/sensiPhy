@@ -110,11 +110,12 @@ summary.sensiInflu <- function(object, ...){
 
 #' @export
 summary.sensiIntra_Influ <- function(object, ...){
-  sp.slope <- object$influential.species$influ.sp.slope
+  sp.slope <- unlist(lapply(testrun,function(x) x$influential.species$influ.sp.slope[[1]])) #Get the list of most influential species across simulations
   sp.slope.tab <- table(sp.slope)
-  sp.slope <- names(sp.slope.tab[order(sp.slope.tab,decreasing=T)]) #Consider giving the counts, rather than just order> 
-  rows.slope <- match(sp.slope, object$influ.model.estimates$species)
-  slope <- object$influ.model.estimates[rows.slope, c(1,6,7,8,9)]
+  sp.slope <- sp.slope.tab[order(sp.slope.tab,decreasing=T)] 
+  influ.model.estimates<-recombine(object,slot1 = 6)
+  rows.slope <- match(names(sp.slope), influ.model.estimates$species)
+  slope <- influ.model.estimates[rows.slope, c(1,6,7,8,9)+1] #+1 because aggregating through recombine add a column up front. 
   slope <- aggregate(slope[,2:5],list(slope$species),mean)
   names(slope)[1]<-"species"
   ord.slope <- order(slope$slope.perc, 
@@ -123,11 +124,11 @@ summary.sensiIntra_Influ <- function(object, ...){
   rownames(slope) <- NULL
   colnames(slope) <- c("Species removed", "Slope", "DFslope", "Change(%)", "Pval")
   
-  sp.inter <-object$influential.species$influ.sp.intercept
+  sp.inter <-unlist(lapply(testrun,function(x) x$influential.species$influ.sp.intercept[[1]]))
   sp.inter.tab <- table(sp.inter)
-  sp.inter <- names(sp.inter.tab[order(sp.inter.tab,decreasing=T)]) #Consider giving the counts, rather than just order> 
-  rows.inter <- match(sp.inter, object$influ.model.estimates$species)
-  inter <- object$influ.model.estimates[rows.inter, c(1,2,3,4,5)]
+  sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
+  rows.inter <- match(names(sp.inter), influ.model.estimates$species)
+  inter <- influ.model.estimates[rows.inter, c(1,2,3,4,5)+1]
   inter <- aggregate(inter[,2:5],list(inter$species),mean)
   names(inter)[1]<-"species"
   ord.inter <- order(inter$intercept.perc, 
