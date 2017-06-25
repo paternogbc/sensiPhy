@@ -14,18 +14,18 @@
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times} = 2
+#' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+#' If NULL, \code{n.intra} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{phylolm}
+#' @param ... Further arguments to be passed to \code{phytools::physig}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-#' The regression is repeated \code{times} times. At each iteration the function generates a random value
+#' The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
 #' package \code{Rmisc}.
@@ -42,7 +42,7 @@
 #' @section Warning:  
 #' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+#' be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'  
 #' @return The function \code{intra_phylm} returns a list with the following
 #' components:
@@ -73,7 +73,7 @@
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
 #'intra <- intra_phylm(gestaLen ~ adultMass, y.transf = log, x.transf = log, 
-#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", times = 30)
+#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", n.intra = 30)
 #'# To check summary results:
 #'summary(intra)
 #'# Visual diagnostics
@@ -83,7 +83,7 @@
 
 
 intra_physig <- function(trait.col, data, phy,
-                        V = NULL, times = 30, distrib = "normal",
+                        V = NULL, n.intra = 30, distrib = "normal",
                         method = "K", track = TRUE, ...){
   #Error check
   if(is.null(V)) stop("V must be defined")
@@ -114,8 +114,8 @@ intra_physig <- function(trait.col, data, phy,
   intra.physig.estimates <- data.frame("n.intra" = numeric(),"estimate" = numeric(),
                                       "pval" = numeric())
   counter = 1
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
-  for (i in 1:times) {
+  pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  for (i in 1:n.intra) {
 
     #choose a random value in [mean-se,mean+se] if Vx is provided
     predV <- apply(full.data[,c(trait.col,V)],1,function(x)funr(x[1],x[2]))
@@ -144,8 +144,8 @@ intra_physig <- function(trait.col, data, phy,
                             mean = apply(intra.physig.estimates, 2, mean),
                             sd_intra = apply(intra.physig.estimates, 2, stats::sd))[-1, ]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   stats <- round(statresults[c(1:2),c(3,5,6,1,2)],digits=5)
   

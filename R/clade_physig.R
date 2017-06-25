@@ -73,7 +73,7 @@
 #'}
 #' @export
 
-clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000, method = "K",  track = TRUE) {
+clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000, method = "K",  track = TRUE, ...) {
   # Error checking:
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
