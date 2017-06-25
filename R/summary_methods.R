@@ -217,13 +217,13 @@ summary.influ.physig <- function(object, ...){
 ### Summary method for class: clade.physig -------------------------------------
 
 #' @export
-summary.clade.physig <- function(object, ...){
-  ce <- object$clade.physig.estimates
-  nd <- object$null.dist
+stats.clade.physig <- function(object, ...){
+  
+  ce <- object$sensi.estimates$sensi.clade
+  nd <- object$sensi.estimates$null.dist
   c <- levels(nd$clade)
   
-  method <- object$call$method
-  if(is.null(method)) method <- "K"
+  method <- object$method
   
   stats <- data.frame("clade removed" = c, 
                       "N.species" = ce$N.species,
@@ -262,10 +262,10 @@ summary.clade.physig <- function(object, ...){
   
   
   ### Sort by % of change:
-  ord <- order(object$clade.physig.estimates$perc, decreasing = TRUE)
+  ord <- order(object$sensi.estimates$sensi.clade$perc, decreasing = TRUE)
   res.0 <- data.frame(Trait = object$trait, N.species = nrow(object$data), 
-                      estimate = object$full.physig.estimates$estimate,
-                      Pval = object$full.physig.estimates$Pval)
+                      estimate = object$full.data.estimates$estimate,
+                      Pval = object$full.data.estimates$Pval)
   res.1 <- stats[ord, ]
   res <- list(res.0, res.1)
   names(res)[[1]] <- paste("Full data:", method, "phylogenetic signal estimate", sep = " ")
@@ -310,4 +310,19 @@ summary.intra.physig <- function(object, ...){
               object$stats)
   names(res) <- c("Call", "Summary")
   return(res)
+}
+
+### Summary methods for class: sensi.physig
+
+summary.sensi.physig <- function(object, ...){
+  if(object$call[[1]] == "influ_physig")
+    summary.influ.physig(object)
+  if(object$call[[1]] == "clade_physig")
+    stats.clade.physig(object)
+  if(object$call[[1]] == "samp_physig")
+    summary_samp.physig(object)
+  if(object$call[[1]] == "tree_physig")
+    summary_tree.physig(object)
+  if(object$call[[1]] == "intra_physig")
+    summary.intra.physig(object)
 }

@@ -95,3 +95,33 @@ print.sensiInflu <- function (x, ...)
     cat(message("use summary(x) and sensi_plot(x) to check results"))
     
 }
+
+### Print method for class: sensiInflu:-----------------------------------------
+#' @export
+print.sensi.physig <- function (x, ...) 
+{
+  if(x$call[[1]] == "influ_physig")
+    cat("Sensitivity analysis of influential species for Phylogenetic signal \n")
+  if(x$call[[1]] == "clade_physig"){
+    cat("Sensitivity analysis of influential clades for Phylogenetic signal \n")
+    cat("Call:\n")
+    print(x$call)
+    cat("\n")
+    cat("Number of randomizations: ")
+    cat(x$sensi.estimates$n.sim)
+    cat("\n")
+    cat("Clades analysed: ")
+    cat(x$sensi.estimates$sensi.clade$clade)
+    }
+  if(x$call[[1]] == "samp_physig")
+    cat("Sensitivity analysis of sample size for Phylogenetic signal \n")
+  if(x$call[[1]] == "tree_physig")
+    cat("Sensitivity analysis of tree uncertainty for Phylogenetic signal \n")
+  if(x$call[[1]] == "intra_physig")
+    cat("Sensitivity analysis of data uncertainty for Phylogenetic signal \n")
+  
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$sensi.estimates to access sensitivity analysis data"))
+  
+}
+

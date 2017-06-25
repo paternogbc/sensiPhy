@@ -14,7 +14,7 @@
 #' specification (a character vector with clade names).
 #' @param n.species Minimum number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{5}.
-#' @param times Number of simulations for the randomization test.
+#' @param n.sim Number of simulations for the randomization test.
 #' @param ... Further arguments to be passed to \code{\link[phytools]{phylosig}}
 #' @details
 #' This function sequentially removes one clade at a time, estimates phylogenetic
@@ -27,7 +27,7 @@
 #' clade (clade sample size), this function also estimate a null distribution of signal estimates
 #' expected for the number of species in a given clade. This is done by estimating
 #'  phylogenetic signal without the same number of species in the given clade. 
-#'  The number of simulations to be performed is set by \code{times}. A test if the 
+#'  The number of simulations to be performed is set by \code{n.sim}. A test if the 
 #'  clade influence differs from the null expectation is performed by a randomization 
 #'  test can using 'summary(x)'. 
 #'
@@ -38,7 +38,7 @@
 #' @return \code{trait.col}: Column name of the trait analysed
 #' @return \code{full.data.estimates}: Phylogenetic signal estimate (K or lambda)
 #' and the P value (for the full data).
-#' @return \code{clade.physig.estimates}: A data frame with all simulation
+#' @return \code{sensi.clade}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. Columns report the calculated
 #' phylogenetic signal (K or lambda) (\code{estimate}), difference between simulation
 #' signal and full data signal (\code{DF}), the percentage of change
@@ -73,8 +73,7 @@
 #'}
 #' @export
 
-clade_physig <- function(trait.col, data, phy, track = TRUE,
-                        clade.col, n.species = 5, times = 1000, method = "K") {
+clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000, method = "K",  track = TRUE) {
   # Error checking:
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
@@ -107,22 +106,22 @@ clade_physig <- function(trait.col, data, phy, track = TRUE,
   p.0 <- mod.0$P
   
   #Create dataframe to store estmates for each clade
-  clade.physig.estimates <-
+  sensi.clade <-
     data.frame("clade" =I(as.character()), 
                "N.species" = numeric(),"estimate"=numeric(),
                "DF"=numeric(),"perc"=numeric(),
                "pval"=numeric())
   
   # Create dataframe store simulations (null distribution)
-  null.dist <- data.frame("clade" = rep(names(uc), each = times),
-                          "estimate"= numeric(length(uc)*times),
-                          "DF"=numeric(length(uc)*times))
+  null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
+                          "estimate"= numeric(length(uc)*n.sim),
+                          "DF"=numeric(length(uc)*n.sim))
   
   ### START LOOP between CLADES:
   # counters:
   aa <- 1; bb <- 1
 
-  pb <- utils::txtProgressBar(min = 0, max = length(uc)*times,
+  pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
                               style = 1)
   for (A in names(uc)){
     ### Number of species in clade A
@@ -148,11 +147,11 @@ clade_physig <- function(trait.col, data, phy, track = TRUE,
     estim.simu <- data.frame(A, cN, mod.s[[1]], DF, perc,
                              pval,
                              stringsAsFactors = F)
-    clade.physig.estimates[aa, ]  <- estim.simu
+    sensi.clade[aa, ]  <- estim.simu
     
     ### START LOOP FOR NULL DIST:
     # number of species in clade A:
-    for (i in 1:times) {
+    for (i in 1:n.sim) {
       exclude <- sample(1:N, cN)
       crop.data <- full.data[-exclude,]
       crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
@@ -182,14 +181,17 @@ clade_physig <- function(trait.col, data, phy, track = TRUE,
   param0 <- list(estimate = e.0,
                  Pval = p.0)
   
+  # sensi.estimates list
+  sensi.estimates <- list(n.sim = n.sim,
+                          sensi.clade = sensi.clade,
+                          null.dist = null.dist)
   #Generates output:
   res <- list(call = match.call(),
               trait = trait.col,
-              full.physig.estimates = param0,
-              clade.physig.estimates = clade.physig.estimates,
-              null.dist = null.dist, 
-              data = full.data,
-              clade.col = clade.col)
-  class(res) <- "clade.physig"
+              method = method,
+              full.data.estimates = param0,
+              sensi.estimates = sensi.estimates,
+              data = full.data)
+  class(res) <- "sensi.physig"
   return(res)
 }

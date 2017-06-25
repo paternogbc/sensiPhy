@@ -21,9 +21,9 @@
 
 ### Start:
 sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
-    
+  clade = NULL
   # check clade
-  clades.names <- x$clade.physig.estimates$clade
+  clades.names <- x$sensi.estimates$sensi.clade$clade
   if (is.null(clade) == TRUE){
     clade <- clades.names[1]
     message("Clade argument was not defined. Plotting results for clade: ",
@@ -31,25 +31,24 @@ sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
                 Use clade = 'clade name' to plot results for other clades")
   }
   
-  method <- x$call$method
-  if(is.null(x$call$method)) method <- "K"
+  method <- x$method
   times <- x$call$times
   if(is.null(x$call$times)) times <- 1000
     
-  ces       <- x$clade.physig.estimates 
+  ces       <- x$sensi.estimates$sensi.clade 
   N.species <- ces[ces$clade==clade, ]$N.species
   p.values <- summary(x)[[2]]
   P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
     
-  wcf <- x$clade.physig.estimates$clade %in% clade
-  wcn <- x$null.dist$clade %in% clade
+  wcf <- x$sensi.estimates$sensi.clade$clade %in% clade
+  wcn <- x$sensi.estimates$null.dist$clade %in% clade
   if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
     
   # Full estimate
-  e.0 <- x$full.physig.estimates$estimate
+  e.0 <- x$full.data.estimates$estimate 
   # Withou clade estimate
-  c.e <- x$clade.physig.estimates[wcf, ]$estimate
-  nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
+  c.e <- x$sensi.estimates$sensi.clade[wcf, ]$estimate
+  nd <- x$sensi.estimates$null.dist[wcn, ] ### CLADE NULL DIST
     
   ## Estimates dataframe
   vl <- data.frame(model = c("Full data", "Without clade"), 

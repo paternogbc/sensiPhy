@@ -27,5 +27,6 @@
 
 ### Start:
 sensi_plot <- function(x, ...){
-    UseMethod("sensi_plot")
+  if(object$call[[1]] == "clade_physig")
+    sensi_plot.clade.physig(x, clade)
 }
