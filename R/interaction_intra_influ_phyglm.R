@@ -85,7 +85,7 @@
 #'dat = data.frame(y, x, z)
 #'# Run sensitivity analysis:
 #'influ_test <- interaction_intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
-#'                                             times = 3,track = TRUE,distrib="normal",x.transf=NULL) 
+#'                                             n.intra = 3,track = TRUE,distrib="normal",x.transf=NULL) 
 #'# To check summary results and most influential species:
 #'summary(influ_test)
 #'# Visual diagnostics for clade removal:
@@ -157,10 +157,10 @@ interaction_intra_influ_phyglm <- function(formula, data, phy,
     
     #model
     #Run the model
-    if(length(all.vars(formiula))>2) {
-      intra.influ[[i]] <- influ_phyglm(respV~predV, data = full.data, phy=phy,method="logistic_MPLE", 
+    if(length(all.vars(formula))>2) {
+      intra.influ[[i]] <- influ_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy,method="logistic_MPLE", 
                                        cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
-    } else intra.influ[[i]] <- influ_phyglm(respV~predV, data = full.data, phy=phy,method="logistic_MPLE", 
+    } else intra.influ[[i]] <- influ_phyglm(resp1~predV, data = full.data, phy=phy,method="logistic_MPLE", 
                                     cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
