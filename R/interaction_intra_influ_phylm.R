@@ -112,8 +112,6 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
   if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
     full.data[is.na(full.data[, Vx]), Vx] <- 0}
   
-  
-  
   #Function to pick a random value in the interval
   if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
