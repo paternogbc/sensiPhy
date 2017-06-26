@@ -91,3 +91,91 @@
 #'# Visual diagnostics for clade removal:
 #'sensi_plot(influ_test)
 #' @export
+
+
+interaction_intra_influ_phyglm <- function(formula, data, phy,
+                         Vx=NULL, n.intra = 30,
+                         x.transf = NULL,
+                         distrib="uniform", cutoff =2, 
+                         btol=50, track=TRUE,...){
+  #Error check
+  if(is.null(Vx)) stop("Vx must be defined")
+  if(class(formula)!="formula") stop("formula must be class 'formula'")
+  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
+  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
+    stop("Please use argument x.transf for data transformation")
+  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
+                                 is provided for Vx")
+  
+  #Matching tree and phylogeny using utils.R
+  datphy<-match_dataphy(formula,data,phy, ...)
+  full.data<-datphy[[1]]
+  phy<-datphy[[2]]
+  
+  resp1<-all.vars(formula)[1]
+  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
+  pred<-all.vars(formula)[length(all.vars(formula))]
+  
+  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
+    full.data[is.na(full.data[,Vx]), Vx] <- 0}
+  
+  #Function to pick a random value in the interval
+  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
+  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
+  
+  #List to store information
+  intra.influ <- list ()
+  N  <- nrow(full.data)
+  
+  #Start intra loop here
+  species.NA <- list()
+  errors <- NULL
+  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
+  counter = 1
+  
+  for (i in 1:n.intra) {
+    
+    ##Set predictor variable
+    #Vx is not provided or is not numeric, do not pick random value
+    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
+    
+    #choose a random value in [mean-se,mean+se] if Vx is provided
+    if(!is.null(Vx) && is.null(dim(Vx)))
+    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    
+    full.data$resp1<-full.data[,resp1] #try to improve this in future
+    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
+    
+    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    if(!is.null(x.transf)) 
+    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    
+    #skip iteration if there are NA's in the dataset
+    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
+    if(sum(is.na(full.data[,"predV"])>0)) next
+    
+    #model
+    #Run the model
+    if(length(all.vars(formiula))>2) {
+      intra.influ[[i]] <- influ_phyglm(respV~predV, data = full.data, phy=phy,method="logistic_MPLE", 
+                                       cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
+    } else intra.influ[[i]] <- influ_phyglm(respV~predV, data = full.data, phy=phy,method="logistic_MPLE", 
+                                    cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
+    
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + N
+  }
+  
+  names(intra.influ)<-1:n.intra
+  
+  on.exit(close(pb))
+  
+  #Generates output:
+  res <- intra.influ
+  
+  class(res) <- "sensiIntra_Influ"
+  return(res)
+}
+    
+    
