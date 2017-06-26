@@ -3,7 +3,7 @@
 recombine <- function(list, slot1, slot2 = NULL){
   ### One level indexing list[[slot1]]:
   if (is.null(slot2)){
-    nam<-c(1:length(list))
+    nam <- as.numeric(names(list))
     x <- lapply(list, function(x) x[[slot1]])
     
     if(is(x[[1]],"list"))
@@ -19,7 +19,7 @@ recombine <- function(list, slot1, slot2 = NULL){
   
   ### Two levels indixing list[[slot1]][[slot2]]
   if(is.null(slot2) == FALSE){ 
-    nam<-c(1:length(list))
+    nam <- as.numeric(names(list))
     x <- lapply(list, function(x) x[[slot1]][[slot2]])
     
     if(class(x[[1]]) == "data.frame" | class(x[[1]]) == "matrix" | class(x[[1]]) == "numeric" | class(x[[1]]) == "character"){
