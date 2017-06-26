@@ -61,7 +61,7 @@
 #' species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
 #' Percentage change and P-value across all species that occured as most influential species in at least one simulation.
 #' 
-#' Alternatively, users can evaluate each element in the list as a regula \code{sensiInflu}-object. 
+#' Additionally, users can evaluate each element in the list as a regula \code{sensiInflu}-object. 
 #'
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
@@ -164,6 +164,8 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
     counter = counter + N
   }
+  
+  names(intra.influ)<-1:n.intra
   
   on.exit(close(pb))
   
