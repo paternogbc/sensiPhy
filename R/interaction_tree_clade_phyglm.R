@@ -132,8 +132,7 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = length(uc)*times.clade*times.tree, style = 1)
-  counter = length(uc)*times.clade
+  counter = 1
   
   for (j in trees){
     
@@ -143,22 +142,33 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
     #Select tree
     tree <- phy[[j]]
     
-    tree.clade[[j]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
+    tree.clade[[counter]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
                                    clade.col, n.species, times.clade, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + length(uc)*times.clade
+    counter = counter +1
   }
   
-  on.exit(close(pb))
-  
 
+  names(clade.tree) <- trees
+  
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- recombine(clade.tree, slot1 = 4, slot2 = 1)
+  clade.estimates <- recombine(clade.tree, slot1 = 5)
+  null.dist       <- recombine(clade.tree, slot1 = 6)
+  
   #Generates output:
-  #To be completed!!
-  res <- list()
+  res <- list(call = match.call(),
+              model = model,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              clade.model.estimates = clade.estimates,
+              null.dist = null.dist, 
+              data = full.data,
+              errors = errors,
+              clade.col = clade.col)
   
+  class(res) <- "sensiTree_Clade"
   
-  class(res) <- c("sensiTree_Clade","sensiTree_CladeL")
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some clades deletion presented errors, please check: output$errors")}

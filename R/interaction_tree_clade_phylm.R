@@ -65,7 +65,7 @@
 #' are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or trees where deletion resulted in errors.
-#' @author Gustavo Paterno (clade) & Caterina Penone (tree)
+#' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
 #'  \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 #' \code{\link{sensi_plot}}
