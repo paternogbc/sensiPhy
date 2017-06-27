@@ -152,9 +152,9 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
   names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(tree.clade, slot1 = 4)
-  clade.estimates <- recombine(tree.clade, slot1 = 5)
-  null.dist       <- recombine(tree.clade, slot1 = 6)
+  full.estimates  <- recombine(tree.clade, slot1 = 3, slot2 = 1)
+  clade.estimates <- recombine(tree.clade, slot1 = 4)
+  null.dist       <- recombine(tree.clade, slot1 = 5)
   
   #Generate output:
   res <- list(call = match.call(),
@@ -167,7 +167,7 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
               errors = errors,
               clade.col = clade.col)
   
-  class(res) <- "sensiTree_Clade"
+  class(res) <- c("sensiTree_Clade","sensiTree_CladeL")
   
   ### Warnings:
   if (length(res$errors) >0){

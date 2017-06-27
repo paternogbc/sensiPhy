@@ -81,7 +81,8 @@
 
 
 interaction_tree_influ_phylm <- function(formula, data, phy, times.tree = 2, 
-                                         cutof = 2, model = "lambda", track = TRUE,...) {
+                                         cutoff = 2, model = "lambda", track = TRUE,...) {
+  
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
@@ -93,8 +94,6 @@ interaction_tree_influ_phylm <- function(formula, data, phy, times.tree = 2,
   phy <- data_phy$phy
   full.data <- data_phy$data
 
-  N  <- nrow(full.data)
-  
   # If the class of tree is multiphylo pick n=times.tree random trees
   trees<-sample(length(phy),times.tree,replace=F)
   
@@ -104,8 +103,7 @@ interaction_tree_influ_phylm <- function(formula, data, phy, times.tree = 2,
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*times.tree, style = 1)
-  counter = N
+  counter = 1
   
   for (j in trees){
     #Match data order to tip order
@@ -114,19 +112,29 @@ interaction_tree_influ_phylm <- function(formula, data, phy, times.tree = 2,
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[j]] <- influ_phylm(formula, data = full.data, phy=tree, 
+    tree.influ[[counter]] <- influ_phylm(formula, data = full.data, phy=tree, 
                                    model, cutoff, track = FALSE, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N
+    counter = counter + 1
   }
   
-  on.exit(close(pb))
+  names(tree.influ) <- trees
   
-  
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
+  influ.sp.slope <- recombine(tree.influ, slot1 = 5, slot2 = 1)
+  influ.sp.intercept <- recombine(tree.influ, slot1 = 5, slot2 = 2)
+  influ.estimates <- recombine(tree.influ, slot1 = 6)
+
   #Generates output:
-  #To be completed!!
-  res <- list()
+  res <- list(call = match.call(),
+              cutoff=cutoff,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+              influ.model.estimates = influ.estimates,
+              data = full.data)
+  
   
   class(res) <- "sensiTree_Influ"
   ### Warnings:
