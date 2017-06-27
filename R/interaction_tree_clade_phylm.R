@@ -122,7 +122,7 @@ interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.specie
                                   problem",sep=""))
   
   #List to store information
-  clade.tree <- list ()
+  tree.clade <- list ()
   
   #Start tree loop here
   errors <- NULL
@@ -135,18 +135,18 @@ interaction_tree_clade_phylm <- function(formula, data, phy, clade.col, n.specie
     #Select tree
     tree <- phy[[j]]
     
-    clade.tree[[counter]] <- clade_phylm(formula, data=full.data, phy=tree, model, track = FALSE,
+    tree.clade[[counter]] <- clade_phylm(formula, data=full.data, phy=tree, model, track = FALSE,
                          clade.col, n.species, times.clade, verbose = FALSE, ...)
     
     counter = counter + 1
   }
   
-  names(clade.tree) <- trees
+  names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(clade.tree, slot1 = 4, slot2 = 1)
-  clade.estimates <- recombine(clade.tree, slot1 = 5)
-  null.dist       <- recombine(clade.tree, slot1 = 6)
+  full.estimates  <- recombine(tree.clade, slot1 = 4, slot2 = 1)
+  clade.estimates <- recombine(tree.clade, slot1 = 5)
+  null.dist       <- recombine(tree.clade, slot1 = 6)
   
   #Generates output:
   res <- list(call = match.call(),

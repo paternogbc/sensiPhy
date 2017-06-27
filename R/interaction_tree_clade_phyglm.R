@@ -66,7 +66,7 @@
 #' are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or trees where deletion resulted in errors.
-#' @author Gustavo Paterno (clade) & Caterina Penone (tree)
+#' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
 #'  \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 #' \code{\link{sensi_plot}}
@@ -149,14 +149,14 @@ interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.speci
   }
   
 
-  names(clade.tree) <- trees
+  names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(clade.tree, slot1 = 4, slot2 = 1)
-  clade.estimates <- recombine(clade.tree, slot1 = 5)
-  null.dist       <- recombine(clade.tree, slot1 = 6)
+  full.estimates  <- recombine(tree.clade, slot1 = 4)
+  clade.estimates <- recombine(tree.clade, slot1 = 5)
+  null.dist       <- recombine(tree.clade, slot1 = 6)
   
-  #Generates output:
+  #Generate output:
   res <- list(call = match.call(),
               model = model,
               formula = formula,

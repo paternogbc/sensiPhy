@@ -59,7 +59,7 @@
 #' reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
-#' @author Gustavo Paterno & Gijsbert D.A. Werner (influ) & Caterina Penone (tree)
+#' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
 #' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
