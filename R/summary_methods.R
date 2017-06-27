@@ -151,6 +151,17 @@ summary.sensiSamp <- function(object, ...){
     sig <- object$sign.analysis
     sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
     sig$perc.sign.slope <- sig$perc.sign.slope * 100
+    if (length(intersect(class(tree.samp.glm),c("sensiTree_Influ", "sensiTree_Influ"))) == 0) {
+      names(sig) <- c("iteration",
+                      "% Species Removed", 
+                      "% Significant Intercepts",
+                      "Mean Intercept Change (%)",
+                      "Mean sDFintercept",
+                      "% Significant Slopes",
+                      "Mean Slope Change (%)",
+                      "Mean sDFslope")}
+    
+    else
     names(sig) <- c("% Species Removed", 
                     "% Significant Intercepts",
                     "Mean Intercept Change (%)",

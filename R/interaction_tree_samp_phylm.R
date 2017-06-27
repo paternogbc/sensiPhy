@@ -109,8 +109,6 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
   phy <- data_phy$phy
   full.data <- data_phy$data
   
-  N  <- nrow(full.data)
-  
   # If the class of tree is multiphylo pick n=times.tree random trees
   trees<-sample(length(phy),times.tree,replace=F)
   
@@ -120,8 +118,7 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*times.tree*times.samp, style = 1)
-  counter = N*times.samp
+  counter = 1
   
   for (j in trees){
     #Match data order to tip order
@@ -130,20 +127,30 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[j]] <- samp_phylm(formula, data = full.data, phy=tree, times = times.samp,
+    tree.influ[[counter]] <- samp_phylm(formula, data = full.data, phy=tree, times = times.samp,
                                    model, breaks=breaks, track = FALSE, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N*times.samp
+    counter = counter + 1
   }
   
-  on.exit(close(pb))
+  names(tree.influ) <- trees
   
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
+  influ.estimates <- recombine(tree.influ, slot1 = 5)
+  perc.sign <- recombine(tree.influ, slot1 = 6)
+
   
   #Generates output:
-  #To be completed!!
-  res <- list()
+  res <- list(call = match.call(),
+              model = model,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              samp.model.estimates = influ.estimates,
+              sign.analysis = perc.sign,
+              data = full.data)
   
+
   class(res) <- "sensiTree_Influ"
   ### Warnings:
   if (length(res$errors) >0){

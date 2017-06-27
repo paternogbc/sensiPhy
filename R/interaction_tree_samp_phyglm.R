@@ -83,6 +83,7 @@
 
 interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
                                          breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
+  
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
@@ -94,9 +95,7 @@ interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, ti
   data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
-  
-  N  <- nrow(full.data)
-  
+
   # If the class of tree is multiphylo pick n=times.tree random trees
   trees<-sample(length(phy),times.tree,replace=F)
   
@@ -106,8 +105,7 @@ interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, ti
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*times.tree*times.samp, style = 1)
-  counter = N*times.samp
+  counter = 1
   
   for (j in trees){
     #Match data order to tip order
@@ -116,21 +114,32 @@ interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, ti
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[j]] <- influ_phyglm(formula, data = full.data, phy=tree, times = times.samp,
-                                    breaks=breaks, btol = btol, verbose = FALSE, track = FALSE, ...)
+    tree.influ[[counter]] <- samp_phyglm(formula, data = full.data, phy=tree, times = times.samp,
+                                    breaks=breaks, btol = btol, track = FALSE, verbose = FALSE, ...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N*times.samp
+    counter = counter + 1
   }
   
-  on.exit(close(pb))
+
+  names(tree.influ) <- trees
+  
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
+  influ.estimates <- recombine(tree.influ, slot1 = 5)
+  perc.sign <- recombine(tree.influ, slot1 = 6)
   
   
   #Generates output:
-  #To be completed!!
-  res <- list()
+  res <- list(call = match.call(),
+              model = "logistic_MPLE",
+              formula = formula,
+              full.model.estimates = full.estimates,
+              samp.model.estimates = influ.estimates,
+              sign.analysis = perc.sign,
+              data = full.data)
   
-  class(res) <- "sensiTree_Influ"
+  
+  class(res) <- c("sensiTree_Influ","sensiTree_InfluL")
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some species deletion presented errors, please check: output$errors")}

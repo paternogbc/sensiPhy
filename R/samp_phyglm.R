@@ -103,7 +103,7 @@ phy <- data_phy$phy
 N <- nrow(full.data)
 
 mod.0 <- phylolm::phyloglm(formula, data = full.data,
-                           phy = phy, method = "logistic_MPLE", btol = btol, ...)
+                           phy = phy, method = "logistic_MPLE", btol = btol)
 
 if(isTRUE(mod.0$convergence != 0)) stop("Full model failed to converge,
                                               consider changing btol. See ?phyloglm")
