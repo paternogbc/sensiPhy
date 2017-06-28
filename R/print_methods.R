@@ -1,4 +1,4 @@
-### Summary method for class: data.phy:-----------------------------------------
+### Print method for class: data.phy:-----------------------------------------
 #' @importFrom utils str
 #' @export
 
@@ -24,6 +24,7 @@ print.data.phy <- function (x, ...)
     }
 }  
 
+### PRINT FOR PGLS--------------------------------------------------------------
 ### Print method for class: sensiIntra:-----------------------------------------
 #' @export
 print.sensiIntra <- function (x, ...) 
@@ -96,7 +97,8 @@ print.sensiInflu <- function (x, ...)
     
 }
 
-### Print method for class: sensiInflu:-----------------------------------------
+### PRINT PHYLOGENETIC SIGNAL------------------------------------------
+### Print method for class: clade.physig:---------------------------------------
 #' @export
 print.clade.physig<- function (x, ...) 
 {
