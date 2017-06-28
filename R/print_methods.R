@@ -116,3 +116,19 @@ print.clade.physig<- function (x, ...)
     cat(message("use x$sensi.estimates to access sensitivity analysis data"))
 }
 
+### Print method for class: influ.physig:---------------------------------------
+#' @export
+print.influ.physig<- function (x, ...) 
+{
+  cat("Sensitivity analysis of influential species for Phylogenetic signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of species: ")
+  cat(nrow(x$data))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
+}
+
