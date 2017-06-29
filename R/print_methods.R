@@ -1,4 +1,4 @@
-### Print method for class: data.phy:-----------------------------------------
+### 0. Print method for class: data.phy:-----------------------------------------
 #' @importFrom utils str
 #' @export
 
@@ -24,8 +24,8 @@ print.data.phy <- function (x, ...)
     }
 }  
 
-### PRINT FOR PGLS--------------------------------------------------------------
-### Print method for class: sensiIntra:-----------------------------------------
+### 1. PRINT FOR PGLS--------------------------------------------------------------
+### sensiIntra:-----------------------------------------
 #' @export
 print.sensiIntra <- function (x, ...) 
 {
@@ -44,7 +44,7 @@ print.sensiIntra <- function (x, ...)
     
 }
 
-### Print method for class: sensiSamp:----------------------------------------
+### sensiSamp:----------------------------------------
 #' @export
 print.sensiSamp <- function (x, ...) 
 {
@@ -57,7 +57,7 @@ print.sensiSamp <- function (x, ...)
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
-### Print method for class: sensiClade:----------------------------------------
+### sensiClade:----------------------------------------
 #' @export
 print.sensiClade <- function (x, ...) 
 {
@@ -70,7 +70,7 @@ print.sensiClade <- function (x, ...)
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
-### Print method for class: sensiTree:-----------------------------------------
+### sensiTree:-----------------------------------------
 #' @export
 print.sensiTree <- function (x, ...) 
 {
@@ -97,8 +97,8 @@ print.sensiInflu <- function (x, ...)
     
 }
 
-### PRINT PHYLOGENETIC SIGNAL------------------------------------------
-### Print method for class: clade.physig:---------------------------------------
+### 2. PRINT PHYLOGENETIC SIGNAL------------------------------------------
+### clade.physig:---------------------------------------
 #' @export
 print.clade.physig<- function (x, ...) 
 {
@@ -116,7 +116,7 @@ print.clade.physig<- function (x, ...)
     cat(message("use x$sensi.estimates to access sensitivity analysis data"))
 }
 
-### Print method for class: influ.physig:---------------------------------------
+### influ.physig:---------------------------------------
 #' @export
 print.influ.physig<- function (x, ...) 
 {
@@ -127,6 +127,22 @@ print.influ.physig<- function (x, ...)
   cat("\n")
   cat("Number of species: ")
   cat(nrow(x$data))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
+}
+
+### samp.physig:---------------------------------------
+#' @export
+print.samp.physig<- function (x, ...) 
+{
+  cat("Sensitivity analysis of sampling uncertainty for Phylogenetic Signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of randomizations: ")
+  cat(x$call$nsim)
   cat("\n")
   cat(message("use summary(x) and sensi_plot(x) to check results"))
   cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
