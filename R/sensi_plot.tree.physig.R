@@ -21,13 +21,11 @@
 #' @export
 sensi_plot.tree.physig <- function(x, graphs="all", ...){
   
-  # nulling variables
-
   ### Basic checking:
   method <- x$call$method
   if(is.null(x$call$method)) method <- "K"
   ### Distribution of K values estimated
-  e1 <- ggplot2::ggplot(x$physig_results, aes(x=estimate))+
+  e1 <- ggplot2::ggplot(x$tree.physig.estimates, aes(x=estimate))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
     geom_vline(xintercept = x$stats$mean[1], color="red",linetype=2,size=.7)+
@@ -39,7 +37,7 @@ sensi_plot.tree.physig <- function(x, graphs="all", ...){
                                           colour="black"))
   
   ### Distribution of Values estimated
-  e2 <- ggplot2::ggplot(x$physig_results, aes(x = pval))+
+  e2 <- ggplot2::ggplot(x$tree.physig.estimates, aes(x = pval))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
     geom_vline(xintercept = 0.05,color="red",linetype=1,size=.7)+
@@ -82,39 +80,37 @@ sensi_plot.tree.physig <- function(x, graphs="all", ...){
 #' @export
 sensi_plot.intra.physig <- function(x, graphs="all", ...){
   
-  # nulling variables
-  
   ### Basic checking:
   method <- x$call$method
-  if(is.null(x$call$method)) method <- "K"
+  if (is.null(x$call$method)) method <- "K"
   ### Distribution of K values estimated
-  e1 <- ggplot2::ggplot(x$physig_results, aes(x=estimate))+
-    geom_histogram(fill="yellow",colour="black", size=.2,
+  e1 <- ggplot2::ggplot(x$intra.physig.estimates, aes(x = estimate)) +
+    geom_histogram(fill = "yellow",colour = "black", size = .2,
                    alpha = .3) +
-    geom_vline(xintercept = x$stats$mean[1], color="red",linetype=2,size=.7)+
-    xlab(paste("Estimated", method, "values", sep = " "))+
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black")); e1
+    geom_vline(xintercept = x$stats$mean[1], color = "red", linetype = 2, size = .7) +
+    xlab(paste("Estimated", method, "values", sep = " ")) +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black")); 
   
   ### Distribution of Values estimated
-  e2 <- ggplot2::ggplot(x$physig_results, aes(x = pval))+
-    geom_histogram(fill="yellow",colour="black", size=.2,
+  e2 <- ggplot2::ggplot(x$intra.physig.estimates, aes(x = pval)) +
+    geom_histogram(fill = "yellow", colour = "black", size = .2,
                    alpha = .3) +
-    geom_vline(xintercept = 0.05,color="red",linetype=1,size=.7)+
-    xlab("Estimated P values")+
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"));
+    geom_vline(xintercept = 0.05, color = "red", linetype = 1, size = .7) +
+    xlab("Estimated P values") +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black"));
   ### Plotting:
-  if (graphs=="all")
-    suppressMessages(return(multiplot(e1,e2, cols=2)))
-  if (graphs==1)
+  if (graphs == "all")
+    suppressMessages(return(multiplot(e1,e2, cols = 2)))
+  if (graphs == 1)
     suppressMessages(return(e1))
-  if (graphs==2)
+  if (graphs == 2)
     suppressMessages(return(e2))
 } 
