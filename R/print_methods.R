@@ -148,3 +148,18 @@ print.samp.physig<- function (x, ...)
   cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
 }
 
+### tree.physig:---------------------------------------
+#' @export
+print.tree.physig<- function (x, ...) 
+{
+  cat("Sensitivity analysis of phylogenetic uncertainty for Phylogenetic signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of trees evaluated: ")
+  cat(nrow(x$tree.physig.estimates))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$tree.physig.estimates to access sensitivity analysis data"))
+}

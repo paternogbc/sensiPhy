@@ -1,10 +1,10 @@
 #' Phylogenetic uncertainty - Phylogenetic signal
 #'
-#' Performs phylogenetic estimates evaluating
+#' Performs phylogenetic signal estimates evaluating
 #' uncertainty in trees topology.
 #'
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
@@ -110,7 +110,7 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
     cl <- match.call()
     res <- list(   call = cl,
                    Trait = trait.col,
-                   physig_results = tree.physig.estimates,
+                   tree.physig.estimates = tree.physig.estimates,
                    N.obs = N,
                    stats = stats,
                    data = full.data)
