@@ -26,7 +26,7 @@
 #' @md 
 #' @export
 
-sensi_plot.samp.physig <- function(x, graphs = "all"){
+sensi_plot.samp.physig <- function(x, graphs = "all", ...){
   
 result    <- x$sensi.estimates
 sig.tab <- x$sign.analysis

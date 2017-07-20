@@ -255,7 +255,7 @@ summary.clade.physig <- function(object, ...){
       Pval.randomization = p)
     names(stats)[5] <- "Change (%)"      
     
-    aa <- aa+1
+    aa <- aa + 1
   }
   
   
@@ -273,12 +273,12 @@ summary.clade.physig <- function(object, ...){
 
 ### Summary method for class: samp.physig:--------------------------------------
 #' @export
-summary.samp.physig <- function(x, ...){
-  method <- x$call$method
-  if(is.null(x$call$method)) method <- "K"
+summary.samp.physig <- function(obejct, ...){
+  method <- obejct$call$method
+  if (is.null(obejct$call$method)) method <- "K"
   
-  simu <- nrow(x$samp.physig.estimates)
-  res <- x$sign.analysis
+  simu <- nrow(obejct$samp.physig.estimates)
+  res <- obejct$sign.analysis
   res$perc.sign <- res$perc.sign * 100
   names(res) <- c("Species Removed (%)", 
                   paste("Significant", method, "(%)"),

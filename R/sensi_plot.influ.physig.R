@@ -21,7 +21,7 @@
 #' @export
 
 ### Start:
-sensi_plot.influ.physig <- function(x, graphs = "all"){
+sensi_plot.influ.physig <- function(x, graphs = "all", ...){
   ### Organizing values:
   result <- x$influ.physig.estimates
   method <- x$call$method
