@@ -1,10 +1,10 @@
 #' Phylogenetic uncertainty - Phylogenetic signal
 #'
-#' Performs phylogenetic estimates evaluating
+#' Performs phylogenetic signal estimates evaluating
 #' uncertainty in trees topology.
 #'
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
@@ -24,7 +24,7 @@
 #' components:
 #' @return \code{Trait}: Column name of the trait analysed
 #' @return \code{data}: Original full dataset
-#' @return \code{physig_results}: Three number, phylogenetic signal ignal estimate 
+#' @return \code{tree.physig.estimates}: Three number, phylogenetic signal estimate 
 #' (lambda or K) and the p-value for each run with a different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Main statistics for phylogenetic estimates.\code{CI_low} and \code{CI_high} are the lower 
@@ -110,7 +110,7 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
     cl <- match.call()
     res <- list(   call = cl,
                    Trait = trait.col,
-                   physig_results = tree.physig.estimates,
+                   tree.physig.estimates = tree.physig.estimates,
                    N.obs = N,
                    stats = stats,
                    data = full.data)

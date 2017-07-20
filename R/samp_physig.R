@@ -1,11 +1,11 @@
 #' Sensitivity Analysis Species Sampling  - Phylogenetic signal
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
-#' species and detecting the effects on parameter estimates on phylogenetic 
+#' species and detecting the effects on phylogenetic 
 #' signal estimates
 #'
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
@@ -14,7 +14,8 @@
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param method Method to compute signal: can be "K" or "lambda".
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... further arguments to be passed to phytools::phylosig
+#' @param ... Further arguments to be passed to \code{\link[phytools]{phylosig}}
+#' 
 #' @details
 #'
 #' This function randomly removes a given percentage of species (controlled by
@@ -31,7 +32,7 @@
 #' @return \code{full.model.estimates}: Phylogenetic signal (K or lambda) and 
 #' p-value  using the full dataset (without deleted species). See 
 #' \code{\link[phytools]{phylosig}} for details.
-#' @return \code{samp.physig.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a rerun with a given number of species
 #' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 #' Columns report the calculated signal estimate (\code{estimate}),
@@ -42,14 +43,13 @@
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' phylogenetic signal over all repititions with reduced data sets.
 #' @return \code{data}: Original full dataset used in the analysis.
-#' @return \code{phy}L Original phylogeny used in the analysis.
 #' #' @note Please be aware that dropping species may reduce power to detect 
 #' significant signal and may partially be responsible for a potential 
 #' effect of species removal on p-values. Please also consult standardised differences
 #' in the (summary) output.
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-#' \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
+#' @seealso
+#' \code{\link[phytools]{phylosig}}, \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -77,6 +77,7 @@
 #' @export
 samp_physig <- function(trait.col, data , phy, n.sim = 30,
                         breaks=seq(.1,.5,.1), method = "K", track = TRUE, ...){
+  ### data prep------
   # Basic error checking:
   if(class(phy) != "phylo") 
     stop("phy must be class 'phylo'")
@@ -107,8 +108,8 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   NL <- length(breaks) * n.sim
   pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
   
-  #####
-  #####
+  
+  ##### Loop----
   for (i in limit){
     for (j in 1:n.sim){
       
@@ -178,7 +179,7 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   res <- list(call = match.call(),
               Trait = trait.col,
               full.data.estimates = param0,
-              samp.physig.estimates = samp.physig.estimates,
+              sensi.estimates = samp.physig.estimates,
               sign.analysis = perc.sign.tab,
               data = full.data,
               phy = phy)
