@@ -136,7 +136,7 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
+  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
   influ.estimates <- recombine(tree.influ, slot1 = 5)
   perc.sign <- recombine(tree.influ, slot1 = 6)
 

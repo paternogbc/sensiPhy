@@ -149,7 +149,7 @@ summary.sensiSamp <- function(object, ...){
     sig <- object$sign.analysis
     sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
     sig$perc.sign.slope <- sig$perc.sign.slope * 100
-    if (length(intersect(class(tree.samp.glm),c("sensiTree_Influ", "sensiTree_Influ"))) == 0) {
+    if (length(intersect(class(object),c("sensiTree_Samp", "sensiTree_SampL"))) != 0) {
       names(sig) <- c("iteration",
                       "% Species Removed", 
                       "% Significant Intercepts",
