@@ -73,13 +73,11 @@
 #' data(alien)
 #' # run analysis:
 #' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
-#' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vy="SD_gesta",Vx=NULL,
+#' data=alien$data,model="lambda",y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
 #' n.intra=30,distrib = "normal")
-#' # To check summary results across all simulatoins:
 #' summary(intra_influ)
-#' #Or, for a given resimulation. 
-#' summary(intra_influ[[1]]
-#' ##Plotting possible? --> Still write code. 
+#' sensi_plot.sensiINTER_Influ(intra_influ)
+#'  
 #' @export
 
 interaction_intra_influ_phylm <- function(formula, data, phy,
@@ -167,9 +165,42 @@ interaction_intra_influ_phylm <- function(formula, data, phy,
   
   on.exit(close(pb))
   
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 4, slot2 = 1))
+  
+  #influ species slope
+  influ.sp.slope <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.slope))
+  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
+  names(influ.sp.slope) <- "influ.sp.slope"
+  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  
+  #influ species intercept
+  influ.sp.intercept <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
+  names(influ.sp.intercept) <- "influ.sp.intercept"
+  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+  
+  #influ.estimates
+  influ.estimates <- recombine(intra.influ, slot1 = 6)
+  
   #Generates output:
-  res <- intra.influ
+  res <- list(call = match.call(),
+              cutoff=cutoff,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+              influ.model.estimates = influ.estimates,
+              data = full.data)
+
   
   class(res) <- "sensiIntra_Influ"
+  
+  ### Warnings:
+  if (length(res$errors) >0){
+    warning("Some species deletion presented errors, please check: output$errors")}
+  else {
+    res$errors <- "No errors found."
+  }
+  
   return(res)
 }
