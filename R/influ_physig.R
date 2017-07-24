@@ -2,8 +2,8 @@
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic signal estimates,
 #' and detects influential species for K or lambda.
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
@@ -11,17 +11,18 @@
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... further arguments to be passed to phytools::phylosig
+#' @param ... Further arguments to be passed to \code{\link[phytools]{phylosig}}
+#' 
 #' @details
 #' This function sequentially removes one species at a time, ans estimates phylogenetic
 #' signal (K or lambda) using \code{\link[phytools]{phylosig}}, stores the
-#' results and detects influential species.
+#' results and detects the most influential species.
 #'
 #' \code{influ_physig} detects influential species based on the standardised
 #' difference in signal estimate (K or lambda) when removing a given species compared
 #' to the full data estimate (with all species). Species with a standardised difference
 #' above the value of \code{cutoff} are identified as influential. The default
-#' value for the cutoff is 2 standardised differences change.
+#' value for the cutoff is 2 standardised differences in signal estimate.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
@@ -31,7 +32,7 @@
 #' @return \code{trait.col}: Column name of the trait analysed
 #' @return \code{full.data.estimates}: Phylogenetic signal estimate (K or lambda)
 #' and the P value (for the full data).
-#' @return \code{influential_species}: List of influential species, both
+#' @return \code{influential_species}: List of influential species,
 #' based on standardised difference in K or lambda. 
 #' Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
@@ -64,8 +65,8 @@
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#'influ <- influ_physig("adultMass", phy = alien$phy[[1]], 
-#'data = alien$data, method = "K")
+#'influ <- influ_physig("adultMass", phy = alien.phy[[1]], 
+#'data = alien.data, method = "K")
 #' # To check summary results:
 #'summary(influ)
 #'# Most influential speciesL

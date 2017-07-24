@@ -1,6 +1,6 @@
 #' Graphical diagnostics for class 'clade.physig'
 #'
-#' \code{plot_influ_physig} Plot results from \code{influ_physig}
+#' \code{plot_clade_physig} Plot results from \code{clade_physig}
 #' @param x output from \code{influ_physig}
 #' @param clade The name of the clade to be evaluated (see details)
 #' @param ... further arguments to methods.
@@ -11,19 +11,18 @@
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[phytools]{phylosig}}
 #' @details For 'x' from clade_physig:
 #' 
-#' Graph 2: Distribution of the simulated slopes (Null distribution
+#' Graph 1: Distribution of the simulated signal estimates (Null distribution
 #' for a given clade sample size).
-#' The red dashed line represents the estimated slope for the reduced model 
-#' (without the focal clade) and the black line represents the slope for the 
-#' full model.
+#' The red dashed line represents the estimated signal for the reduced data 
+#' (without the focal clade) and the black line represents the signal estimate
+#'  for the full data.
 #' 
 #' @export
 
 ### Start:
 sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
-    
   # check clade
-  clades.names <- x$clade.physig.estimates$clade
+  clades.names <- x$sensi.estimates$clade
   if (is.null(clade) == TRUE){
     clade <- clades.names[1]
     message("Clade argument was not defined. Plotting results for clade: ",
@@ -31,24 +30,23 @@ sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
                 Use clade = 'clade name' to plot results for other clades")
   }
   
-  method <- x$call$method
-  if(is.null(x$call$method)) method <- "K"
-  times <- x$call$times
-  if(is.null(x$call$times)) times <- 1000
+  method <- x$method
+  times <- x$call$n.sim
+  if(is.null(x$call$n.sim)) times <- 1000
     
-  ces       <- x$clade.physig.estimates 
+  ces       <- x$sensi.estimates 
   N.species <- ces[ces$clade==clade, ]$N.species
   p.values <- summary(x)[[2]]
   P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
     
-  wcf <- x$clade.physig.estimates$clade %in% clade
+  wcf <- x$sensi.estimates$clade %in% clade
   wcn <- x$null.dist$clade %in% clade
   if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
     
   # Full estimate
-  e.0 <- x$full.physig.estimates$estimate
+  e.0 <- x$full.data.estimates$estimate 
   # Withou clade estimate
-  c.e <- x$clade.physig.estimates[wcf, ]$estimate
+  c.e <- x$sensi.estimates[wcf, ]$estimate
   nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
     
   ## Estimates dataframe

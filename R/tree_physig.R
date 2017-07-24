@@ -1,16 +1,16 @@
 #' Phylogenetic uncertainty - Phylogenetic signal
 #'
-#' Performs phylogenetic estimates evaluating
+#' Performs phylogenetic signal estimates evaluating
 #' uncertainty in trees topology.
 #'
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param method Method to compute signal: can be "K" or "lambda".
-#' @param times Number of times to repeat the analysis with n different trees picked 
-#' randomly in the multiPhylo file. (If \code{times} = "all", phylosgentic signal will be estimated
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
+#' randomly in the multiPhylo file. (If \code{n.tree} = "all", phylosgentic signal will be estimated
 #' among the all set of trees provided in \code{phy})
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylosig}
@@ -24,7 +24,7 @@
 #' components:
 #' @return \code{Trait}: Column name of the trait analysed
 #' @return \code{data}: Original full dataset
-#' @return \code{physig_results}: Three number, phylogenetic signal ignal estimate 
+#' @return \code{tree.physig.estimates}: Three number, phylogenetic signal estimate 
 #' (lambda or K) and the p-value for each run with a different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Main statistics for phylogenetic estimates.\code{CI_low} and \code{CI_high} are the lower 
@@ -53,13 +53,13 @@
 #'# Run sensitivity analysis:
 #'tree <- tree_physig(trait.col = "adultMass", data = alien.data, phy = alien.phy)
 #' @export
-tree_physig <- function(trait.col, data, phy, times = "all", method = "K", track = TRUE, ...){
+tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", track = TRUE, ...){
 
   #Error check
-  if (times == "all") times <- length(phy)
+  if (n.tree == "all") n.tree <- length(phy)
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   
   # Check match between data and phy 
   datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
@@ -70,15 +70,15 @@ tree_physig <- function(trait.col, data, phy, times = "all", method = "K", track
   N <- nrow(full.data)
   
   
-    # Pick n=times random trees or all
-    trees <- sample(length(phy), times, replace = F)
+    # Pick n=n.tree random trees or all
+    trees <- sample(length(phy), n.tree, replace = F)
     #Create the results data.frame
     tree.physig.estimates <- data.frame("n.tree" = numeric(), "estimate" = numeric(),
                                         "pval" = numeric())
     
     #Model calculation
     counter = 1
-    pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
+    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
     for (j in trees){
       
       mod.s    <- phytools::phylosig(tree = phy[[j]], x = trait, method = method, test = TRUE, ...)
@@ -102,15 +102,15 @@ tree_physig <- function(trait.col, data, phy, times = "all", method = "K", track
                               mean = apply(tree.physig.estimates, 2, mean),
                               sd_tree = apply(tree.physig.estimates, 2, stats::sd))[-1, ]
     
-    statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
-    statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
+    statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
+    statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
     
     stats <- round(statresults[c(1:2),c(3,5,6,1,2)],digits=5)
     
     cl <- match.call()
     res <- list(   call = cl,
                    Trait = trait.col,
-                   physig_results = tree.physig.estimates,
+                   tree.physig.estimates = tree.physig.estimates,
                    N.obs = N,
                    stats = stats,
                    data = full.data)

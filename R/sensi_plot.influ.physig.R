@@ -1,6 +1,6 @@
 #' Graphical diagnostics for class 'influ.physig'
 #'
-#' \code{plot_influ_physig} Plot results from \code{influ_physig}
+#' \code{sensi_plot.influ_physig} Plot results from \code{influ_physig}
 #' @param x output from \code{influ_physig}
 #' @param graphs choose which graph should be printed on the output ("all", 1, 2)
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
@@ -16,13 +16,12 @@
 #' 
 #' Graph 2: Distribution of P values for the phylogenetic signal (K or lambda) 
 #' for each simulation (leave-one-out deletion). Red vertical line represents 
-#' the alpha significance level = 0.005.
+#' the alpha significance level = 0.05.
 #' 
 #' @export
 
 ### Start:
-sensi_plot.influ.physig <- function(x, graphs = "all"){
-  
+sensi_plot.influ.physig <- function(x, graphs = "all", ...){
   ### Organizing values:
   result <- x$influ.physig.estimates
   method <- x$call$method
@@ -34,13 +33,17 @@ sensi_plot.influ.physig <- function(x, graphs = "all"){
   i1 <- ggplot2::ggplot(result, aes(x = estimate))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
-    geom_vline(xintercept = est.0, color = "red", linetype = 2, size =.7)+
+    geom_vline(aes(xintercept = est.0, color = "red"), linetype = 2, size =.7)+
+    scale_color_manual(values = "red", name = "", labels = c("Full data")) +
     xlab(paste("Estimated", method, "values", sep = " "))+
     ylab("Frequency")+
     theme(axis.title=element_text(size=12),
           axis.text = element_text(size=12),
           panel.background = element_rect(fill="white",
-                                          colour="black"))
+                                          colour="black"),
+          legend.key = element_rect(fill = "transparent"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position = c(.9,.9)) 
   ### Distribution of P-values
   i2 <- ggplot2::ggplot(result,aes(x = pval))+
     geom_histogram(fill="yellow",colour="black", size=.2,

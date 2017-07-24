@@ -1,27 +1,28 @@
 #' Sensitivity Analysis Species Sampling  - Phylogenetic signal
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
-#' species and detecting the effects on parameter estimates on phylogenetic 
+#' species and detecting the effects on phylogenetic 
 #' signal estimates
 #'
-#' @param trait.col Column name containing values for a single
-#'  continuously distributed trait (e.g. "Body_mass").
+#' @param trait.col The name of a column in the provided data frame with trait 
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times The number of times species are randomly deleted for each
-#' \code{break}.
+#' @param n.sim The number of times to repeat species random removal for each
+#' \code{break} interval.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param method Method to compute signal: can be "K" or "lambda".
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... further arguments to be passed to phytools::phylosig
+#' @param ... Further arguments to be passed to \code{\link[phytools]{phylosig}}
+#' 
 #' @details
 #'
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full data, estimates phylogenetic
 #' signal for a given trait (K or lambda) without these species using 
 #' \code{\link[phytools]{phylosig}}, then
-#' repeats the analysis many times (controlled by \code{times}), stores the results and
+#' repeats the analysis many times (controlled by \code{n.sim}), stores the results and
 #' calculates the effect of random species removal on phylogenetic siganl estimates.
 #'
 #' Output can be visualised using \code{sensi_plot}.
@@ -31,7 +32,7 @@
 #' @return \code{full.model.estimates}: Phylogenetic signal (K or lambda) and 
 #' p-value  using the full dataset (without deleted species). See 
 #' \code{\link[phytools]{phylosig}} for details.
-#' @return \code{samp.physig.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a rerun with a given number of species
 #' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 #' Columns report the calculated signal estimate (\code{estimate}),
@@ -42,14 +43,13 @@
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' phylogenetic signal over all repititions with reduced data sets.
 #' @return \code{data}: Original full dataset used in the analysis.
-#' @return \code{phy}L Original phylogeny used in the analysis.
 #' #' @note Please be aware that dropping species may reduce power to detect 
 #' significant signal and may partially be responsible for a potential 
 #' effect of species removal on p-values. Please also consult standardised differences
 #' in the (summary) output.
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-#' \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
+#' @seealso
+#' \code{\link[phytools]{phylosig}}, \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -75,8 +75,9 @@
 #' summary(fit)
 #' sensi_plot(fit)
 #' @export
-samp_physig <- function(trait.col, data , phy, times = 30,
+samp_physig <- function(trait.col, data , phy, n.sim = 30,
                         breaks=seq(.1,.5,.1), method = "K", track = TRUE, ...){
+  ### data prep------
   # Basic error checking:
   if(class(phy) != "phylo") 
     stop("phy must be class 'phylo'")
@@ -101,16 +102,16 @@ samp_physig <- function(trait.col, data , phy, times = 30,
                "perc"= numeric(),"pval"=numeric())
   
   #Loops over breaks, remove percentage of species determined by 'breaks
-  #and repeat determined by 'times'.
+  #and repeat determined by 'n.sim'.
   counter <- 1
   limit <- sort(round( (breaks) * nrow(full.data),digits=0))
-  NL <- length(breaks) * times
+  NL <- length(breaks) * n.sim
   pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
   
-  #####
-  #####
+  
+  ##### Loop----
   for (i in limit){
-    for (j in 1:times){
+    for (j in 1:n.sim){
       
       exclude <- sample(1:N,i)
       crop.data <- full.data[-exclude,]
@@ -155,13 +156,13 @@ samp_physig <- function(trait.col, data , phy, times = 30,
   #colnames(samp.physig.estimates)[3] <- method
   
   res                 <- samp.physig.estimates
-  times               <- table(res$n.remov)
+  n.sim               <- table(res$n.remov)
   breaks              <- unique(res$n.percent)
   
   ### Significance Table
     sign                <- res$pval > .05
     res$sign            <- sign
-    perc.sign           <- 1-(with(res,tapply(sign, n.remov, sum))) / times
+    perc.sign           <- 1-(with(res,tapply(sign, n.remov, sum))) / n.sim
     mean.sDF            <- with(res,tapply(sDF,n.remov,mean))
     mean.perc           <- with(res,tapply(perc,n.remov,mean))
     perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
@@ -178,7 +179,7 @@ samp_physig <- function(trait.col, data , phy, times = 30,
   res <- list(call = match.call(),
               Trait = trait.col,
               full.data.estimates = param0,
-              samp.physig.estimates = samp.physig.estimates,
+              sensi.estimates = samp.physig.estimates,
               sign.analysis = perc.sign.tab,
               data = full.data,
               phy = phy)

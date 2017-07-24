@@ -230,24 +230,22 @@ summary.influ.physig <- function(object, ...){
 
 #' @export
 summary.clade.physig <- function(object, ...){
-  ce <- object$clade.physig.estimates
+  ce <- object$sensi.estimates
   nd <- object$null.dist
   c <- levels(nd$clade)
   
-  method <- object$call$method
-  if(is.null(method)) method <- "K"
+  method <- object$method
   
   stats <- data.frame("clade removed" = c, 
                       "N.species" = ce$N.species,
                       "estimate" = numeric(length(c)),
-                      "DF" = numeric(length(c)),
+                      "DIF.est" = numeric(length(c)),
                       "change" = numeric(length(c)),
                       "Pval" = numeric(length(c)),
-                      "m.null.slope" = numeric(length(c)),
+                      "m.null.estimate" = numeric(length(c)),
                       "Pval.randomization" = numeric(length(c)))
   aa <- 1
   for(j in c) {
-    
     nes <- nd[nd$clade == j, ] # null estimates
     ces <- ce[ce$clade == j, ] # reduced model estimates
     times <- nrow(nes)
@@ -269,15 +267,15 @@ summary.clade.physig <- function(object, ...){
       Pval.randomization = p)
     names(stats)[5] <- "Change (%)"      
     
-    aa <- aa+1
+    aa <- aa + 1
   }
   
   
   ### Sort by % of change:
-  ord <- order(object$clade.physig.estimates$perc, decreasing = TRUE)
+  ord <- order(object$sensi.estimates$perc, decreasing = TRUE)
   res.0 <- data.frame(Trait = object$trait, N.species = nrow(object$data), 
-                      estimate = object$full.physig.estimates$estimate,
-                      Pval = object$full.physig.estimates$Pval)
+                      estimate = object$full.data.estimates$estimate,
+                      Pval = object$full.data.estimates$Pval)
   res.1 <- stats[ord, ]
   res <- list(res.0, res.1)
   names(res)[[1]] <- paste("Full data:", method, "phylogenetic signal estimate", sep = " ")
@@ -287,12 +285,12 @@ summary.clade.physig <- function(object, ...){
 
 ### Summary method for class: samp.physig:--------------------------------------
 #' @export
-summary.samp.physig <- function(x, ...){
-  method <- x$call$method
-  if(is.null(x$call$method)) method <- "K"
+summary.samp.physig <- function(obejct, ...){
+  method <- obejct$call$method
+  if (is.null(obejct$call$method)) method <- "K"
   
-  simu <- nrow(x$samp.physig.estimates)
-  res <- x$sign.analysis
+  simu <- nrow(obejct$samp.physig.estimates)
+  res <- obejct$sign.analysis
   res$perc.sign <- res$perc.sign * 100
   names(res) <- c("Species Removed (%)", 
                   paste("Significant", method, "(%)"),

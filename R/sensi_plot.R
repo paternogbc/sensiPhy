@@ -27,5 +27,5 @@
 
 ### Start:
 sensi_plot <- function(x, ...){
-    UseMethod("sensi_plot")
+  UseMethod("sensi_plot")
 }
