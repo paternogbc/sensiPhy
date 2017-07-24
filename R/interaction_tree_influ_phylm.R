@@ -121,9 +121,21 @@ interaction_tree_influ_phylm <- function(formula, data, phy, times.tree = 2,
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
-  influ.sp.slope <- recombine(tree.influ, slot1 = 5, slot2 = 1) ######need to fix this
-  influ.sp.intercept <- recombine(tree.influ, slot1 = 5, slot2 = 2) ######need to fix this
+  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
+  
+  #influ species slope
+  influ.sp.slope <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.slope))
+  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
+  names(influ.sp.slope) <- "influ.sp.slope"
+  influ.sp.slope$tree<-row.names(influ.sp.slope)
+
+  #influ species intercept
+  influ.sp.intercept <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
+  names(influ.sp.intercept) <- "influ.sp.intercept"
+  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+
+  #influ.estimates
   influ.estimates <- recombine(tree.influ, slot1 = 6)
 
   #Generates output:
