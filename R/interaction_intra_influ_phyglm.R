@@ -89,7 +89,7 @@
 #'# To check summary results and most influential species:
 #'summary(influ_test)
 #'# Visual diagnostics for clade removal:
-#'sensi_plot(influ_test)
+#'sensi_plot.sensiINTER_Influ(intra_influ)
 #' @export
 
 
@@ -105,8 +105,7 @@ interaction_intra_influ_phyglm <- function(formula, data, phy,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
-                                 is provided for Vx")
+  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
   
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy, ...)
@@ -171,10 +170,42 @@ interaction_intra_influ_phyglm <- function(formula, data, phy,
   
   on.exit(close(pb))
   
-  #Generates output:
-  res <- intra.influ
   
-  class(res) <- "sensiIntra_Influ"
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 3, slot2 = 1))
+  
+  #influ species slope
+  influ.sp.slope <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.slope))
+  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
+  names(influ.sp.slope) <- "influ.sp.slope"
+  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  
+  #influ species intercept
+  influ.sp.intercept <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
+  names(influ.sp.intercept) <- "influ.sp.intercept"
+  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+  
+  #influ.estimates
+  influ.estimates <- recombine(intra.influ, slot1 = 5)
+  
+  #Generates output:
+  res <- list(call = match.call(),
+              cutoff=cutoff,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+              influ.model.estimates = influ.estimates,
+              data = full.data)
+  
+  class(res) <- c("sensiIntra_Influ","sensiIntra_InfluL")
+  ### Warnings:
+  if (length(res$errors) >0){
+    warning("Some species deletion presented errors, please check: output$errors")}
+  else {
+    res$errors <- "No errors found."
+  }
+  
   return(res)
 }
     
