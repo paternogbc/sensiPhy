@@ -84,7 +84,7 @@ summary.sensiClade <- function(object, ...){
 summary.sensiInflu <- function(object, ...){
     sp.slope <- object$influential.species$influ.sp.slope
     rows.slope <- match(sp.slope, object$influ.model.estimates$species)
-    slope <- object$influ.model.estimates[rows.slope, c(1,6,7,8,9)]
+    slope <- object$influ.model.estimates[rows.slope, c("species","slope","DFslope","slope.perc","pval.slope")]
     ord.slope <- order(slope$slope.perc, 
                        decreasing = TRUE)
     slope <- slope[ord.slope, ]
@@ -93,7 +93,7 @@ summary.sensiInflu <- function(object, ...){
     
     sp.inter <-object$influential.species$influ.sp.intercept
     rows.inter <- match(sp.inter, object$influ.model.estimates$species)
-    inter <- object$influ.model.estimates[rows.inter, c(1,2,3,4,5)]
+    inter <- object$influ.model.estimates[rows.inter, c("species","intercept","DFintercept","intercept.perc","pval.intercept")]
     ord.inter <- order(inter$intercept.perc, 
                        decreasing = TRUE)
     inter <- inter[ord.inter, ]
@@ -106,33 +106,31 @@ summary.sensiInflu <- function(object, ...){
     
 }
 
-### Summary method for class: sensiInflu_Intra:--------------------------------------
+### Summary method for class: sensiIntra_Influ and sensiTree_Influ:--------------------------------------
 
 #' @export
-summary.sensiIntra_Influ <- function(object, ...){
-  sp.slope <- unlist(lapply(testrun,function(x) x$influential.species$influ.sp.slope[[1]])) #Get the list of most influential species across simulations
+summary.sensiINTER_Influ <- function(object, ...){
+  sp.slope <- unlist(as.list(object$influential.species$influ.sp.slope$influ.sp.slope))
   sp.slope.tab <- table(sp.slope)
   sp.slope <- sp.slope.tab[order(sp.slope.tab,decreasing=T)] 
-  influ.model.estimates<-recombine(object,slot1 = 6)
+  influ.model.estimates<-object$influ.model.estimates
   rows.slope <- match(names(sp.slope), influ.model.estimates$species)
-  slope <- influ.model.estimates[rows.slope, c(1,6,7,8,9)+1] #+1 because aggregating through recombine add a column up front. 
+  slope <- influ.model.estimates[rows.slope, c("species","slope","DFslope","slope.perc","pval.slope")]
   slope <- aggregate(slope[,2:5],list(slope$species),mean)
   names(slope)[1]<-"species"
-  ord.slope <- order(slope$slope.perc, 
-                     decreasing = TRUE)
+  ord.slope <- order(slope$slope.perc,decreasing = TRUE)
   slope <- slope[ord.slope, ]
   rownames(slope) <- NULL
   colnames(slope) <- c("Species removed", "Slope", "DFslope", "Change(%)", "Pval")
   
-  sp.inter <-unlist(lapply(testrun,function(x) x$influential.species$influ.sp.intercept[[1]]))
+  sp.inter <-unlist(as.list(object$influential.species$influ.sp.intercept$influ.sp.intercept))
   sp.inter.tab <- table(sp.inter)
   sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
   rows.inter <- match(names(sp.inter), influ.model.estimates$species)
-  inter <- influ.model.estimates[rows.inter, c(1,2,3,4,5)+1]
+  inter <- influ.model.estimates[rows.inter, c("species","intercept","DFintercept","intercept.perc","pval.intercept")]
   inter <- aggregate(inter[,2:5],list(inter$species),mean)
   names(inter)[1]<-"species"
-  ord.inter <- order(inter$intercept.perc, 
-                     decreasing = TRUE)
+  ord.inter <- order(inter$intercept.perc,decreasing = TRUE)
   inter <- inter[ord.inter, ]
   rownames(inter) <- NULL
   colnames(inter) <- c("Species removed", "Intercept", "DFintercept", "Change(%)", "Pval")
