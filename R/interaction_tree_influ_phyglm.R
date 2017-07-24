@@ -57,7 +57,7 @@
 #' (i.e. \code{alpha}) are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Species where deletion resulted in errors.
-#' @author Gustavo Paterno & Gijsbert D.A. Werner (influ) & Caterina Penone (tree)
+#' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
 #' \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
@@ -71,7 +71,7 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'influ <- interaction_tree_influ_phyglm(y ~ x, data = dat, phy = mphy, times.tree = 2)
+#'influ <- interaction_tree_influ_phyglm(y ~ x, data = dat, phy = mphy, times.tree = 3)
 #' @export
 
 interaction_tree_influ_phyglm <- function(formula, data, phy, times.tree = 2, 
@@ -86,8 +86,6 @@ interaction_tree_influ_phyglm <- function(formula, data, phy, times.tree = 2,
   data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
-
-  N  <- nrow(full.data)
   
   # If the class of tree is multiphylo pick n=times.tree random trees
   trees<-sample(length(phy),times.tree,replace=F)
@@ -98,8 +96,7 @@ interaction_tree_influ_phyglm <- function(formula, data, phy, times.tree = 2,
   
   #Start tree loop here
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*times.tree, style = 1)
-  counter = N
+  counter = 1
   
   for (j in trees){
     #Match data order to tip order
@@ -108,21 +105,45 @@ interaction_tree_influ_phyglm <- function(formula, data, phy, times.tree = 2,
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[j]] <- influ_phyglm(formula, data = full.data, phy=tree,
-                                   verbose = FALSE, track = FALSE, ...)
+    tree.influ[[counter]] <- influ_phyglm(formula, data = full.data, phy=tree,
+                                   verbose = FALSE, track = FALSE,...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N
+    counter = counter + 1
   }
   
-  on.exit(close(pb))
+
+  names(tree.influ) <- trees
   
+  # Merge lists into data.frames between iterations:
+  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 3, slot2 = 1))
+  
+  #influ species slope
+  influ.sp.slope <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.slope))
+  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
+  names(influ.sp.slope) <- "influ.sp.slope"
+  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  
+  #influ species intercept
+  influ.sp.intercept <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
+  names(influ.sp.intercept) <- "influ.sp.intercept"
+  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+  
+  #influ.estimates
+  influ.estimates <- recombine(tree.influ, slot1 = 5)
   
   #Generates output:
-  #To be completed!!
-  res <- list()
+  res <- list(call = match.call(),
+              cutoff=cutoff,
+              formula = formula,
+              full.model.estimates = full.estimates,
+              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
+              influ.model.estimates = influ.estimates,
+              data = full.data)
   
-  class(res) <- "sensiTree_Influ"
+  
+  class(res) <- c("sensiTree_Influ","sensiTree_InfluL")
+  
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some species deletion presented errors, please check: output$errors")}
