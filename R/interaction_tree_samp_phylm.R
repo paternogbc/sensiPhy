@@ -102,7 +102,7 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(length(breaks) < 2)  stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-  if((model == "trend") & (sum(is.ultrametric(mphy))>1)) stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  if((model == "trend") & (sum(is.ultrametric(phy))>1)) stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
@@ -151,7 +151,7 @@ interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, tim
               data = full.data)
   
 
-  class(res) <- "sensiTree_Influ"
+  class(res) <- "sensiTree_Samp"
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some species deletion presented errors, please check: output$errors")}
