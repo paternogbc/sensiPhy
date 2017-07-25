@@ -78,7 +78,7 @@
 #' are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or iterations where deletion resulted in errors.
-#' @authors Gustavo Paterno, Caterina Penone
+#' @author Gustavo Paterno, Caterina Penone
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
 #' \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 #' \code{\link{sensi_plot}}, \code{\link{intra_phylm}}

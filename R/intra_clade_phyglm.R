@@ -74,13 +74,26 @@
 #' are reported.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or iterations where deletion resulted in errors.
-#' @authors Gustavo Paterno, Caterina Penone
+#' @author Gustavo Paterno, Caterina Penone
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{samp_phyglm}},
 #' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 #' \code{\link{sensi_plot}}, \code{\link{intra_phyglm}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples
+#' set.seed(6987)
+#' phy = rtree(100)
+#' x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
+#' X = cbind(rep(1,100),x)
+#' y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#' z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
+#' cla <- rep(c("A","B","C","D"), each = 25)
+#' dat = data.frame(y, x, z, cla)
+
+#' intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
+#'                                   clade.col = "cla", times.clade = 30, times.intra = 3,
+#'                                   y.transf = log, Vx = "z", distrib="normal")
+#' summary.sensiClade(intra_clade)
 
 #' @export
 
