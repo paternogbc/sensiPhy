@@ -62,7 +62,7 @@
 #' in the (summary) output.
 #' @author Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-#' \code{\link{influ_phylm}},\code{\link{sensi_plot}}
+#' \code{\link{samp_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -114,7 +114,7 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
   
   
   #List to store information
-  tree.influ <- list ()
+  tree.samp <- list ()
   
   #Start tree loop here
   errors <- NULL
@@ -127,18 +127,18 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[counter]] <- samp_phylm(formula, data = full.data, phy=tree, times = times.samp,
+    tree.samp[[counter]] <- samp_phylm(formula, data = full.data, phy=tree, times = times.samp,
                                    model, breaks=breaks, track = FALSE, verbose = FALSE, ...)
     
     counter = counter + 1
   }
   
-  names(tree.influ) <- trees
+  names(tree.samp) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
-  influ.estimates <- recombine(tree.influ, slot1 = 5)
-  perc.sign <- recombine(tree.influ, slot1 = 6)
+  full.estimates  <- suppressWarnings(recombine(tree.samp, slot1 = 4, slot2 = 1))
+  samp.estimates <- recombine(tree.samp, slot1 = 5)
+  perc.sign <- recombine(tree.samp, slot1 = 6)
 
   
   #Generates output:
@@ -146,7 +146,7 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
               model = model,
               formula = formula,
               full.model.estimates = full.estimates,
-              samp.model.estimates = influ.estimates,
+              samp.model.estimates = samp.estimates,
               sign.analysis = perc.sign,
               data = full.data)
   
