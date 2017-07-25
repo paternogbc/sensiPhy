@@ -21,7 +21,7 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 #' linear regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times}), stores the results and
+#' repeats this many times (controlled by \code{times.samp}), stores the results and
 #' calculates the effects on model parameters. It repeats this operation using n trees, 
 #' randomly picked in a multiPhylo file.
 #'

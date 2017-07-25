@@ -2,7 +2,7 @@
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
 #' species and detecting the effects on parameter estimates in a phylogenetic
-#' linear regression, while taking into account potential
+#' logistic regression, while taking into account potential
 #' interactions with intraspecific variability.
 #'
 #' @param formula The model formula
@@ -11,11 +11,9 @@
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param times.samp The number of times species are randomly deleted for each
 #' \code{break}.
-#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"}) 
+#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"}) 
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
-#' #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
-#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
@@ -25,14 +23,14 @@
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
-#' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
+#' Warning: we recommend to use normal distribution with Vx = standard deviation of the mean.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #'
 #' This function randomly removes a given percentage of species (controlled by
-#' \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
-#' linear regression model without these species using \code{\link[phylolm]{phylolm}},
+#' \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
+#' logistic regression model without these species using \code{\link[phylolm]{phylolm}},
 #' repeats this many times (controlled by \code{times.samp}), stores the results and
 #' calculates the effects on model parameters. 
 #' This operation is repeated \code{times.intra} times for simulated values of the dataset, 
@@ -44,11 +42,11 @@
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+#' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#' @return The function \code{samp_phylm} returns a list with the following
+#' @return The function \code{samp_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -77,7 +75,7 @@
 #' in the (summary) output.
 #' @author Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-#' \code{\link{samp_phylm}},\code{\link{sensi_plot}}
+#' \code{\link{samp_phyglm}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -89,60 +87,56 @@
 #' 
 #' @import ape phylolm
 #' 
-#' @examples 
-#' # Load data:
-#' data(alien)
-#' # Run analysis:
-#' samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
-#' y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-#' data = alien$data, times.tree = 5, times.samp=10)
+#' @examples
+#' set.seed(6987)
+#' phy = rtree(100)
+#' x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
+#' X = cbind(rep(1,100),x)
+#' y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#' z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
+#' dat = data.frame(y, x, z)
+#' #Run sensitivity analysis:
+#' intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy, 
+#'                                times.samp=10, times.intra = 3,
+#'                                breaks=seq(.1,.5,.1),
+#'                                Vx = "z", distrib="normal",x.transf=NULL)
 #' summary(samp)
-#' head(samp$samp.model.estimates)
-#' # Visual diagnostics
-#' \dontrun{
-#' sensi_plot(samp)
-#' # You can specify which graph and parameter ("slope" or "intercept") to print: 
-#' sensi_plot(samp, graphs = 1, param = "slope")
-#' sensi_plot(samp, graphs = 2, param = "intercept")
-#' }
+#' sensi_plot.sensiSamp(samp)
+
 #' @export
 
 
-intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
-                             breaks=seq(.1,.5,.1),model="lambda",
-                             Vy = NULL, Vx = NULL, distrib = "normal",
-                             y.transf = NULL, x.transf = NULL, track=TRUE,...) { 
+intra_samp_phyglm <- function(formula, data, phy, times.samp=10, times.intra = 3,
+                             breaks=seq(.1,.5,.1), 
+                             Vx = NULL, distrib = "normal", x.transf = NULL, 
+                             btol = 50, track=TRUE,...) { 
   
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
+  if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula) != "formula") stop("formula must be class 'formula'")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx and/or Vy")
+  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
   if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
-    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
-  
-  
+
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy)
-  full.data <- datphy[[1]]
-  phy <- datphy[[2]]
+  datphy<-match_dataphy(formula,data,phy, ...)
+  full.data<-datphy[[1]]
+  phy<-datphy[[2]]
   
-  resp <- all.vars(formula)[1]
-  pred <- all.vars(formula)[2]
+  resp1<-all.vars(formula)[1]
+  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
+  pred<-all.vars(formula)[length(all.vars(formula))]
   
-  if(!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
-    full.data[is.na(full.data[, Vy]), Vy] <- 0}
-  
-  if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
-    full.data[is.na(full.data[, Vx]), Vx] <- 0}
+  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
+    full.data[is.na(full.data[,Vx]), Vx] <- 0}
   
   #Function to pick a random value in the interval
-  if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
+  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
+  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
+  
   
   #List to store information
   intra.samp <- list()
@@ -153,37 +147,36 @@ intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
   counter = 1
   
   for (i in 1:times.intra) {
-    ##Set response and predictor variables
-    #Vy is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
-    {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
-    
-    #choose a random value in [mean-se,mean+se] if Vy is provided
-    if (!is.null(Vy))
-    {full.data$respV <- apply(full.data[,c(resp,Vy)],1,function(x)funr(x[1],x[2]))}
-    
+    ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
-    if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
-    {full.data$predV <- stats::model.frame(formula, data = full.data)[,2]}
+    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
     
     #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx))
-    {full.data$predV <- apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    if(!is.null(Vx) && is.null(dim(Vx)))
+    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
     
-    #transform Vy and/or Vx if x.transf and/or y.transf are provided
-    if(!is.null(y.transf)) 
-    {suppressWarnings (full.data$respV <- y.transf(full.data$respV))}
+    full.data$resp1<-full.data[,resp1] #try to improve this in future
+    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
     
+    #transform Vx if x.transf is provided
     if(!is.null(x.transf)) 
     {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
     
     #skip iteration if there are NA's in the dataset
-    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
-    if(sum(is.na(full.data[,c("respV","predV")])>0)) next
+    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
+    if(sum(is.na(full.data[,"predV"])>0)) next
     
     #Run the model
-    intra.samp[[i]] <- samp_phylm(respV~predV, data = full.data, phy=phy, times = times.samp,
-                                  model, breaks=breaks, track = FALSE, verbose = FALSE,...)
+    if(length(all.vars(formula))>2) {
+      intra.samp[[i]] <- samp_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy, times = times.samp,
+                                     breaks=breaks, btol=btol, method="logistic_MPLE",
+                                     track = FALSE, verbose = FALSE,...)
+    } else 
+      intra.samp[[i]] <- samp_phyglm(resp1~predV, data = full.data, phy=phy, times = times.samp,
+                                     breaks=breaks, btol=btol, method="logistic_MPLE",
+                                     track = FALSE, verbose = FALSE,...)
+    
+    
     
     counter = counter + 1
   }
@@ -195,10 +188,9 @@ intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
   influ.estimates <- recombine(intra.samp, slot1 = 5)
   perc.sign <- recombine(intra.samp, slot1 = 6)
   
-  
   #Generates output:
   res <- list(call = match.call(),
-              model = model,
+              model = "logistic_MPLE",
               formula = formula,
               full.model.estimates = full.estimates,
               samp.model.estimates = influ.estimates,

@@ -88,7 +88,7 @@
 intra_phyglm <- function(formula, data, phy,
                           Vx=NULL, n.intra = 30,
                           x.transf = NULL,
-                          distrib="uniform", btol=50, track=TRUE,...){
+                          distrib="normal", btol=50, track=TRUE,...){
   #Error check
   if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
@@ -140,7 +140,7 @@ intra_phyglm <- function(formula, data, phy,
     full.data$resp1<-full.data[,resp1] #try to improve this in future
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
     
-    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    #transform Vx if x.transf is provided
     if(!is.null(x.transf)) 
     {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
     

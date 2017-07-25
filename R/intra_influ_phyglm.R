@@ -18,7 +18,7 @@
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
-#' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
+#' Warning: we recommend to use normal distribution with Vx = standard deviation of the mean.
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -65,7 +65,7 @@
 #' data(alien)
 #' # run analysis:
 #' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
-#' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vy="SD_gesta",Vx=NULL,
+#' data=alien$data,model="lambda",y.transf = "log",x.transf = NULL,Vx="SD_adultMass",
 #' times=3,distrib = "normal")
 #' # To check summary results:
 #'summary(intra_influ)
@@ -97,7 +97,7 @@
 intra_influ_phyglm <- function(formula, data, phy,
                          Vx=NULL, n.intra = 30,
                          x.transf = NULL,
-                         distrib="uniform", cutoff =2, 
+                         distrib="normal", cutoff =2, 
                          btol=50, track=TRUE,...){
   #Error check
   if(is.null(Vx)) stop("Vx must be defined")
@@ -147,7 +147,7 @@ intra_influ_phyglm <- function(formula, data, phy,
     full.data$resp1<-full.data[,resp1] #try to improve this in future
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
     
-    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    #transform Vx if x.transf is provided
     if(!is.null(x.transf)) 
     {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
     

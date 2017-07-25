@@ -94,8 +94,8 @@
 #' data(alien)
 #' # Run analysis:
 #' samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
-#' y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-#' data = alien$data, times.tree = 5, times.samp=10)
+#'                          y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
+#'                          data = alien$data, times.tree = 5, times.samp=10)
 #' summary(samp)
 #' head(samp$samp.model.estimates)
 #' # Visual diagnostics
