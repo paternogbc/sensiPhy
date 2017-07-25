@@ -72,15 +72,15 @@
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#' intra_influ <- interaction_intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
+#' intra_influ <- intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
 #' data=alien$data,model="lambda",y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
 #' n.intra=30,distrib = "normal")
 #' summary(intra_influ)
-#' sensi_plot.sensiINTER_Influ(intra_influ)
+#' sensi_plot(intra_influ)
 #'  
 #' @export
 
-interaction_intra_influ_phylm <- function(formula, data, phy,
+intra_influ_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
                         n.intra = 10, distrib = "normal",

@@ -78,7 +78,7 @@
 #' # Load data:
 #' data(alien)
 #' # Run analysis:
-#' samp <- interaction_tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
+#' samp <- tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
 #'                                     data = alien$data, times.tree = 5, times.samp=10)
 #' summary(samp)
 #' head(samp$samp.model.estimates)
@@ -92,7 +92,7 @@
 #' @export
 
 
-interaction_tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
+tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
                                         breaks=seq(.1,.5,.1), model = "lambda", track = TRUE,...) {
   
 

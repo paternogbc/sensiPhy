@@ -78,12 +78,12 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'samp <- interaction_tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, times.samp=10) 
+#'samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, times.samp=10) 
 #'summary(samp)
 #'sensi_plot(samp)
 
 
-interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
+tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
                                          breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
   
   # Error checking:

@@ -83,7 +83,7 @@
 #' cla <- rep(c("A","B","C","D","E"), each = 30)
 #' dat = data.frame(y, x, cla)
 #' # Run sensitivity analysis:
-#' clade <- interaction_tree_clade_phyglm(y ~ x, phy = mphy, data = dat, times.tree = 3, times.clade = 5, clade.col = "cla")
+#' clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, times.tree = 3, times.clade = 5, clade.col = "cla")
 #'# To check summary results and most influential clades:
 #'summary(clade)
 #'# Visual diagnostics for clade removal:
@@ -95,7 +95,7 @@
 #'}
 #' @export
 
-interaction_tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5, 
+tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5, 
                                          times.clade = 100, times.tree = 2, btol=50, track = TRUE,...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
