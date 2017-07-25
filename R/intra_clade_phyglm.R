@@ -93,7 +93,7 @@
 #' intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
 #'                                   clade.col = "cla", times.clade = 30, times.intra = 3,
 #'                                   y.transf = log, Vx = "z", distrib="normal")
-#' summary.sensiClade(intra_clade)
+#' summary(intra_clade)
 
 #' @export
 

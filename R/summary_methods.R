@@ -1,4 +1,4 @@
-### Summary method for class: sensiClade:--------------------------------------
+### Summary method for class: sensiClade, sensiIntra_Clade, sensiTreeClade:--------------------------------------
 
 #' @export
 summary.sensiClade <- function(object, ...){
@@ -106,7 +106,7 @@ summary.sensiInflu <- function(object, ...){
     
 }
 
-### Summary method for class: sensiIntra_Influ and sensiTree_Influ:--------------------------------------
+### Summary method for class: sensiIntra_Influ, sensiTree_Influ:--------------------------------------
 
 #' @export
 summary.sensiINTER_Influ <- function(object, ...){
@@ -141,7 +141,7 @@ summary.sensiINTER_Influ <- function(object, ...){
   
 }
 
-### Summary method for class: sensiSamp:----------------------------------------
+### Summary method for class: sensiSamp, sensiTree_Samp, sensiIntra_Samp:----------------------------------------
 
 #' @export
 summary.sensiSamp <- function(object, ...){
@@ -188,7 +188,7 @@ summary.sensiTree <- function(object, ...){
     return(res)
 }
 
-### Summary method for class: sensiIntra_Tree:--------------------------------------
+### Summary method for class: sensiIntra_Tree, sensiTree_Intra:--------------------------------------
 
 #' @export
 summary.sensiIntra_Tree <- function(object, ...){
