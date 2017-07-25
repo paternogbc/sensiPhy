@@ -61,12 +61,18 @@
 #'  B: Biological Sciences, 368: 20120341.
 #'  
 #' @examples 
-#'# Load data:
+#'data(alien)
+#'# Run sensitivity analysis:
+#'intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" , data = alien.data, phy = alien.phy[[1]])
+#'summary(intra)
+#'sensi_plot(intra)
+#'sensi_plot(intra, graphs = 1)
+#'sensi_plot(intra, graphs = 2)
 #' @export
 
 
 intra_physig <- function(trait.col, data, phy,
-                        V = NULL, n.intra = 30, distrib = "normal",
+                        V = NULL, n.intra = 100, distrib = "normal",
                         method = "K", track = TRUE, ...){
   #Error check
   if(is.null(V)) stop("V must be defined")
