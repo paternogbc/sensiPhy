@@ -64,11 +64,15 @@
 #'  B: Biological Sciences, 368: 20120341.
 #' @examples 
 #' \dontrun{
-#' data("primates")
-#' c <- clade_physig(trait.col = "homeRange", data = primates.data, 
-#' phy = primates.phy[[1]], clade.col = "family")
-#' summary(c)
-#' sensi_plot(c, clade = "Cercopithecidae")
+#'data(alien)
+#'# Logtransform data
+#'alien.data$logMass <- log(alien.data$adultMass) 
+#'# Run sensitivity analysis:
+#'clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
+#'                  phy = alien.phy[[1]], clade.col = "family", method = "K")
+#'summary(clade)
+#'sensi_plot(clade, "Bovidae")
+#'sensi_plot(clade, "Sciuridae")
 #'}
 #' @export
 
