@@ -96,8 +96,7 @@ intra_phyglm <- function(formula, data, phy,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
      stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
-                                 is provided for Vx")
+  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
 
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy, ...)
@@ -126,7 +125,7 @@ intra_phyglm <- function(formula, data, phy,
   counter=1
   errors <- NULL
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
   for (i in 1:n.intra) {
     
     ##Set predictor variable
@@ -183,7 +182,7 @@ intra_phyglm <- function(formula, data, phy,
       
     }
   }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
