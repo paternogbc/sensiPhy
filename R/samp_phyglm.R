@@ -136,7 +136,7 @@ for (i in limit){
             crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
             mod <- try(phylolm::phyloglm(formula, data = crop.data,
                             phy = crop.phy, method = "logistic_MPLE",
-                            btol = btol, ...), TRUE)
+                            btol = btol), TRUE)
             
             if(isTRUE(class(mod)=="try-error")) { next }
             else { 
