@@ -79,6 +79,8 @@
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
 #'samp <- interaction_tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, times.samp=10) 
+#'summary(samp)
+#'sensi_plot(samp)
 
 
 interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
@@ -124,7 +126,7 @@ interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, ti
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(tree.influ, slot1 = 4, slot2 = 1)
+  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
   influ.estimates <- recombine(tree.influ, slot1 = 5)
   perc.sign <- recombine(tree.influ, slot1 = 6)
   
@@ -139,7 +141,7 @@ interaction_tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, ti
               data = full.data)
   
   
-  class(res) <- c("sensiTree_Influ","sensiTree_InfluL")
+  class(res) <- c("sensiTree_Samp","sensiTree_SampL")
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some species deletion presented errors, please check: output$errors")}
