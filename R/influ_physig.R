@@ -62,12 +62,13 @@
 #' 
 #' @importFrom phytools phylosig
 #' @examples 
-#' # Load data:
-#' data(alien)
-#' # run analysis:
-#'influ <- influ_physig("adultMass", phy = alien.phy[[1]], 
-#'data = alien.data, method = "K")
-#' # To check summary results:
+#'# Load data:
+#'data(alien)
+#'# Logtransform data
+#'alien.data$logMass <- log(alien.data$adultMass) 
+#'# Run sensitivity analysis:
+#'influ <- influ_physig("logMass", data = alien.data, phy = alien.phy[[1]])
+#'# To check summary results:
 #'summary(influ)
 #'# Most influential speciesL
 #'influ$influential.species
