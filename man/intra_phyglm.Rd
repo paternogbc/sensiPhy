@@ -4,8 +4,8 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, times = 30, x.transf = NULL,
-  distrib = "uniform", btol = 50, track = TRUE, ...)
+intra_phyglm(formula, data, phy, Vx = NULL, n.intra = 30, x.transf = NULL,
+  distrib = "normal", btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}
@@ -17,8 +17,8 @@ intra_phyglm(formula, data, phy, Vx = NULL, times = 30, x.transf = NULL,
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
-\item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
-If NULL, \code{times} = 2}
+\item{n.intra}{Number of times to repeat the analysis generating a random value for the predictor variable.
+If NULL, \code{n.intra} = 2}
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
@@ -62,7 +62,7 @@ intraspecific variability in predictor variables.
 }
 \details{
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
-The regression is repeated \code{times} times. At each iteration the function generates a random value
+The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
 To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
 package \code{Rmisc}.
@@ -80,7 +80,7 @@ Output can be visualised using \code{sensi_plot}.
   
 When Vx exceeds X negative (or null) values can be generated, this might cause problems
 for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
 }
 
 \examples{

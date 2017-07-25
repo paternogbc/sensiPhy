@@ -23,6 +23,7 @@
 #' @param phy A phylogeny (class 'phylo' or 'multiphylo')
 #' @param verbose Print the number of species that match data and phylogeny and warnings. We highly recommend to use the 
 #' default (verbose = T), but warning and information can be silenced for advanced use.
+#' @param ... Further arguments to be passed to \code{match_dataphy}
 #' @return The function \code{match_dataphy} returns a list with the following
 #' components:
 #' @return \code{data}: Cropped dataset matching phylogeny

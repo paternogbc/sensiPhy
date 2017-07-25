@@ -77,7 +77,7 @@
 #' @export
 
 tree_influ_phyglm <- function(formula, data, phy, times.tree = 2, 
-                                         cutof = 2, btol = 50, track = TRUE,...) {
+                                         cutoff = 2, btol = 50, track = TRUE,...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")

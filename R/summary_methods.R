@@ -116,7 +116,7 @@ summary.sensiINTER_Influ <- function(object, ...){
   influ.model.estimates<-object$influ.model.estimates
   rows.slope <- match(names(sp.slope), influ.model.estimates$species)
   slope <- influ.model.estimates[rows.slope, c("species","slope","DFslope","slope.perc","pval.slope")]
-  slope <- aggregate(slope[,2:5],list(slope$species),mean)
+  slope <- stats::aggregate(slope[,2:5],list(slope$species),mean)
   names(slope)[1]<-"species"
   ord.slope <- order(slope$slope.perc,decreasing = TRUE)
   slope <- slope[ord.slope, ]
@@ -128,7 +128,7 @@ summary.sensiINTER_Influ <- function(object, ...){
   sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
   rows.inter <- match(names(sp.inter), influ.model.estimates$species)
   inter <- influ.model.estimates[rows.inter, c("species","intercept","DFintercept","intercept.perc","pval.intercept")]
-  inter <- aggregate(inter[,2:5],list(inter$species),mean)
+  inter <- stats::aggregate(inter[,2:5],list(inter$species),mean)
   names(inter)[1]<-"species"
   ord.inter <- order(inter$intercept.perc,decreasing = TRUE)
   inter <- inter[ord.inter, ]

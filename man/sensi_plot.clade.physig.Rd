@@ -14,16 +14,16 @@
 \item{...}{further arguments to methods.}
 }
 \description{
-\code{plot_influ_physig} Plot results from \code{influ_physig}
+\code{plot_clade_physig} Plot results from \code{clade_physig}
 }
 \details{
 For 'x' from clade_physig:
 
-Graph 2: Distribution of the simulated slopes (Null distribution
+Graph 1: Distribution of the simulated signal estimates (Null distribution
 for a given clade sample size).
-The red dashed line represents the estimated slope for the reduced model 
-(without the focal clade) and the black line represents the slope for the 
-full model.
+The red dashed line represents the estimated signal for the reduced data 
+(without the focal clade) and the black line represents the signal estimate
+ for the full data.
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[phytools]{phylosig}}

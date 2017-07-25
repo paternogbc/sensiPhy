@@ -8,8 +8,8 @@ influ_physig(trait.col, data, phy, method = "K", cutoff = 2, track = TRUE,
   ...)
 }
 \arguments{
-\item{trait.col}{Column name containing values for a single
-continuously distributed trait (e.g. "Body_mass").}
+\item{trait.col}{The name of a column in the provided data frame with trait 
+to be analyzed  (e.g. "Body_mass").}
 
 \item{data}{Data frame containing species traits with row names matching tips
 in \code{phy}.}
@@ -23,7 +23,7 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{...}{further arguments to be passed to phytools::phylosig}
+\item{...}{Further arguments to be passed to \code{\link[phytools]{phylosig}}}
 }
 \value{
 The function \code{influ_physig} returns a list with the following
@@ -36,7 +36,7 @@ components:
 \code{full.data.estimates}: Phylogenetic signal estimate (K or lambda)
 and the P value (for the full data).
 
-\code{influential_species}: List of influential species, both
+\code{influential_species}: List of influential species,
 based on standardised difference in K or lambda. 
 Species are ordered from most influential to less influential and
 only include species with a standardised difference > \code{cutoff}.
@@ -58,22 +58,23 @@ and detects influential species for K or lambda.
 \details{
 This function sequentially removes one species at a time, ans estimates phylogenetic
 signal (K or lambda) using \code{\link[phytools]{phylosig}}, stores the
-results and detects influential species.
+results and detects the most influential species.
 
 \code{influ_physig} detects influential species based on the standardised
 difference in signal estimate (K or lambda) when removing a given species compared
 to the full data estimate (with all species). Species with a standardised difference
 above the value of \code{cutoff} are identified as influential. The default
-value for the cutoff is 2 standardised differences change.
+value for the cutoff is 2 standardised differences in signal estimate.
 
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 # Load data:
 data(alien)
-# run analysis:
-influ <- influ_physig("adultMass", phy = alien$phy[[1]], 
-data = alien$data, method = "K")
+# Logtransform data
+alien.data$logMass <- log(alien.data$adultMass) 
+# Run sensitivity analysis:
+influ <- influ_physig("logMass", data = alien.data, phy = alien.phy[[1]])
 # To check summary results:
 summary(influ)
 # Most influential speciesL

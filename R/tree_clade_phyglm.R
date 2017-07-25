@@ -16,7 +16,6 @@
 #' randomly in the multiPhylo file.
 #' If NULL, \code{times} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}
-#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
