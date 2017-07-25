@@ -11,7 +11,7 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
-#' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})
+#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})
 #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
@@ -28,7 +28,7 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}, and detects
-#' influential species by sequentially deleting one at a time. The regression is repeated \code{n.intra} times for 
+#' influential species by sequentially deleting one at a time. The regression is repeated \code{times.intra} times for 
 #' simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
 #' generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
 #' detect the influential species within that iteration. 
@@ -52,11 +52,11 @@
 #' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. 
 #' 
-#' Setting \code{n.intra} at high values can take a long time to exectue, since the total number of iterations 
-#' equals \code{n.intra * nrow(data)}.
+#' Setting \code{times.intra} at high values can take a long time to exectue, since the total number of iterations 
+#' equals \code{times.intra * nrow(data)}.
 #'
 #' The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
-#' of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
+#' of length \code{times.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
 #' regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
 #' species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
 #' Percentage change and P-value across all species that occured as most influential species in at least one simulation.
@@ -74,7 +74,7 @@
 #' # run analysis:
 #' intra_influ <- intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
 #' data=alien$data,model="lambda",y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-#' n.intra=30,distrib = "normal")
+#' times.intra=30,distrib = "normal")
 #' summary(intra_influ)
 #' sensi_plot(intra_influ)
 #'  
@@ -83,7 +83,7 @@
 intra_influ_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
-                        n.intra = 10, distrib = "normal",
+                        times.intra = 10, distrib = "normal",
                         model = "lambda", cutoff=2,
                         track = TRUE, ...){
   #Error check
@@ -121,10 +121,10 @@ intra_influ_phylm <- function(formula, data, phy,
   #Start intra loop here
   species.NA <- list()
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
+  pb <- utils::txtProgressBar(min = 0, max = N*times.intra, style = 3)
   counter = 1
 
-  for (i in 1:n.intra) {
+  for (i in 1:times.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
@@ -161,7 +161,7 @@ intra_influ_phylm <- function(formula, data, phy,
     counter = counter + N
   }
   
-  names(intra.influ)<-1:n.intra
+  names(intra.influ)<-1:times.intra
   
   on.exit(close(pb))
   
