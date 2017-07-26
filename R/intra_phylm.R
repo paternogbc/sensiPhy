@@ -14,8 +14,8 @@
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times} = 30
+#' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+#' If NULL, \code{n.intra} = 30
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -25,7 +25,7 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-#' The regression is repeated \code{times} times. At each iteration the function generates a random value
+#' The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
 #' package \code{Rmisc}.
@@ -42,7 +42,7 @@
 #' @section Warning:  
 #' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+#' be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'  
 #' @return The function \code{intra_phylm} returns a list with the following
 #' components:
@@ -73,7 +73,7 @@
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
 #'intra <- intra_phylm(gestaLen ~ adultMass, y.transf = log, x.transf = log, 
-#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", times = 30)
+#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", n.intra = 30)
 #'# To check summary results:
 #'summary(intra)
 #'# Visual diagnostics
@@ -85,7 +85,7 @@
 intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
-                        times = 30, distrib = "normal",
+                        n.intra = 30, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
@@ -131,8 +131,8 @@ intra_phylm <- function(formula, data, phy,
   counter = 1
   errors <- NULL
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
-  for (i in 1:times) {
+  pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
@@ -209,11 +209,11 @@ intra_phylm <- function(formula, data, phy,
                           mean = apply(intra.model.estimates, 2, mean),
                           sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- times - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(intra.model.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
   warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function

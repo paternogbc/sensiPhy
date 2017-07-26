@@ -9,9 +9,9 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times.samp The number of times species are randomly deleted for each
+#' @param n.sim The number of times species are randomly deleted for each
 #' \code{break}.
-#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"}) 
+#' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"}) 
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
@@ -31,9 +31,9 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
 #' logistic regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times.samp}), stores the results and
+#' repeats this many times (controlled by \code{n.sim}), stores the results and
 #' calculates the effects on model parameters. 
-#' This operation is repeated \code{times.intra} times for simulated values of the dataset, 
+#' This operation is repeated \code{n.intra} times for simulated values of the dataset, 
 #' taking into account intraspecific variation. At each iteration, the function generates a 
 #' random value for each row in the dataset using the standard deviation or errors supplied, and 
 #' evaluates the effects of sampling within that iteration.
@@ -97,7 +97,7 @@
 #' dat = data.frame(y, x, z)
 #' #Run sensitivity analysis:
 #' intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy, 
-#'                                times.samp=10, times.intra = 3,
+#'                                n.sim=10, n.intra = 3,
 #'                                breaks=seq(.1,.5,.1),
 #'                                Vx = "z", distrib="normal",x.transf=NULL)
 #' summary(samp)
@@ -106,7 +106,7 @@
 #' @export
 
 
-intra_samp_phyglm <- function(formula, data, phy, times.samp=10, times.intra = 3,
+intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
                              breaks=seq(.1,.5,.1), 
                              Vx = NULL, distrib = "normal", x.transf = NULL, 
                              btol = 50, track=TRUE,...) { 
@@ -146,7 +146,7 @@ intra_samp_phyglm <- function(formula, data, phy, times.samp=10, times.intra = 3
   errors <- NULL
   counter = 1
   
-  for (i in 1:times.intra) {
+  for (i in 1:n.intra) {
     ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
@@ -168,11 +168,11 @@ intra_samp_phyglm <- function(formula, data, phy, times.samp=10, times.intra = 3
     
     #Run the model
     if(length(all.vars(formula))>2) {
-      intra.samp[[i]] <- samp_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy, times = times.samp,
+      intra.samp[[i]] <- samp_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy, n.sim = n.sim,
                                      breaks=breaks, btol=btol, method="logistic_MPLE",
                                      track = FALSE, verbose = FALSE,...)
     } else 
-      intra.samp[[i]] <- samp_phyglm(resp1~predV, data = full.data, phy=phy, times = times.samp,
+      intra.samp[[i]] <- samp_phyglm(resp1~predV, data = full.data, phy=phy, n.sim = n.sim,
                                      breaks=breaks, btol=btol, method="logistic_MPLE",
                                      track = FALSE, verbose = FALSE,...)
     
@@ -181,7 +181,7 @@ intra_samp_phyglm <- function(formula, data, phy, times.samp=10, times.intra = 3
     counter = counter + 1
   }
   
-  names(intra.samp)<-1:times.intra
+  names(intra.samp)<-1:n.intra
   
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.samp, slot1 = 4, slot2 = 1))

@@ -8,9 +8,9 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times.samp The number of times species are randomly deleted for each
+#' @param n.sim The number of times species are randomly deleted for each
 #' \code{break}.
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param btol Bound on searching space. For details see \code{phyloglm}
@@ -78,19 +78,19 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, times.samp=10) 
+#'samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, n.sim=10) 
 #'summary(samp)
 #'sensi_plot(samp)
 
 
-tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
+tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
                                          breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
   
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   
   #Match data and phy
@@ -98,8 +98,8 @@ tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2
   phy <- data_phy$phy
   full.data <- data_phy$data
 
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   
   #List to store information
@@ -116,7 +116,7 @@ tree_samp_phyglm <- function(formula, data, phy, times.samp = 30, times.tree = 2
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[counter]] <- samp_phyglm(formula, data = full.data, phy=tree, times = times.samp,
+    tree.influ[[counter]] <- samp_phyglm(formula, data = full.data, phy=tree, n.sim = n.sim,
                                     breaks=breaks, btol = btol, track = FALSE, verbose = FALSE, ...)
     
     counter = counter + 1

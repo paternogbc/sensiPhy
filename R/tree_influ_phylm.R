@@ -10,7 +10,7 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -68,7 +68,7 @@
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, data = alien$data, times.tree = 3)
+#' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, data = alien$data, n.tree = 20)
 #' # To check summary results:
 #'summary(tree_influ)
 #'# Most influential speciesL
@@ -80,22 +80,22 @@
 #' @export
 
 
-tree_influ_phylm <- function(formula, data, phy, times.tree = 2, 
+tree_influ_phylm <- function(formula, data, phy, n.tree = 2, 
                                          cutoff = 2, model = "lambda", track = TRUE,...) {
   
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
 
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   
   #List to store information

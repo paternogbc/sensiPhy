@@ -9,9 +9,9 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times.samp The number of times species are randomly deleted for each
+#' @param n.sim The number of times species are randomly deleted for each
 #' \code{break}.
-#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"}) 
+#' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"}) 
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
@@ -33,9 +33,9 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 #' linear regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times.samp}), stores the results and
+#' repeats this many times (controlled by \code{n.sim}), stores the results and
 #' calculates the effects on model parameters. 
-#' This operation is repeated \code{times.intra} times for simulated values of the dataset, 
+#' This operation is repeated \code{n.intra} times for simulated values of the dataset, 
 #' taking into account intraspecific variation. At each iteration, the function generates a 
 #' random value for each row in the dataset using the standard deviation or errors supplied, and 
 #' evaluates the effects of sampling within that iteration.
@@ -95,7 +95,7 @@
 #' # Run analysis:
 #' samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
 #'                          y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-#'                          data = alien$data, times.tree = 5, times.samp=10)
+#'                          data = alien$data, times.tree = 5, n.sim=10)
 #' summary(samp)
 #' head(samp$samp.model.estimates)
 #' # Visual diagnostics
@@ -108,7 +108,7 @@
 #' @export
 
 
-intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
+intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
                              breaks=seq(.1,.5,.1),model="lambda",
                              Vy = NULL, Vx = NULL, distrib = "normal",
                              y.transf = NULL, x.transf = NULL, track=TRUE,...) { 
@@ -152,7 +152,7 @@ intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
   errors <- NULL
   counter = 1
   
-  for (i in 1:times.intra) {
+  for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
@@ -182,13 +182,13 @@ intra_samp_phylm <- function(formula, data, phy, times.samp=10, times.intra = 3,
     if(sum(is.na(full.data[,c("respV","predV")])>0)) next
     
     #Run the model
-    intra.samp[[i]] <- samp_phylm(respV~predV, data = full.data, phy=phy, times = times.samp,
+    intra.samp[[i]] <- samp_phylm(respV~predV, data = full.data, phy=phy, n.sim = n.sim,
                                     model, breaks=breaks, track = FALSE, verbose = FALSE,...)
 
     counter = counter + 1
   }
   
-  names(intra.samp)<-1:times.intra
+  names(intra.samp)<-1:n.intra
   
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.samp, slot1 = 4, slot2 = 1))

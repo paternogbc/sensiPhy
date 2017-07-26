@@ -10,7 +10,7 @@
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param cutoff The cutoff value used to identify for influential species
 #' (see Details)
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
@@ -71,26 +71,26 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, times.tree = 3)
+#'influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 20)
 #'summary(influ)
 #'sensi_plot(influ)
 #' @export
 
-tree_influ_phyglm <- function(formula, data, phy, times.tree = 2, 
+tree_influ_phyglm <- function(formula, data, phy, n.tree = 2, 
                                          cutoff = 2, btol = 50, track = TRUE,...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
   
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   
   #List to store information

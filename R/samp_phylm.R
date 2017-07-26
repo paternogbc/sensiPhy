@@ -8,7 +8,7 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times The number of times species are randomly deleted for each
+#' @param n.sim The number of times species are randomly deleted for each
 #' \code{break}.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
@@ -19,7 +19,7 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 #' linear regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times}), stores the results and
+#' repeats this many times (controlled by \code{n.sim}), stores the results and
 #' calculates the effects on model parameters.
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
@@ -76,7 +76,7 @@
 #' data(alien)
 #' # Run analysis:
 #' samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
-#' data = alien$data, times = 10)
+#' data = alien$data, n.sim = 10)
 #' summary(samp)
 #' head(samp$samp.model.estimates)
 #' # Visual diagnostics
@@ -88,7 +88,7 @@
 #' }
 #' @export
 
-samp_phylm <- function(formula,data,phy,times=30,
+samp_phylm <- function(formula,data,phy,n.sim=30,
                          breaks=seq(.1,.5,.1),model="lambda",track=TRUE,...){
 # Basic error checking:
 if(class(formula) != "formula") 
@@ -128,13 +128,13 @@ samp.model.estimates <-
                "AIC"= numeric(),"optpar" = numeric())
 
 #Loops over breaks, remove percentage of species determined by 'breaks
-#and repeat determined by 'times'.
+#and repeat determined by 'n.sim'.
 counter <- 1
 limit <- sort(round( (breaks) * nrow(full.data),digits=0))
-NL <- length(breaks) * times
+NL <- length(breaks) * n.sim
 pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
 for (i in limit){
-    for (j in 1:times){
+    for (j in 1:n.sim){
         exclude <- sample(1:N,i)
         crop.data <- full.data[-exclude,]
         crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
@@ -192,14 +192,14 @@ samp.model.estimates$sDFslope     <- sDFslope
 
 #Calculates percentages of signficant intercepts & slopes within breaks.
 res                 <- samp.model.estimates
-times               <- table(res$n.remov)
+n.sim               <- table(res$n.remov)
 breaks              <- unique(res$n.percent)
 sign.intercept      <- res$pval.intercept > .05
 sign.slope          <- res$pval.slope > .05
 res$sign.intercept  <- sign.intercept
 res$sign.slope      <- sign.slope
-perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / times
-perc.sign.slope     <- 1-(with(res,tapply(sign.slope,n.remov,sum))) / times
+perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / n.sim
+perc.sign.slope     <- 1-(with(res,tapply(sign.slope,n.remov,sum))) / n.sim
 mean.sDFslope       <- with(res,tapply(sDFslope,n.remov,mean))
 mean.sDFintercept   <- with(res,tapply(sDFintercept,n.remov,mean))
 mean.perc.intercept <- with(res,tapply(intercept.perc,n.remov,mean))

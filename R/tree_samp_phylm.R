@@ -8,9 +8,9 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param times.samp The number of times species are randomly deleted for each
+#' @param n.sim The number of times species are randomly deleted for each
 #' \code{break}.
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
@@ -21,7 +21,7 @@
 #' This function randomly removes a given percentage of species (controlled by
 #' \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 #' linear regression model without these species using \code{\link[phylolm]{phylolm}},
-#' repeats this many times (controlled by \code{times.samp}), stores the results and
+#' repeats this many times (controlled by \code{n.sim}), stores the results and
 #' calculates the effects on model parameters. It repeats this operation using n trees, 
 #' randomly picked in a multiPhylo file.
 #'
@@ -79,7 +79,7 @@
 #' data(alien)
 #' # Run analysis:
 #' samp <- tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
-#'                                     data = alien$data, times.tree = 5, times.samp=10)
+#'                                     data = alien$data, n.tree = 5, n.sim=10)
 #' summary(samp)
 #' head(samp$samp.model.estimates)
 #' # Visual diagnostics
@@ -92,7 +92,7 @@
 #' @export
 
 
-tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2, 
+tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
                                         breaks=seq(.1,.5,.1), model = "lambda", track = TRUE,...) {
   
 
@@ -100,7 +100,7 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(length(breaks) < 2)  stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   if((model == "trend") & (sum(is.ultrametric(phy))>1)) stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   
@@ -109,8 +109,8 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
   phy <- data_phy$phy
   full.data <- data_phy$data
   
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   
   #List to store information
@@ -127,7 +127,7 @@ tree_samp_phylm <- function(formula, data, phy, times.samp = 30, times.tree = 2,
     #Select tree
     tree <- phy[[j]]
     
-    tree.samp[[counter]] <- samp_phylm(formula, data = full.data, phy=tree, times = times.samp,
+    tree.samp[[counter]] <- samp_phylm(formula, data = full.data, phy=tree, n.sim = n.sim,
                                    model, breaks=breaks, track = FALSE, verbose = FALSE, ...)
     
     counter = counter + 1
