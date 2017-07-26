@@ -1,4 +1,4 @@
-### Summary method for class: sensiClade, sensiIntra_Clade, sensiTreeClade:--------------------------------------
+### Summary method for class: sensiClade:--------------------------------------
 
 #' @export
 summary.sensiClade <- function(object, ...){
@@ -76,7 +76,202 @@ summary.sensiClade <- function(object, ...){
     res <- list(stats.slo[ord.slo, ], stats.int[ord.slo, ])
     names(res) <- c("Slope", "Intercept")
     res
+}
+
+### Summary method for class: sensiIntra_Clade:--------------------------------------
+
+#' @export
+summary.sensiIntra_Clade <- function(object, ...){
+  ### Permutation test:
+  ce <- object$clade.model.estimates
+  nd <- object$null.dist
+  c <- levels(nd$clade)
+  it <- unique(nd$iteration)
+  
+  
+  stats.slo <- data.frame("clade removed" = rep(c,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
+                          "slope" = numeric(length(c)),
+                          "DFslope" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "Pval" = numeric(length(c)),
+                          "m.null.slope" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  stats.int <- data.frame("clade removed" = rep(c,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
+                          "intercept" = numeric(length(c)),
+                          "DFintercept" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "Pval" = numeric(length(c)),
+                          "m.null.intercept" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  aa <- 1
+
+    for(j in c) {
+      for(i in 1:length(it)){
+    
+    nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
+    ces <- ce[ce$clade == j & ce$iteration == it[i], ] # reduced model estimates
+    times <- nrow(nes)
+    
+    ### Permutation test SLOPE:
+    if (ces$DFslope > 0){
+      p.slo <- sum(nes$slope >= ces$slope)/times
     }
+    if (ces$DFslope < 0){
+      p.slo <- sum(nes$slope <= ces$slope)/times
+    }
+    
+    stats.slo[aa, -c(1:2)] <- data.frame(
+      slope = ces$slope,
+      DFslope = ces$DFslope,
+      ces$slope.perc,
+      Pval = ces$pval.slope,
+      m.null.slope = mean((nes$slope)),
+      Pval.randomization = p.slo)
+    
+    names(stats.slo)[5] <- "Change (%)" 
+    
+    ### Permutation test intercept:
+    if (ces$DFintercept > 0){
+      p.int <- sum(nes$intercept >= ces$intercept)/times
+    }
+    if (ces$DFintercept < 0){
+      p.int <- sum(nes$intercept <= ces$intercept)/times
+    }
+    
+    stats.int[aa, -c(1:2)] <- data.frame(
+      intercept = ces$intercept,
+      DFintercept = ces$DFintercept,
+      ces$intercept.perc,
+      Pval = ces$pval.slope,
+      m.null.intercept = mean((nes$intercept)),
+      Pval.randomization = p.int)
+    
+    names(stats.int)[5] <- "Change (%)"
+    
+    aa <- aa+1
+      }
+  }
+  
+  #calculate means and number of P.vals<0.005 for each clade
+  perc.ran.slo <- ((stats::aggregate(stats.slo$Pval.randomization<=0.05,by=list(stats.slo$clade.removed),FUN=sum))$x)/length(it)*100
+  stats.slo <- stats::aggregate(.~clade.removed, data=stats.slo, mean)
+  stats.slo$perc.ran.slo<-round(perc.ran.slo,1)
+  
+  names(stats.slo)[9] <-"Non random (%)"
+  
+  perc.ran.int <- ((stats::aggregate(stats.int$Pval.randomization<=0.05,by=list(stats.int$clade.removed),FUN=sum))$x)/length(it)*100
+  stats.int <- stats::aggregate(.~clade.removed, data=stats.int, mean)
+  stats.int$perc.ran.int<-round(perc.ran.int,1)
+
+  names(stats.int)[9] <-"Non random (%)"
+  
+  ### Sort by % of change:
+  ord.slo <- order(stats.slo$`Change (%)`, decreasing = TRUE)
+  
+  res <- list(stats.slo[ord.slo, ], stats.int[ord.slo, ])
+  names(res) <- c("Slope", "Intercept")
+  res
+}
+
+
+### Summary method for class: sensiTree_Clade:--------------------------------------
+
+#' @export
+summary.sensiTree_Clade <- function(object, ...){
+  ### Permutation test:
+  ce <- object$clade.model.estimates
+  nd <- object$null.dist
+  c <- levels(nd$clade)
+  it <- unique(nd$iteration)
+  
+  
+  stats.slo <- data.frame("clade removed" = rep(c,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
+                          "slope" = numeric(length(c)),
+                          "DFslope" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "Pval" = numeric(length(c)),
+                          "m.null.slope" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  stats.int <- data.frame("clade removed" = rep(c,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
+                          "intercept" = numeric(length(c)),
+                          "DFintercept" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "Pval" = numeric(length(c)),
+                          "m.null.intercept" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  aa <- 1
+  
+  for(j in c) {
+    for(i in 1:length(it)){
+      
+      nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
+      ces <- ce[ce$clade == j & ce$iteration == it[i], ] # reduced model estimates
+      times <- nrow(nes)
+      
+      ### Permutation test SLOPE:
+      if (ces$DFslope > 0){
+        p.slo <- sum(nes$slope >= ces$slope)/times
+      }
+      if (ces$DFslope < 0){
+        p.slo <- sum(nes$slope <= ces$slope)/times
+      }
+      
+      stats.slo[aa, -c(1:2)] <- data.frame(
+        slope = ces$slope,
+        DFslope = ces$DFslope,
+        ces$slope.perc,
+        Pval = ces$pval.slope,
+        m.null.slope = mean((nes$slope)),
+        Pval.randomization = p.slo)
+      
+      names(stats.slo)[5] <- "Change (%)" 
+      
+      ### Permutation test intercept:
+      if (ces$DFintercept > 0){
+        p.int <- sum(nes$intercept >= ces$intercept)/times
+      }
+      if (ces$DFintercept < 0){
+        p.int <- sum(nes$intercept <= ces$intercept)/times
+      }
+      
+      stats.int[aa, -c(1:2)] <- data.frame(
+        intercept = ces$intercept,
+        DFintercept = ces$DFintercept,
+        ces$intercept.perc,
+        Pval = ces$pval.slope,
+        m.null.intercept = mean((nes$intercept)),
+        Pval.randomization = p.int)
+      
+      names(stats.int)[5] <- "Change (%)"
+      
+      aa <- aa+1
+    }
+  }
+  
+  #calculate means and number of P.vals<0.005 for each clade
+  perc.ran.slo <- ((stats::aggregate(stats.slo$Pval.randomization<=0.05,by=list(stats.slo$clade.removed),FUN=sum))$x)/length(it)*100
+  stats.slo <- stats::aggregate(.~clade.removed, data=stats.slo, mean)
+  stats.slo$perc.ran.slo<-round(perc.ran.slo,1)
+  
+  names(stats.slo)[9] <-"Non random (%)"
+  
+  perc.ran.int <- ((stats::aggregate(stats.int$Pval.randomization<=0.05,by=list(stats.int$clade.removed),FUN=sum))$x)/length(it)*100
+  stats.int <- stats::aggregate(.~clade.removed, data=stats.int, mean)
+  stats.int$perc.ran.int<-round(perc.ran.int,1)
+  
+  names(stats.int)[9] <-"Non random (%)"
+  
+  ### Sort by % of change:
+  ord.slo <- order(stats.slo$`Change (%)`, decreasing = TRUE)
+  
+  res <- list(stats.slo[ord.slo, ], stats.int[ord.slo, ])
+  names(res) <- c("Slope", "Intercept")
+  res
+}
 
 ### Summary method for class: sensiInflu:--------------------------------------
 
@@ -106,10 +301,45 @@ summary.sensiInflu <- function(object, ...){
     
 }
 
-### Summary method for class: sensiIntra_Influ, sensiTree_Influ:--------------------------------------
+### Summary method for class: sensiIntra_Influ:--------------------------------------
 
 #' @export
-summary.sensiINTER_Influ <- function(object, ...){
+summary.sensiIntra_Influ <- function(object, ...){
+  sp.slope <- unlist(as.list(object$influential.species$influ.sp.slope$influ.sp.slope))
+  sp.slope.tab <- table(sp.slope)
+  sp.slope <- sp.slope.tab[order(sp.slope.tab,decreasing=T)] 
+  influ.model.estimates<-object$influ.model.estimates
+  rows.slope <- match(names(sp.slope), influ.model.estimates$species)
+  slope <- influ.model.estimates[rows.slope, c("species","slope","DFslope","slope.perc","pval.slope")]
+  slope <- stats::aggregate(slope[,2:5],list(slope$species),mean)
+  names(slope)[1]<-"species"
+  ord.slope <- order(slope$slope.perc,decreasing = TRUE)
+  slope <- slope[ord.slope, ]
+  rownames(slope) <- NULL
+  colnames(slope) <- c("Species removed", "Slope", "DFslope", "Change(%)", "Pval")
+  
+  sp.inter <-unlist(as.list(object$influential.species$influ.sp.intercept$influ.sp.intercept))
+  sp.inter.tab <- table(sp.inter)
+  sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
+  rows.inter <- match(names(sp.inter), influ.model.estimates$species)
+  inter <- influ.model.estimates[rows.inter, c("species","intercept","DFintercept","intercept.perc","pval.intercept")]
+  inter <- stats::aggregate(inter[,2:5],list(inter$species),mean)
+  names(inter)[1]<-"species"
+  ord.inter <- order(inter$intercept.perc,decreasing = TRUE)
+  inter <- inter[ord.inter, ]
+  rownames(inter) <- NULL
+  colnames(inter) <- c("Species removed", "Intercept", "DFintercept", "Change(%)", "Pval")
+  
+  res <- list("Most Common Influential species for the Slope" = sp.slope, "Mean Slope Estimates" = slope,
+              "Most Common Influential species for the Intercept" = sp.inter, "Mean Intercept Estimates" = inter)
+  return(res)
+  
+}
+
+### Summary method for class: sensiTree_Influ:--------------------------------------
+
+#' @export
+summary.sensiTree_Influ <- function(object, ...){
   sp.slope <- unlist(as.list(object$influential.species$influ.sp.slope$influ.sp.slope))
   sp.slope.tab <- table(sp.slope)
   sp.slope <- sp.slope.tab[order(sp.slope.tab,decreasing=T)] 
@@ -149,17 +379,6 @@ summary.sensiSamp <- function(object, ...){
     sig <- object$sign.analysis
     sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
     sig$perc.sign.slope <- sig$perc.sign.slope * 100
-    if (length(intersect(class(object),c("sensiTree_Samp", "sensiTree_SampL","sensiIntra_Samp","sensiIntra_SampL"))) != 0) {
-      names(sig) <- c("iteration",
-                      "% Species Removed", 
-                      "% Significant Intercepts",
-                      "Mean Intercept Change (%)",
-                      "Mean sDFintercept",
-                      "% Significant Slopes",
-                      "Mean Slope Change (%)",
-                      "Mean sDFslope")}
-    
-    else
     names(sig) <- c("% Species Removed", 
                     "% Significant Intercepts",
                     "Mean Intercept Change (%)",
@@ -167,10 +386,57 @@ summary.sensiSamp <- function(object, ...){
                     "% Significant Slopes",
                     "Mean Slope Change (%)",
                     "Mean sDFslope")
+    
     message(paste(simu, "simulations saved," ,
                   "see output$samp.model.estimates to acess all simulations"))
     return(sig)
 }
+
+
+### Summary method for class: sensiTree_Samp:----------------------------------------
+
+#' @export
+summary.sensiTree_Samp <- function(object, ...){
+  simu <- nrow(object$samp.model.estimates)
+  sig <- object$sign.analysis
+  sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
+  sig$perc.sign.slope <- sig$perc.sign.slope * 100
+    names(sig) <- c("iteration",
+                    "% Species Removed", 
+                    "% Significant Intercepts",
+                    "Mean Intercept Change (%)",
+                    "Mean sDFintercept",
+                    "% Significant Slopes",
+                    "Mean Slope Change (%)",
+                    "Mean sDFslope")
+
+  message(paste(simu, "simulations saved," ,
+                "see output$samp.model.estimates to acess all simulations"))
+  return(sig)
+}
+
+### Summary method for class: sensiIntra_Samp:----------------------------------------
+
+#' @export
+summary.sensiIntra_Samp <- function(object, ...){
+  simu <- nrow(object$samp.model.estimates)
+  sig <- object$sign.analysis
+  sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
+  sig$perc.sign.slope <- sig$perc.sign.slope * 100
+  names(sig) <- c("iteration",
+                  "% Species Removed", 
+                  "% Significant Intercepts",
+                  "Mean Intercept Change (%)",
+                  "Mean sDFintercept",
+                  "% Significant Slopes",
+                  "Mean Slope Change (%)",
+                  "Mean sDFslope")
+  
+  message(paste(simu, "simulations saved," ,
+                "see output$samp.model.estimates to acess all simulations"))
+  return(sig)
+}
+
 
 ### Summary method for class: sensiIntra:--------------------------------------
 
@@ -188,7 +454,7 @@ summary.sensiTree <- function(object, ...){
     return(res)
 }
 
-### Summary method for class: sensiIntra_Tree, sensiTree_Intra:--------------------------------------
+### Summary method for class: sensiTree_Intra:--------------------------------------
 
 #' @export
 summary.sensiIntra_Tree <- function(object, ...){

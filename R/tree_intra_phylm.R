@@ -15,11 +15,11 @@
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times.intra} = 30
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+#' If NULL, \code{n.intra} = 30
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times.tree} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -28,8 +28,8 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
-#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}} to n trees (\code{times.tree}), 
-#' randomly picked in a multiPhylo file. The regression is also repeated \code{times.intra} times.
+#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}} to n trees (\code{n.tree}), 
+#' randomly picked in a multiPhylo file. The regression is also repeated \code{n.intra} times.
 #' At each iteration the function generates a random value for each row in the dataset using the standard deviation 
 #' or errors supplied and assuming a normal or uniform distribution. To calculate means and se for your raw data, 
 #' you can use the \code{summarySE} function from the package \code{Rmisc}.
@@ -81,7 +81,7 @@
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
 #'intra.tree <- tree_intra_phylm(gestaLen ~ adultMass, data = alien$data, phy = alien$phy,
-#'Vy = "SD_gesta", times.intra = 10, times.tree = 10, y.transf = log, x.transf = log)
+#'Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
 #'# To check summary results:
 #'summary(intra.tree)
 #'# Visual diagnostics
@@ -93,7 +93,7 @@
 tree_intra_phylm <- function(formula, data, phy,
                                          Vy = NULL, Vx = NULL,
                                          y.transf = NULL, x.transf = NULL,
-                                         times.intra = 10, times.tree = 2, 
+                                         n.intra = 10, n.tree = 2, 
                                          distrib = "normal", model = "lambda", 
                                          track = TRUE, ...){
   
@@ -104,7 +104,7 @@ tree_intra_phylm <- function(formula, data, phy,
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(length(phy)<times.tree) stop("'times.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
   
   
@@ -113,8 +113,8 @@ tree_intra_phylm <- function(formula, data, phy,
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   #Model calculation
   counter = 1
@@ -134,7 +134,7 @@ tree_intra_phylm <- function(formula, data, phy,
       #model (remove warnings about standard deviation in intra)
       withCallingHandlers(
         tree.intra[[counter]] <- intra_phylm(formula=formula,data=full.data,phy=tree,
-                                             Vx, Vy, y.transf, x.transf, times=times.intra,
+                                             Vx, Vy, y.transf, x.transf, times=n.intra,
                                              distrib, model, track=F, verbose=F,...),
                                 
         warning=function(w){
@@ -174,13 +174,13 @@ tree_intra_phylm <- function(formula, data, phy,
                             mean.tree = apply(mean_by_tree, 2, mean),
                             sd_tree = apply(mean_by_tree, 2, stats::sd))[-(1:2), ]
   
-  statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = times.intra*times.tree-1) * statresults$sd_all / sqrt(times.intra*times.tree)
-  statresults$CI_low_intra  <- statresults$mean.intra - stats::qt(0.975, df = times.intra-1) * statresults$sd_intra / sqrt(times.intra)
-  statresults$CI_low_tree   <- statresults$mean.tree - stats::qt(0.975, df = times.tree-1) * statresults$sd_intra / sqrt(times.tree)
+  statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
+  statresults$CI_low_intra  <- statresults$mean.intra - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_low_tree   <- statresults$mean.tree - stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
   
-  statresults$CI_high_all    <- statresults$mean.all + stats::qt(0.975, df = times.intra*times.tree-1) * statresults$sd_all / sqrt(times.intra*times.tree)
-  statresults$CI_high_intra  <- statresults$mean.intra + stats::qt(0.975, df = times.intra-1) * statresults$sd_intra / sqrt(times.intra)
-  statresults$CI_high_tree   <- statresults$mean.tree + stats::qt(0.975, df = times.tree-1) * statresults$sd_intra / sqrt(times.tree)
+  statresults$CI_high_all    <- statresults$mean.all + stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
+  statresults$CI_high_intra  <- statresults$mean.intra + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high_tree   <- statresults$mean.tree + stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
   
   #reoder to later match sensi_plot for the single functions
   statresults <- statresults[,c("min.all","max.all","mean.all","sd_all","CI_low_all","CI_high_all",
@@ -189,7 +189,7 @@ tree_intra_phylm <- function(formula, data, phy,
   
   
   #species with transformation problems
-  nr <- times.tree*times.intra - nrow(mod_results)
+  nr <- n.tree*n.intra - nrow(mod_results)
   sp.pb <- unique(unlist(lapply(tree.intra,function(x) x$sp.pb)))
 
   if (length(sp.pb) >0) 
@@ -205,6 +205,6 @@ tree_intra_phylm <- function(formula, data, phy,
               model_results = mod_results, N.obs = tree.intra[[1]]$N.obs,
               stats = round(statresults[c(1:6),c(3,13,16,7,14,17,11,15,18)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
-  class(res) <- "sensiIntra_Tree"
+  class(res) <- "sensiTree_Intra"
   return(res)
 }

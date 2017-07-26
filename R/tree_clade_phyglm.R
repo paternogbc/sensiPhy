@@ -11,8 +11,8 @@
 #' specification (a character vector with clade names).
 #' @param n.species Minimum number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{5}.
-#' @param times.clade Number of simulations for the randomization test.
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.sim Number of simulations for the randomization test.
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
 #' If NULL, \code{times} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}
@@ -82,7 +82,7 @@
 #' cla <- rep(c("A","B","C","D","E"), each = 30)
 #' dat = data.frame(y, x, cla)
 #' # Run sensitivity analysis:
-#' clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, times.tree = 3, times.clade = 5, clade.col = "cla")
+#' clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, n.tree = 3, n.sim = 5, clade.col = "cla")
 #'# To check summary results and most influential clades:
 #'summary(clade)
 #'# Visual diagnostics for clade removal:
@@ -95,14 +95,14 @@
 #' @export
 
 tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5, 
-                                         times.clade = 100, times.tree = 2, btol=50, track = TRUE,...) {
+                                         n.sim = 100, n.tree = 2, btol=50, track = TRUE,...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
@@ -114,7 +114,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   
   
   # If the class of tree is multiphylo pick n=times random trees
-  trees<-sample(length(phy),times.tree,replace=F)
+  trees<-sample(length(phy),n.tree,replace=F)
   
   
   # Identify CLADES to use and their sample size 
@@ -142,7 +142,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     tree <- phy[[j]]
     
     tree.clade[[counter]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
-                                   clade.col, n.species, times.clade, verbose = FALSE, ...)
+                                   clade.col, n.species, n.sim, verbose = FALSE, ...)
     
     counter = counter +1
   }
@@ -151,7 +151,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- recombine(tree.clade, slot1 = 3, slot2 = 1)
+  full.estimates  <- suppressWarnings(recombine(tree.clade, slot1 = 3, slot2 = 1))
   clade.estimates <- recombine(tree.clade, slot1 = 4)
   null.dist       <- recombine(tree.clade, slot1 = 5)
   

@@ -12,8 +12,8 @@
 #' specification (a character vector with clade names).
 #' @param n.species Minimum number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{5}.
-#' @param times.clade Number of simulations for the randomization test.
-#' @param times.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"})
+#' @param n.sim Number of simulations for the randomization test.
+#' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"})
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param x.transf Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
@@ -30,7 +30,7 @@
 #' logistic regression model using \code{\link[phylolm]{phyloglm}} and stores the
 #' results. The impact of of a specific clade on model estimates is calculated by the
 #' comparison between the full model (with all species) and the model without 
-#' the species belonging to a clade. This operation is repeated \code{times.intra} times for
+#' the species belonging to a clade. This operation is repeated \code{n.intra} times for
 #' simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
 #' generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
 #' detect the influential species within that iteration. 
@@ -91,7 +91,7 @@
 #' dat = data.frame(y, x, z, cla)
 
 #' intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
-#'                                   clade.col = "cla", times.clade = 30, times.intra = 3,
+#'                                   clade.col = "cla", n.sim = 30, n.intra = 3,
 #'                                   y.transf = log, Vx = "z", distrib="normal")
 #' summary(intra_clade)
 
@@ -99,7 +99,7 @@
 
 
 intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
-                              times.clade = 100, times.intra = 2,
+                              n.sim = 100, n.intra = 2,
                               Vy = NULL, Vx = NULL, distrib = "normal",
                               y.transf = NULL, x.transf = NULL,
                               model = "lambda", track = TRUE,...) {
@@ -149,7 +149,7 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   errors <- NULL
   counter = 1
   
-  for (j in 1:times.intra){
+  for (j in 1:n.intra){
     
     ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
@@ -168,17 +168,17 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     
     if(length(all.vars(formula))>2) {
     intra.clade[[j]] <- clade_phyglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy, method="logistic_MPLE",
-                                    clade.col=clade.col, n.species=n.species, times.clade=times.clade, 
+                                    clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
                                     track = FALSE, verbose = FALSE,...)}
     else 
     intra.clade[[j]] <- clade_phyglm(resp1~predV, data = full.data, phy=phy, method="logistic_MPLE",
-                                    clade.col=clade.col, n.species=n.species, times.clade=times.clade, 
+                                    clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
                                     track = FALSE, verbose = FALSE,...)
 
     counter = counter + 1
   }
   
-  names(intra.clade) <- 1:times.intra
+  names(intra.clade) <- 1:n.intra
   
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.clade, slot1 = 3, slot2 = 1))

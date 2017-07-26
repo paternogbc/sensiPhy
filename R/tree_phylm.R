@@ -6,9 +6,9 @@
 #' @param formula The model formula
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param times Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -55,7 +55,7 @@
 #'alien$phy
 #'# run PGLS accounting for phylogenetic uncertain:
 #'tree <- tree_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
-#'data = alien$data, times = 30)
+#'data = alien$data, n.tree = 30)
 #'# To check summary results:
 #'summary(tree)
 #'# Visual diagnostics
@@ -65,12 +65,12 @@
 #' @export
 
 tree_phylm <- function(formula,data,phy,
-                         times=2,model="lambda",track=TRUE,...){
+                         n.tree=2,model="lambda",track=TRUE,...){
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   else
   
   #Matching tree and phylogeny using utils.R
@@ -78,8 +78,8 @@ tree_phylm <- function(formula,data,phy,
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
 
-  # If the class of tree is multiphylo pick n=times random trees
-  trees<-sample(length(phy),times,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
 
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
@@ -90,7 +90,7 @@ tree_phylm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
   for (j in trees){
       
       #Match data order to tip order
@@ -146,8 +146,8 @@ tree_phylm <- function(formula,data,phy,
                           mean=apply(tree.model.estimates,2,mean),
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
-  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
-  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
+  statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
+  statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
   
   res <- list(   call = match.call(),
                  formula=formula,

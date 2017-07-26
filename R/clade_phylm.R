@@ -13,7 +13,7 @@
 #' specification (a character vector with clade names).
 #' @param n.species Minimum number of species in the clade in order to include
 #' this clade in the leave-one-out deletion analyis. Default is \code{5}.
-#' @param times Number of simulations for the randomization test.
+#' @param n.sim Number of simulations for the randomization test.
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function sequentially removes one clade at a time, fits a phylogenetic
@@ -26,7 +26,7 @@
 #' clade (clade sample size), this function also estimate a null distribution of slopes
 #' expected for the number of species in a given clade. This is done by fitting
 #'  models without the same number of species in the given clade. 
-#'  The number of simulations to be performed is set by 'times'. To test if the 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
 #'  clade influence differs from the null expectation, a randomization test can
 #'  be performed using 'summary(x)'. 
 #'
@@ -73,7 +73,7 @@
 #'data(primates)
 #'# run analysis:
 #'clade <- clade_phylm(log(sexMaturity) ~ log(adultMass), 
-#'phy = primates$phy[[1]], data = primates$data, times = 30, clade.col = "family")
+#'phy = primates$phy[[1]], data = primates$data, n.sim = 30, clade.col = "family")
 #'# To check summary results and most influential clades:
 #'summary(clade)
 #'# Visual diagnostics for clade removal:
@@ -85,7 +85,7 @@
 #' @export
 
 clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
-                        clade.col, n.species = 5, times = 100, ...) {
+                        clade.col, n.species = 5, n.sim = 100, ...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
@@ -131,11 +131,11 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
                "optpar" = numeric())
   
   # Create dataframe store simulations (null distribution)
-  null.dist <- data.frame("clade" = rep(names(uc), each = times),
-                          "intercept"= numeric(length(uc)*times),
-                          "slope" = numeric(length(uc)*times),
-                          "DFintercept"=numeric(length(uc)*times),
-                          "DFslope"=numeric(length(uc)*times))
+  null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
+                          "intercept"= numeric(length(uc)*n.sim),
+                          "slope" = numeric(length(uc)*n.sim),
+                          "DFintercept"=numeric(length(uc)*n.sim),
+                          "DFslope"=numeric(length(uc)*n.sim))
   
   
   ### START LOOP between CLADES:
@@ -143,7 +143,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
   aa <- 1; bb <- 1
   errors <- NULL
   
-  pb <- utils::txtProgressBar(min = 0, max = length(uc)*times,
+  pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
                               style = 1)
   for (A in names(uc)){
     
@@ -183,7 +183,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
     
     ### START LOOP FOR NULL DIST:
     # number of species in clade A:
-    for (i in 1:times) {
+    for (i in 1:n.sim) {
       exclude <- sample(1:N, cN)
       crop.data <- full.data[-exclude,]
       crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
