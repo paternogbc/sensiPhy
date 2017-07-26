@@ -1,17 +1,17 @@
 #' Graphical diagnostics for class 'sensiInflu_Intra'
 #'
-#' \code{plot_influ_phylm} Plot results from \code{influ_phylm} and 
-#' \code{influ_phyglm}
-#' @param x output from \code{influ_phylm}
+#' \code{sensi_plot.intra_influ} Plot results from \code{intra_influ_phylm} and 
+#' \code{intra_influ_phyglm}
+#' @param x output from \code{influ_phylm} or \code{intra_influ_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
 #' @param param choose which parameter ("intercept" or "slope" should be printed)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
 #' ggtitle element_blank
-#' @author Gustavo Paterno
+#' @author Gustavo Paterno, Caterina Penone
 #' @seealso \code{\link[ggplot2]{ggplot}}
-#' @details For 'x' from influ_phylm or influ_phyglm:
+#' @details For 'x' from intra_influ_phylm or intra_influ_phyglm:
 #' 
 #' Graph 1: Distribution of estimated slopes or intercepts for each 
 #' simulation (leave-one-out deletion). Red vertical line represents the original
@@ -31,7 +31,7 @@
 #' @export
 
 ### Start:
-sensi_plot.sensiINTER_Influ <- function(x, graphs="all", param="slope", ...){
+sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
   
   # nulling variables:------------------------------------------------------------
   slope <- ..density.. <- intercept <- sDFslope <- slope.perc <- NULL 
@@ -203,3 +203,42 @@ sensi_plot.sensiINTER_Influ <- function(x, graphs="all", param="slope", ...){
   
 }
 
+
+#' Graphical diagnostics for class 'sensiTree_Influ'
+#'
+#' \code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
+#' \code{tree_influ_phyglm}
+#' @param x output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}
+#' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
+#' @param param choose which parameter ("intercept" or "slope" should be printed)
+#' @param ... further arguments to methods
+#' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
+#' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
+#' ggtitle element_blank
+#' @author Gustavo Paterno, Caterina Penone
+#' @seealso \code{\link[ggplot2]{ggplot}}
+#' @details For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
+#' 
+#' Graph 1: Distribution of estimated slopes or intercepts for each 
+#' simulation (leave-one-out deletion). Red vertical line represents the original
+#' slope or intercept from the full model (with all species). 
+#' 
+#' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
+#' difference in slope or intercept is represented by a continous size scale. 
+#' The names of the most influential species (sDF > cutoff) are ploted in the
+#' graph. 
+#' 
+#' Graph 3: Distribution of standardized difference in slope or intercept. Red 
+#' colour indicates inbfluential species (with a standardised difference above 
+#' the value of \code{cutoff}).
+#' 
+#' Graph 4: Distribution of the percentage of change in slope or intercept.
+#' @importFrom grid unit 
+#' @export
+
+
+
+#' @export
+sensi_plot.sensiTree_Influ <- function(x, graphs="all", param="slope", ...){
+  sensi_plot.intra_influ(x, graphs, ...)
+}

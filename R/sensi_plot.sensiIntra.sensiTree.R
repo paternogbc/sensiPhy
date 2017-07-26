@@ -166,9 +166,9 @@ sensi_plot.sensiTree <- function(x, graphs = "all", ...){
 
 #' Graphical diagnostics for class 'sensiIntra_Tree'
 #'
-#' \code{plot_tree.intra_phylm} Plot results from \code{interaction_intra_tree_phylm},
-#' \code{interaction_intra_tree_phylm} and \code{interaction_intra_tree_phyglm}
-#' @param x output from \code{interaction_intra_tree_phylm}, \code{interaction_intra_tree_phyglm}
+#' \code{plot_tree.intra_phylm} Plot results from \code{tree_intra_phylm},
+#' \code{tree_intra_phylm} and \code{tree_intra_phyglm}
+#' @param x output from \code{tree_intra_phylm}, \code{tree_intra_phyglm}
 #' @param graphs choose which graph should be printed in the output ("all", 1, 2 or 3)
 #' @param uncer.type chosse which uncertainty type should be printed ("all", "intra", "tree")
 #' @param ... further arguments to methods
@@ -177,7 +177,7 @@ sensi_plot.sensiTree <- function(x, graphs = "all", ...){
 #' @author Caterina Penone and Gustavo Paterno
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylm}}
 #' \code{\link[sensiPhy]{intra_phylm}}
-#' @details For 'x' from \code{interaction_intra_tree_phylm} or \code{interaction_intra_tree_phyglm}:
+#' @details For 'x' from \code{tree_intra_phylm} or \code{tree_intra_phyglm}:
 #' 
 #' Graphs 1 and 2: Distribution of estimated estimates and intercepts for each tree (for \code{tree_phylm}) or 
 #' value generated within a given interval (\code{interaction_intra_tree_phylm})
@@ -188,7 +188,7 @@ sensi_plot.sensiTree <- function(x, graphs = "all", ...){
 #' @importFrom stats plogis
 #' @export
 
-sensi_plot.sensiIntra_Tree <- function(x, graphs="all", uncer.type = "all",...){
+sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
   
   # nulling variables
   formula <- estimate <- ..density.. <- intercept <- NULL
