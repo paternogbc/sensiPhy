@@ -371,7 +371,7 @@ summary.sensiTree_Influ <- function(object, ...){
   
 }
 
-### Summary method for class: sensiSamp, sensiTree_Samp, sensiIntra_Samp:----------------------------------------
+### Summary method for class: sensiSamp:----------------------------------------
 
 #' @export
 summary.sensiSamp <- function(object, ...){
@@ -401,15 +401,17 @@ summary.sensiTree_Samp <- function(object, ...){
   sig <- object$sign.analysis
   sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
   sig$perc.sign.slope <- sig$perc.sign.slope * 100
-    names(sig) <- c("iteration",
-                    "% Species Removed", 
-                    "% Significant Intercepts",
-                    "Mean Intercept Change (%)",
-                    "Mean sDFintercept",
-                    "% Significant Slopes",
-                    "Mean Slope Change (%)",
-                    "Mean sDFslope")
-
+  sig <- stats::aggregate(.~percent_sp_removed, data=sig, mean)
+  sig$iteration <- NULL
+  
+  names(sig) <- c("% Species Removed", 
+                  "% Significant Intercepts",
+                  "Mean Intercept Change (%)",
+                  "Mean sDFintercept",
+                  "% Significant Slopes",
+                  "Mean Slope Change (%)",
+                  "Mean sDFslope")
+  
   message(paste(simu, "simulations saved," ,
                 "see output$samp.model.estimates to acess all simulations"))
   return(sig)
@@ -423,8 +425,10 @@ summary.sensiIntra_Samp <- function(object, ...){
   sig <- object$sign.analysis
   sig$perc.sign.intercept <- sig$perc.sign.intercept * 100
   sig$perc.sign.slope <- sig$perc.sign.slope * 100
-  names(sig) <- c("iteration",
-                  "% Species Removed", 
+  sig <- stats::aggregate(.~percent_sp_removed, data=sig, mean)
+  sig$iteration <- NULL
+  
+  names(sig) <- c("% Species Removed", 
                   "% Significant Intercepts",
                   "Mean Intercept Change (%)",
                   "Mean sDFintercept",

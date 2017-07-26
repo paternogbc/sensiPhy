@@ -93,7 +93,7 @@
 
 
 tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
-                                        breaks=seq(.1,.5,.1), model = "lambda", track = TRUE,...) {
+                            breaks=seq(.1,.5,.1), model = "lambda", track = TRUE,...) {
   
 
   # Error checking:

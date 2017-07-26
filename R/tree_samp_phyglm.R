@@ -84,7 +84,7 @@
 
 
 tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
-                                         breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
+                             breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
   
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
