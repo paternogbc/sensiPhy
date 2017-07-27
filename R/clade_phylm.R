@@ -18,7 +18,7 @@
 #' @details
 #' This function sequentially removes one clade at a time, fits a phylogenetic
 #' linear regression model using \code{\link[phylolm]{phylolm}} and stores the
-#' results. The impact of of a specific clade on model estimates is calculated by the
+#' results. The impact of of a specific clade on model estimates is calculated by a
 #' comparison between the full model (with all species) and the model without 
 #' the species belonging to a clade.
 #' 
@@ -27,8 +27,8 @@
 #' expected for the number of species in a given clade. This is done by fitting
 #'  models without the same number of species in the given clade. 
 #'  The number of simulations to be performed is set by 'n.sim'. To test if the 
-#'  clade influence differs from the null expectation, a randomization test can
-#'  be performed using 'summary(x)'. 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},

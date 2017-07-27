@@ -27,9 +27,9 @@
 #' clade (clade sample size), this function also estimate a null distribution of signal estimates
 #' expected by the removal of the same number of species in a given clade. This is done by estimating
 #' phylogenetic signal without the same number of species in the given clade. 
-#' The number of simulations to be performed is set by \code{n.sim}. A test if the 
-#' clade influence differs from the null expectation is performed by a randomization 
-#' test using 'summary(x)'. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'

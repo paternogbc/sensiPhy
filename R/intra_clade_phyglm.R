@@ -39,9 +39,9 @@
 #' clade (clade sample size), this function also estimate a null distribution of slopes
 #' expected for the number of species in a given clade. This is done by fitting
 #' models without the same number of species in the given clade. 
-#' The number of simulations to be performed is set by 'times'. To test if the 
-#' clade influence differs from the null expectation, a randomization test can
-#' be performed using 'summary(x)'. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #' All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
