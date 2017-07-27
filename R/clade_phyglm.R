@@ -17,6 +17,20 @@
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' 
 #' @details
+#' #' This function sequentially removes one clade at a time, fits a phylogenetic
+#' logistic regression model using \code{\link[phylolm]{phyloglm}} and stores the
+#' results. The impact of of a specific clade on model estimates is calculated by a
+#' comparison between the full model (with all species) and the model without 
+#' the species belonging to a clade.
+#' 
+#' Additionally, to account for the influence of the number of species on each 
+#' clade (clade sample size), this function also estimate a null distribution of slopes
+#' expected for the number of species in a given clade. This is done by fitting
+#'  models without the same number of species in the given clade. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
+#'
 #' Currently only logistic regression using the "logistic_MPLE"-method from
 #' \code{phyloglm} is implemented.
 #'
