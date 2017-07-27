@@ -4,20 +4,20 @@
 \alias{tree_physig}
 \title{Phylogenetic uncertainty - Phylogenetic signal}
 \usage{
-tree_physig(trait.col, data, phy, times = "all", method = "K",
+tree_physig(trait.col, data, phy, n.tree = "all", method = "K",
   track = TRUE, ...)
 }
 \arguments{
-\item{trait.col}{Column name containing values for a single
-continuously distributed trait (e.g. "Body_mass").}
+\item{trait.col}{The name of a column in the provided data frame with trait 
+to be analyzed  (e.g. "Body_mass").}
 
 \item{data}{Data frame containing species traits with row names matching tips
 in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{Number of times to repeat the analysis with n different trees picked 
-randomly in the multiPhylo file. (If \code{times} = "all", phylosgentic signal will be estimated
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
+randomly in the multiPhylo file. (If \code{n.tree} = "all", phylosgentic signal will be estimated
 among the all set of trees provided in \code{phy})}
 
 \item{method}{Method to compute signal: can be "K" or "lambda".}
@@ -34,7 +34,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{physig_results}: Three number, phylogenetic signal ignal estimate 
+\code{tree.physig.estimates}: Three number, phylogenetic signal estimate 
 (lambda or K) and the p-value for each run with a different phylogenetic tree.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
@@ -43,7 +43,7 @@ components:
 and upper limits of the 95% confidence interval.
 }
 \description{
-Performs phylogenetic estimates evaluating
+Performs phylogenetic signal estimates evaluating
 uncertainty in trees topology.
 }
 \details{
@@ -55,8 +55,14 @@ Output can be visualised using \code{sensi_plot}.
 \examples{
 # Load data:
 data(alien)
+# Logtransform data
+alien.data$logMass <- log(alien.data$adultMass) 
 # Run sensitivity analysis:
-tree <- tree_physig(trait.col = "adultMass", data = alien.data, phy = alien.phy)
+tree <- tree_physig(trait.col = "logMass", data = alien.data, phy = alien.phy)
+summary(tree)
+sensi_plot(tree)
+sensi_plot(tree, graphs = 1)
+sensi_plot(tree, graphs = 2)
 }
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 

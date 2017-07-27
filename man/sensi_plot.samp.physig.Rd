@@ -4,7 +4,7 @@
 \alias{sensi_plot.samp.physig}
 \title{Graphical diagnostics for class 'samp.physig'}
 \usage{
-\method{sensi_plot}{samp.physig}(x, graphs = "all")
+\method{sensi_plot}{samp.physig}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{samp_physig}}
@@ -18,19 +18,18 @@
 }
 \details{
 For 'x' from samp_physig:
-
-Graph 1: Estimated phylogenetic signal for each simution across  
-percentages of species removed. Colours represent percentage 
-of change in comparison with the full data estimate (blue = lower than 5, orange = 
+\itemize{
+\item Graph 1: Estimated phylogenetic signal for each simution across
+percentages of species removed. Colours represent percentage
+of change in comparison with the full data estimate (blue = lower than 5, orange =
 between 5 and 10 and red = higher than 10).
-The red horizontal line represents the original phylogenetic signal 
-estimated from the full model (with all species). 
-
-Graph 2: The proportion of estimated signal in each category 
+The red horizontal line represents the original phylogenetic signal
+estimated from the full model (with all species).
+\item Graph 2: The proportion of estimated signal in each category
 across the percentage of species removed.
-
-Graph 3: The percentage of significant signal estimates across the 
+\item Graph 3: The percentage of significant signal estimates across the
 percentage of species removed.
+}
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_phylm}}

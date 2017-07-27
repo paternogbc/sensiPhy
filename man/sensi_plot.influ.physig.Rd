@@ -4,7 +4,7 @@
 \alias{sensi_plot.influ.physig}
 \title{Graphical diagnostics for class 'influ.physig'}
 \usage{
-\method{sensi_plot}{influ.physig}(x, graphs = "all")
+\method{sensi_plot}{influ.physig}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{influ_physig}}
@@ -12,7 +12,7 @@
 \item{graphs}{choose which graph should be printed on the output ("all", 1, 2)}
 }
 \description{
-\code{plot_influ_physig} Plot results from \code{influ_physig}
+\code{sensi_plot.influ_physig} Plot results from \code{influ_physig}
 }
 \details{
 For 'x' from influ_physig:
@@ -23,7 +23,7 @@ simulation (leave-one-out deletion). Dashed red vertical line represents the ori
 
 Graph 2: Distribution of P values for the phylogenetic signal (K or lambda) 
 for each simulation (leave-one-out deletion). Red vertical line represents 
-the alpha significance level = 0.005.
+the alpha significance level = 0.05.
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[phytools]{phylosig}}

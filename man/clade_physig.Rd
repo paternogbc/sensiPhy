@@ -4,29 +4,29 @@
 \alias{clade_physig}
 \title{Influential clade detection - Phylogenetic signal}
 \usage{
-clade_physig(trait.col, data, phy, track = TRUE, clade.col, n.species = 5,
-  times = 1000, method = "K")
+clade_physig(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000,
+  method = "K", track = TRUE, ...)
 }
 \arguments{
-\item{trait.col}{Column name containing values for a single
-continuously distributed trait (e.g. "Body_mass").}
+\item{trait.col}{The name of a column in the provided data frame with trait 
+to be analyzed  (e.g. "Body_mass").}
 
 \item{data}{Data frame containing species traits with row names matching tips
 in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{track}{Print a report tracking function progress (default = TRUE)}
-
 \item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+specification.}
 
 \item{n.species}{Minimum number of species in the clade in order to include
 this clade in the leave-one-out deletion analyis. Default is \code{5}.}
 
-\item{times}{Number of simulations for the randomization test.}
+\item{n.sim}{Number of simulations for the randomization test.}
 
 \item{method}{Method to compute signal: can be "K" or "lambda".}
+
+\item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{...}{Further arguments to be passed to \code{\link[phytools]{phylosig}}}
 }
@@ -39,13 +39,12 @@ components:
 \code{full.data.estimates}: Phylogenetic signal estimate (K or lambda)
 and the P value (for the full data).
 
-\code{clade.physig.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a deleted clade. Columns report the calculated
 phylogenetic signal (K or lambda) (\code{estimate}), difference between simulation
 signal and full data signal (\code{DF}), the percentage of change
 in signal compared to the full data estimate (\code{perc}) and 
 p-value of the phylogenetic signal with the reduced data (\code{pval}).
-All these parameters are also reported for
 
 \code{null.dist}: A data frame with estimates for the null distribution
 of phylogenetic signal for all clades analysed.
@@ -53,8 +52,7 @@ of phylogenetic signal for all clades analysed.
 \code{data}: Original full dataset.
 }
 \description{
-Estimate the impact on phylogenetic signal estimates after 
-removing clades from the analysis.
+Estimate the influence of clade removal on phylogenetic signal estimates
 }
 \details{
 This function sequentially removes one clade at a time, estimates phylogenetic
@@ -65,21 +63,25 @@ comparison between the full data (with all species) and reduced data estimates
 
 Additionally, to account for the influence of the number of species on each 
 clade (clade sample size), this function also estimate a null distribution of signal estimates
-expected for the number of species in a given clade. This is done by estimating
- phylogenetic signal without the same number of species in the given clade. 
- The number of simulations to be performed is set by \code{times}. A test if the 
- clade influence differs from the null expectation is performed by a randomization 
- test can using 'summary(x)'. 
+expected by the removal of the same number of species in a given clade. This is done by estimating
+phylogenetic signal without the same number of species in the given clade. 
+The number of simulations to be performed is set by \code{n.sim}. A test if the 
+clade influence differs from the null expectation is performed by a randomization 
+test using 'summary(x)'. 
 
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 \dontrun{
-data("primates")
-c <- clade_physig(trait.col = "homeRange", data = primates.data, 
-phy = primates.phy[[1]], clade.col = "family")
-summary(c)
-sensi_plot(c, clade = "Cercopithecidae")
+data(alien)
+# Logtransform data
+alien.data$logMass <- log(alien.data$adultMass) 
+# Run sensitivity analysis:
+clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
+                 phy = alien.phy[[1]], clade.col = "family", method = "K")
+summary(clade)
+sensi_plot(clade, "Bovidae")
+sensi_plot(clade, "Sciuridae")
 }
 }
 \references{

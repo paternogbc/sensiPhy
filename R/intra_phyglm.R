@@ -10,8 +10,8 @@
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times Number of times to repeat the analysis generating a random value for the predictor variable.
-#' If NULL, \code{times} = 2
+#' @param n.intra Number of times to repeat the analysis generating a random value for the predictor variable.
+#' If NULL, \code{n.intra} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the
 #' predictor variable. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -21,7 +21,7 @@
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
 #' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
-#' The regression is repeated \code{times} times. At each iteration the function generates a random value
+#' The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
 #' package \code{Rmisc}.
@@ -38,7 +38,7 @@
 #' @section Warning:  
 #' When Vx exceeds X negative (or null) values can be generated, this might cause problems
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+#' be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'  
 #' @return The function \code{intra_phyglm} returns a list with the following
 #' components:
@@ -86,9 +86,9 @@
 
 
 intra_phyglm <- function(formula, data, phy,
-                          Vx=NULL, times = 30,
+                          Vx=NULL, n.intra = 30,
                           x.transf = NULL,
-                          distrib="uniform", btol=50, track=TRUE,...){
+                          distrib="normal", btol=50, track=TRUE,...){
   #Error check
   if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
@@ -96,11 +96,10 @@ intra_phyglm <- function(formula, data, phy,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
      stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation 
-                                 is provided for Vx")
+  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
 
   #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy)
+  datphy<-match_dataphy(formula,data,phy, ...)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
@@ -126,8 +125,8 @@ intra_phyglm <- function(formula, data, phy,
   counter=1
   errors <- NULL
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
-  for (i in 1:times) {
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  for (i in 1:n.intra) {
     
     ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
@@ -140,7 +139,7 @@ intra_phyglm <- function(formula, data, phy,
     full.data$resp1<-full.data[,resp1] #try to improve this in future
     if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
     
-    #transform Vy and/or Vx if x.transf and/or y.transf are provided
+    #transform Vx if x.transf is provided
     if(!is.null(x.transf)) 
     {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
     
@@ -183,7 +182,7 @@ intra_phyglm <- function(formula, data, phy,
       
     }
   }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
@@ -194,11 +193,11 @@ intra_phyglm <- function(formula, data, phy,
                           mean=apply(intra.model.estimates,2,mean),
                           sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- times - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(intra.model.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function

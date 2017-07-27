@@ -4,7 +4,7 @@
 \alias{match_dataphy}
 \title{Match data and phylogeny based on model formula}
 \usage{
-match_dataphy(formula, data, phy)
+match_dataphy(formula, data, phy, verbose = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -13,6 +13,11 @@ match_dataphy(formula, data, phy)
 in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo' or 'multiphylo')}
+
+\item{verbose}{Print the number of species that match data and phylogeny and warnings. We highly recommend to use the 
+default (verbose = T), but warning and information can be silenced for advanced use.}
+
+\item{...}{Further arguments to be passed to \code{match_dataphy}}
 }
 \value{
 The function \code{match_dataphy} returns a list with the following
@@ -46,7 +51,10 @@ with missing values are removed. This function uses variables provided in the
 This function uses all variables provided in the `formula` to match
 data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 for NA values only on variables provided by formula. Missing values on 
-other variables, not included in `formula`, will not be removed from data. 
+other variables, not included in `formula`, will not be removed from data.
+If no species names are provided as row names in the dataset but the number of rows in the dataset
+is the same as the number of tips in the phylogeny, the function assumes that the dataset and the 
+phylogeny are in the same order.
 
 This ensures consistance between data and phylogeny only for the variables 
 that are being used in the model (set by `formula`).

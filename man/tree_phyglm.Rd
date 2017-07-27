@@ -49,7 +49,7 @@ Performs Phylogenetic logistic regression evaluating
 uncertainty in trees topology.
 }
 \details{
-This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phyloglm}}
+This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}
 to n trees, randomly picked in a multiPhylo file.
 
 Currently, this function can only implement simple logistic models (i.e. \eqn{trait~

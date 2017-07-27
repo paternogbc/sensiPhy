@@ -25,6 +25,7 @@ the graphs generated for each sensiPhy function:
  \item{\code{\link[sensiPhy]{sensi_plot.sensiSamp}}}
  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra}}}
  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree}}}
+ \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Tree}}}
  }
 }
 \references{

@@ -15,11 +15,11 @@
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times.intra} = 30
-#' @param times.tree Number of times to repeat the analysis with n different trees picked 
+#' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+#' If NULL, \code{n.intra} = 30
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times.tree} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -28,8 +28,8 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
-#' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{times.tree}), 
-#' randomly picked in a multiPhylo file. The regression is also repeated \code{times.intra} times.
+#' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{n.tree}), 
+#' randomly picked in a multiPhylo file. The regression is also repeated \code{n.intra} times.
 #' At each iteration the function generates a random value for each row in the dataset using the standard deviation 
 #' or errors supplied and assuming a normal or uniform distribution. To calculate means and se for your raw data, 
 #' you can use the \code{summarySE} function from the package \code{Rmisc}.
@@ -48,7 +48,7 @@
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
 #'  
-#' @return The function \code{interaction_intra_tree_phylm} returns a list with the following
+#' @return The function \code{tree_intra_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
@@ -86,8 +86,8 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x, x_sd)
 # Run sensitivity analysis:
-#'intra.tree <- interaction_intra_tree_phyglm(y ~ x, data = dat, phy = mphy, times.intra = 10, 
-#'                                            times.tree = 10, Vx = "x_sd")
+#'intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, n.intra = 10, 
+#'                                            n.tree = 10, Vx = "x_sd")
 #'# summary results:
 #'summary(intra.tree)
 #'# Visual diagnostics for phylogenetic uncertainty:
@@ -95,145 +95,76 @@
 #' @export
 
 
-interaction_intra_tree_phyglm <- function(formula, data, phy,
-                                         Vy = NULL, Vx = NULL,
-                                         y.transf = NULL, x.transf = NULL,
-                                         times.intra = 10, times.tree = 2, 
-                                         distrib = "normal", model = "lambda", 
-                                         track = TRUE, btol=50,...){
+tree_intra_phyglm <- function(formula, data, phy,
+                                          Vx = NULL, y.transf = NULL, x.transf = NULL,
+                                          n.intra = 10, n.tree = 2, 
+                                          distrib = "normal", model = "lambda", 
+                                          track = TRUE, btol=50,...){
   
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
+  if(is.null(Vx)) stop("Vx must be defined")
   if(class(formula) != "formula") stop("formula must be class 'formula'")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(length(phy)<times.tree) stop("'times.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
   
   
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy)
+  datphy <- match_dataphy(formula, data, phy,...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
-  resp <- all.vars(formula)[1]
-  pred <- all.vars(formula)[2]
-  
-  if(!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
-    full.data[is.na(full.data[, Vy]), Vy] <- 0}
-  
-  if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
-    full.data[is.na(full.data[, Vx]), Vx] <- 0}
-  
-  
-  #Function to pick a random value in the interval
-  if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
-  
-  # If the class of tree is multiphylo pick n=times.tree random trees
-  trees<-sample(length(phy),times.tree,replace=F)
-  
-  #Create the results data.frame
-  tree.intra.model.estimates <- data.frame("n.tree"=numeric(), "n.intra"=numeric(),
-                                           "intercept"=numeric(),"se.intercept"=numeric(),
-                                           "pval.intercept"=numeric(),
-                                           "estimate"=numeric(), "se.estimate"=numeric(),
-                                           "pval.estimate"=numeric(),
-                                           "aic"=numeric(), "optpar"=numeric())
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   #Model calculation
   counter = 1
   errors <- NULL
+  tree.intra <- list()
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = (times.tree*times.intra), style = 1)
   
-  for (j in 1:times.tree) {
-    for (i in 1:times.intra) {
-      
+  for (j in trees) {
+
       #Match data order to tip order
       full.data <- full.data[phy[[j]]$tip.label,]
       
-      ##Set response and predictor variables
-      #Vy is not provided or is not numeric, do not pick random value
-      if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
-      {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
+      #Select tree
+      tree <- phy[[j]]
       
-      #choose a random value in [mean-se,mean+se] if Vy is provided
-      if (!is.null(Vy))
-      {full.data$respV <- apply(full.data[,c(resp,Vy)],1,function(x)funr(x[1],x[2]))}
-      
-      #Vx is not provided or is not numeric, do not pick random value
-      if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
-      {full.data$predV <- stats::model.frame(formula, data = full.data)[,2]}
-      
-      #choose a random value in [mean-se,mean+se] if Vx is provided
-      if(!is.null(Vx))
-      {full.data$predV <- apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
-      
-      #transform Vy and/or Vx if x.transf and/or y.transf are provided
-      if(!is.null(y.transf)) 
-      {suppressWarnings (full.data$respV <- y.transf(full.data$respV))}
-      
-      if(!is.null(x.transf)) 
-      {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
-      
-      #skip iteration if there are NA's in the dataset
-      species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
-      if(sum(is.na(full.data[,c("respV","predV")])>0)) next
-      
-      #model
-      if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, 
-                                                                  phy=phyphy[[j]], method="logistic_MPLE", btol=btol),FALSE)}
-      else
-      
-      
-      mod = try(phylolm::phyloglm(respV ~ predV, data = full.data, phy = phy[[j]], 
-                                  method="logistic_MPLE", btol=btol), FALSE)
-      
-      if(isTRUE(class(mod) == "try-error")) {
-        error <- i
-        errors <- c(errors,error)
-        next }
-      
-      
-      else{
-        intercept            <- phylolm::summary.phyloglm(mod)$coefficients[[1,1]]
-        se.intercept         <- phylolm::summary.phyloglm(mod)$coefficients[[1,2]]
-        estimate             <- phylolm::summary.phyloglm(mod)$coefficients[[2,1]]
-        se.estimate          <- phylolm::summary.phyloglm(mod)$coefficients[[2,2]]
-        pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-        pval.estimate        <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
-        aic.mod              <- mod$aic
-        n                    <- mod$n
-        optpar               <- mod$alpha
-        
+      #model (remove warnings about standard deviation in intra)
 
-        #write in a table
-        estim.simu <- data.frame(j, i, intercept, se.intercept, pval.intercept,
-                                 estimate, se.estimate, pval.estimate, aic.mod, optpar,
-                                 stringsAsFactors = F)
-        tree.intra.model.estimates[counter, ]  <- estim.simu
-        counter=counter+1
+      withCallingHandlers(tree.intra[[counter]] <- intra_phyglm(formula=formula,data=full.data,phy=tree,
+                          Vx, x.transf, y.transf, n.intra=n.intra,
+                           distrib=distrib, btol=btol, track=F, verbose=F),
+                          
+                          warning=function(w){
+                            if (grepl("make sure that standard deviation", w$message))
+                              invokeRestart("muffleWarning")
+                          } )
+
+              counter=counter+1
         
       }
-    }
-    if(track == TRUE) utils::setTxtProgressBar(pb, i*j)
-  }
-  on.exit(close(pb))
+
+  names(tree.intra) <- trees
+  
+  mod_results <- recombine(tree.intra, slot1 = 4)
+  names(mod_results)[1]<-"n.tree"
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = tree.intra.model.estimates,mean)
+  mean_by_randomval <- stats::aggregate(.~n.intra, data = mod_results,mean)
   
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=tree.intra.model.estimates, mean)
+  mean_by_tree<-stats::aggregate(.~n.tree, data=mod_results, mean)
   
-  statresults <- data.frame(min.all = apply(tree.intra.model.estimates, 2, min),
-                            max.all = apply(tree.intra.model.estimates, 2, max),
-                            mean.all = apply(tree.intra.model.estimates, 2, mean),
-                            sd_all = apply(tree.intra.model.estimates, 2, stats::sd),
+  statresults <- data.frame(min.all = apply(mod_results, 2, min),
+                            max.all = apply(mod_results, 2, max),
+                            mean.all = apply(mod_results, 2, mean),
+                            sd_all = apply(mod_results, 2, stats::sd),
                             
                             min.intra = apply(mean_by_randomval, 2, min),
                             max.intra = apply(mean_by_randomval, 2, max),
@@ -245,13 +176,13 @@ interaction_intra_tree_phyglm <- function(formula, data, phy,
                             mean.tree = apply(mean_by_tree, 2, mean),
                             sd_tree = apply(mean_by_tree, 2, stats::sd))[-(1:2), ]
   
-  statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = times.intra*times.tree-1) * statresults$sd_all / sqrt(times.intra*times.tree)
-  statresults$CI_low_intra  <- statresults$mean.intra - stats::qt(0.975, df = times.intra-1) * statresults$sd_intra / sqrt(times.intra)
-  statresults$CI_low_tree   <- statresults$mean.tree - stats::qt(0.975, df = times.tree-1) * statresults$sd_intra / sqrt(times.tree)
+  statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
+  statresults$CI_low_intra  <- statresults$mean.intra - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_low_tree   <- statresults$mean.tree - stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
   
-  statresults$CI_high_all    <- statresults$mean.all + stats::qt(0.975, df = times.intra*times.tree-1) * statresults$sd_all / sqrt(times.intra*times.tree)
-  statresults$CI_high_intra  <- statresults$mean.intra + stats::qt(0.975, df = times.intra-1) * statresults$sd_intra / sqrt(times.intra)
-  statresults$CI_high_tree   <- statresults$mean.tree + stats::qt(0.975, df = times.tree-1) * statresults$sd_intra / sqrt(times.tree)
+  statresults$CI_high_all    <- statresults$mean.all + stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
+  statresults$CI_high_intra  <- statresults$mean.intra + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high_tree   <- statresults$mean.tree + stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
   
   #reoder to later match sensi_plot for the single functions
   statresults <- statresults[,c("min.all","max.all","mean.all","sd_all","CI_low_all","CI_high_all",
@@ -260,8 +191,9 @@ interaction_intra_tree_phyglm <- function(formula, data, phy,
   
   
   #species with transformation problems
-  nr <- times.tree*times.intra - nrow(tree.intra.model.estimates)
-  sp.pb <- unique(unlist(species.NA))
+  nr <- n.tree*n.intra - nrow(mod_results)
+  sp.pb <- unique(unlist(lapply(tree.intra,function(x) x$sp.pb)))
+  
   if (length(sp.pb) >0) 
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
                    for x.transf or y.transf and check output$sp.pb",sep=" "))
@@ -272,9 +204,9 @@ interaction_intra_tree_phyglm <- function(formula, data, phy,
               y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
-              model_results = tree.intra.model.estimates, N.obs = n,
+              model_results = mod_results, N.obs = tree.intra[[1]]$N.obs,
               stats = round(statresults[c(1:6),c(3,13,16,7,14,17,11,15,18)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
-  class(res) <- c("sensiIntra_Tree","sensiIntra_TreeL")
+  class(res) <- c("sensiTree_Intra","sensiTree_IntraL")
   return(res)
 }

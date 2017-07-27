@@ -4,16 +4,20 @@
 \alias{intra_physig}
 \title{Intraspecific variability - Phylogenetic Linear Regression}
 \usage{
-intra_physig(trait.col, data, phy, V = NULL, times = 30,
+intra_physig(trait.col, data, phy, V = NULL, n.intra = 100,
   distrib = "normal", method = "K", track = TRUE, ...)
 }
 \arguments{
-\item{data}{Data frame containing species traits and species names as row names.}
+\item{trait.col}{The name of a column in the provided data frame with trait 
+to be analyzed  (e.g. "Body_mass").#' @param data Data frame containing species traits and species names as row names.}
 
 \item{phy}{A phylogeny (class 'phylo', see ?\code{ape}).}
 
-\item{times}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-If NULL, \code{times} = 2}
+\item{V}{Name of the column containing the standard deviation or the standard error of the trait 
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
+
+\item{n.intra}{Number of times to repeat the analysis generating a random trait value.
+If NULL, \code{n.intra} = 30}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the response 
 and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -22,53 +26,31 @@ Warning: we recommend to use normal distribution with Vx or Vy = standard deviat
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{...}{Further arguments to be passed to \code{phylolm}}
-
-\item{formula}{The model formula: \code{response~predictor}.}
-
-\item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
-variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
-
-\item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
-variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
-
-\item{y.transf}{Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly (see also details below).}
-
-\item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly (see also details below).}
-
-\item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
+\item{...}{Further arguments to be passed to \code{phytools::physig}}
 }
 \value{
 The function \code{intra_phylm} returns a list with the following
 components:
 
-\code{formula}: The formula
+\code{Trait}: Column name of the trait analysed
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
-value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
+\code{intra.physig.estimates}: Run number, phylogenetic signal estimate 
+(lambda or K) and the p-value for each run with a different simulated datset.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 
-\code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
+\code{stats}: Main statistics for signal estimate\code{CI_low} and \code{CI_high} are the lower 
 and upper limits of the 95% confidence interval.
-
-\code{all.stats}: Complete statistics for model parameters. \code{sd_intra} is the standard deviation 
-due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
-of the 95% confidence interval.
-
-\code{sp.pb}: Species that caused problems with data transformation (see details above).
 }
 \description{
-Performs Phylogenetic linear regression evaluating
-intraspecific variability in response and/or predictor variables.
+Performs Phylogenetic siganl estimates evaluating
+trait intraspecific variability
 }
 \details{
-This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-The regression is repeated \code{times} times. At each iteration the function generates a random value
+This function estimates phylogenetic signal using \code{\link[phytools]{phylosig}}.
+The analysis is repeated \code{n.intra} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
 package \code{Rmisc}.
@@ -82,24 +64,14 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
-\section{Warning}{
-  
-When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
-for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
-}
-
 \examples{
-# Load data:
 data(alien)
-# run PGLS accounting for intraspecific variation:
-intra <- intra_phylm(gestaLen ~ adultMass, y.transf = log, x.transf = log, 
-phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", times = 30)
-# To check summary results:
+# Run sensitivity analysis:
+intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" , data = alien.data, phy = alien.phy[[1]])
 summary(intra)
-# Visual diagnostics
 sensi_plot(intra)
-
+sensi_plot(intra, graphs = 1)
+sensi_plot(intra, graphs = 2)
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
@@ -107,12 +79,20 @@ Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef
 fishes is related to body size and depth range. Molecular Phylogenetics and 
 Evolution, 93, 1-4
 
-Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
-Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
+Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 
+Testing for phylogenetic signal in comparative data: 
+Behavioral traits are more labile. Evolution, 57, 717-745.
+
+Pagel, M. (1999) Inferring the historical patterns of biological evolution. 
+Nature, 401, 877-884.
+
+Kamilar, J. M., & Cooper, N. (2013). Phylogenetic signal in primate behaviour,
+ ecology and life history. Philosophical Transactions of the Royal Society 
+ B: Biological Sciences, 368: 20120341.
 }
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
 }
 \author{
-Caterina Penone & Pablo Ariel Martinez
+Caterina Penone & Pablo Ariel Martinez & Gustavo Paterno
 }

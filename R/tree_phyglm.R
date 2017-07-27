@@ -6,14 +6,14 @@
 #' @param formula The model formula
 #' @param data Data frame containing species traits with species as row names.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param times Number of times to repeat the analysis with n different trees picked 
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
-#' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phyloglm}}
+#' This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}
 #' to n trees, randomly picked in a multiPhylo file.
 #'
 #' Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
@@ -52,7 +52,7 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, times = 30)
+#'tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 30)
 #'# summary results:
 #'summary(tree)
 #'# Visual diagnostics for phylogenetic uncertainty:
@@ -60,22 +60,22 @@
 #' @export
 
 tree_phyglm <- function(formula,data,phy,
-                         times=2,btol=50,track=TRUE,...){
+                         n.tree=2,btol=50,track=TRUE,...){
 
   #Error check
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<times) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   else
     
     #Matching tree and phylogeny using utils.R
-    datphy<-match_dataphy(formula,data,phy)
+    datphy<-match_dataphy(formula,data,phy,...)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
-  # If the class of tree is multiphylo pick n=times random trees
-  trees<-sample(length(phy),times,replace=F)
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees<-sample(length(phy),n.tree,replace=F)
   
   #Create the results data.frame
   tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
@@ -86,7 +86,7 @@ tree_phyglm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
+  pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
   for (j in trees){
     
     #Match data order to tip order
@@ -135,8 +135,8 @@ tree_phyglm <- function(formula,data,phy,
                           mean=apply(tree.model.estimates,2,mean),
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
-  statresults$CI_low  <- statresults$mean - qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
-  statresults$CI_high <- statresults$mean + qt(0.975, df = times-1) * statresults$sd_tree / sqrt(times)
+  statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
+  statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
   
   res <- list(call = match.call(),
               formula=formula,

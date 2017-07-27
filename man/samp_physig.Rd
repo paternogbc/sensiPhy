@@ -4,20 +4,20 @@
 \alias{samp_physig}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic signal}
 \usage{
-samp_physig(trait.col, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
+samp_physig(trait.col, data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
   method = "K", track = TRUE, ...)
 }
 \arguments{
-\item{trait.col}{Column name containing values for a single
-continuously distributed trait (e.g. "Body_mass").}
+\item{trait.col}{The name of a column in the provided data frame with trait 
+to be analyzed  (e.g. "Body_mass").}
 
 \item{data}{Data frame containing species traits with row names matching tips
 in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{The number of times species are randomly deleted for each
-\code{break}.}
+\item{n.sim}{The number of times to repeat species random removal for each
+\code{break} interval.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
 
@@ -25,7 +25,7 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{...}{further arguments to be passed to phytools::phylosig}
+\item{...}{Further arguments to be passed to \code{\link[phytools]{phylosig}}}
 }
 \value{
 The function \code{samp_phylosig} returns a list with the following
@@ -37,7 +37,7 @@ components:
 p-value  using the full dataset (without deleted species). See 
 \code{\link[phytools]{phylosig}} for details.
 
-\code{samp.physig.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 Columns report the calculated signal estimate (\code{estimate}),
@@ -50,8 +50,6 @@ removed) this reports the percentage of statistically signficant (at p<0.05)
 phylogenetic signal over all repititions with reduced data sets.
 
 \code{data}: Original full dataset used in the analysis.
-
-\code{phy}L Original phylogeny used in the analysis.
 #' @note Please be aware that dropping species may reduce power to detect 
 significant signal and may partially be responsible for a potential 
 effect of species removal on p-values. Please also consult standardised differences
@@ -59,7 +57,7 @@ in the (summary) output.
 }
 \description{
 Performs analyses of sensitivity to species sampling by randomly removing
-species and detecting the effects on parameter estimates on phylogenetic 
+species and detecting the effects on phylogenetic 
 signal estimates
 }
 \details{
@@ -67,16 +65,21 @@ This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full data, estimates phylogenetic
 signal for a given trait (K or lambda) without these species using 
 \code{\link[phytools]{phylosig}}, then
-repeats the analysis many times (controlled by \code{times}), stores the results and
+repeats the analysis many times (controlled by \code{n.sim}), stores the results and
 calculates the effect of random species removal on phylogenetic siganl estimates.
 
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-data("alien")
-fit  <- samp_physig(trait.col = "adultMass", data = alien.data, phy = alien.phy[[1]])
-summary(fit)
-sensi_plot(fit)
+data(alien)
+# Logtransform data
+alien.data$logMass <- log(alien.data$adultMass) 
+# Run sensitivity analysis:
+samp <- samp_physig(trait.col = "logMass", data = alien.data, n.sim = 100, phy = alien.phy[[1]])
+summary(samp)
+sensi_plot(samp)
+sensi_plot(samp, graphs = 1)
+sensi_plot(samp, graphs = 2)
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -95,8 +98,7 @@ Kamilar, J. M., & Cooper, N. (2013). Phylogenetic signal in primate behaviour,
  B: Biological Sciences, 368: 20120341.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-\code{\link{influ_phylosig}},\code{\link{sensi_plot}}
+\code{\link[phytools]{phylosig}}, \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner
