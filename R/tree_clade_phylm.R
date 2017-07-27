@@ -7,10 +7,10 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param clade.col The name of a column in the provided data frame with clades 
-#' specification (a character vector with clade names).
-#' @param n.species Minimum number of species in the clade in order to include
-#' this clade in the leave-one-out deletion analyis. Default is \code{5}.
+#' @param clade.col The column in the provided data frame which specifies the
+#' clades (a character vector with clade names).
+#' @param n.species Minimum number of species in a clade for the clade to be
+#' included in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.

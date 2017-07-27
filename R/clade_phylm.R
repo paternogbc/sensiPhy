@@ -11,7 +11,7 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param clade.col The column in the provided data frame which specifies the
 #' clades (a character vector with clade names).
-#' @param n.species Minimum number of species in the clade for the clade to be
+#' @param n.species Minimum number of species in a clade for the clade to be
 #' included in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param ... Further arguments to be passed to \code{phylolm}
