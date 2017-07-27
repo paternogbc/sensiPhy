@@ -68,7 +68,8 @@
 #' # Load data:
 #' data(alien)
 #' # run analysis:
-#' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, data = alien$data, n.tree = 20)
+#' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
+#' data = alien$data, n.tree = 20)
 #' # To check summary results:
 #'summary(tree_influ)
 #'# Most influential speciesL
