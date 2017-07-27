@@ -1,7 +1,7 @@
 #' Influential clade detection and phylogenetic uncertainty - Phylogenetic Linear Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic linear regression after 
-#' removing clades from the analysis and evaluating uncertainty in trees topology.. 
+#' removing clades from the analysis and evaluating uncertainty in trees topology. 
 #'
 #' @param formula The model formula
 #' @param data Data frame containing species traits with row names matching tips
@@ -77,7 +77,7 @@
 #'data(primates)
 #'# run analysis:
 #'clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
-#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 100, n.tree = 20)
+#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 50, n.tree = 20)
 #'# To check summary results and most influential clades:
 #'summary(clade_tree)
 #'# Visual diagnostics for clade removal:
