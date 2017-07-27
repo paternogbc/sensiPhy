@@ -88,7 +88,7 @@
 #' #load data
 #' data(alien)
 #' intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data, 
-#' clade.col = "family", n.sim = 100, n.intra = 50, y.transf = log, Vy="SD_gesta")
+#' clade.col = "family", n.sim = 50, n.intra = 10, y.transf = log, Vy="SD_gesta")
 #' summary(intra_clade)
 #' sensi_plot(intra_clade)
 #' @export
