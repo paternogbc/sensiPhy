@@ -14,7 +14,7 @@
 #' @param n.sim Number of simulations for the randomization test.
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
