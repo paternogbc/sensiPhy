@@ -134,7 +134,7 @@ tree_intra_phylm <- function(formula, data, phy,
       #model (remove warnings about standard deviation in intra)
       withCallingHandlers(
         tree.intra[[counter]] <- intra_phylm(formula=formula,data=full.data,phy=tree,
-                                             Vx, Vy, y.transf, x.transf, times=n.intra,
+                                             Vx, Vy, y.transf, x.transf, n.intra=n.intra,
                                              distrib, model, track=F, verbose=F,...),
                                 
         warning=function(w){

@@ -86,7 +86,7 @@ tree_phyglm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
   for (j in trees){
     
     #Match data order to tip order
@@ -125,7 +125,7 @@ tree_phyglm <- function(formula,data,phy,
       
     }
   }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
   mean_by_tree<-stats::aggregate(.~n.tree, data=tree.model.estimates, mean)
