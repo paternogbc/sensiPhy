@@ -158,7 +158,6 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   
   #Generate output:
   res <- list(call = match.call(),
-              model = model,
               formula = formula,
               full.model.estimates = full.estimates,
               clade.model.estimates = clade.estimates,
