@@ -7,14 +7,14 @@
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param clade.col The name of a column in the provided data frame with clades 
-#' specification (a character vector with clade names).
-#' @param n.species Minimum number of species in the clade in order to include
-#' this clade in the leave-one-out deletion analyis. Default is \code{5}.
+#' @param clade.col The column in the provided data frame which specifies the
+#' clades (a character vector with clade names).
+#' @param n.species Minimum number of species in a clade for the clade to be
+#' included in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
@@ -33,9 +33,9 @@
 #' clade (clade sample size), this function also estimates a null distribution of slopes
 #' expected for the number of species in a given clade. This is done by fitting
 #' models without the same number of species in the given clade. 
-#' The number of simulations to be performed is set by 'times'. To test if the 
-#' clade influence differs from the null expectation, a randomization test can
-#' be performed using 'summary(x)'. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #'
 #' \code{clade_phyglm} detects influential clades based on

@@ -1,20 +1,20 @@
 #' Influential clade detection and phylogenetic uncertainty - Phylogenetic Linear Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic linear regression after 
-#' removing clades from the analysis and evaluating uncertainty in trees topology.. 
+#' removing clades from the analysis and evaluating uncertainty in trees topology. 
 #'
 #' @param formula The model formula
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'multiPhylo', see ?\code{ape}).
-#' @param clade.col The name of a column in the provided data frame with clades 
-#' specification (a character vector with clade names).
-#' @param n.species Minimum number of species in the clade in order to include
-#' this clade in the leave-one-out deletion analyis. Default is \code{5}.
+#' @param clade.col The column in the provided data frame which specifies the
+#' clades (a character vector with clade names).
+#' @param n.species Minimum number of species in a clade for the clade to be
+#' included in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file.
-#' If NULL, \code{times} = 2
+#' If NULL, \code{n.tree} = 2
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
@@ -30,9 +30,9 @@
 #'  clade (clade sample size), this function also estimate a null distribution of slopes
 #'  expected for the number of species in a given clade. This is done by fitting
 #'  models without the same number of species in the given clade. 
-#'  The number of simulations to be performed is set by 'times'. To test if the 
-#'  clade influence differs from the null expectation, a randomization test can
-#'  be performed using 'summary(x)'. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -77,7 +77,7 @@
 #'data(primates)
 #'# run analysis:
 #'clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
-#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 100, n.tree = 20)
+#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 50, n.tree = 10)
 #'# To check summary results and most influential clades:
 #'summary(clade_tree)
 #'# Visual diagnostics for clade removal:

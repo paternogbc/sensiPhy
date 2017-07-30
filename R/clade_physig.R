@@ -8,10 +8,10 @@
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param method Method to compute signal: can be "K" or "lambda".
-#' @param clade.col The name of a column in the provided data frame with clades 
-#' specification.
-#' @param n.species Minimum number of species in the clade in order to include
-#' this clade in the leave-one-out deletion analyis. Default is \code{5}.
+#' @param clade.col The column in the provided data frame which specifies the
+#' clades (a character vector with clade names).
+#' @param n.species Minimum number of species in a clade for the clade to be
+#' included in the leave-one-out deletion analyis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[phytools]{phylosig}}
@@ -27,9 +27,9 @@
 #' clade (clade sample size), this function also estimate a null distribution of signal estimates
 #' expected by the removal of the same number of species in a given clade. This is done by estimating
 #' phylogenetic signal without the same number of species in the given clade. 
-#' The number of simulations to be performed is set by \code{n.sim}. A test if the 
-#' clade influence differs from the null expectation is performed by a randomization 
-#' test using 'summary(x)'. 
+#'  The number of simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
