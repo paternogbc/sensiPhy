@@ -4,9 +4,8 @@
 \alias{tree_clade_phylm}
 \title{Influential clade detection and phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_clade_phylm(formula, data, phy, clade.col, n.species = 5,
-  times.clade = 100, times.tree = 2, model = "lambda", track = TRUE,
-  ...)
+tree_clade_phylm(formula, data, phy, clade.col, n.species = 5, n.sim = 100,
+  n.tree = 2, model = "lambda", track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -16,17 +15,17 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analyis. Default is \code{5}.}
 
-\item{times.clade}{Number of simulations for the randomization test.}
+\item{n.sim}{Number of simulations for the randomization test.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 
@@ -61,7 +60,7 @@ are reported.
 }
 \description{
 Estimate the impact on model estimates of phylogenetic linear regression after 
-removing clades from the analysis and evaluating uncertainty in trees topology..
+removing clades from the analysis and evaluating uncertainty in trees topology.
 }
 \details{
 This function sequentially removes one clade at a time, fits a phylogenetic
@@ -75,9 +74,9 @@ randomly picked in a multiPhylo file.
  clade (clade sample size), this function also estimate a null distribution of slopes
  expected for the number of species in a given clade. This is done by fitting
  models without the same number of species in the given clade. 
- The number of simulations to be performed is set by 'times'. To test if the 
- clade influence differs from the null expectation, a randomization test can
- be performed using 'summary(x)'. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -98,7 +97,7 @@ Output can be visualised using \code{sensi_plot}.
 data(primates)
 # run analysis:
 clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
-phy = primates$phy, data = primates$data, clade.col = "family", times.clade = 30, times.tree = 5)
+phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 50, n.tree = 10)
 # To check summary results and most influential clades:
 summary(clade_tree)
 # Visual diagnostics for clade removal:

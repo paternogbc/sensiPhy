@@ -4,7 +4,7 @@
 \alias{intra_samp_phyglm}
 \title{Interaction of intraspecific variability & influential species - Phylogenetic Logistic Regression}
 \usage{
-intra_samp_phyglm(formula, data, phy, times.samp = 10, times.intra = 3,
+intra_samp_phyglm(formula, data, phy, n.sim = 10, n.intra = 3,
   breaks = seq(0.1, 0.5, 0.1), Vx = NULL, distrib = "normal",
   x.transf = NULL, btol = 50, track = TRUE, ...)
 }
@@ -16,10 +16,10 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.samp}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
-\item{times.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"})}
+\item{n.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"})}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
 
@@ -83,9 +83,9 @@ interactions with intraspecific variability.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
 logistic regression model without these species using \code{\link[phylolm]{phylolm}},
-repeats this many times (controlled by \code{times.samp}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters. 
-This operation is repeated \code{times.intra} times for simulated values of the dataset, 
+This operation is repeated \code{n.intra} times for simulated values of the dataset, 
 taking into account intraspecific variation. At each iteration, the function generates a 
 random value for each row in the dataset using the standard deviation or errors supplied, and 
 evaluates the effects of sampling within that iteration.
@@ -115,7 +115,7 @@ z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
 dat = data.frame(y, x, z)
 #Run sensitivity analysis:
 intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy, 
-                               times.samp=10, times.intra = 3,
+                               n.sim=10, n.intra = 3,
                                breaks=seq(.1,.5,.1),
                                Vx = "z", distrib="normal",x.transf=NULL)
 summary(samp)

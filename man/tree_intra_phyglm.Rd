@@ -5,7 +5,7 @@
 \title{Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic logistic Regression}
 \usage{
 tree_intra_phyglm(formula, data, phy, Vx = NULL, y.transf = NULL,
-  x.transf = NULL, times.intra = 10, times.tree = 2, distrib = "normal",
+  x.transf = NULL, n.intra = 10, n.tree = 2, distrib = "normal",
   model = "lambda", track = TRUE, btol = 50, ...)
 }
 \arguments{
@@ -24,12 +24,12 @@ argument instead of transforming data in the formula directly (see also details 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
 
-\item{times.intra}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-If NULL, \code{times.intra} = 30}
+\item{n.intra}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+If NULL, \code{n.intra} = 30}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times.tree} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the response 
 and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -77,8 +77,8 @@ intraspecific variability in response and/or predictor variables
 and uncertainty in trees topology.
 }
 \details{
-This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{times.tree}), 
-randomly picked in a multiPhylo file. The regression is also repeated \code{times.intra} times.
+This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}} to n trees (\code{n.tree}), 
+randomly picked in a multiPhylo file. The regression is also repeated \code{n.intra} times.
 At each iteration the function generates a random value for each row in the dataset using the standard deviation 
 or errors supplied and assuming a normal or uniform distribution. To calculate means and se for your raw data, 
 you can use the \code{summarySE} function from the package \code{Rmisc}.
@@ -108,8 +108,8 @@ x_sd = rnorm(150,mean = 0.8,sd=0.2)
 X = cbind(rep(1,150),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x, x_sd)
-intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, times.intra = 10, 
-                                           times.tree = 10, Vx = "x_sd")
+intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, n.intra = 10, 
+                                           n.tree = 10, Vx = "x_sd")
 # summary results:
 summary(intra.tree)
 # Visual diagnostics for phylogenetic uncertainty:

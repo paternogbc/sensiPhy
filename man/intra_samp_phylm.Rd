@@ -4,7 +4,7 @@
 \alias{intra_samp_phylm}
 \title{Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression}
 \usage{
-intra_samp_phylm(formula, data, phy, times.samp = 10, times.intra = 3,
+intra_samp_phylm(formula, data, phy, n.sim = 10, n.intra = 3,
   breaks = seq(0.1, 0.5, 0.1), model = "lambda", Vy = NULL, Vx = NULL,
   distrib = "normal", y.transf = NULL, x.transf = NULL, track = TRUE,
   ...)
@@ -17,10 +17,10 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.samp}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
-\item{times.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
+\item{n.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
 
@@ -86,9 +86,9 @@ interactions with intraspecific variability.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 linear regression model without these species using \code{\link[phylolm]{phylolm}},
-repeats this many times (controlled by \code{times.samp}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters. 
-This operation is repeated \code{times.intra} times for simulated values of the dataset, 
+This operation is repeated \code{n.intra} times for simulated values of the dataset, 
 taking into account intraspecific variation. At each iteration, the function generates a 
 random value for each row in the dataset using the standard deviation or errors supplied, and 
 evaluates the effects of sampling within that iteration.
@@ -114,7 +114,7 @@ data(alien)
 # Run analysis:
 samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
                          y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-                         data = alien$data, times.tree = 5, times.samp=10)
+                         data = alien$data, times.tree = 5, n.sim=10)
 summary(samp)
 head(samp$samp.model.estimates)
 # Visual diagnostics

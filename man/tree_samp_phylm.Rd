@@ -4,7 +4,7 @@
 \alias{tree_samp_phylm}
 \title{Sensitivity Analysis Species Sampling and phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_samp_phylm(formula, data, phy, times.samp = 30, times.tree = 2,
+tree_samp_phylm(formula, data, phy, n.sim = 30, n.tree = 2,
   breaks = seq(0.1, 0.5, 0.1), model = "lambda", track = TRUE, ...)
 }
 \arguments{
@@ -15,10 +15,10 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.samp}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -72,7 +72,7 @@ linear regression, while evaluating uncertainty in trees topology.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 linear regression model without these species using \code{\link[phylolm]{phylolm}},
-repeats this many times (controlled by \code{times.samp}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters. It repeats this operation using n trees, 
 randomly picked in a multiPhylo file.
 
@@ -90,7 +90,7 @@ Output can be visualised using \code{sensi_plot}.
 data(alien)
 # Run analysis:
 samp <- tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
-                                    data = alien$data, times.tree = 5, times.samp=10)
+                                    data = alien$data, n.tree = 5, n.sim=10)
 summary(samp)
 head(samp$samp.model.estimates)
 # Visual diagnostics

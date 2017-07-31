@@ -4,7 +4,7 @@
 \alias{tree_samp_phyglm}
 \title{Sensitivity Analysis Species Sampling and phylogenetic uncertainty  - Phylogenetic Logistic Regression}
 \usage{
-tree_samp_phyglm(formula, data, phy, times.samp = 30, times.tree = 2,
+tree_samp_phyglm(formula, data, phy, n.sim = 30, n.tree = 2,
   breaks = seq(0.1, 0.5, 0.1), btol = 50, track = TRUE, ...)
 }
 \arguments{
@@ -15,10 +15,10 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.samp}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -95,7 +95,7 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, times.samp=10) 
+samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, n.sim=10) 
 summary(samp)
 sensi_plot(samp)
 }

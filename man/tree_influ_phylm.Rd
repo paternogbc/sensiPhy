@@ -4,7 +4,7 @@
 \alias{tree_influ_phylm}
 \title{Influential species detection and phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_influ_phylm(formula, data, phy, times.tree = 2, cutoff = 2,
+tree_influ_phylm(formula, data, phy, n.tree = 2, cutoff = 2,
   model = "lambda", track = TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.}
 
 \item{cutoff}{The cutoff value used to identify for influential species
@@ -89,7 +89,8 @@ Output can be visualised using \code{sensi_plot}.
 # Load data:
 data(alien)
 # run analysis:
-tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, data = alien$data, times.tree = 3)
+tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
+data = alien$data, n.tree = 20)
 # To check summary results:
 summary(tree_influ)
 # Most influential speciesL

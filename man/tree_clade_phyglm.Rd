@@ -4,8 +4,8 @@
 \alias{tree_clade_phyglm}
 \title{Influential clade detection and phylogenetic uncertainty - Phylogenetic Logistic Regression}
 \usage{
-tree_clade_phyglm(formula, data, phy, clade.col, n.species = 5,
-  times.clade = 100, times.tree = 2, btol = 50, track = TRUE, ...)
+tree_clade_phyglm(formula, data, phy, clade.col, n.species = 5, n.sim = 100,
+  n.tree = 2, btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -15,17 +15,17 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analyis. Default is \code{5}.}
 
-\item{times.clade}{Number of simulations for the randomization test.}
+\item{n.sim}{Number of simulations for the randomization test.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{btol}{Bound on searching space. For details see \code{phyloglm}}
 
@@ -77,9 +77,9 @@ Additionally, to account for the influence of the number of species on each
 clade (clade sample size), this function also estimates a null distribution of slopes
 expected for the number of species in a given clade. This is done by fitting
 models without the same number of species in the given clade. 
-The number of simulations to be performed is set by 'times'. To test if the 
-clade influence differs from the null expectation, a randomization test can
-be performed using 'summary(x)'. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
 
 
 \code{clade_phyglm} detects influential clades based on
@@ -102,7 +102,8 @@ y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 cla <- rep(c("A","B","C","D","E"), each = 30)
 dat = data.frame(y, x, cla)
 # Run sensitivity analysis:
-clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, times.tree = 3, times.clade = 5, clade.col = "cla")
+clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, 
+n.tree = 3, n.sim = 5, clade.col = "cla")
 # To check summary results and most influential clades:
 summary(clade)
 # Visual diagnostics for clade removal:

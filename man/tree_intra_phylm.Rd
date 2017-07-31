@@ -5,7 +5,7 @@
 \title{Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
 tree_intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
-  y.transf = NULL, x.transf = NULL, times.intra = 10, times.tree = 2,
+  y.transf = NULL, x.transf = NULL, n.intra = 10, n.tree = 2,
   distrib = "normal", model = "lambda", track = TRUE, ...)
 }
 \arguments{
@@ -27,12 +27,12 @@ argument instead of transforming data in the formula directly (see also details 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
 
-\item{times.intra}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-If NULL, \code{times.intra} = 30}
+\item{n.intra}{Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+If NULL, \code{n.intra} = 30}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times.tree} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the response 
 and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -77,8 +77,8 @@ intraspecific variability in response and/or predictor variables
 and uncertainty in trees topology.
 }
 \details{
-This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}} to n trees (\code{times.tree}), 
-randomly picked in a multiPhylo file. The regression is also repeated \code{times.intra} times.
+This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}} to n trees (\code{n.tree}), 
+randomly picked in a multiPhylo file. The regression is also repeated \code{n.intra} times.
 At each iteration the function generates a random value for each row in the dataset using the standard deviation 
 or errors supplied and assuming a normal or uniform distribution. To calculate means and se for your raw data, 
 you can use the \code{summarySE} function from the package \code{Rmisc}.
@@ -104,7 +104,7 @@ be solved by increasing \code{times}, changing the transformation type and/or ch
 data(alien)
 # run PGLS accounting for intraspecific variation:
 intra.tree <- tree_intra_phylm(gestaLen ~ adultMass, data = alien$data, phy = alien$phy,
-Vy = "SD_gesta", times.intra = 10, times.tree = 10, y.transf = log, x.transf = log)
+Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
 # To check summary results:
 summary(intra.tree)
 # Visual diagnostics

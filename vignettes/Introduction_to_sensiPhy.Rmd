@@ -7,7 +7,7 @@ output:
     theme: default
     highlight: pygments
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{}Introduction to sensiPhy
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

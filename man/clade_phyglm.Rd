@@ -5,7 +5,7 @@
 \title{Influential clade detection - Phylogenetic Logistic Regression}
 \usage{
 clade_phyglm(formula, data, phy, btol = 50, track = TRUE, clade.col,
-  n.species = 5, times = 100, ...)
+  n.species = 5, n.sim = 100, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -19,13 +19,13 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analyis. Default is \code{5}.}
 
-\item{times}{Number of simulations for the randomization test.}
+\item{n.sim}{Number of simulations for the randomization test.}
 
 \item{...}{Further arguments to be passed to \code{phyloglm}}
 }
@@ -58,6 +58,20 @@ Estimate the impact on model estimates of phylogenetic logistic regression after
 removing clades from the analysis.
 }
 \details{
+#' This function sequentially removes one clade at a time, fits a phylogenetic
+logistic regression model using \code{\link[phylolm]{phyloglm}} and stores the
+results. The impact of of a specific clade on model estimates is calculated by a
+comparison between the full model (with all species) and the model without 
+the species belonging to a clade.
+
+Additionally, to account for the influence of the number of species on each 
+clade (clade sample size), this function also estimate a null distribution of slopes
+expected for the number of species in a given clade. This is done by fitting
+ models without the same number of species in the given clade. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
+
 Currently only logistic regression using the "logistic_MPLE"-method from
 \code{phyloglm} is implemented.
 
@@ -69,9 +83,9 @@ Additionally, to account for the influence of the number of species on each
 clade (clade sample size), this function also estimate a null distribution of slopes
 expected for the number of species in a given clade. This is done by fitting
 models without the same number of species in the given clade. 
-The number of simulations to be performed is set by 'times'. To test if the 
-clade influence differs from the null expectation, a randomization test can
-be performed using 'summary(x)'. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
 
 Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
 predictor}). In the future we will implement more complex models.
@@ -89,7 +103,7 @@ y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 cla <- rep(c("A","B","C","D","E"), each = 30)
 dat = data.frame(y, x, cla)
 # Run sensitivity analysis:
-clade <- clade_phyglm(y ~ x, phy = phy, data = dat, times = 30, clade.col = "cla")
+clade <- clade_phyglm(y ~ x, phy = phy, data = dat, n.sim = 30, clade.col = "cla")
 # To check summary results and most influential clades:
 summary(clade)
 # Visual diagnostics for clade removal:

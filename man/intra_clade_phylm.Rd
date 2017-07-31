@@ -4,10 +4,9 @@
 \alias{intra_clade_phylm}
 \title{Interaction of intraspecific variability & influential clade detection - Phylogenetic Linear Regression}
 \usage{
-intra_clade_phylm(formula, data, phy, clade.col, n.species = 5,
-  times.clade = 100, times.intra = 2, Vy = NULL, Vx = NULL,
-  distrib = "normal", y.transf = NULL, x.transf = NULL,
-  model = "lambda", track = TRUE, ...)
+intra_clade_phylm(formula, data, phy, clade.col, n.species = 5, n.sim = 100,
+  n.intra = 2, Vy = NULL, Vx = NULL, distrib = "normal",
+  y.transf = NULL, x.transf = NULL, model = "lambda", track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -17,15 +16,15 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analyis. Default is \code{5}.}
 
-\item{times.clade}{Number of simulations for the randomization test.}
+\item{n.sim}{Number of simulations for the randomization test.}
 
-\item{times.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
+\item{n.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
 
 \item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
@@ -85,7 +84,7 @@ This function sequentially removes one clade at a time, fits a phylogenetic
 linear regression model using \code{\link[phylolm]{phylolm}} and stores the
 results. The impact of of a specific clade on model estimates is calculated by the
 comparison between the full model (with all species) and the model without 
-the species belonging to a clade. This operation is repeated \code{times.intra} times for
+the species belonging to a clade. This operation is repeated \code{n.intra} times for
 simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
 generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
 detect the influential species within that iteration. 
@@ -94,9 +93,9 @@ Additionally, to account for the influence of the number of species on each
 clade (clade sample size), this function also estimate a null distribution of slopes
 expected for the number of species in a given clade. This is done by fitting
 models without the same number of species in the given clade. 
-The number of simulations to be performed is set by 'times'. To test if the 
-clade influence differs from the null expectation, a randomization test can
-be performed using 'summary(x)'. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -115,7 +114,7 @@ Output can be visualised using \code{sensi_plot}.
 #load data
 data(alien)
 intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data, 
-clade.col = "family", times.clade = 30, times.intra = 3, y.transf = log, Vy="SD_gesta")
+clade.col = "family", n.sim = 50, n.intra = 10, y.transf = log, Vy="SD_gesta")
 summary(intra_clade)
 sensi_plot(intra_clade)
 }

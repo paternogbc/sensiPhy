@@ -5,8 +5,8 @@
 \title{Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression}
 \usage{
 intra_influ_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
-  y.transf = NULL, x.transf = NULL, times.intra = 10,
-  distrib = "normal", model = "lambda", cutoff = 2, track = TRUE, ...)
+  y.transf = NULL, x.transf = NULL, n.intra = 10, distrib = "normal",
+  model = "lambda", cutoff = 2, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula:  \code{response~predictor}.}
@@ -28,7 +28,7 @@ argument instead of transforming data in the formula directly (see also details 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
 
-\item{times.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
+\item{n.intra}{Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phylm"})}
 
 \item{distrib}{A character string indicating which distribution to use to generate a random value for the response 
 and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
@@ -51,7 +51,7 @@ interactions with intraspecific variability.
 }
 \details{
 This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}, and detects
-influential species by sequentially deleting one at a time. The regression is repeated \code{times.intra} times for 
+influential species by sequentially deleting one at a time. The regression is repeated \code{n.intra} times for 
 simulated values of the dataset, taking into account intraspecific variation. At each iteration, the function 
 generates a random value for each row in the dataset using the standard deviation or errors supplied, and 
 detect the influential species within that iteration. 
@@ -76,11 +76,11 @@ Output can be visualised using \code{sensi_plot}.
 When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
 for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. 
 
-Setting \code{times.intra} at high values can take a long time to exectue, since the total number of iterations 
-equals \code{times.intra * nrow(data)}.
+Setting \code{n.intra} at high values can take a long time to exectue, since the total number of iterations 
+equals \code{n.intra * nrow(data)}.
 
 The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
-of length \code{times.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
+of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
 regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
 species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
 Percentage change and P-value across all species that occured as most influential species in at least one simulation.
@@ -94,7 +94,7 @@ data(alien)
 # run analysis:
 intra_influ <- intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
 data=alien$data,model="lambda",y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-times.intra=30,distrib = "normal")
+n.intra=30,distrib = "normal")
 summary(intra_influ)
 sensi_plot(intra_influ)
  

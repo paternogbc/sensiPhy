@@ -4,8 +4,8 @@
 \alias{tree_influ_phyglm}
 \title{Influential species detection and phylogenetic uncertainty - Phylogenetic Logistic Regression}
 \usage{
-tree_influ_phyglm(formula, data, phy, times.tree = 2, cutoff = 2,
-  btol = 50, track = TRUE, ...)
+tree_influ_phyglm(formula, data, phy, n.tree = 2, cutoff = 2, btol = 50,
+  track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times.tree}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.}
 
 \item{cutoff}{The cutoff value used to identify for influential species
@@ -92,7 +92,7 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, times.tree = 3)
+influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 20)
 summary(influ)
 sensi_plot(influ)
 }

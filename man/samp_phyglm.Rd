@@ -4,7 +4,7 @@
 \alias{samp_phyglm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Logistic Regression}
 \usage{
-samp_phyglm(formula, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
+samp_phyglm(formula, data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
   btol = 50, track = TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -65,7 +65,7 @@ logistic regression.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
 logistic regression model without these species using \code{\link[phylolm]{phyloglm}},
-repeats this many times (controlled by \code{times}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters.
 
 Only logistic regression using the "logistic_MPLE"-method from
@@ -91,7 +91,7 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-samp <- samp_phyglm(y ~ x, data = dat, phy = phy, times = 10) 
+samp <- samp_phyglm(y ~ x, data = dat, phy = phy, n.sim = 10) 
 # To check summary results and most influential species:
 summary(samp)
 \dontrun{

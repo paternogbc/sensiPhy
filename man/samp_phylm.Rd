@@ -4,7 +4,7 @@
 \alias{samp_phylm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Linear Regression}
 \usage{
-samp_phylm(formula, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
+samp_phylm(formula, data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
   model = "lambda", track = TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -69,7 +69,7 @@ linear regression.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 linear regression model without these species using \code{\link[phylolm]{phylolm}},
-repeats this many times (controlled by \code{times}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters.
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
@@ -86,7 +86,7 @@ Output can be visualised using \code{sensi_plot}.
 data(alien)
 # Run analysis:
 samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
-data = alien$data, times = 10)
+data = alien$data, n.sim = 10)
 summary(samp)
 head(samp$samp.model.estimates)
 # Visual diagnostics
