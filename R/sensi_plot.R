@@ -14,7 +14,13 @@
 #'  \item{\code{\link[sensiPhy]{sensi_plot.sensiSamp}}}
 #'  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra}}}
 #'  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree}}}
-#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Tree}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Influ}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Samp}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Clade}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
+#'  \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
 #'  }
 #' 
 #' @author Gustavo Paterno

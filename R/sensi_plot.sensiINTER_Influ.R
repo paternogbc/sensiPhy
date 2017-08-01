@@ -4,7 +4,7 @@
 #' \code{intra_influ_phyglm}
 #' @param x output from \code{influ_phylm} or \code{intra_influ_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which parameter ("intercept" or "slope" should be printed)
+#' @param param choose which parameter ("intercept" or "estimate" should be printed)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
@@ -31,34 +31,34 @@
 #' @export
 
 ### Start:
-sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
+sensi_plot.sensiIntra_Influ <- function(x, graphs="all", param="estimate", ...){
   
   # nulling variables:------------------------------------------------------------
-  slope <- ..density.. <- intercept <- sDFslope <- slope.perc <- NULL 
-  intercept.perc <- sDFintercept <- species <-  NULL
+  estimate <- ..density.. <- intercept <- sDIFestimate <- estimate.perc <- NULL 
+  intercept.perc <- sDIFintercept <- species <-  NULL
   
   ### Organizing values:
-  result <- x$influ.model.estimates
+  result <- x$sensi.estimates
   mappx <- x$formula[[3]]
   mappy <- x$formula[[2]]
   vars <- all.vars(x$formula)
   intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
-  slope.0     <-  as.numeric(x$full.model.estimates$coef[2])
+  estimate.0     <-  as.numeric(x$full.model.estimates$coef[2])
   cutoff      <-  x$cutoff
   
   ### Removing species with error:
   if (isTRUE(class(x$errors) != "character" )){
     x$data <- x$data[-as.numeric(x$errors),]
   }
-  result.tab <- data.frame(x$influ.model.estimates,x$data[all.vars(x$formula)])
+  result.tab <- data.frame(x$sensi.estimates,x$data[all.vars(x$formula)])
   
   ### Plots:
-  # Distribution of estimated slopes:
-  s1 <- ggplot2::ggplot(result,aes(x=slope))+
+  # Distribution of estimated estimates:
+  s1 <- ggplot2::ggplot(result,aes(x=estimate))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
-    geom_vline(xintercept = slope.0,color="red",linetype=2,size=.7)+
-    xlab("Estimated slopes")+
+    geom_vline(xintercept = estimate.0,color="red",linetype=2,size=.7)+
+    xlab("Estimates")+
     ylab("Frequency")+
     theme(axis.title=element_text(size=12),
           axis.text = element_text(size=12),
@@ -77,13 +77,13 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
           panel.background = element_rect(fill="white",
                                           colour="black"))
   
-  # Original plot with Standardized DFslope as colour gradient
+  # Original plot with Standardized DIFestimate as colour gradient
   s2 <- ggplot2::ggplot(result.tab, aes_string(y = mappy, x = mappx),
                         environment = environment())+
     geom_point(data = result.tab,
-               aes(size = abs(sDFslope)), alpha = .8)+
+               aes(size = abs(sDIFestimate)), alpha = .8)+
     ggplot2::scale_size_continuous(name = "|sDF|", range = c(1, 6))+
-    ggplot2::geom_text(aes(label =  ifelse(abs(sDFslope) > cutoff, 
+    ggplot2::geom_text(aes(label =  ifelse(abs(sDIFestimate) > cutoff, 
                                            as.character(species), ""),
                            vjust = 0, hjust = 0,
                            color = "red", size = .7), show.legend = F,
@@ -94,19 +94,19 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank())+
     scale_x_continuous(expand = c(.2, .2)) +
-    ggtitle("Standardized Difference in slope")+
+    ggtitle("Standardized Difference in estimate")+
     theme(axis.title = element_text(size = 12),
           axis.text = element_text(size = 12),
           panel.background = element_rect(fill = "white",
                                           colour = "black"))
   
-  # Original plot with Standardized DFintercept as size gradient
+  # Original plot with Standardized DIFintercept as size gradient
   i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
                       environment = environment())+
     geom_point(data = result.tab,
-               aes(size = abs(sDFintercept)), alpha = .8)+
+               aes(size = abs(sDIFintercept)), alpha = .8)+
     ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
-    ggplot2::geom_text(aes(label = ifelse(abs(sDFintercept) > cutoff, 
+    ggplot2::geom_text(aes(label = ifelse(abs(sDIFintercept) > cutoff, 
                                           as.character(species), ""), 
                            vjust = 0, hjust = 0, color = "red",
                            size = .7), show.legend = F,  fontface = "bold") +
@@ -122,12 +122,12 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
           panel.background = element_rect(fill="white",
                                           colour="black"))
   
-  # Influential points for slope estimate
-  s3 <- ggplot2::ggplot(result,aes(x=sDFslope))+
+  # Influential points for estimate estimate
+  s3 <- ggplot2::ggplot(result,aes(x=sDIFestimate))+
     geom_histogram(fill="red",color="black",binwidth=.5) +
-    xlab("Standardized Difference in Slope")+
+    xlab("Standardized Difference in Estimate")+
     ylab("Frequency")+
-    geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
+    geom_histogram(data=subset(result,sDIFestimate<cutoff&sDIFestimate>-cutoff),
                    colour="black", fill="white",binwidth=.5)+
     geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
     geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
@@ -137,11 +137,11 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
                                           colour="black"))
   
   # Influential points for intercept estimate
-  i3 <- ggplot2::ggplot(result,aes(x=sDFintercept))+
+  i3 <- ggplot2::ggplot(result,aes(x=sDIFintercept))+
     geom_histogram(fill="red",color="black",binwidth=.5) +
     xlab("Standardized Difference in Intercept")+
     ylab("Frequency")+
-    geom_histogram(data=subset(result,sDFslope<cutoff&sDFslope>-cutoff),
+    geom_histogram(data=subset(result,sDIFestimate<cutoff&sDIFestimate>-cutoff),
                    colour="black", fill="white",binwidth=.5)+
     geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
     geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
@@ -152,18 +152,18 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
   
   # Distribution of slope.perc:
   
-  s4 <- ggplot2::ggplot(result,aes(x=slope.perc,y=..density..))+
+  s4 <- ggplot2::ggplot(result,aes(x=estimate.perc,y=..density..))+
     geom_histogram(data = result,
                    colour="black", fill="yellow",
                    alpha = .3)+
-    xlab("% of change in Slope")+
+    xlab("% of change in Estimate")+
     ylab("Frequency") +
     theme(axis.title=element_text(size=12),
           axis.text = element_text(size=12),
           panel.background = element_rect(fill="white",
                                           colour="black"))
   
-  # Distribution of slope.perc:
+  # Distribution of estimate.perc:
   i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
     geom_histogram(
       colour="black", fill="yellow",
@@ -176,15 +176,15 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
                                           colour="black"))
   
   ### Plotting:
-  if (param == "slope" & graphs == "all")
+  if (param == "estimate" & graphs == "all")
     suppressMessages(return(multiplot(s1, s3, s2, s4, cols = 2)))
-  if (param == "slope" & graphs == 1)
+  if (param == "estimate" & graphs == 1)
     suppressMessages(return(s1))
-  if (param == "slope" & graphs == 2)
+  if (param == "estimate" & graphs == 2)
     suppressMessages(return(s2))
-  if (param == "slope" & graphs == 3)
+  if (param == "estimate" & graphs == 3)
     suppressMessages(return(s3))
-  if (param == "slope" & graphs == 4)
+  if (param == "estimate" & graphs == 4)
     suppressMessages(return(s4))
   if (param == "intercept" & graphs == "all")
     suppressMessages(return(multiplot(i1, i3, i2, i4, cols = 2)))
@@ -210,7 +210,7 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
 #' \code{tree_influ_phyglm}
 #' @param x output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which parameter ("intercept" or "slope" should be printed)
+#' @param param choose which parameter ("intercept" or "estimate" should be printed)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
@@ -219,7 +219,7 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
 #' @seealso \code{\link[ggplot2]{ggplot}}
 #' @details For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
 #' 
-#' Graph 1: Distribution of estimated slopes or intercepts for each 
+#' Graph 1: Distribution of estimated estimates (slopes) or intercepts for each 
 #' simulation (leave-one-out deletion). Red vertical line represents the original
 #' slope or intercept from the full model (with all species). 
 #' 
@@ -239,6 +239,6 @@ sensi_plot.intra_influ <- function(x, graphs="all", param="slope", ...){
 
 
 #' @export
-sensi_plot.sensiTree_Influ <- function(x, graphs="all", param="slope", ...){
+sensi_plot.sensiTree_Influ <- function(x, graphs="all", param="estimate", ...){
   sensi_plot.intra_influ(x, graphs, ...)
 }
