@@ -138,7 +138,7 @@ tree_intra_phyglm <- function(formula, data, phy,
 
       withCallingHandlers(tree.intra[[counter]] <- intra_phyglm(formula=formula,data=full.data,phy=tree,
                           Vx, x.transf, y.transf, n.intra=n.intra,
-                           distrib=distrib, btol=btol, track=F, verbose=F),
+                           distrib=distrib, btol=btol, track=F, verbose=F,...),
                           
                           warning=function(w){
                             if (grepl("make sure that standard deviation", w$message))

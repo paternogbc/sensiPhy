@@ -128,7 +128,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
 
 
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy)
+  datphy <- match_dataphy(formula, data, phy,...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   

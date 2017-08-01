@@ -145,9 +145,9 @@ intra_influ_phyglm <- function(formula, data, phy,
     #Run the model
     if(length(all.vars(formula))>2) {
       intra.influ[[i]] <- influ_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy,method="logistic_MPLE", 
-                                       cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
+                                       cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE,...)
     } else intra.influ[[i]] <- influ_phyglm(resp1~predV, data = full.data, phy=phy,method="logistic_MPLE", 
-                                    cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE)
+                                    cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE,...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
     counter = counter + N
