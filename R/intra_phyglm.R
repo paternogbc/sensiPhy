@@ -44,7 +44,7 @@
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
-#' @return \code{model_results}: Coefficients, aic and the optimised
+#' @return \code{sensi.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
@@ -79,7 +79,7 @@
 #' 
 #' #Print summary of sensitivity analysis
 #' summary(intra_glm)
-#' head(intra_glm$model_results)
+#' head(intra_glm$sensi.estimates)
 #' #Visual output
 #' sensi_plot(intra_glm)
 #' @export
@@ -207,7 +207,7 @@ intra_phyglm <- function(formula, data, phy,
   res <- list(call = match.call(),
               formula=formula,
               data=full.data,
-              model_results=sensi.estimates,N.obs=n,
+              sensi.estimates=sensi.estimates,N.obs=n,
               stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
   class(res) <- c("sensiIntra","sensiIntraL")

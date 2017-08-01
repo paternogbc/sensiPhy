@@ -45,14 +45,14 @@
 #' based on standardised difference in interecept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
-#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. #' Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage of change in intercept compared
+#' intercept and full model intercept (\code{DIFintercept}), the standardised
+#' difference (\code{sDIFintercept}), the percentage of change in intercept compared
 #' to the full model (\code{intercept.perc}) and intercept p-value
 #' (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (i.e. \code{alpha}) are reported.
 #' @return \code{data}: Original full dataset.
@@ -83,6 +83,7 @@ tree_influ_phyglm <- function(formula, data, phy, n.tree = 2,
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  else
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
@@ -120,10 +121,10 @@ tree_influ_phyglm <- function(formula, data, phy, n.tree = 2,
   full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 3, slot2 = 1))
   
   #influ species slope
-  influ.sp.slope <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.slope))
-  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
-  names(influ.sp.slope) <- "influ.sp.slope"
-  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  influ.sp.estimate <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
+  names(influ.sp.estimate) <- "influ.sp.estimate"
+  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
   
   #influ species intercept
   influ.sp.intercept <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.intercept))
@@ -139,8 +140,8 @@ tree_influ_phyglm <- function(formula, data, phy, n.tree = 2,
               cutoff=cutoff,
               formula = formula,
               full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
-              influ.model.estimates = influ.estimates,
+              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
+              sensi.estimates = influ.estimates,
               data = full.data)
   
   

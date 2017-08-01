@@ -58,7 +58,7 @@
 #' The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
 #' of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
 #' regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
-#' species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
+#' species was identified as the most influential species, as well as a table listing the mean estimate (slope), DIFestimate, 
 #' Percentage change and P-value across all species that occured as most influential species in at least one simulation.
 #' 
 #' Additionally, users can evaluate each element in the list as a regula \code{sensiInflu}-object. 
@@ -93,8 +93,11 @@ intra_influ_phylm <- function(formula, data, phy,
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
-                                   is provided for Vx and/or Vy")
+  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx and/or Vy")
+  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
+    
   
   #Matching tree and phylogeny using utils.R
   datphy <- match_dataphy(formula, data, phy)
@@ -169,10 +172,10 @@ intra_influ_phylm <- function(formula, data, phy,
   full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 4, slot2 = 1))
   
   #influ species slope
-  influ.sp.slope <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.slope))
-  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
-  names(influ.sp.slope) <- "influ.sp.slope"
-  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  influ.sp.estimate <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
+  names(influ.sp.estimate) <- "influ.sp.estimate"
+  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
   
   #influ species intercept
   influ.sp.intercept <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.intercept))
@@ -188,8 +191,8 @@ intra_influ_phylm <- function(formula, data, phy,
               cutoff=cutoff,
               formula = formula,
               full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
-              influ.model.estimates = influ.estimates,
+              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
+              sensi.estimates = influ.estimates,
               data = full.data)
 
   

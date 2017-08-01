@@ -62,13 +62,13 @@
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
-#' @return \code{clade.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the percentage of change
+#' intercept and full model intercept (\code{DIFintercept}), the percentage of change
 #' in intercept compared to the full model (\code{intercept.perc}) and intercept
 #' p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter 
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 #' are reported.
@@ -113,6 +113,7 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
+  else
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
@@ -189,7 +190,7 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   res <- list(call = match.call(),
               formula = formula,
               full.model.estimates = full.estimates,
-              clade.model.estimates = clade.estimates,
+              sensi.estimates = clade.estimates,
               null.dist = null.dist, 
               data = full.data,
               errors = errors,

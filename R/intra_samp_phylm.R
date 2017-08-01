@@ -54,22 +54,22 @@
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 #' the full model without deleted species.
-#' @return \code{samp.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a model rerun with a given number of species
 #' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 #' Columns report the calculated regression intercept (\code{intercept}),
-#' difference between simulation intercept and full model intercept (\code{DFintercept}),
+#' difference between simulation intercept and full model intercept (\code{DIFintercept}),
 #' the percentage of change in intercept compared to the full model (\code{intercept.perc})
 #' and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-#' for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+#' for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 #' (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 #' parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 #' used) are reported. Lastly we reported the standardised difference in intercept 
-#' (\code{sDFintercept}) and slope (\code{sDFslope}). 
+#' (\code{sDIFintercept}) and slope (\code{sDIFestimate}). 
 #' @return \code{sign.analysis} For each break (i.e. each percentage of species
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-#' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+#' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 #' @return \code{data}: Original full dataset.
 #' @note Please be aware that dropping species may reduce power to detect 
 #' significant slopes/intercepts and may partially be responsible for a potential 
@@ -97,12 +97,12 @@
 #'                          y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
 #'                          data = alien$data, times.tree = 5, n.sim=10)
 #' summary(samp)
-#' head(samp$samp.model.estimates)
+#' head(samp$sensi.estimates)
 #' # Visual diagnostics
 #' \dontrun{
 #' sensi_plot(samp)
-#' # You can specify which graph and parameter ("slope" or "intercept") to print: 
-#' sensi_plot(samp, graphs = 1, param = "slope")
+#' # You can specify which graph and parameter ("estimate" or "intercept") to print: 
+#' sensi_plot(samp, graphs = 1, param = "estimate")
 #' sensi_plot(samp, graphs = 2, param = "intercept")
 #' }
 #' @export
@@ -124,6 +124,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
   if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
 
 
   #Matching tree and phylogeny using utils.R
@@ -201,7 +202,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
               model = model,
               formula = formula,
               full.model.estimates = full.estimates,
-              samp.model.estimates = influ.estimates,
+              sensi.estimates = influ.estimates,
               sign.analysis = perc.sign,
               data = full.data)
   
