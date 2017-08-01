@@ -35,11 +35,11 @@
 #' \code{phyloglm} is implemented.
 #'
 #' \code{clade_phyglm} detects influential clades based on
-#' difference in intercept and/or slope when removing a given clade compared
+#' difference in intercept and/or estimate when removing a given clade compared
 #' to the full model including all species.
 #' 
 #' Additionally, to account for the influence of the number of species on each 
-#' clade (clade sample size), this function also estimate a null distribution of slopes
+#' clade (clade sample size), this function also estimate a null distribution of estimates
 #' expected for the number of species in a given clade. This is done by fitting
 #' models without the same number of species in the given clade. 
 #'  The number of simulations to be performed is set by 'n.sim'. To test if the 
@@ -57,13 +57,13 @@
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{alpha}) for the full model
 #' without deleted species.
-#' @return \code{clade.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the percentage of change
+#' intercept and full model intercept (\code{DIFintercept}), the percentage of change
 #' in intercept compared to the full model (\code{intercept.perc}) and intercept
 #' p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter are
 #' reported.
 #' @return \code{data}: Original full dataset.
@@ -126,35 +126,35 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
                                   problem",sep=""))
   
   # FULL MODEL PARAMETERS:
-  N               <- nrow(full.data)
-  mod.0           <- phylolm::phyloglm(formula, data = full.data, 
+  N                <- nrow(full.data)
+  mod.0            <- phylolm::phyloglm(formula, data = full.data, 
                                        phy = phy, method = "logistic_MPLE",
                                        btol = btol)
   intercept.0      <- mod.0$coefficients[[1]]
-  slope.0          <- mod.0$coefficients[[2]]
+  estimate.0       <- mod.0$coefficients[[2]]
   pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
-  pval.slope.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
+  pval.estimate.0  <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
   optpar.0 <- mod.0$optpar
   
   if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge,
                                         consider changing btol. See ?phyloglm")
   
   #Create dataframe to store estmates for each clade
-  clade.model.estimates <-
+  sensi.estimates <-
     data.frame("clade" =I(as.character()), 
                "N.species" = numeric(),"intercept"=numeric(),
-               "DFintercept"=numeric(),"intercept.perc"=numeric(),
-               "pval.intercept"=numeric(),"slope"=numeric(),
-               "DFslope"=numeric(),"slope.perc"=numeric(),
-               "pval.slope"=numeric(),"AIC"=numeric(),
+               "DIFintercept"=numeric(),"intercept.perc"=numeric(),
+               "pval.intercept"=numeric(),"estimate"=numeric(),
+               "DIFestimate"=numeric(),"estimate.perc"=numeric(),
+               "pval.estimate"=numeric(),"AIC"=numeric(),
                "optpar" = numeric())
   
   # Create dataframe store simulations (null distribution)
   null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
                           "intercept"= numeric(length(uc)*n.sim),
-                          "slope" = numeric(length(uc)*n.sim),
-                          "DFintercept"=numeric(length(uc)*n.sim),
-                          "DFslope"=numeric(length(uc)*n.sim))
+                          "estimate" = numeric(length(uc)*n.sim),
+                          "DIFintercept"=numeric(length(uc)*n.sim),
+                          "DIFestimate"=numeric(length(uc)*n.sim))
   
   
   ### START LOOP between CLADES:
@@ -162,7 +162,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
   aa <- 1; bb <- 1
   errors <- NULL
   
-  pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
                               style = 1)
   for (A in names(uc)){
     
@@ -176,26 +176,26 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
     mod=try(phylolm::phyloglm(formula, data = crop.data, 
                               phy = crop.phy, method = "logistic_MPLE",
                               btol = btol), TRUE)
-    intercept            <- mod$coefficients[[1]]
-    slope                <- mod$coefficients[[2]]
-    DFintercept          <- intercept - intercept.0
-    DFslope              <- slope - slope.0
-    intercept.perc       <- round((abs(DFintercept / intercept.0)) * 100,
+    intercept           <- mod$coefficients[[1]]
+    estimate            <- mod$coefficients[[2]]
+    DIFintercept        <- intercept - intercept.0
+    DIFestimate         <- estimate - estimate.0
+    intercept.perc      <- round((abs(DIFintercept / intercept.0)) * 100,
                                   digits = 1)
-    slope.perc           <- round((abs(DFslope / slope.0)) * 100,
+    estimate.perc       <- round((abs(DIFestimate / estimate.0)) * 100,
                                   digits = 1)
-    pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-    pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
-    aic.mod              <- mod$aic
-    optpar          <- mod$alpha
+    pval.intercept      <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
+    pval.estimate       <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+    aic.mod             <- mod$aic
+    optpar              <- mod$alpha
     
     
     # Store reduced model parameters: 
-    estim.simu <- data.frame(A, cN, intercept, DFintercept, intercept.perc,
-                             pval.intercept, slope, DFslope, slope.perc,
-                             pval.slope, aic.mod, optpar,
+    estim.simu <- data.frame(A, cN, intercept, DIFintercept, intercept.perc,
+                             pval.intercept, estimate, DIFestimate, estimate.perc,
+                             pval.estimate, aic.mod, optpar,
                              stringsAsFactors = F)
-    clade.model.estimates[aa, ]  <- estim.simu
+    sensi.estimates[aa, ]  <- estim.simu
     
     ### START LOOP FOR NULL DIST:
     # number of species in clade A:
@@ -206,23 +206,23 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
       mod=try(phylolm::phyloglm(formula, data = crop.data, 
                                 phy = crop.phy, method = "logistic_MPLE",
                                 btol = btol), TRUE)
-      intercept      <- mod$coefficients[[1]]
-      slope          <- mod$coefficients[[2]]
-      DFintercept          <- intercept - intercept.0
-      DFslope              <- slope - slope.0
+      intercept         <- mod$coefficients[[1]]
+      estimate          <- mod$coefficients[[2]]
+      DIFintercept      <- intercept - intercept.0
+      DIFestimate       <- estimate - estimate.0
       
-      null.dist[bb, ]  <- data.frame(clade = as.character(A), 
+      null.dist[bb, ]   <- data.frame(clade = as.character(A), 
                                      intercept,
-                                     slope,
-                                     DFintercept,
-                                     DFslope)
+                                     estimate,
+                                     DIFintercept,
+                                     DIFestimate)
       
       if(track==TRUE) utils::setTxtProgressBar(pb, bb)
       bb <- bb + 1
     }
     aa <- aa + 1
   }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   #OUTPUT
   #full model estimates:
@@ -234,7 +234,7 @@ clade_phyglm <- function(formula, data, phy, btol=50, track = TRUE,
   res <- list(call = match.call(),
               formula = formula,
               full.model.estimates = param0,
-              clade.model.estimates = clade.model.estimates,
+              sensi.estimates = sensi.estimates,
               null.dist = null.dist, 
               data = full.data,
               errors = errors,

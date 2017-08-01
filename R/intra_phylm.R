@@ -96,6 +96,9 @@ intra_phylm <- function(formula, data, phy,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx and/or Vy")
+  if ( (model == "trend") & (ape::is.ultrametric(phy)))
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
   
 
     
@@ -120,7 +123,7 @@ intra_phylm <- function(formula, data, phy,
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
   
   #Create the results data.frame
-  intra.model.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
+  sensi.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
                                     "se.intercept" = numeric(), 
                                     "pval.intercept" = numeric(),
                                     "estimate" = numeric(),
@@ -192,7 +195,7 @@ intra_phylm <- function(formula, data, phy,
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
                                estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                stringsAsFactors = F)
-      intra.model.estimates[counter, ]  <- estim.simu
+      sensi.estimates[counter, ]  <- estim.simu
       counter=counter+1
       
     }
@@ -201,19 +204,19 @@ intra_phylm <- function(formula, data, phy,
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = intra.model.estimates,
+  mean_by_randomval <- stats::aggregate(.~n.intra, data = sensi.estimates,
                                         mean)
   
-  statresults <- data.frame(min = apply(intra.model.estimates, 2, min),
-                          max = apply(intra.model.estimates, 2, max),
-                          mean = apply(intra.model.estimates, 2, mean),
+  statresults <- data.frame(min = apply(sensi.estimates, 2, min),
+                          max = apply(sensi.estimates, 2, max),
+                          mean = apply(sensi.estimates, 2, mean),
                           sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
   
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- n.intra - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(sensi.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
   warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
@@ -225,7 +228,7 @@ intra_phylm <- function(formula, data, phy,
               y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
-              model_results = intra.model.estimates, N.obs = n,
+              model_results = sensi.estimates, N.obs = n,
               stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
   class(res) <- "sensiIntra"

@@ -42,14 +42,14 @@
 #' based on standardised difference in interecept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
-#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. #' Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage of change in intercept compared
+#' intercept and full model intercept (\code{DIFintercept}), the standardised
+#' difference (\code{sDIFintercept}), the percentage of change in intercept compared
 #' to the full model (\code{intercept.perc}) and intercept p-value
 #' (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (i.e. \code{alpha}) are reported.
 #' @return \code{data}: Original full dataset.
@@ -91,27 +91,27 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         mod.0           <- phylolm::phyloglm(formula, data=full.data,
                                    phy=phy,method="logistic_MPLE",btol=btol)
         intercept.0      <- mod.0$coefficients[[1]]
-        slope.0          <- mod.0$coefficients[[2]]
+        estimate.0       <- mod.0$coefficients[[2]]
         pval.intercept.0 <- phylolm::summary.phyloglm(mod.0)$coefficients[[1,4]]
-        pval.slope.0     <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]
+        pval.estimate.0  <- phylolm::summary.phyloglm(mod.0)$coefficients[[2,4]]
         optpar.0         <- mod.0$alpha
         if(isTRUE(mod.0$convergence!=0)) stop("Full model failed to converge,
                                         consider changing btol. See ?phyloglm")
         else
 
         #Creates empty data frame to store model outputs
-        influ.model.estimates<-
+        sensi.estimates<-
                 data.frame("species" =numeric(), "intercept"=numeric(),
-                           "DFintercept"=numeric(),"intercept.perc"=numeric(),
-                           "pval.intercept"=numeric(),"slope"=numeric(),
-                           "DFslope"=numeric(),"slope.perc"=numeric(),
-                           "pval.slope"=numeric(),"AIC"=numeric(),
+                           "DIFintercept"=numeric(),"intercept.perc"=numeric(),
+                           "pval.intercept"=numeric(),"estimate"=numeric(),
+                           "DIFestimate"=numeric(),"estimate.perc"=numeric(),
+                           "pval.estimate"=numeric(),"AIC"=numeric(),
                            "optpar" = numeric())
 
         #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
-        pb <- utils::txtProgressBar(min = 0, max = N, style = 1)
+        if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 1)
         for (i in 1:N){
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
@@ -125,36 +125,36 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                         next }
                 else {  sp                   <- phy$tip.label[i]
                         intercept            <- mod$coefficients[[1]]
-                        slope                <- mod$coefficients[[2]]
-                        DFintercept          <- intercept - intercept.0
-                        DFslope              <- slope - slope.0
-                        intercept.perc       <- round((abs(DFintercept/intercept.0))*100,digits=1)
-                        slope.perc           <- round((abs(DFslope/slope.0))*100,digits=1)
+                        estimate             <- mod$coefficients[[2]]
+                        DIFintercept         <- intercept - intercept.0
+                        DIFestimate          <- estimate - estimate.0
+                        intercept.perc       <- round((abs(DIFintercept/intercept.0))*100,digits=1)
+                        estimate.perc        <- round((abs(DIFestimate/estimate.0))*100,digits=1)
                         pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-                        pval.slope           <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+                        pval.estimate        <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
                         aic.mod              <- mod$aic
                         optpar               <- mod$alpha
 
                         if(track==TRUE) utils::setTxtProgressBar(pb, i)
 
                         #Stores values for eacht simulation
-                        estim.simu <- data.frame(sp, intercept, DFintercept, intercept.perc,
-                                                 pval.intercept, slope, DFslope, slope.perc,
-                                                 pval.slope, aic.mod, optpar,
+                        estim.simu <- data.frame(sp, intercept, DIFintercept, intercept.perc,
+                                                 pval.intercept, estimate, DIFestimate, estimate.perc,
+                                                 pval.estimate, aic.mod, optpar,
                                                  stringsAsFactors = F)
-                        influ.model.estimates[counter, ]  <- estim.simu
+                        sensi.estimates[counter, ]  <- estim.simu
                         counter=counter+1
                 }
         }
-        on.exit(close(pb))
-        #Calculates standardized DFbeta and DFintercept
-        sDFintercept <- influ.model.estimates$DFintercept/
-                stats::sd(influ.model.estimates$DFintercept)
-        sDFslope     <- influ.model.estimates$DFslope/
-                stats::sd(influ.model.estimates$DFslope)
+        if(track==TRUE) on.exit(close(pb))
+        #Calculates standardized DFbeta and DIFintercept
+        sDIFintercept <- sensi.estimates$DIFintercept/
+                stats::sd(sensi.estimates$DIFintercept)
+        sDIFestimate     <- sensi.estimates$DIFestimate/
+                stats::sd(sensi.estimates$DIFestimate)
 
-        influ.model.estimates$sDFslope     <- sDFslope
-        influ.model.estimates$sDFintercept <- sDFintercept
+        sensi.estimates$sDIFestimate     <- sDIFestimate
+        sensi.estimates$sDIFintercept <- sDIFintercept
 
         #Creates a list with full model estimates:
         param0 <- list(coef=phylolm::summary.phyloglm(mod.0)$coefficients,
@@ -162,22 +162,22 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
                        optpar=phylolm::summary.phyloglm(mod.0)$alpha)
 
         #Identifies influencital species (sDF > cutoff) and orders by influence
-        reorder.on.slope         <-influ.model.estimates[order(abs(
-                influ.model.estimates$sDFslope),decreasing=T),c("species","sDFslope")]
-        influ.sp.slope           <-as.character(reorder.on.slope$species[abs(
-                reorder.on.slope$sDFslope)>cutoff])
-        reorder.on.intercept     <-influ.model.estimates[order(abs(
-                influ.model.estimates$sDFintercept),decreasing=T),c("species","sDFintercept")]
+        reorder.on.estimate         <-sensi.estimates[order(abs(
+                sensi.estimates$sDIFestimate),decreasing=T),c("species","sDIFestimate")]
+        influ.sp.estimate           <-as.character(reorder.on.estimate$species[abs(
+                reorder.on.estimate$sDIFestimate)>cutoff])
+        reorder.on.intercept     <-sensi.estimates[order(abs(
+                sensi.estimates$sDIFintercept),decreasing=T),c("species","sDIFintercept")]
         influ.sp.intercept       <-as.character(reorder.on.intercept$species[abs(
-                reorder.on.intercept$sDFintercept)>cutoff])
+                reorder.on.intercept$sDIFintercept)>cutoff])
 
         #Generates output:
         res <- list(cutoff=cutoff,
                     formula=formula,
                     full.model.estimates=param0,
-                    influential.species= list(influ.sp.slope=influ.sp.slope,
+                    influential.species= list(influ.sp.estimate=influ.sp.estimate,
                                               influ.sp.intercept=influ.sp.intercept),
-                    influ.model.estimates=influ.model.estimates,
+                    sensi.estimates=sensi.estimates,
                     data=full.data,errors=errors)
         class(res) <- "sensiInflu"
         ### Warnings:
