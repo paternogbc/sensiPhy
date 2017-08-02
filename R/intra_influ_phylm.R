@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression
+#' Interaction between intraspecific variability and influential species - Phylogenetic Linear Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic linear regression,
 #' and detects influential species, while taking into account potential

@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential species - Phylogenetic Logistic Regression
+#' Interaction between intraspecific variability and influential species - Phylogenetic Logistic Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic logistic regression,
 #' and detects influential species, while taking into account potential

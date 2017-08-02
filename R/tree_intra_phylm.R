@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction between phylogenetic uncertainty and intraspecific variability  - Phylogenetic Linear Regression
 #'
 #' Performs Phylogenetic linear regression evaluating
 #' intraspecific variability in response and/or predictor variables

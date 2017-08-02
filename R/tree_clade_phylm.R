@@ -1,4 +1,4 @@
-#' Influential clade detection and phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction between phylogenetic uncertainty and influential clade detection - Phylogenetic Linear Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic linear regression after 
 #' removing clades from the analysis and evaluating uncertainty in trees topology. 

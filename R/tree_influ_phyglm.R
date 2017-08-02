@@ -1,4 +1,4 @@
-#' Influential species detection and phylogenetic uncertainty - Phylogenetic Logistic Regression
+#' Interaction between phylogenetic uncertainty and influential species detection - Phylogenetic Logistic Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic logistic regression,
 #' and detects influential species while evaluating uncertainty in trees topology.

@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential clade detection - Phylogenetic Linear Regression
+#' Interaction between intraspecific variability and influential clade detection - Phylogenetic Linear Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic linear regression after 
 #' removing clades from the analysis, while taking into account potential

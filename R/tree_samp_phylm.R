@@ -1,4 +1,4 @@
-#' Sensitivity Analysis Species Sampling and phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction between phylogenetic uncertainty and sensitivity to species sampling - Phylogenetic Linear Regression
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
 #' species and detecting the effects on parameter estimates in a phylogenetic

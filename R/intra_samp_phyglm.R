@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential species - Phylogenetic Logistic Regression
+#' Interaction between intraspecific variability and species sampling - Phylogenetic Logistic Regression
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
 #' species and detecting the effects on parameter estimates in a phylogenetic

@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic logistic Regression
+#' Interaction between phylogenetic uncertainty and intraspecific variability - Phylogenetic logistic Regression
 #'
 #' Performs Phylogenetic logistic regression evaluating
 #' intraspecific variability in response and/or predictor variables
