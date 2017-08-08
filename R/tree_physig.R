@@ -84,7 +84,7 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
     
     #Model calculation
     counter = 1
-    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
+    if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
     for (j in trees){
       
       mod.s    <- phytools::phylosig(tree = phy[[j]], x = trait, method = method, test = TRUE, ...)
