@@ -132,6 +132,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   
   #Start tree loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -145,7 +146,8 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     tree.clade[[counter]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
                                    clade.col, n.species, n.sim, verbose = FALSE, ...)
     
-    counter = counter +1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + n.sim
   }
   
 

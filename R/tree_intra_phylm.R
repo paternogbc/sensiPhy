@@ -119,10 +119,11 @@ tree_intra_phylm <- function(formula, data, phy,
   trees<-sample(length(phy),n.tree,replace=F)
   
   #Model calculation
-  counter = 1
   errors <- NULL
   tree.intra <- list()
   species.NA <- list()
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra*n.tree, style = 3)
+  counter = 1
 
   for (j in trees) {
 
@@ -145,7 +146,8 @@ tree_intra_phylm <- function(formula, data, phy,
         } ) 
 
 
-        counter=counter+1
+      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+      counter = counter + n.intra
         
       }
 

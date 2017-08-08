@@ -104,9 +104,11 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
   
   #List to store information
   tree.influ <- list ()
+  N  <- nrow(full.data)
   
   #Start tree loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N*n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -119,7 +121,8 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
     tree.influ[[counter]] <- influ_phylm(formula, data = full.data, phy=tree, 
                                    model, cutoff, track = FALSE, verbose = FALSE, ...)
     
-    counter = counter + 1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + N
   }
   
   names(tree.influ) <- trees

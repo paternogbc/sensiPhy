@@ -148,8 +148,9 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
   #List to store information
   intra.clade <- list ()
   
-  #Start tree loop here
+  #Start clade loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.intra, style = 3)
   counter = 1
   
   for (j in 1:n.intra){
@@ -181,7 +182,8 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
                                     clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
                                     track = FALSE, verbose = FALSE,...)
     
-    counter = counter + 1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + n.sim
   }
   
   names(intra.clade) <- 1:n.intra
