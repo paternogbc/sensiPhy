@@ -124,7 +124,7 @@ intra_influ_phylm <- function(formula, data, phy,
   #Start intra loop here
   species.NA <- list()
   errors <- NULL
-  pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
   counter = 1
 
   for (i in 1:n.intra) {
