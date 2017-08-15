@@ -29,7 +29,7 @@
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
-#' @return \code{model_results}: Coefficients, aic and the optimised
+#' @return \code{sensi.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 #' different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
@@ -71,7 +71,10 @@ tree_phylm <- function(formula,data,phy,
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if ( (model == "trend") & (ape::is.ultrametric(phy)))
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
+
   
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy, ...)
@@ -82,7 +85,7 @@ tree_phylm <- function(formula,data,phy,
   trees<-sample(length(phy),n.tree,replace=F)
 
   #Create the results data.frame
-  tree.model.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
+  sensi.estimates<-data.frame("n.tree"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                          "pval.intercept"=numeric(),"estimate"=numeric(),"se.estimate"=numeric(),
                          "pval.estimate"=numeric(),"aic"=numeric(),"optpar"=numeric())
 
@@ -131,7 +134,7 @@ tree_phylm <- function(formula,data,phy,
         estim.simu <- data.frame(j, intercept, se.intercept, pval.intercept,
                                  estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                  stringsAsFactors = F)
-        tree.model.estimates[counter, ]  <- estim.simu
+        sensi.estimates[counter, ]  <- estim.simu
         counter=counter+1
         
       }
@@ -139,11 +142,11 @@ tree_phylm <- function(formula,data,phy,
   if(track==TRUE) on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=tree.model.estimates, mean)
+  mean_by_tree<-stats::aggregate(.~n.tree, data=sensi.estimates, mean)
 
-  statresults<-data.frame(min=apply(tree.model.estimates,2,min),
-                          max=apply(tree.model.estimates,2,max),
-                          mean=apply(tree.model.estimates,2,mean),
+  statresults<-data.frame(min=apply(sensi.estimates,2,min),
+                          max=apply(sensi.estimates,2,max),
+                          mean=apply(sensi.estimates,2,mean),
                           sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
   
   statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
@@ -152,7 +155,7 @@ tree_phylm <- function(formula,data,phy,
   res <- list(   call = match.call(),
                  formula=formula,
                  data=full.data,
-                 model_results=tree.model.estimates,N.obs=n,
+                 sensi.estimates=sensi.estimates,N.obs=n,
                  stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
                  all.stats = statresults)
   class(res) <- "sensiTree"

@@ -39,11 +39,11 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     if(!is.null(x$x.transf))
     {full.data[,2] <- x$x.transf(full.data[,2])}
     
-    result <- x$model_results
+    result <- x$sensi.estimates
     statm<- x$all.stats
     estimate.0 <-  as.numeric(statm[4,3])
     intercept.0 <-  as.numeric(statm[1,3])
-    model_results<-x$model_results
+    sensi.estimates<-x$sensi.estimates
     
     xf <- model.frame(formula = x$formula, data = full.data)[,2]
     yf <- plogis(intercept.0 + estimate.0 * xf)
@@ -55,11 +55,11 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                             linety = rep(c("Mean","High","Low"),each = length(yf)))
 
     #Distribution of estimated estimates:
-    s1 <- ggplot2::ggplot(model_results,aes(x=estimate),
+    s1 <- ggplot2::ggplot(sensi.estimates,aes(x=estimate),
                           environment = parent.frame())+
       geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
       geom_vline(xintercept = estimate.0,color="red",linetype=2,size=.7)+
-      xlab("Estimated slopes")+
+      xlab("Estimates")+
       ylab("Frequency")+
         theme(axis.title=element_text(size=12),
               axis.text = element_text(size=12),
@@ -67,7 +67,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
                                               colour="black"))
 
     #Distribution of estimated intercepts:
-    i1 <- ggplot2::ggplot(model_results,aes(x=intercept),
+    i1 <- ggplot2::ggplot(sensi.estimates,aes(x=intercept),
                           environment = parent.frame())+
       geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
       geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
@@ -109,7 +109,7 @@ sensi_plot.sensiIntra <- function(x, graphs="all", ...){
     }
     
     #Distribution of p-values (estimate)
-    p1 <- ggplot2::ggplot(model_results,aes(x=pval.estimate),
+    p1 <- ggplot2::ggplot(sensi.estimates,aes(x=pval.estimate),
                           environment = parent.frame())+
         geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
         xlab("Distribution of P-values")+
@@ -204,7 +204,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
   if(!is.null(x$x.transf))
   {full.data[,2] <- x$x.transf(full.data[,2])}
   
-  result <- x$model_results
+  result <- x$sensi.estimates
   if(uncer.type == "all") {statm <- x$all.stats[,1:6]}
   if(uncer.type == "intra") {statm <- x$all.stats[,7:12]}
   if(uncer.type == "tree") {statm <- x$all.stats[,13:18]}
@@ -212,9 +212,9 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
   estimate.0 <-  as.numeric(statm[4,3])
   intercept.0 <-  as.numeric(statm[1,3])
   
-  if(uncer.type == "all") {model_results <- x$model_results}
-  if(uncer.type == "intra") {model_results <- stats::aggregate(.~n.intra, data = x$model_results,mean)}
-  if(uncer.type == "tree") {model_results <- stats::aggregate(.~n.tree, data = x$model_results,mean)}
+  if(uncer.type == "all") {sensi.estimates <- x$sensi.estimates}
+  if(uncer.type == "intra") {sensi.estimates <- stats::aggregate(.~n.intra, data = x$sensi.estimates,mean)}
+  if(uncer.type == "tree") {sensi.estimates <- stats::aggregate(.~n.tree, data = x$sensi.estimates,mean)}
 
   xf <- model.frame(formula = x$formula, data = full.data)[,2]
   yf <- plogis(intercept.0 + estimate.0 * xf)
@@ -226,7 +226,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
                           linety = rep(c("Mean","High","Low"),each = length(yf)))
   
   #Distribution of estimated estimates:
-  s1 <- ggplot2::ggplot(model_results,aes(x=estimate),
+  s1 <- ggplot2::ggplot(sensi.estimates,aes(x=estimate),
                         environment = parent.frame())+
     geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
     geom_vline(xintercept = estimate.0,color="red",linetype=2,size=.7)+
@@ -238,7 +238,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
                                           colour="black"))
   
   #Distribution of estimated intercepts:
-  i1 <- ggplot2::ggplot(model_results,aes(x=intercept),
+  i1 <- ggplot2::ggplot(sensi.estimates,aes(x=intercept),
                         environment = parent.frame())+
     geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
     geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
@@ -280,7 +280,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
   }
   
   #Distribution of p-values (estimate)
-  p1 <- ggplot2::ggplot(model_results,aes(x=pval.estimate),
+  p1 <- ggplot2::ggplot(sensi.estimates,aes(x=pval.estimate),
                         environment = parent.frame())+
     geom_histogram(fill="yellow", colour="black", size=.2, alpha = .3) +
     xlab("Distribution of P-values")+

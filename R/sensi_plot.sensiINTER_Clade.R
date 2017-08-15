@@ -21,7 +21,7 @@
 #' Species from the selected clade are represented in red (removed species), black
 #' solid line represents the regression with the full model and red dashed line represents
 #' the regression of the model without the species from the selected clade.
-#' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
+#' To check the available clades to plot, see \code{x$sensi.estimates$clade} 
 #' in the object returned from \code{intra_clade_phylm} or \code{intra_clade_phyglm}. 
 #' 
 #' Graph 2: Distribution of the simulated slopes (Null distribution
@@ -35,12 +35,12 @@
 #' @export
 
 sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
-  yy <- NULL; slope <- NULL
+  yy <- NULL; estimate <- NULL
   
   #aggregate results (needs to be improved in future!)
-  x$full.model.estimates$type <- c("inter","slope")
+  x$full.model.estimates$type <- c("inter","estimate")
   x$full.model.estimates <- stats::aggregate(.~type,x$full.model.estimates,FUN=mean)
-  x$clade.model.estimates <- stats::aggregate(.~clade,x$clade.model.estimates,FUN=mean)
+  x$sensi.estimates <- stats::aggregate(.~clade,x$sensi.estimates,FUN=mean)
   x$null.dist$simul <- 1:x$call$n.sim
   x$null.dist <- stats::aggregate(.~clade+simul,x$null.dist,FUN=mean)
   
@@ -51,7 +51,7 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
   vars <- all.vars(x$formula)
   clade.col <- x$clade.col
   
-  clades.names <- unique(x$clade.model.estimates$clade)
+  clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
     clade <- clades.names[1]
     warning("Clade argument was not defined. Plotting results for clade: ",
@@ -62,14 +62,14 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
   if (length(clade.n) == 0) stop(paste(clade,"is not a valid clade name"))
   
   ### Organizing values:
-  result <- x$clade.model.estimates
+  result <- x$sensi.estimates
   intercept.0 <-  as.numeric(x$full.model.estimates$Estimate[1])
-  slope.0     <-  as.numeric(x$full.model.estimates$Estimate[2])
+  estimate.0     <-  as.numeric(x$full.model.estimates$Estimate[2])
   
-  inter <- c(x$clade.model.estimates$intercept[clade.n ],
+  inter <- c(x$sensi.estimates$intercept[clade.n ],
              intercept.0)
-  slo <-  c(x$clade.model.estimates$slope[clade.n ],
-            slope.0)
+  slo <-  c(x$sensi.estimates$estimate[clade.n ],
+            estimate.0)
   model <- NULL
   estimates <- data.frame(inter,slo, model=c("Without clade", "Full model"))
   
@@ -107,22 +107,22 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
   
   ### Permuation Test plot:
   nd <- x$null.dist
-  ces <- x$clade.model.estimates
+  ces <- x$sensi.estimates
   
   nes <- nd[nd$clade == clade, ]
-  slob <- ces[ces$clade == clade ,]$slope
+  slob <- ces[ces$clade == clade ,]$estimate
   slfu <- x$full.model.estimates$Estimate[[2]]
   
   ### P.value permutation test:
   p.values <- summary(x)[[1]]
   P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization
   
-  g2 <- ggplot2::ggplot(nes ,aes(x=slope))+
+  g2 <- ggplot2::ggplot(nes ,aes(x=estimate))+
     geom_histogram(fill="yellow",colour="black", size=.2,
                    alpha = .3) +
     geom_vline(xintercept = slob, color="red",linetype=2,size=.7)+
     geom_vline(xintercept = slfu, color="black",linetype=1,size=.7)+
-    xlab(paste("Simulated slopes | N.species = ", 
+    xlab(paste("Simulated estimates | N.species = ", 
                ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
                nrow(nes))) +
     ylab("Frequency")+
@@ -135,7 +135,7 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
   
   ### plot lines: linear or logistic depending on output class
   if(length(class(x)) == 1){
-    g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
+    g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, estimate = slo,
                                                     linetype = factor(model),color=factor(model)),
                               size=.8)
   }
@@ -170,13 +170,13 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
 #' Species from the selected clade are represented in red (removed species), black
 #' solid line represents the regression with the full model and red dashed line represents
 #' the regression of the model without the species from the selected clade.
-#' To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
+#' To check the available clades to plot, see \code{x$sensi.estimates$clade} 
 #' in the object returned from \code{tree_clade_phylm} or \code{tree_clade_phyglm}. 
 #' 
 #' Graph 2: Distribution of the simulated slopes (Null distribution
 #' for a given clade sample size).
-#' The red dashed line represents the estimated slope for the reduced model 
-#' (without the focal clade) and the black line represents the slope for the 
+#' The red dashed line represents the estimated estimate for the reduced model 
+#' (without the focal clade) and the black line represents the estimate for the 
 #' full model.
 #'  
 #' @importFrom ggplot2 aes_string

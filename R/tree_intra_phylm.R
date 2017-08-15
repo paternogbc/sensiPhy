@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction between phylogenetic uncertainty and intraspecific variability  - Phylogenetic Linear Regression
 #'
 #' Performs Phylogenetic linear regression evaluating
 #' intraspecific variability in response and/or predictor variables
@@ -52,7 +52,7 @@
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
-#' @return \code{model_results}: Coefficients, aic and the optimised value of the phylogenetic 
+#' @return \code{sensi.estimates}: Coefficients, aic and the optimised value of the phylogenetic 
 #' parameter (e.g. \code{lambda}) for each regression using a value in the interval of variation and 
 #' a different phylogenetic tree.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
@@ -106,10 +106,12 @@ tree_intra_phylm <- function(formula, data, phy,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
-  
+  if ((model == "trend") & (ape::is.ultrametric(phy)))
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
   
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy)
+  datphy <- match_dataphy(formula, data, phy,...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
@@ -117,10 +119,11 @@ tree_intra_phylm <- function(formula, data, phy,
   trees<-sample(length(phy),n.tree,replace=F)
   
   #Model calculation
-  counter = 1
   errors <- NULL
   tree.intra <- list()
   species.NA <- list()
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra*n.tree, style = 3)
+  counter = 1
 
   for (j in trees) {
 
@@ -143,7 +146,8 @@ tree_intra_phylm <- function(formula, data, phy,
         } ) 
 
 
-        counter=counter+1
+      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+      counter = counter + n.intra
         
       }
 
@@ -202,8 +206,10 @@ tree_intra_phylm <- function(formula, data, phy,
               y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
-              model_results = mod_results, N.obs = tree.intra[[1]]$N.obs,
-              stats = round(statresults[c(1:6),c(3,13,16,7,14,17,11,15,18)],digits=3),
+              sensi.estimates = mod_results, N.obs = tree.intra[[1]]$N.obs,
+              stats = round(statresults[c(1:6),c("mean.all","CI_low_all","CI_high_all",
+                                                 "mean.intra","CI_low_intra","CI_high_intra",
+                                                 "mean.tree","CI_low_tree","CI_high_tree")],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
   class(res) <- "sensiTree_Intra"
   return(res)

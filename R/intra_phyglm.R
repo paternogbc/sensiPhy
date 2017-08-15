@@ -44,7 +44,7 @@
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
-#' @return \code{model_results}: Coefficients, aic and the optimised
+#' @return \code{sensi.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
@@ -79,7 +79,7 @@
 #' 
 #' #Print summary of sensitivity analysis
 #' summary(intra_glm)
-#' head(intra_glm$model_results)
+#' head(intra_glm$sensi.estimates)
 #' #Visual output
 #' sensi_plot(intra_glm)
 #' @export
@@ -97,7 +97,8 @@ intra_phyglm <- function(formula, data, phy,
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
      stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-
+  else
+  
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy, ...)
   full.data<-datphy[[1]]
@@ -116,7 +117,7 @@ intra_phyglm <- function(formula, data, phy,
   
   
   #Create the results data.frame
-  intra.model.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
+  sensi.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
                                     "pval.intercept"=numeric(),"estimate"=numeric(),"se.estimate"=numeric(),
                                     "pval.estimate"=numeric(),"aic"=numeric(),"optpar"=numeric())
   
@@ -177,7 +178,7 @@ intra_phyglm <- function(formula, data, phy,
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
                                estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                stringsAsFactors = F)
-      intra.model.estimates[counter, ]  <- estim.simu
+      sensi.estimates[counter, ]  <- estim.simu
       counter=counter+1
       
     }
@@ -186,18 +187,18 @@ intra_phyglm <- function(formula, data, phy,
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval<-stats::aggregate(.~n.intra, data=intra.model.estimates, mean)
+  mean_by_randomval<-stats::aggregate(.~n.intra, data=sensi.estimates, mean)
   
-  statresults<-data.frame(min=apply(intra.model.estimates,2,min),
-                          max=apply(intra.model.estimates,2,max),
-                          mean=apply(intra.model.estimates,2,mean),
+  statresults<-data.frame(min=apply(sensi.estimates,2,min),
+                          max=apply(sensi.estimates,2,max),
+                          mean=apply(sensi.estimates,2,mean),
                           sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
   
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- n.intra - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(sensi.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
@@ -206,7 +207,7 @@ intra_phyglm <- function(formula, data, phy,
   res <- list(call = match.call(),
               formula=formula,
               data=full.data,
-              model_results=intra.model.estimates,N.obs=n,
+              sensi.estimates=sensi.estimates,N.obs=n,
               stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
   class(res) <- c("sensiIntra","sensiIntraL")

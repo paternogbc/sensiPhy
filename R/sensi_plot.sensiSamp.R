@@ -4,7 +4,7 @@
 #' \code{influ_phyloglm}
 #' @param x output from \code{samp_phylm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which model parameter should be ploted  ("intercept" or "slope")
+#' @param param choose which model parameter should be ploted  ("intercept" or "estimate")
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
 #' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
@@ -33,38 +33,38 @@
 #'  model parameter is not available for model = "BM"
 #' @export
 
-sensi_plot.sensiSamp <- function(x, graphs = "all", param = "slope", ...)
+sensi_plot.sensiSamp <- function(x, graphs = "all", param = "estimate", ...)
 {
 
    # x <- samp
 # nulling variables:
-slope <- n.percent <- slope.class <- intercept <- model <- intercept.class <- NULL
-optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
+estimate <- n.percent <- estimate.class <- intercept <- model <- intercept.class <- NULL
+optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NULL
 
-        result    <- x$samp.model.estimates
+        result    <- x$sensi.estimates
         sig.tab <- x$sign.analysis
         
         # classes of slope.perc:
-        result$slope.class <- "class"
+        result$estimate.class <- "class"
         ### Within 5%:
-        if (length(result[result$slope.perc <= 5 ,]$slope.class) >= 1){
-                result[result$slope.perc <= 5,]$slope.class <- "within 5%"
+        if (length(result[result$estimate.perc <= 5 ,]$estimate.class) >= 1){
+                result[result$estimate.perc <= 5,]$estimate.class <- "within 5%"
         }
         ### Higher than 5%
-        if (length(result[result$slope.perc > 5
-                & result$slope.perc <= 10 ,]$slope.class) >= 1){
-                result[result$slope.perc > 5
-                       & result$slope.perc <= 10 ,]$slope.class <- "higher than 5%"
+        if (length(result[result$estimate.perc > 5
+                & result$estimate.perc <= 10 ,]$estimate.class) >= 1){
+                result[result$estimate.perc > 5
+                       & result$estimate.perc <= 10 ,]$estimate.class <- "higher than 5%"
         }
         ### Higher than 10%
-        if (length(result[result$slope.perc > 10,]$slope.class) >= 1){
-                result[result$slope.perc > 10,]$slope.class <- "higher than 10%"
+        if (length(result[result$estimate.perc > 10,]$estimate.class) >= 1){
+                result[result$estimate.perc > 10,]$estimate.class <- "higher than 10%"
         }
 
-        result$slope.class <- as.factor(result$slope.class)
-        slope.0    <- as.numeric(x$full.model.estimates$coef[2])
-        slope.5    <- .05*slope.0
-        slope.10   <- .1*slope.0
+        result$estimate.class <- as.factor(result$estimate.class)
+        estimate.0    <- as.numeric(x$full.model.estimates$coef[2])
+        estimate.5    <- .05*estimate.0
+        estimate.10   <- .1*estimate.0
 
         # classes of intercept.perc:
         result$intercept.class <- "class"
@@ -89,21 +89,21 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         intercept.10   <- .1*intercept.0
 
         # reverting the order of the levels
-        result$slope.class =
-                with(result, factor(slope.class,
-                                    levels = rev(levels(result$slope.class))))
+        result$estimate.class =
+                with(result, factor(estimate.class,
+                                    levels = rev(levels(result$estimate.class))))
         result$intercept.class =
                 with(result, factor(intercept.class,
                                     levels = rev(levels(result$intercept.class))))
 
         ## Organizing colours: slope
-        if(length(levels(result$slope.class)) == 3){
+        if(length(levels(result$estimate.class)) == 3){
                 colS = c("skyblue","orange","red2")
         }
-        if(length(levels(result$slope.class)) == 2){
+        if(length(levels(result$estimate.class)) == 2){
                 colS = c("skyblue","orange")
         }
-        if(length(levels(result$slope.class)) == 1){
+        if(length(levels(result$estimate.class)) == 1){
                 colS = c("skyblue")
         }
         ## Organizing colours: intercept
@@ -120,25 +120,25 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         ### Graphs--------------------------------------------------------------
 
         ### Estimated slopes across n.percent:
-        s1 <- ggplot2::ggplot(result,aes(y=slope,x=n.percent,
-                                         colour=slope.class),
+        s1 <- ggplot2::ggplot(result,aes(y=estimate,x=n.percent,
+                                         colour=estimate.class),
                               environment = parent.frame())+
 
                 geom_point(size=4,position = "jitter",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
-                ylab("Estimated slopes")+
+                ylab("Estimates")+
                 xlab("% of Species Removed ")+
                 scale_colour_manual(values=colS)+
-                geom_hline(yintercept=slope.0,linetype=1,color="red",
+                geom_hline(yintercept=estimate.0,linetype=1,color="red",
                            size=1, alpha = .6)+
 
-                geom_hline(yintercept=slope.0+slope.5,linetype=2,
+                geom_hline(yintercept=estimate.0+estimate.5,linetype=2,
                            alpha=.6)+
-                geom_hline(yintercept=slope.0-slope.5,linetype=2,
+                geom_hline(yintercept=estimate.0-estimate.5,linetype=2,
                            alpha=.6)+
-                geom_hline(yintercept=slope.0+slope.10,linetype=2,
+                geom_hline(yintercept=estimate.0+estimate.10,linetype=2,
                            alpha=.6)+
-                geom_hline(yintercept=slope.0-slope.10,linetype=2,
+                geom_hline(yintercept=estimate.0-estimate.10,linetype=2,
                            alpha=.6)+
                 theme( legend.position = "none",
                        legend.direction = "horizontal",
@@ -157,7 +157,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
                 geom_point(size=4,position = "jitter",alpha=.5)+
                 scale_x_continuous(breaks=result$n.percent)+
-                ylab("Estimated intercepts")+
+                ylab("Intercepts")+
                 xlab("% of Species Removed ")+
                 scale_colour_manual(values=colI)+
                 geom_hline(yintercept=intercept.0,linetype=1,color="red",
@@ -184,18 +184,18 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
 
         ### Proportion of change.classes across n.percent
         n.perc.times <- as.numeric(table(result$n.percent))
-        slope.perc <- with(result,aggregate(data=result,slope ~ slope.class*n.percent,FUN=length))
-        a <- colSums(table(slope.perc$slope.class,slope.perc$n.percent))
-        slope.perc$slope <- (slope.perc$slope/rep(n.perc.times,
+        estimate.perc <- with(result,aggregate(data=result,estimate ~ estimate.class*n.percent,FUN=length))
+        a <- colSums(table(estimate.perc$estimate.class,estimate.perc$n.percent))
+        estimate.perc$estimate <- (estimate.perc$estimate/rep(n.perc.times,
                                                   times=a))*100
         intercept.perc <- with(result,aggregate(data=result,intercept ~ intercept.class*n.percent,FUN=length))
         b <- colSums(table(intercept.perc$intercept.class,intercept.perc$n.percent))
         intercept.perc$intercept <- (intercept.perc$intercept/rep(n.perc.times,
                                                   times=b))*100
         ### Graph: Slope
-        s2 <- ggplot2::ggplot(slope.perc,
-                     aes(y=slope,x=n.percent,
-                         fill=factor(slope.class)),
+        s2 <- ggplot2::ggplot(estimate.perc,
+                     aes(y=estimate,x=n.percent,
+                         fill=factor(estimate.class)),
                      environment = parent.frame())+
                 geom_bar(stat="identity",alpha=.5)+
                 scale_fill_manual(values=colS,name="Change in beta")+
@@ -212,7 +212,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("% of estimated slopes")
+                ylab("% of Estimates")
 
         ### Graph: Intercept
         i2 <- ggplot2::ggplot(intercept.perc,
@@ -234,7 +234,7 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
                        panel.background = element_rect(fill="white",
                                                        colour="black"))+
                 xlab("% of Species Removed")+
-                ylab("% of estimated intercepts")
+                ylab("% of Intercepts")
 
         ### Optpar acros % removed species:
         opt <- ggplot2::ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
@@ -251,14 +251,14 @@ optpar <- perc.sign.slope <- percent_sp_removed <- perc.sign.intercept <- NULL
         ## Significance Analysis : p.value of slope
 
         s4 <-ggplot2::ggplot(sig.tab,
-                             aes(y=perc.sign.slope*100,x=percent_sp_removed),
+                             aes(y=perc.sign.estimate*100,x=percent_sp_removed),
                              environment = parent.frame())+
                 scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
                 scale_x_continuous(breaks=result$n.percent)+
                 xlab("% Species removed")+
                 geom_point(size=5,colour="red")+
                 geom_line(colour="red")+
-                ylab("% of significant slopes")+
+                ylab("% of significant estimates")+
                 theme(axis.text=element_text(size=12),
                       axis.title=element_text(size=12),
                       panel.background = element_rect(fill="white",

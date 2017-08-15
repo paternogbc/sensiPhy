@@ -1,4 +1,4 @@
-#' Interaction of intraspecific variability & influential species - Phylogenetic Logistic Regression
+#' Interaction between intraspecific variability and species sampling - Phylogenetic Logistic Regression
 #'
 #' Performs analyses of sensitivity to species sampling by randomly removing
 #' species and detecting the effects on parameter estimates in a phylogenetic
@@ -52,22 +52,22 @@
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 #' the full model without deleted species.
-#' @return \code{samp.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a model rerun with a given number of species
 #' \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 #' Columns report the calculated regression intercept (\code{intercept}),
-#' difference between simulation intercept and full model intercept (\code{DFintercept}),
+#' difference between simulation intercept and full model intercept (\code{DIFintercept}),
 #' the percentage of change in intercept compared to the full model (\code{intercept.perc})
 #' and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-#' for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+#' for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 #' (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 #' parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 #' used) are reported. Lastly we reported the standardised difference in intercept 
-#' (\code{sDFintercept}) and slope (\code{sDFslope}). 
+#' (\code{sDIFintercept}) and slope (\code{sDIFestimate}). 
 #' @return \code{sign.analysis} For each break (i.e. each percentage of species
 #' removed) this reports the percentage of statistically signficant (at p<0.05)
 #' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-#' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+#' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 #' @return \code{data}: Original full dataset.
 #' @note Please be aware that dropping species may reduce power to detect 
 #' significant slopes/intercepts and may partially be responsible for a potential 
@@ -144,6 +144,7 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
   
   #Start intra loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.intra, style = 3)
   counter = 1
   
   for (i in 1:n.intra) {
@@ -176,9 +177,8 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
                                      breaks=breaks, btol=btol, method="logistic_MPLE",
                                      track = FALSE, verbose = FALSE,...)
     
-    
-    
-    counter = counter + 1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + n.sim
   }
   
   names(intra.samp)<-1:n.intra
@@ -193,7 +193,7 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
               model = "logistic_MPLE",
               formula = formula,
               full.model.estimates = full.estimates,
-              samp.model.estimates = influ.estimates,
+              sensi.estimates = influ.estimates,
               sign.analysis = perc.sign,
               data = full.data)
   

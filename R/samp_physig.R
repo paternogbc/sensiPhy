@@ -111,7 +111,7 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   counter <- 1
   limit <- sort(round( (breaks) * nrow(full.data),digits=0))
   NL <- length(breaks) * n.sim
-  pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
   
   
   ##### Loop----

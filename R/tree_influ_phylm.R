@@ -1,4 +1,4 @@
-#' Influential species detection and phylogenetic uncertainty - Phylogenetic Linear Regression
+#' Interaction between phylogenetic uncertainty and influential species detection - Phylogenetic Linear Regression
 #'
 #' Performs leave-one-out deletion analyis for phylogenetic linear regression,
 #' and detects influential species while evaluating uncertainty in trees topology.
@@ -46,14 +46,14 @@
 #' based on standardised difference in interecept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
-#' @return \code{influ.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. #' Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the standardised
-#' difference (\code{sDFintercept}), the percentage of change in intercept compared
+#' intercept and full model intercept (\code{DIFintercept}), the standardised
+#' difference (\code{sDIFintercept}), the percentage of change in intercept compared
 #' to the full model (\code{intercept.perc}) and intercept p-value
 #' (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) are
 #' reported.
@@ -76,8 +76,8 @@
 #'influ$influential.species
 #'# Visual diagnostics
 #'sensi_plot(influ)
-#'# You can specify which graph and parameter ("slope" or "intercept") to print: 
-#'sensi_plot(influ, param = "slope", graphs = 2)
+#'# You can specify which graph and parameter ("estimate" or "intercept") to print: 
+#'sensi_plot(influ, param = "estimate", graphs = 2)
 #' @export
 
 
@@ -89,6 +89,9 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
   
   #Match data and phy
   data_phy <- match_dataphy(formula, data, phy, ...)
@@ -101,9 +104,11 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
   
   #List to store information
   tree.influ <- list ()
+  N  <- nrow(full.data)
   
   #Start tree loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N*n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -116,7 +121,8 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
     tree.influ[[counter]] <- influ_phylm(formula, data = full.data, phy=tree, 
                                    model, cutoff, track = FALSE, verbose = FALSE, ...)
     
-    counter = counter + 1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + N
   }
   
   names(tree.influ) <- trees
@@ -125,10 +131,10 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
   full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
   
   #influ species slope
-  influ.sp.slope <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.slope))
-  influ.sp.slope <- as.data.frame(as.matrix(influ.sp.slope))
-  names(influ.sp.slope) <- "influ.sp.slope"
-  influ.sp.slope$tree<-row.names(influ.sp.slope)
+  influ.sp.estimate <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
+  names(influ.sp.estimate) <- "influ.sp.estimate"
+  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
 
   #influ species intercept
   influ.sp.intercept <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.intercept))
@@ -144,8 +150,8 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
               cutoff=cutoff,
               formula = formula,
               full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.slope=influ.sp.slope,influ.sp.intercept=influ.sp.intercept),
-              influ.model.estimates = influ.estimates,
+              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
+              sensi.estimates = influ.estimates,
               data = full.data)
   
   

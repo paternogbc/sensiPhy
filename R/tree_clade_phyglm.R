@@ -1,4 +1,4 @@
-#' Influential clade detection and phylogenetic uncertainty - Phylogenetic Logistic Regression
+#' Interaction between phylogenetic uncertainty and influential clade detection - Phylogenetic Logistic Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic logistic regression after 
 #' removing clades from the analysis and evaluating uncertainty in trees topology.
@@ -53,13 +53,13 @@
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
-#' @return \code{clade.model.estimates}: A data frame with all simulation
+#' @return \code{sensi.estimates}: A data frame with all simulation
 #' estimates. Each row represents a deleted clade. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
-#' intercept and full model intercept (\code{DFintercept}), the percentage of change
+#' intercept and full model intercept (\code{DIFintercept}), the percentage of change
 #' in intercept compared to the full model (\code{intercept.perc}) and intercept
 #' p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-#' slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter 
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 #' are reported.
@@ -132,6 +132,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   
   #Start tree loop here
   errors <- NULL
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -145,7 +146,8 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     tree.clade[[counter]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
                                    clade.col, n.species, n.sim, verbose = FALSE, ...)
     
-    counter = counter +1
+    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    counter = counter + n.sim
   }
   
 
@@ -160,7 +162,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   res <- list(call = match.call(),
               formula = formula,
               full.model.estimates = full.estimates,
-              clade.model.estimates = clade.estimates,
+              sensi.estimates = clade.estimates,
               null.dist = null.dist, 
               data = full.data,
               errors = errors,
