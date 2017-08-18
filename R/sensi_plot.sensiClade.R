@@ -127,7 +127,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
      
     ### plot lines: linear or logistic depending on output class
     if(length(class(x)) == 1){
-        g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, estimate = slo,
+        g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, slope = slo,
                                       linetype = factor(model),color=factor(model)),
                 size=.8)
     }
