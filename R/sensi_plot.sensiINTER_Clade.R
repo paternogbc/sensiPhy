@@ -34,23 +34,8 @@
 #' @importFrom stats model.frame qt plogis 
 #' @export
 
-sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
-  yy <- NULL; estimate <- NULL
-  
-  #aggregate results (needs to be improved in future!)
-  x$full.model.estimates$type <- c("inter","estimate")
-  x$full.model.estimates <- stats::aggregate(.~type,x$full.model.estimates,FUN=mean)
-  x$sensi.estimates <- stats::aggregate(.~clade,x$sensi.estimates,FUN=mean)
-  x$null.dist$simul <- 1:x$call$n.sim
-  x$null.dist <- stats::aggregate(.~clade+simul,x$null.dist,FUN=mean)
-  
-  # start:
-  full.data <- x$data
-  mappx <- x$formula[[3]]
-  mappy <- x$formula[[2]]
-  vars <- all.vars(x$formula)
-  clade.col <- x$clade.col
-  
+sensi_plot.sensiTree_Clade <- function(x, clade = NULL, graphs = "all", ...){
+  ### Get clade name:
   clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
     clade <- clades.names[1]
@@ -60,92 +45,83 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
   }
   clade.n <- which(clade == clades.names)
   if (length(clade.n) == 0) stop(paste(clade,"is not a valid clade name"))
-  
-  ### Organizing values:
-  result <- x$sensi.estimates
-  intercept.0 <-  as.numeric(x$full.model.estimates$Estimate[1])
-  estimate.0     <-  as.numeric(x$full.model.estimates$Estimate[2])
-  
-  inter <- c(x$sensi.estimates$intercept[clade.n ],
-             intercept.0)
-  slo <-  c(x$sensi.estimates$estimate[clade.n ],
-            estimate.0)
-  model <- NULL
-  estimates <- data.frame(inter,slo, model=c("Without clade", "Full model"))
-  
-  xf <- model.frame(formula = x$formula, data = full.data)[,2]
-  yf <- plogis(estimates[2,1] + estimates[2,2] * xf)
-  yw <- plogis(estimates[1,1] + estimates[1,2] * xf)
-  plot_data <- data.frame("xf" = c(xf,xf),
-                          "yy" = c(yw, yf),
-                          model = rep(c("Without clade","Full model"),
-                                      each = length(yf)))
-  
-  match.y <- which(full.data[, clade.col] == clade)
-  match.n <- which(full.data[, clade.col] != clade)
-  
-  g1 <- ggplot2::ggplot(full.data, aes_string(y = mappy, x = mappx),
-                        environment = parent.frame())+
-    geom_point(data = full.data[match.n, ], alpha = .7,
-               size = 4)+
-    geom_point(data = full.data[match.y, ],alpha = .5,
-               size = 4, aes(shape = "Removed species"), colour = "red")+
-    
-    scale_shape_manual(name = "", values = c("Removed species" = 16))+
-    guides(shape = guide_legend(override.aes = list(linetype = 0)))+
-    scale_linetype_manual(name = "Model", values = c("Full model" = "solid",
-                                                     "Without clade" = "dashed"))+
-    scale_color_manual(name = "Model", values = c("Full model" = "black",
-                                                  "Without clade" = "red"))+
-    theme(axis.text = element_text(size = 12),
-          axis.title = element_text(size = 12),
-          legend.text = element_text(size = 12),
-          plot.title = element_text(size = 12),
-          panel.background = element_rect(fill = "white", colour = "black"),
-          legend.position="bottom", legend.box = "horizontal")+
-    ggtitle(paste("Clade removed: ", clade, sep = ""))
-  
-  ### Permuation Test plot:
-  nd <- x$null.dist
-  ces <- x$sensi.estimates
-  
-  nes <- nd[nd$clade == clade, ]
-  slob <- ces[ces$clade == clade ,]$estimate
-  slfu <- x$full.model.estimates$Estimate[[2]]
-  
-  ### P.value permutation test:
-  p.values <- summary(x)[[1]]
-  P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization
-  
-  g2 <- ggplot2::ggplot(nes ,aes(x=estimate))+
-    geom_histogram(fill="yellow",colour="black", size=.2,
-                   alpha = .3) +
-    geom_vline(xintercept = slob, color="red",linetype=2,size=.7)+
-    geom_vline(xintercept = slfu, color="black",linetype=1,size=.7)+
-    xlab(paste("Simulated estimates | N.species = ", 
-               ces[ces$clade==clade, ]$N.species, "| N.sim = ", 
-               nrow(nes))) +
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))+
-    ggtitle(paste("Randomization test for", clade, " | P = ", 
-                  sprintf("%.3f", P)))
-  
-  ### plot lines: linear or logistic depending on output class
-  if(length(class(x)) == 1){
-    g.out <- g1 + geom_abline(data = estimates, aes(intercept = inter, estimate = slo,
-                                                    linetype = factor(model),color=factor(model)),
-                              size=.8)
-  }
-  if(length(class(x)) == 2){
-    g.out <- g1 + geom_line(data = plot_data, aes(x = xf, y = yy, linetype = factor(model),color=factor(model)))
-  }
-  return(suppressMessages(multiplot(g.out, g2, cols=2)))
-  }
+
+### organize data:
+fes   <- x$full.model.estimates
+f     <- data.frame(fes)[seq(2,nrow(fes), 2), ]
+f.ord <- match(sort(f$iteration), f$iteration)
+ces   <- x$sensi.estimates
+ces.c <- ces[ces$clade == clade, ]
+nd    <-  x$null.dist
+nd.c  <- nd[nd$clade == clade, ]
+s.est <- summary(x)[[1]]
+
+### null > | < then clade removed
+if (s.est[s.est$clade.removed == clade, ]$DIFestimate > 0)            
+  out <- which(nd.c$estimate >= rep(ces.c$estimate, each = x$call$n.sim))
+if (s.est[s.est$clade.removed == clade, ]$DIFestimate < 0)            
+  out <- which(nd.c$estimate <= rep(ces.c$estimate, each = x$call$n.sim))
+nd.c.out <- nd.c[out, ]
+
+### Transform iteration intofactor:
+fes$iteration   <- as.factor(fes$iteration)
+ces.c$iteration <- as.factor(ces.c$iteration)
+nd.c$iteration  <- as.factor(nd.c$iteration)
 
 
+### Plot 1: Estimated slopes for each clade between trees ----------------------
+g1 <-
+  ggplot(ces, aes(y = estimate, x = reorder(as.factor(strtrim(clade, 4)), estimate))) + 
+  geom_point(color = "red") +
+  ggplot2::stat_summary(fun.data = "mean_cl_boot", size = 1, color = "red") +
+  geom_hline(yintercept = mean(f$Estimate), size = 1.5) +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=12),
+        panel.background = element_rect(fill="white",
+                                        colour="black"),
+        legend.position = "none",
+        axis.text.x=element_text(angle=45,hjust=1)) +
+  xlab("Clade removed") + ylab("estimate")
+
+### Plot 2: Estimated slopes against for null distribution/removed clade ~ trees 
+cols <- c("Without clade" = "red", "Full data" = "black", "Null distribution" = "lightblue")
+g2 <- 
+  ggplot(nd.c) +       
+  geom_jitter(width = .35, aes(y = estimate, x = as.factor(iteration), color = "Null distribution")) +
+  geom_line(data = f[f.ord, ], aes(y = Estimate, x = as.factor(iteration), color = "Full data",  group = 1), size = 1) +
+  geom_point(data = f[f.ord, ] , aes(y = Estimate, x = as.factor(iteration),  color = "Full data", group = 1), size = 1) +
+  geom_line(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
+  geom_point(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
+ # geom_point(data = nd.c.out , aes(y = estimate, x = as.factor(iteration)), color = "blue",  size = .5) +
+  
+  theme_bw() + 
+  scale_color_manual(name = "", values = cols) +
+  theme(legend.position = c(.15, .95),
+        legend.direction = "vertical",
+        legend.text=element_text(size=12),
+        axis.text=element_text(size=10),
+        axis.title=element_text(size=12),
+        legend.key.width=unit(.5,"line"),
+        legend.key.size = unit(.5,"cm"),
+        legend.background = element_blank(),
+        panel.background = element_rect(fill="white",
+                                        colour="black"),
+        axis.line = element_line(colour = "black"),
+        panel.grid = element_blank()) +
+  xlab("Tree") + ylab("estimate")+
+  ggtitle(paste("Clade = ", clade, "| ", "n.sim = ", x$call$n.sim, " | ",
+                " n.tree = ", x$call$n.tree)) 
+if(length(levels(ces.c$iteration)) > 30) g2 <- g2 +  theme(axis.text.x = element_blank()) 
+
+### Output-------------------------------------------------------------------------------
+### Plotting:
+if (graphs=="all")
+  return(suppressMessages(multiplot(g1,g2, cols = 2)))
+if (graphs==1)
+  return(suppressMessages(g1))
+if (graphs==2)
+  return(suppressMessages(g2))
+}
 
 #' Graphical diagnostics for class 'sensiTree_Clade'
 #'
@@ -182,6 +158,6 @@ sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, ...){
 #' @importFrom ggplot2 aes_string
 #' @importFrom stats model.frame qt plogis 
 #' @export
-sensi_plot.sensiTree_Clade <- function(x, graphs = "all", ...){
-  sensi_plot.sensiIntra_Clade(x, clade = NULL, ...)
+sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, graphs = "all", ...){
+  sensi_plot.sensiIntra_Clade(x, clade = NULL, graphs, ...)
 }
