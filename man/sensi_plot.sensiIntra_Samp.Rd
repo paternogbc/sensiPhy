@@ -4,7 +4,7 @@
 \alias{sensi_plot.sensiIntra_Samp}
 \title{Graphical diagnostics for class 'sensiIntra_Samp' and 'sensiTree_samp'}
 \usage{
-\method{sensi_plot}{sensiIntra_Samp}(x, graphs = "all", param = "slope",
+\method{sensi_plot}{sensiIntra_Samp}(x, graphs = "all", param = "estimate",
   ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which model parameter should be ploted  ("intercept" or "slope")}
+\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
 
 \item{...}{further arguments to methods}
 }
@@ -23,7 +23,7 @@
 \details{
 For 'x' from sensiIntra_Samp_phylm or sensiIntra_Samp_phyglm:
 
-Graph 1: Estimated slopes or intercepts for each simution across  
+Graph 1: Estimated estimates (slopes) or intercepts for each simution across  
 percentages of species removed and intra simulations. Colours represent percentage 
 of change in comparison with the full model (blue = lower than 5, orange = 
 between 5 and 10 and red = higher than 10).

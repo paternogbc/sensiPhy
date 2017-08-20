@@ -42,7 +42,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
@@ -98,7 +98,7 @@ intra_glm <- intra_phyglm(y~x,Vx = "x_sd",data = dat,phy=phy,distrib = "normal")
 
 #Print summary of sensitivity analysis
 summary(intra_glm)
-head(intra_glm$model_results)
+head(intra_glm$sensi.estimates)
 #Visual output
 sensi_plot(intra_glm)
 }

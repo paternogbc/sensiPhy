@@ -2,7 +2,7 @@
 % Please edit documentation in R/tree_intra_phylm.R
 \name{tree_intra_phylm}
 \alias{tree_intra_phylm}
-\title{Interaction of intraspecific variability & Phylogenetic uncertainty - Phylogenetic Linear Regression}
+\title{Interaction between phylogenetic uncertainty and intraspecific variability  - Phylogenetic Linear Regression}
 \usage{
 tree_intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
   y.transf = NULL, x.transf = NULL, n.intra = 10, n.tree = 2,
@@ -53,7 +53,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised value of the phylogenetic 
+\code{sensi.estimates}: Coefficients, aic and the optimised value of the phylogenetic 
 parameter (e.g. \code{lambda}) for each regression using a value in the interval of variation and 
 a different phylogenetic tree.
 

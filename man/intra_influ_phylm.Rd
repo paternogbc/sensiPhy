@@ -2,7 +2,7 @@
 % Please edit documentation in R/intra_influ_phylm.R
 \name{intra_influ_phylm}
 \alias{intra_influ_phylm}
-\title{Interaction of intraspecific variability & influential species - Phylogenetic Linear Regression}
+\title{Interaction between intraspecific variability and influential species - Phylogenetic Linear Regression}
 \usage{
 intra_influ_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
   y.transf = NULL, x.transf = NULL, n.intra = 10, distrib = "normal",
@@ -82,7 +82,7 @@ equals \code{n.intra * nrow(data)}.
 The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
 of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
 regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
-species was identified as the most influential species, as well as a table listing the mean slope, DFslope, 
+species was identified as the most influential species, as well as a table listing the mean estimate (slope), DIFestimate, 
 Percentage change and P-value across all species that occured as most influential species in at least one simulation.
 
 Additionally, users can evaluate each element in the list as a regula \code{sensiInflu}-object.

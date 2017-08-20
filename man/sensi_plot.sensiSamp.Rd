@@ -4,14 +4,14 @@
 \alias{sensi_plot.sensiSamp}
 \title{Graphical diagnostics for class 'sensiSamp'}
 \usage{
-\method{sensi_plot}{sensiSamp}(x, graphs = "all", param = "slope", ...)
+\method{sensi_plot}{sensiSamp}(x, graphs = "all", param = "estimate", ...)
 }
 \arguments{
 \item{x}{output from \code{samp_phylm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which model parameter should be ploted  ("intercept" or "slope")}
+\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
 
 \item{...}{further arguments to methods}
 }

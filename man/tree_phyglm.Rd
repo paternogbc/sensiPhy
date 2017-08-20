@@ -31,7 +31,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 different phylogenetic tree.
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/tree_samp_phyglm.R
 \name{tree_samp_phyglm}
 \alias{tree_samp_phyglm}
-\title{Sensitivity Analysis Species Sampling and phylogenetic uncertainty  - Phylogenetic Logistic Regression}
+\title{Interaction between phylogenetic uncertainty and sensitivity to species sampling  - Phylogenetic Logistic Regression}
 \usage{
 tree_samp_phyglm(formula, data, phy, n.sim = 30, n.tree = 2,
   breaks = seq(0.1, 0.5, 0.1), btol = 50, track = TRUE, ...)
@@ -39,23 +39,23 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 the full model without deleted species.
 
-\code{samp.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 Columns report the calculated regression intercept (\code{intercept}),
-difference between simulation intercept and full model intercept (\code{DFintercept}),
+difference between simulation intercept and full model intercept (\code{DIFintercept}),
 the percentage of change in intercept compared to the full model (\code{intercept.perc})
 and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 used) are reported. Lastly we reported the standardised difference in intercept 
-(\code{sDFintercept}) and slope (\code{sDFslope}).
+(\code{sDIFintercept}) and slope (\code{sDIFestimate}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
 removed) this reports the percentage of statistically signficant (at p<0.05)
 intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 
 \code{data}: Original full dataset.
 }

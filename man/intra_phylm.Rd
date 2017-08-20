@@ -49,7 +49,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.

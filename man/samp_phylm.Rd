@@ -36,23 +36,23 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 the full model without deleted species.
 
-\code{samp.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 Columns report the calculated regression intercept (\code{intercept}),
-difference between simulation intercept and full model intercept (\code{DFintercept}),
+difference between simulation intercept and full model intercept (\code{DIFintercept}),
 the percentage of change in intercept compared to the full model (\code{intercept.perc})
 and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 used) are reported. Lastly we reported the standardised difference in intercept 
-(\code{sDFintercept}) and slope (\code{sDFslope}).
+(\code{sDIFintercept}) and slope (\code{sDIFestimate}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
 removed) this reports the percentage of statistically signficant (at p<0.05)
 intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 
 \code{data}: Original full dataset.
 #' @note Please be aware that dropping species may reduce power to detect 
@@ -88,12 +88,12 @@ data(alien)
 samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
 data = alien$data, n.sim = 10)
 summary(samp)
-head(samp$samp.model.estimates)
+head(samp$sensi.estimates)
 # Visual diagnostics
 \dontrun{
 sensi_plot(samp)
-# You can specify which graph and parameter ("slope" or "intercept") to print: 
-sensi_plot(samp, graphs = 1, param = "slope")
+# You can specify which graph and parameter ("estimate" or "intercept") to print: 
+sensi_plot(samp, graphs = 1, param = "estimate")
 sensi_plot(samp, graphs = 2, param = "intercept")
 }
 }

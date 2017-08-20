@@ -27,13 +27,13 @@ details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 Species from the selected clade are represented in red (removed species), black
 solid line represents the regression with the full model and red dashed line represents
 the regression of the model without the species from the selected clade.
-To check the available clades to plot, see \code{x$clade.model.estimates$clade} 
+To check the available clades to plot, see \code{x$sensi.estimates$clade} 
 in the object returned from \code{tree_clade_phylm} or \code{tree_clade_phyglm}. 
 
 Graph 2: Distribution of the simulated slopes (Null distribution
 for a given clade sample size).
-The red dashed line represents the estimated slope for the reduced model 
-(without the focal clade) and the black line represents the slope for the 
+The red dashed line represents the estimated estimate for the reduced model 
+(without the focal clade) and the black line represents the estimate for the 
 full model.
 }
 \seealso{

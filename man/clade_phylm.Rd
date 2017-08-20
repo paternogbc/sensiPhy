@@ -39,13 +39,13 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 without deleted species.
 
-\code{clade.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a deleted clade. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the percentage of change
+intercept and full model intercept (\code{DIFintercept}), the percentage of change
 in intercept compared to the full model (\code{intercept.perc}) and intercept
 p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter 
 (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 are reported.
@@ -78,7 +78,7 @@ All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 
 \code{clade_phylm} detects influential clades based on
-difference in intercept and/or slope when removing a given clade compared
+difference in intercept and/or estimate when removing a given clade compared
 to the full model including all species.
 
 Currently, this function can only implement simple linear models (i.e. 

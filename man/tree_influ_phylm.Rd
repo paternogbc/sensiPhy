@@ -2,7 +2,7 @@
 % Please edit documentation in R/tree_influ_phylm.R
 \name{tree_influ_phylm}
 \alias{tree_influ_phylm}
-\title{Influential species detection and phylogenetic uncertainty - Phylogenetic Linear Regression}
+\title{Interaction between phylogenetic uncertainty and influential species detection - Phylogenetic Linear Regression}
 \usage{
 tree_influ_phylm(formula, data, phy, n.tree = 2, cutoff = 2,
   model = "lambda", track = TRUE, ...)
@@ -44,14 +44,14 @@ based on standardised difference in interecept and in the slope of the
 regression. Species are ordered from most influential to less influential and
 only include species with a standardised difference > \code{cutoff}.
 
-\code{influ.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a deleted clade. #' Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the standardised
-difference (\code{sDFintercept}), the percentage of change in intercept compared
+intercept and full model intercept (\code{DIFintercept}), the standardised
+difference (\code{sDIFintercept}), the percentage of change in intercept compared
 to the full model (\code{intercept.perc}) and intercept p-value
 (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter
 (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) are
 reported.
@@ -97,8 +97,8 @@ summary(tree_influ)
 influ$influential.species
 # Visual diagnostics
 sensi_plot(influ)
-# You can specify which graph and parameter ("slope" or "intercept") to print: 
-sensi_plot(influ, param = "slope", graphs = 2)
+# You can specify which graph and parameter ("estimate" or "intercept") to print: 
+sensi_plot(influ, param = "estimate", graphs = 2)
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

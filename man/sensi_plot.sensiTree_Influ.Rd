@@ -4,7 +4,7 @@
 \alias{sensi_plot.sensiTree_Influ}
 \title{Graphical diagnostics for class 'sensiTree_Influ'}
 \usage{
-\method{sensi_plot}{sensiTree_Influ}(x, graphs = "all", param = "slope",
+\method{sensi_plot}{sensiTree_Influ}(x, graphs = "all", param = "estimate",
   ...)
 }
 \arguments{
@@ -12,7 +12,7 @@
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which parameter ("intercept" or "slope" should be printed)}
+\item{param}{choose which parameter ("intercept" or "estimate" should be printed)}
 
 \item{...}{further arguments to methods}
 }
@@ -23,7 +23,7 @@
 \details{
 For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
 
-Graph 1: Distribution of estimated slopes or intercepts for each 
+Graph 1: Distribution of estimated estimates (slopes) or intercepts for each 
 simulation (leave-one-out deletion). Red vertical line represents the original
 slope or intercept from the full model (with all species). 
 
