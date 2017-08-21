@@ -66,7 +66,7 @@ print.sensiClade <- function(x, ...)
     print(x$call)
     cat("\n")
     cat("Analyzed clades: ")
-    cat(x$clade.model.estimates$clade, sep = "; ",  "\n")
+    cat(x$sensi.estimates$clade, sep = "; ",  "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
@@ -178,4 +178,28 @@ print.intra.physig <- function(x, ...)
   cat("\n")
   cat(message("use summary(x) and sensi_plot(x) to check results"))
   cat(message("use x$tree.intra.estimates to access sensitivity analysis data"))
+}
+
+
+### 3. PRINT interaction PGLS------------------------------------------
+#' @export
+print.sensiTree_Clade <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:clade \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Analyzed clades: ")
+  cat(unique(x$sensi.estimates$clade), sep = "; ",  "\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiTree_Influ <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
