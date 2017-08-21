@@ -14,8 +14,8 @@
 #' @details For 'x' from clade_phylm or clade_phyglm:
 #' 
 #' Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
-#' full dataset) and a comparison between the regression lines of the full model
-#' and the model without the selected clade (set by \code{clade}). For further
+#' full dataset) and a comparison between the regression lines of the full dataset
+#' and the rerun without the selected clade (set by \code{clade}). For further
 #' details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 #' 
 #' Species from the selected clade are represented in red (removed species), black
@@ -63,14 +63,14 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     slo <-  c(x$sensi.estimates$estimate[clade.n ],
               estimate.0)
     model <- NULL
-    estimates <- data.frame(inter,slo, model=c("Without clade", "Full model"))
+    estimates <- data.frame(inter,slo, model=c("Without clade", "Full data"))
     
     xf <- model.frame(formula = x$formula, data = full.data)[,2]
     yf <- plogis(estimates[2,1] + estimates[2,2] * xf)
     yw <- plogis(estimates[1,1] + estimates[1,2] * xf)
     plot_data <- data.frame("xf" = c(xf,xf),
                             "yy" = c(yw, yf),
-                            model = rep(c("Without clade","Full model"),
+                            model = rep(c("Without clade","Full data"),
                                         each = length(yf)))
                             
     match.y <- which(full.data[, clade.col] == clade)
@@ -85,9 +85,9 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
         
         scale_shape_manual(name = "", values = c("Removed species" = 16))+
         guides(shape = guide_legend(override.aes = list(linetype = 0)))+
-        scale_linetype_manual(name = "Model", values = c("Full model" = "solid",
+        scale_linetype_manual(name = "Model", values = c("Full data" = "solid",
                                                     "Without clade" = "dashed"))+
-        scale_color_manual(name = "Model", values = c("Full model" = "black",
+        scale_color_manual(name = "Model", values = c("Full data" = "black",
                                                     "Without clade" = "red"))+
         theme(axis.text = element_text(size = 12),
               axis.title = element_text(size = 12),

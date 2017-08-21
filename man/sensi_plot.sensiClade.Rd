@@ -20,8 +20,8 @@ Plot results from \code{clade_phylm} and \code{clade_phyglm}
 For 'x' from clade_phylm or clade_phyglm:
 
 Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
-full dataset) and a comparison between the regression lines of the full model
-and the model without the selected clade (set by \code{clade}). For further
+full dataset) and a comparison between the regression lines of the full dataset
+and the rerun without the selected clade (set by \code{clade}). For further
 details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
 
 Species from the selected clade are represented in red (removed species), black
