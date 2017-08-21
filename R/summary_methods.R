@@ -1,3 +1,5 @@
+### METHODS for: PGLS--------------------------------------------
+
 ### Summary method for class: sensiClade:--------------------------------------
 
 #' @export
@@ -257,13 +259,13 @@ summary.sensiTree_Clade <- function(object, ...){
   stats.slo <- stats::aggregate(.~clade.removed, data=stats.slo, mean)
   stats.slo$perc.ran.slo<-round(perc.ran.slo,1)
   
-  names(stats.slo)[9] <-"Non random (%)"
+  names(stats.slo)[9] <-"Significant (%)"
   
   perc.ran.int <- ((stats::aggregate(stats.int$Pval.randomization<=0.05,by=list(stats.int$clade.removed),FUN=sum))$x)/length(it)*100
   stats.int <- stats::aggregate(.~clade.removed, data=stats.int, mean)
   stats.int$perc.ran.int<-round(perc.ran.int,1)
   
-  names(stats.int)[9] <-"Non random (%)"
+  names(stats.int)[9] <-"Significant (%)"
   
   ### Sort by % of change:
   ord.slo <- order(stats.slo$`Change (%)`, decreasing = TRUE)
@@ -340,11 +342,19 @@ summary.sensiIntra_Influ <- function(object, ...){
 
 #' @export
 summary.sensiTree_Influ <- function(object, ...){
+  n.tree <- length(unique(object$sensi.estimates$iteration))
+  
+  ## Estimate:
   sp.estimate <- unlist(as.list(object$influential.species$influ.sp.estimate$influ.sp.estimate))
   sp.estimate.tab <- table(sp.estimate)
   sp.estimate <- sp.estimate.tab[order(sp.estimate.tab,decreasing=T)] 
+  sp.estimate.tab <- data.frame("Species removed" = names(sp.estimate), 
+                                "Significant" = (as.numeric(sp.estimate)/n.tree)*100)
+  colnames(sp.estimate.tab) <- c("Species removed", "(%) of iterations")
+  
   sensi.estimates<-object$sensi.estimates
-  rows.estimate <- match(names(sp.estimate), sensi.estimates$species)
+  #rows.estimate <- match(names(sp.estimate), sensi.estimates$species)
+  rows.estimate <- sensi.estimates$species %in% sp.estimate.tab$`Species removed`
   estimate <- sensi.estimates[rows.estimate, c("species","estimate","DIFestimate","estimate.perc","pval.estimate")]
   estimate <- stats::aggregate(estimate[,2:5],list(estimate$species),mean)
   names(estimate)[1]<-"species"
@@ -353,10 +363,15 @@ summary.sensiTree_Influ <- function(object, ...){
   rownames(estimate) <- NULL
   colnames(estimate) <- c("Species removed", "Estimate", "DIFestimate", "Change(%)", "Pval")
   
+  
+  ### Intercept:
   sp.inter <-unlist(as.list(object$influential.species$influ.sp.intercept$influ.sp.intercept))
   sp.inter.tab <- table(sp.inter)
   sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
-  rows.inter <- match(names(sp.inter), sensi.estimates$species)
+  sp.inter.tab <- data.frame(names(sp.inter), (as.numeric(sp.inter)/n.tree)*100)
+  colnames(sp.inter.tab) <- c("Species removed", "(%) of iterations")
+  #rows.inter <- match(names(sp.inter), sensi.estimates$species)
+  rows.inter <- sensi.estimates$species %in% sp.inter.tab$`Species removed`
   inter <- sensi.estimates[rows.inter, c("species","intercept","DIFintercept","intercept.perc","pval.intercept")]
   inter <- stats::aggregate(inter[,2:5],list(inter$species),mean)
   names(inter)[1]<-"species"
@@ -365,8 +380,8 @@ summary.sensiTree_Influ <- function(object, ...){
   rownames(inter) <- NULL
   colnames(inter) <- c("Species removed", "Intercept", "DIFintercept", "Change(%)", "Pval")
   
-  res <- list("Most Common Influential species for the Estimate" = sp.estimate, "Mean Estimates" = estimate,
-              "Most Common Influential species for the Intercept" = sp.inter, "Mean Intercepts" = inter)
+  res <- list("Most Common Influential species for the Estimate" = sp.estimate.tab, "Average Estimates" = estimate,
+              "Most Common Influential species for the Intercept" = sp.inter.tab, "Average Intercepts" = inter)
   return(res)
   
 }
