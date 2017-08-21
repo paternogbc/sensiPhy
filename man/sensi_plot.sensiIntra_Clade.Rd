@@ -2,22 +2,22 @@
 % Please edit documentation in R/sensi_plot.sensiINTER_Clade.R
 \name{sensi_plot.sensiIntra_Clade}
 \alias{sensi_plot.sensiIntra_Clade}
-\title{Graphical diagnostics for class 'sensiIntra_Clade'}
+\title{Graphical diagnostics for class 'sensiTree_Clade'}
 \usage{
-\method{sensi_plot}{sensiIntra_Clade}(x, clade = NULL, ...)
+\method{sensi_plot}{sensiIntra_Clade}(x, clade = NULL, graphs = "all", ...)
 }
 \arguments{
-\item{x}{output from \code{intra_clade_phylm} or \code{intra_clade_phyglm}}
+\item{x}{output from \code{tree_clade_phylm} or \code{tree_clade_phyglm}}
 
 \item{clade}{The name of the clade to be evaluated (see details)}
 
 \item{...}{further arguments to methods.}
 }
 \description{
-Plot results from \code{intra_clade_phylm} and \code{intra_clade_phyglm}
+Plot results from \code{tree_clade_phylm} and \code{tree_clade_phyglm}
 }
 \details{
-For 'x' from intra_clade_phylm or intra_clade_phyglm:
+For 'x' from tree_clade_phylm or tree_clade_phyglm:
 
 Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
 full dataset) and a comparison between the regression lines of the full model
@@ -28,16 +28,16 @@ Species from the selected clade are represented in red (removed species), black
 solid line represents the regression with the full model and red dashed line represents
 the regression of the model without the species from the selected clade.
 To check the available clades to plot, see \code{x$sensi.estimates$clade} 
-in the object returned from \code{intra_clade_phylm} or \code{intra_clade_phyglm}. 
+in the object returned from \code{tree_clade_phylm} or \code{tree_clade_phyglm}. 
 
 Graph 2: Distribution of the simulated slopes (Null distribution
 for a given clade sample size).
-The red dashed line represents the estimated slope for the reduced model 
-(without the focal clade) and the black line represents the slope for the 
+The red dashed line represents the estimated estimate for the reduced model 
+(without the focal clade) and the black line represents the estimate for the 
 full model.
 }
 \seealso{
-\code{\link[sensiPhy]{intra_clade_phylm}}
+\code{\link[sensiPhy]{tree_clade_phylm}}
 }
 \author{
 Gustavo Paterno, Caterina Penone
