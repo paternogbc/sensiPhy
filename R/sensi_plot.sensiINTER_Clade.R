@@ -35,7 +35,7 @@
 #' @export
 
 sensi_plot.sensiTree_Clade <- function(x, clade = NULL, graphs = "all", ...){
-  ### Get clade name:
+    ### Get clade name:
   clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
     clade <- clades.names[1]
@@ -110,7 +110,8 @@ g2 <-
         panel.grid = element_blank()) +
   xlab("Tree") + ylab("estimate")+
   ggtitle(paste("Clade = ", clade, "| ", "n.sim = ", x$call$n.sim, " | ",
-                " n.tree = ", x$call$n.tree)) 
+                " n.tree = ", x$call$n.tree,
+                "| Sig. iterations =", s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")) 
 if(length(levels(ces.c$iteration)) > 30) g2 <- g2 +  theme(axis.text.x = element_blank()) 
 
 ### Output-------------------------------------------------------------------------------
