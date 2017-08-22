@@ -82,16 +82,16 @@
 #' cla <- rep(c("A","B","C","D","E"), each = 30)
 #' dat = data.frame(y, x, cla)
 #' # Run sensitivity analysis:
-#' clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, 
+#' tree_clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, 
 #' n.tree = 3, n.sim = 5, clade.col = "cla")
 #'# To check summary results and most influential clades:
-#'summary(clade)
+#'summary(tree_clade)
 #'# Visual diagnostics for clade removal:
-#'sensi_plot(clade)
+#'sensi_plot(tree_clade)
 #'# Specify which clade removal to plot:
-#'sensi_plot(clade, "B")
-#'sensi_plot(clade, "C")
-#'sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
+#'sensi_plot(tree_clade, "B")
+#'sensi_plot(tree_clade, "C")
+#'sensi_plot(tree_clade, "D") #The clade with the largest effect on slope and intercept
 #'}
 #' @export
 
