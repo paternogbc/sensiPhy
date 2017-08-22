@@ -55,7 +55,7 @@ sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
              label = paste("Number of iterations =", n.tree))
   
   ### Graph two
-  es <- tree_influ$sensi.estimates
+  es <- x$sensi.estimates
   es <- es[es$species %in% summary(x)[[1]][[1]], ]
   es$species <- as.factor(es$species)
   

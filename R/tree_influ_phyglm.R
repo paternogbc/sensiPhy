@@ -100,7 +100,7 @@ tree_influ_phyglm <- function(formula, data, phy, n.tree = 2,
   
   #Start tree loop here
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N*n.tree, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -114,7 +114,7 @@ tree_influ_phyglm <- function(formula, data, phy, n.tree = 2,
                                    verbose = FALSE, track = FALSE,...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N
+    counter = counter + 1
   }
   
 
