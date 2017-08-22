@@ -120,7 +120,7 @@ tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
   
   #Start tree loop here
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.tree, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   counter = 1
   
   for (j in trees){
@@ -134,7 +134,7 @@ tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
                                    model, breaks=breaks, track = FALSE, verbose = FALSE, ...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + n.sim
+    counter = counter + 1
   }
   
   names(tree.samp) <- trees
