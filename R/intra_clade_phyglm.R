@@ -113,10 +113,9 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-  else
   
   #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy)
+  data_phy <- match_dataphy(formula, data, phy,...)
   phy <- data_phy$phy
   full.data <- data_phy$data
   if (is.na(match(clade.col, names(full.data)))) {
