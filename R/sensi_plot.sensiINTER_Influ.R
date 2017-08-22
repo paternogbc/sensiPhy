@@ -1,4 +1,4 @@
-#' Graphical diagnostics for class 'sensiInflu_Intra'
+#' Graphical diagnostics for class 'sensiTree_Intra'
 #'
 #' \code{sensi_plot.intra_influ} Plot results from \code{intra_influ_phylm} and 
 #' \code{intra_influ_phyglm}
@@ -31,180 +31,62 @@
 #' @export
 
 ### Start:
-sensi_plot.sensiIntra_Influ <- function(x, graphs="all", param="estimate", ...){
+sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
   
-  # nulling variables:------------------------------------------------------------
-  estimate <- ..density.. <- intercept <- sDIFestimate <- estimate.perc <- NULL 
-  intercept.perc <- sDIFintercept <- species <-  NULL
-  
-  ### Organizing values:
-  result <- x$sensi.estimates
-  mappx <- x$formula[[3]]
-  mappy <- x$formula[[2]]
-  vars <- all.vars(x$formula)
-  intercept.0 <-  as.numeric(x$full.model.estimates$coef[1])
-  estimate.0     <-  as.numeric(x$full.model.estimates$coef[2])
-  cutoff      <-  x$cutoff
-  
-  ### Removing species with error:
-  if (isTRUE(class(x$errors) != "character" )){
-    x$data <- x$data[-as.numeric(x$errors),]
-  }
-  result.tab <- data.frame(x$sensi.estimates,x$data[all.vars(x$formula)])
-  
-  ### Plots:
-  # Distribution of estimated estimates:
-  s1 <- ggplot2::ggplot(result,aes(x=estimate))+
-    geom_histogram(fill="yellow",colour="black", size=.2,
-                   alpha = .3) +
-    geom_vline(xintercept = estimate.0,color="red",linetype=2,size=.7)+
-    xlab("Estimates")+
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
+  ### Graph one
+  n.tree <- length(unique(x$sensi.estimates$iteration))
+  sp.estimate <- unlist(as.list(x$influential.species$influ.sp.estimate$influ.sp.estimate))
+  sp.estimate.tab <- table(sp.estimate)
+  sp.estimate <- sp.estimate.tab[order(sp.estimate.tab,decreasing=T)] 
+  sp.estimate.tab <- data.frame("Species removed" = names(sp.estimate), 
+                                "Significant" = (as.numeric(sp.estimate)/n.tree)*100)
+  g1 <- 
+    ggplot(sp.estimate.tab, aes(y = (Significant), 
+                                x = reorder(Species.removed, - Significant))) +
+    geom_bar(stat = "identity", fill = "lightblue") + 
+    xlab("Species removed") + ylab("(%) iterations") +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",
-                                          colour="black"))
+                                          colour="black"),
+          legend.position = "none",
+          axis.text.x=element_text(angle=65,hjust=1)) +
+    annotate(geom = "text",x=Inf, y = Inf, vjust= 1.5, hjust= 1.2,
+             label = paste("Number of iterations =", n.tree))
   
-  # Distribution of estimated intercepts:
-  i1 <- ggplot2::ggplot(result,aes(x=intercept))+
-    geom_histogram(fill="yellow",colour="black", size=.2,
-                   alpha = .3) +
-    geom_vline(xintercept = intercept.0,color="red",linetype=2,size=.7)+
-    xlab("Estimated Intercepts")+
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
+  ### Graph two
+  es <- tree_influ$sensi.estimates
+  es <- es[es$species %in% summary(x)[[1]][[1]], ]
+  es$species <- as.factor(es$species)
+  
+  ### ord species in the same order as graph 1
+  es$species <- factor(es$species, levels = sp.estimate.tab$Species.removed)
+  g2 <-
+    ggplot(es, aes(y = DIFestimate, x = species)) + 
+    geom_point(color = "red") +
+    #scale_x_discrete(labels = c(strtrim(es$species, 4))) +
+    ggplot2::stat_summary(fun.y = "mean", size = 5, color = "red", geom = "point") +
+    geom_hline(yintercept = 0, color = "black") +
+    theme(axis.text=element_text(size= 12),
+          axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",
-                                          colour="black"))
+                                          colour="black"),
+          legend.position = "none",
+          axis.text.x=element_text(angle=65,hjust=1)) +
+    xlab("Species removed") + ylab("DIFestimate")
   
-  # Original plot with Standardized DIFestimate as colour gradient
-  s2 <- ggplot2::ggplot(result.tab, aes_string(y = mappy, x = mappx),
-                        environment = environment())+
-    geom_point(data = result.tab,
-               aes(size = abs(sDIFestimate)), alpha = .8)+
-    ggplot2::scale_size_continuous(name = "|sDF|", range = c(1, 6))+
-    ggplot2::geom_text(aes(label =  ifelse(abs(sDIFestimate) > cutoff, 
-                                           as.character(species), ""),
-                           vjust = 0, hjust = 0,
-                           color = "red", size = .7), show.legend = F,
-                       fontface = "bold") + 
-    theme(legend.key.width = unit(.2,"cm"),
-          panel.background=element_rect(fill="white", colour = "black"),
-          legend.text = element_text(size = 12),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank())+
-    scale_x_continuous(expand = c(.2, .2)) +
-    ggtitle("Standardized Difference in estimate")+
-    theme(axis.title = element_text(size = 12),
-          axis.text = element_text(size = 12),
-          panel.background = element_rect(fill = "white",
-                                          colour = "black"))
-  
-  # Original plot with Standardized DIFintercept as size gradient
-  i2<-ggplot2::ggplot(result.tab,aes_string(y = mappy, x = mappx),
-                      environment = environment())+
-    geom_point(data = result.tab,
-               aes(size = abs(sDIFintercept)), alpha = .8)+
-    ggplot2::scale_size_continuous(name = "sDF", range = c(1, 6))+
-    ggplot2::geom_text(aes(label = ifelse(abs(sDIFintercept) > cutoff, 
-                                          as.character(species), ""), 
-                           vjust = 0, hjust = 0, color = "red",
-                           size = .7), show.legend = F,  fontface = "bold") +
-    theme(legend.key.width = unit(.2,"cm"),
-          panel.background=element_rect(fill="white",colour="black"),
-          legend.text = element_text(size=12),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank())+
-    scale_x_continuous(expand = c(.2, .2)) +
-    ggtitle("Standardized Difference in Intercept")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))
-  
-  # Influential points for estimate estimate
-  s3 <- ggplot2::ggplot(result,aes(x=sDIFestimate))+
-    geom_histogram(fill="red",color="black",binwidth=.5) +
-    xlab("Standardized Difference in Estimate")+
-    ylab("Frequency")+
-    geom_histogram(data=subset(result,sDIFestimate<cutoff&sDIFestimate>-cutoff),
-                   colour="black", fill="white",binwidth=.5)+
-    geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
-    geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))
-  
-  # Influential points for intercept estimate
-  i3 <- ggplot2::ggplot(result,aes(x=sDIFintercept))+
-    geom_histogram(fill="red",color="black",binwidth=.5) +
-    xlab("Standardized Difference in Intercept")+
-    ylab("Frequency")+
-    geom_histogram(data=subset(result,sDIFestimate<cutoff&sDIFestimate>-cutoff),
-                   colour="black", fill="white",binwidth=.5)+
-    geom_vline(xintercept = -cutoff,color="red",linetype=2,size=.7)+
-    geom_vline(xintercept = cutoff,color="red",linetype=2,size=.7)+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))                
-  
-  # Distribution of slope.perc:
-  
-  s4 <- ggplot2::ggplot(result,aes(x=estimate.perc,y=..density..))+
-    geom_histogram(data = result,
-                   colour="black", fill="yellow",
-                   alpha = .3)+
-    xlab("% of change in Estimate")+
-    ylab("Frequency") +
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))
-  
-  # Distribution of estimate.perc:
-  i4 <- ggplot2::ggplot(result,aes(x=intercept.perc,y=..density..))+
-    geom_histogram(
-      colour="black", fill="yellow",
-      alpha = .3)+
-    xlab("% of change in Intercept")+
-    ylab("Frequency")+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))
-  
+  ### Output-------------------------------------------------------------------------------
   ### Plotting:
-  if (param == "estimate" & graphs == "all")
-    suppressMessages(return(multiplot(s1, s3, s2, s4, cols = 2)))
-  if (param == "estimate" & graphs == 1)
-    suppressMessages(return(s1))
-  if (param == "estimate" & graphs == 2)
-    suppressMessages(return(s2))
-  if (param == "estimate" & graphs == 3)
-    suppressMessages(return(s3))
-  if (param == "estimate" & graphs == 4)
-    suppressMessages(return(s4))
-  if (param == "intercept" & graphs == "all")
-    suppressMessages(return(multiplot(i1, i3, i2, i4, cols = 2)))
-  if (param == "intercept" & graphs == 1)
-    suppressMessages(return(i1))
-  if (param == "intercept" & graphs == 2)
-    suppressMessages(return(i2))
-  if (param == "intercept" & graphs == 3)
-    suppressMessages(return(i3))
-  if (param == "intercept" & graphs == 4)
-    suppressMessages(return(i4))
-  
-  ### Warnings
-  if (isTRUE(class(x$errors) != "character" ))
-    warnings("Deletion of some species caused error. These species were not ploted")
-  
+  if (graphs=="all")
+    return(suppressMessages(multiplot(g1,g2, cols = 2)))
+  if (graphs==1)
+    return(suppressMessages(g1))
+  if (graphs==2)
+    return(suppressMessages(g2))
 }
 
 
-#' Graphical diagnostics for class 'sensiTree_Influ'
+#' Graphical diagnostics for class 'sensiIntraInflu'
 #'
 #' \code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
 #' \code{tree_influ_phyglm}
@@ -239,6 +121,6 @@ sensi_plot.sensiIntra_Influ <- function(x, graphs="all", param="estimate", ...){
 
 
 #' @export
-sensi_plot.sensiTree_Influ <- function(x, graphs="all", param="estimate", ...){
+sensi_plot.sensiIntra_Influ <- function(x, graphs="all", param="estimate", ...){
   sensi_plot.intra_influ(x, graphs, ...)
 }

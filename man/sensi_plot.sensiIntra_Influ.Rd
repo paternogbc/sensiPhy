@@ -2,13 +2,13 @@
 % Please edit documentation in R/sensi_plot.sensiINTER_Influ.R
 \name{sensi_plot.sensiIntra_Influ}
 \alias{sensi_plot.sensiIntra_Influ}
-\title{Graphical diagnostics for class 'sensiInflu_Intra'}
+\title{Graphical diagnostics for class 'sensiIntraInflu'}
 \usage{
 \method{sensi_plot}{sensiIntra_Influ}(x, graphs = "all", param = "estimate",
   ...)
 }
 \arguments{
-\item{x}{output from \code{influ_phylm} or \code{intra_influ_phyglm}}
+\item{x}{output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
@@ -17,13 +17,13 @@
 \item{...}{further arguments to methods}
 }
 \description{
-\code{sensi_plot.intra_influ} Plot results from \code{intra_influ_phylm} and 
-\code{intra_influ_phyglm}
+\code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
+\code{tree_influ_phyglm}
 }
 \details{
-For 'x' from intra_influ_phylm or intra_influ_phyglm:
+For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
 
-Graph 1: Distribution of estimated slopes or intercepts for each 
+Graph 1: Distribution of estimated estimates (slopes) or intercepts for each 
 simulation (leave-one-out deletion). Red vertical line represents the original
 slope or intercept from the full model (with all species). 
 
