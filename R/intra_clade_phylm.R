@@ -114,7 +114,7 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
   else
 
   #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy, ...)
+  data_phy <- match_dataphy(formula, data, phy)
   phy <- data_phy$phy
   full.data <- data_phy$data
   if (is.na(match(clade.col, names(full.data)))) {
