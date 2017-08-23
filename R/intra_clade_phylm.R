@@ -150,7 +150,7 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
   
   #Start clade loop here
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.intra, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   counter = 1
   
   for (j in 1:n.intra){
@@ -178,12 +178,12 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
     if(!is.null(x.transf)) 
     {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
     
-    intra.clade[[j]] <- clade_phylm(formula, data=full.data, phy=phy, model=model,
+    intra.clade[[j]] <- clade_phylm(formula = respV ~ predV, data=full.data, phy=phy, model=model,
                                     clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
-                                    track = FALSE, verbose = FALSE,...)
+                                    track = FALSE, verbose = FALSE, ...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + n.sim
+    counter = counter + 1
   }
   
   names(intra.clade) <- 1:n.intra
