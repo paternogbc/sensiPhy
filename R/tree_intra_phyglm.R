@@ -98,7 +98,7 @@
 tree_intra_phyglm <- function(formula, data, phy,
                                           Vx = NULL, y.transf = NULL, x.transf = NULL,
                                           n.intra = 10, n.tree = 2, 
-                                          distrib = "normal", model = "lambda", 
+                                          distrib = "normal", 
                                           track = TRUE, btol=50,...){
   
   #Error check
@@ -126,6 +126,7 @@ tree_intra_phyglm <- function(formula, data, phy,
   species.NA <- list()
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra*n.tree, style = 3)
   counter = 1
+  counterpb = 1
   
   for (j in trees) {
 
@@ -137,17 +138,18 @@ tree_intra_phyglm <- function(formula, data, phy,
       
       #model (remove warnings about standard deviation in intra)
 
-      withCallingHandlers(tree.intra[[counter]] <- intra_phyglm(formula=formula,data=full.data,phy=tree,
+      withCallingHandlers(tree.intra[[counter]] <- intra_phyglm(formula=formula, data=full.data, phy=tree,
                           Vx, x.transf, y.transf, n.intra=n.intra,
-                           distrib=distrib, btol=btol, track=F, verbose=F,...),
+                           distrib=distrib, btol=btol, track=F, verbose=F),
                           
                           warning=function(w){
                             if (grepl("make sure that standard deviation", w$message))
                               invokeRestart("muffleWarning")
                           } )
 
-      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-      counter = counter + n.intra
+      if(track==TRUE) utils::setTxtProgressBar(pb, counterpb)
+      counterpb = counterpb + n.intra
+      counter = counter + 1
         
       }
 

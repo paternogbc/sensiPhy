@@ -124,6 +124,7 @@ tree_intra_phylm <- function(formula, data, phy,
   species.NA <- list()
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra*n.tree, style = 3)
   counter = 1
+  counterpb = 1
 
   for (j in trees) {
 
@@ -138,7 +139,7 @@ tree_intra_phylm <- function(formula, data, phy,
       withCallingHandlers(
         tree.intra[[counter]] <- intra_phylm(formula=formula,data=full.data,phy=tree,
                                              Vx, Vy, y.transf, x.transf, n.intra=n.intra,
-                                             distrib, model, track=F, verbose=F,...),
+                                             distrib, model, track=F, verbose=F),
                                 
         warning=function(w){
         if (grepl("make sure that standard deviation", w$message))
@@ -146,8 +147,9 @@ tree_intra_phylm <- function(formula, data, phy,
         } ) 
 
 
-      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-      counter = counter + n.intra
+      if(track==TRUE) utils::setTxtProgressBar(pb, counterpb)
+      counterpb = counterpb + n.intra
+      counter = counter + 1
         
       }
 
@@ -214,3 +216,4 @@ tree_intra_phylm <- function(formula, data, phy,
   class(res) <- "sensiTree_Intra"
   return(res)
 }
+
