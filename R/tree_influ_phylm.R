@@ -73,11 +73,11 @@
 #' # To check summary results:
 #'summary(tree_influ)
 #'# Most influential speciesL
-#'influ$influential.species
+#'tree_influ$influential.species
 #'# Visual diagnostics
-#'sensi_plot(influ)
+#'sensi_plot(tree_influ)
 #'# You can specify which graph and parameter ("estimate" or "intercept") to print: 
-#'sensi_plot(influ, param = "estimate", graphs = 2)
+#'sensi_plot(tree_influ, param = "estimate", graphs = 2)
 #' @export
 
 
