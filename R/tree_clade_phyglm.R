@@ -83,7 +83,7 @@
 #' dat = data.frame(y, x, cla)
 #' # Run sensitivity analysis:
 #' tree_clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, 
-#' n.tree = 3, n.sim = 5, clade.col = "cla")
+#' n.tree = 10, n.sim = 10, clade.col = "cla")
 #'# To check summary results and most influential clades:
 #'summary(tree_clade)
 #'# Visual diagnostics for clade removal:
