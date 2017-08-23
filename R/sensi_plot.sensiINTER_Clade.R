@@ -163,5 +163,5 @@ if (graphs==2)
 #' @importFrom stats model.frame qt plogis 
 #' @export
 sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, graphs = "all", ...){
-  sensi_plot.sensiTree_Clade(x, clade = NULL, graphs = "all", ...)
+  sensi_plot.sensiTree_Clade(x, clade, graphs, ...)
 }
