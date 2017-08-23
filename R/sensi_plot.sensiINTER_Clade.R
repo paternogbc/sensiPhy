@@ -35,7 +35,7 @@
 #' @export
 
 sensi_plot.sensiTree_Clade <- function(x, clade = NULL, graphs = "all", ...){
-    ### Get clade name:
+  ### Get clade name:
   clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
     clade <- clades.names[1]
@@ -85,6 +85,9 @@ g1 <-
 
 ### Plot 2: Estimated slopes against for null distribution/removed clade ~ trees 
 cols <- c("Without clade" = "red", "Full data" = "black", "Null distribution" = "lightblue")
+if (class(x) == "sensiTree_Clade") XLAB <- "Tree"
+if (class(x) == "sensiIntra_Clade") XLAB <- "Iteration"
+
 g2 <- 
   ggplot(nd.c) +       
   geom_jitter(width = .35, aes(y = estimate, x = as.factor(iteration), color = "Null distribution")) +
@@ -108,7 +111,7 @@ g2 <-
                                         colour="black"),
         axis.line = element_line(colour = "black"),
         panel.grid = element_blank()) +
-  xlab("Tree") + ylab("estimate")+
+  xlab(XLAB) + ylab("estimate")+
   ggtitle(paste("Clade = ", clade, "| ", "n.sim = ", x$call$n.sim, " | ",
                 " n.tree = ", x$call$n.tree,
                 "| Sig. iterations =", s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")) 
@@ -160,5 +163,5 @@ if (graphs==2)
 #' @importFrom stats model.frame qt plogis 
 #' @export
 sensi_plot.sensiIntra_Clade <- function(x, clade = NULL, graphs = "all", ...){
-  sensi_plot.sensiIntra_Clade(x, clade = NULL, graphs, ...)
+  sensi_plot.sensiTree_Clade(x, clade = NULL, graphs = "all", ...)
 }
