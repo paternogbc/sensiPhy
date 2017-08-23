@@ -71,9 +71,9 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 20)
-#'summary(influ)
-#'sensi_plot(influ)
+#'tree_influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 20)
+#'summary(tree_influ)
+#'sensi_plot(tree_influ)
 #' @export
 
 tree_influ_phyglm <- function(formula, data, phy, n.tree = 2, 
