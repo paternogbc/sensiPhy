@@ -72,9 +72,9 @@ nd.c$iteration  <- as.factor(nd.c$iteration)
 ### Plot 1: Estimated slopes for each clade between trees ----------------------
 g1 <-
   ggplot(ces, aes(y = estimate, x = reorder(as.factor(strtrim(clade, 4)), estimate))) + 
-  geom_point(color = "red") +
-  ggplot2::stat_summary(fun.data = "mean_cl_boot", size = 1, color = "red") +
-  geom_hline(yintercept = mean(f$Estimate), size = 1.5) +
+  geom_point(color = "red", size = .8) +
+  ggplot2::stat_summary(fun.y = "mean", size = 3, color = "red", geom = "point") +
+  geom_hline(yintercept = mean(f$Estimate), size = 1) +
   theme(axis.text=element_text(size=12),
         axis.title=element_text(size=12),
         panel.background = element_rect(fill="white",
