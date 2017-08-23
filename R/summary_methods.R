@@ -108,52 +108,52 @@ summary.sensiIntra_Clade <- function(object, ...){
                           "m.null.intercept" = numeric(length(c)),
                           "Pval.randomization" = numeric(length(c)))
   aa <- 1
-
-    for(j in c) {
-      for(i in 1:length(it)){
-    
-    nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
-    ces <- ce[ce$clade == j & ce$iteration == it[i], ] # reduced model estimates
-    times <- nrow(nes)
-    
-    ### Permutation test SLOPE:
-    if (ces$DIFestimate > 0){
-      p.slo <- sum(nes$estimate >= ces$estimate)/times
-    }
-    if (ces$DIFestimate < 0){
-      p.slo <- sum(nes$estimate <= ces$estimate)/times
-    }
-    
-    stats.slo[aa, -c(1:2)] <- data.frame(
-      estimate = ces$estimate,
-      DIFestimate = ces$DIFestimate,
-      ces$estimate.perc,
-      Pval = ces$pval.estimate,
-      m.null.estimate = mean((nes$estimate)),
-      Pval.randomization = p.slo)
-    
-    names(stats.slo)[5] <- "Change (%)" 
-    
-    ### Permutation test intercept:
-    if (ces$DIFintercept > 0){
-      p.int <- sum(nes$intercept >= ces$intercept)/times
-    }
-    if (ces$DIFintercept < 0){
-      p.int <- sum(nes$intercept <= ces$intercept)/times
-    }
-    
-    stats.int[aa, -c(1:2)] <- data.frame(
-      intercept = ces$intercept,
-      DIFintercept = ces$DIFintercept,
-      ces$intercept.perc,
-      Pval = ces$pval.estimate,
-      m.null.intercept = mean((nes$intercept)),
-      Pval.randomization = p.int)
-    
-    names(stats.int)[5] <- "Change (%)"
-    
-    aa <- aa+1
+  
+  for(j in c) {
+    for(i in 1:length(it)){
+      
+      nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
+      ces <- ce[ce$clade == j & ce$iteration == it[i], ] # reduced model estimates
+      times <- nrow(nes)
+      
+      ### Permutation test SLOPE:
+      if (ces$DIFestimate > 0){
+        p.slo <- sum(nes$estimate >= ces$estimate)/times
       }
+      if (ces$DIFestimate < 0){
+        p.slo <- sum(nes$estimate <= ces$estimate)/times
+      }
+      
+      stats.slo[aa, -c(1:2)] <- data.frame(
+        estimate = ces$estimate,
+        DIFestimate = ces$DIFestimate,
+        ces$estimate.perc,
+        Pval = ces$pval.estimate,
+        m.null.estimate = mean((nes$estimate)),
+        Pval.randomization = p.slo)
+      
+      names(stats.slo)[5] <- "Change (%)" 
+      
+      ### Permutation test intercept:
+      if (ces$DIFintercept > 0){
+        p.int <- sum(nes$intercept >= ces$intercept)/times
+      }
+      if (ces$DIFintercept < 0){
+        p.int <- sum(nes$intercept <= ces$intercept)/times
+      }
+      
+      stats.int[aa, -c(1:2)] <- data.frame(
+        intercept = ces$intercept,
+        DIFintercept = ces$DIFintercept,
+        ces$intercept.perc,
+        Pval = ces$pval.estimate,
+        m.null.intercept = mean((nes$intercept)),
+        Pval.randomization = p.int)
+      
+      names(stats.int)[5] <- "Change (%)"
+      
+      aa <- aa+1
+    }
   }
   
   #calculate means and number of P.vals<0.005 for each clade
@@ -161,13 +161,13 @@ summary.sensiIntra_Clade <- function(object, ...){
   stats.slo <- stats::aggregate(.~clade.removed, data=stats.slo, mean)
   stats.slo$perc.ran.slo<-round(perc.ran.slo,1)
   
-  names(stats.slo)[9] <-"Non random (%)"
+  names(stats.slo)[9] <-"Significant (%)"
   
   perc.ran.int <- ((stats::aggregate(stats.int$Pval.randomization<=0.05,by=list(stats.int$clade.removed),FUN=sum))$x)/length(it)*100
   stats.int <- stats::aggregate(.~clade.removed, data=stats.int, mean)
   stats.int$perc.ran.int<-round(perc.ran.int,1)
-
-  names(stats.int)[9] <-"Non random (%)"
+  
+  names(stats.int)[9] <-"Significant (%)"
   
   ### Sort by % of change:
   ord.slo <- order(stats.slo$`Change (%)`, decreasing = TRUE)
@@ -176,6 +176,7 @@ summary.sensiIntra_Clade <- function(object, ...){
   names(res) <- c("Estimate", "Intercept")
   res
 }
+
 
 
 ### Summary method for class: sensiTree_Clade:--------------------------------------
