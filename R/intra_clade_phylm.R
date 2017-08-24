@@ -87,10 +87,13 @@
 #' @examples
 #' #load data
 #' data(alien)
-#' intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]], data = alien$data, 
-#' clade.col = "family", n.sim = 50, n.intra = 10, y.transf = log, Vy="SD_gesta")
+#' intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
+#'  data = alien$data, clade.col = "family", n.sim = 30, n.intra = 5, 
+#'  y.transf = log, x.transf = log, Vy="SD_gesta")
 #' summary(intra_clade)
-#' sensi_plot(intra_clade)
+#' sensi_plot(intra_clade, clade = "Bovidae")
+#' sensi_plot(intra_clade, clade = "Mustelidae")
+#' sensi_plot(intra_clade, clade = "Mustelidae", graphs = 2)
 #' @export
 
 
