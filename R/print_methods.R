@@ -195,6 +195,18 @@ print.sensiTree_Clade <- function(x, ...)
 }
 
 #' @export
+print.sensiIntra_Clade <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:clade \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Analyzed clades: ")
+  cat(unique(x$sensi.estimates$clade), sep = "; ",  "\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
 print.sensiTree_Influ <- function(x, ...) 
 {
   cat("Sensitivity analysis for interaction between tree:influ \n")
@@ -203,3 +215,5 @@ print.sensiTree_Influ <- function(x, ...)
   cat("\n")
   cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
+
+
