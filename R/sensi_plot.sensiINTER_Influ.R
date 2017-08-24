@@ -32,8 +32,6 @@
 
 ### Start:
 sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
-  
-  x <- intra_influ
   ### Graph one
   n.tree <- length(unique(x$sensi.estimates$iteration))
   sp.estimate <- unlist(as.list(x$influential.species$influ.sp.estimate$influ.sp.estimate))
