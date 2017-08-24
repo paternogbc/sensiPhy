@@ -4,17 +4,16 @@
 \alias{sensi_plot.sensiIntra_Influ}
 \title{Graphical diagnostics for class 'sensiIntraInflu'}
 \usage{
-\method{sensi_plot}{sensiIntra_Influ}(x, graphs = "all", param = "estimate",
-  ...)
+\method{sensi_plot}{sensiIntra_Influ}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which parameter ("intercept" or "estimate" should be printed)}
-
 \item{...}{further arguments to methods}
+
+\item{param}{choose which parameter ("intercept" or "estimate" should be printed)}
 }
 \description{
 \code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
