@@ -35,7 +35,7 @@
 #' @export
 
 sensi_plot.sensiTree_Clade <- function(x, clade = NULL, graphs = "all", ...){
-  ### Get clade name:
+   ### Get clade name:
   clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
     clade <- clades.names[1]
@@ -85,9 +85,27 @@ g1 <-
 
 ### Plot 2: Estimated slopes against for null distribution/removed clade ~ trees 
 cols <- c("Without clade" = "red", "Full data" = "black", "Null distribution" = "lightblue")
-if (class(x) == "sensiTree_Clade") XLAB <- "Tree"
-if (class(x) == "sensiIntra_Clade") XLAB <- "Iteration"
+n.sim <- table(nd.c$iteration)[1]
+n.int <- length(unique(nd.c$iteration))
 
+if (class(x) == "sensiTree_Clade") {
+  XLAB <- "Tree"
+  title <- paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
+                 " n.tree = ", n.int,
+                 "| Sig. iterations =",
+                 s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")
+  }
+if (class(x) == "sensiIntra_Clade") {
+  XLAB <- "Iteration"
+  title <- paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
+                 " n.intra = ", n.int,
+                 "| Sig. iterations =",
+                 s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")
+}
+
+paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
+      " n.tree = ", n.int,
+      "| Sig. iterations =", s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")
 g2 <- 
   ggplot(nd.c) +       
   geom_jitter(width = .35, aes(y = estimate, x = as.factor(iteration), color = "Null distribution")) +
@@ -112,9 +130,7 @@ g2 <-
         axis.line = element_line(colour = "black"),
         panel.grid = element_blank()) +
   xlab(XLAB) + ylab("estimate")+
-  ggtitle(paste("Clade = ", clade, "| ", "n.sim = ", x$call$n.sim, " | ",
-                " n.tree = ", x$call$n.tree,
-                "| Sig. iterations =", s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")) 
+  ggtitle(title) 
 if(length(levels(ces.c$iteration)) > 30) g2 <- g2 +  theme(axis.text.x = element_blank()) 
 
 ### Output-------------------------------------------------------------------------------
