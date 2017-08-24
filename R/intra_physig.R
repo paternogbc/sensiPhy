@@ -103,7 +103,7 @@ intra_physig <- function(trait.col, data, phy,
   intra.physig.estimates <- data.frame("n.intra" = numeric(),"estimate" = numeric(),
                                       "pval" = numeric())
   counter = 1
-  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   for (i in 1:n.intra) {
 
     #choose a random value in [mean-se,mean+se] if Vx is provided

@@ -111,7 +111,7 @@ influ_phyglm <- function(formula,data,phy,btol=50,cutoff=2,track=TRUE,...){
         #Loops over all species, and removes each one individually
         counter <- 1
         errors <- NULL
-        if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 1)
+        if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 3)
         for (i in 1:N){
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])

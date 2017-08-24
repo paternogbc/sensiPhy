@@ -95,7 +95,7 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, timestree = 3, n.sim=10) 
+samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 3, n.sim=10) 
 summary(samp)
 sensi_plot(samp)
 }

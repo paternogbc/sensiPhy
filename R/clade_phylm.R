@@ -147,7 +147,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
   errors <- NULL
   
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
-                              style = 1)
+                              style = 3)
   for (A in names(uc)){
     
     ### Number of species in clade A

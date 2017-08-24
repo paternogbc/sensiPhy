@@ -86,7 +86,7 @@ tree_phyglm <- function(formula,data,phy,
   counter=1
   errors <- NULL
   c.data<-list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 1)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   for (j in trees){
     
     #Match data order to tip order

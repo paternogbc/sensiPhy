@@ -134,7 +134,7 @@ intra_phylm <- function(formula, data, phy,
   counter = 1
   errors <- NULL
   species.NA <- list()
-  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 1)
+  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value

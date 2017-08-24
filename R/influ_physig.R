@@ -105,7 +105,7 @@ influ_physig <- function(trait.col, data, phy, method = "K", cutoff = 2, track =
   
   ### Start leave-one-out analysis (between all species)
   counter <- 1
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 1)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 3)
   
   for (i in 1:N){
     # Crop data: remove one species from data and phy:

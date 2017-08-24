@@ -124,10 +124,9 @@ tree_intra_phyglm <- function(formula, data, phy,
   errors <- NULL
   tree.intra <- list()
   species.NA <- list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra*n.tree, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   counter = 1
-  counterpb = 1
-  
+
   for (j in trees) {
 
       #Match data order to tip order
@@ -147,8 +146,8 @@ tree_intra_phyglm <- function(formula, data, phy,
                               invokeRestart("muffleWarning")
                           } )
 
-      if(track==TRUE) utils::setTxtProgressBar(pb, counterpb)
-      counterpb = counterpb + n.intra
+      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+
       counter = counter + 1
         
       }

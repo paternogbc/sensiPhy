@@ -131,7 +131,7 @@ sensi.estimates <-
 counter <- 1
 limit <- sort(round( (breaks) * nrow(full.data),digits=0))
 NL <- length(breaks) * n.sim
-if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 1)
+if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
 for (i in limit){
     for (j in 1:n.sim){
         exclude <- sample(1:N,i)

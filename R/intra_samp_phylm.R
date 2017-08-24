@@ -151,7 +151,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
 
   #Start intra loop here
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.sim*n.intra, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   counter = 1
   
   for (i in 1:n.intra) {
@@ -188,7 +188,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
                                     model, breaks=breaks, track = FALSE, verbose = FALSE,...)
 
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + n.sim
+    counter = counter + 1
   }
   
   names(intra.samp)<-1:n.intra

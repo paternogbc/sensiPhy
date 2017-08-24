@@ -6,7 +6,7 @@
 \usage{
 tree_intra_phyglm(formula, data, phy, Vx = NULL, y.transf = NULL,
   x.transf = NULL, n.intra = 10, n.tree = 2, distrib = "normal",
-  model = "lambda", track = TRUE, btol = 50, ...)
+  track = TRUE, btol = 50, ...)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}
@@ -36,14 +36,14 @@ and/or predictor variables. Default is normal distribution: "normal" (function \
 Uniform distribution: "uniform" (\code{\link{runif}})
 Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.}
 
-\item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
-
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{...}{Further arguments to be passed to \code{phyloglm}}
 
 \item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
+
+\item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 }
 \value{
 The function \code{tree_intra_phylm} returns a list with the following

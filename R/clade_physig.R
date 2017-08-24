@@ -125,7 +125,7 @@ clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim =
   aa <- 1; bb <- 1
 
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
-                              style = 1)
+                              style = 3)
   for (A in names(uc)){
     ### Number of species in clade A
     cN  <- as.numeric(uc[names(uc) == A])
