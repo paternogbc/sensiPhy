@@ -97,10 +97,9 @@ intra_phyglm <- function(formula, data, phy,
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
      stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-  else
-  
+
   #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy)
+  datphy<-match_dataphy(formula,data,phy,...)
   full.data<-datphy[[1]]
   phy<-datphy[[2]]
   
