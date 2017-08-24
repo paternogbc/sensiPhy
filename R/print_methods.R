@@ -216,4 +216,12 @@ print.sensiTree_Influ <- function(x, ...)
   cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
-
+#' @export
+print.sensiIntra_Influ <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
