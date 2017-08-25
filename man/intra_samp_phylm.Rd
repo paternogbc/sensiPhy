@@ -114,15 +114,15 @@ data(alien)
 # Run analysis:
 samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
                          y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=NULL,
-                         data = alien$data, times.tree = 5, n.sim=10)
+                         data = alien$data, n.intra = 5, n.sim=10)
 summary(samp)
 head(samp$sensi.estimates)
 # Visual diagnostics
 \dontrun{
 sensi_plot(samp)
 # You can specify which graph and parameter ("estimate" or "intercept") to print: 
-sensi_plot(samp, graphs = 1, param = "estimate")
-sensi_plot(samp, graphs = 2, param = "intercept")
+sensi_plot(samp, graphs = 1)
+sensi_plot(samp, graphs = 2)
 }
 }
 \references{
