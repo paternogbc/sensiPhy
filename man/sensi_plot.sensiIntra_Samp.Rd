@@ -4,17 +4,16 @@
 \alias{sensi_plot.sensiIntra_Samp}
 \title{Graphical diagnostics for class 'sensiIntra_Samp' and 'sensiTree_samp'}
 \usage{
-\method{sensi_plot}{sensiIntra_Samp}(x, graphs = "all", param = "estimate",
-  ...)
+\method{sensi_plot}{sensiIntra_Samp}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{sensiIntra_Samp_phylm} or \code{sensiIntra_Samp_phyglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
-\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
-
 \item{...}{further arguments to methods}
+
+\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
 }
 \description{
 \code{sensi_plot.sensiIntra_Samp} Plot results from \code{sensiIntra_Samp_phylm} and

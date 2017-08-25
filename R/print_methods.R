@@ -225,3 +225,43 @@ print.sensiIntra_Influ <- function(x, ...)
   cat("\n")
   cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
+
+#' @export
+print.sensiTree_Samp <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiTree_SampL <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_Samp <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_SampL <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}

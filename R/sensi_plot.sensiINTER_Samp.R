@@ -33,256 +33,60 @@
 #'  model parameter is not available for model = "BM"
 #' @export
 
-sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", param = "estimate", ...)
+sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
 {
   
-  # x <- samp
-  # nulling variables:
-  estimate <- n.percent <- estimate.class <- intercept <- model <- intercept.class <- NULL
-  optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NULL
+  ### prepare data
+  fes <- x$full.model.estimates
+  es <- x$sensi.estimates
+  n.tree <- nrow(fes)/2
+  est.or <- seq(2, nrow(fes), by = 2)
+  e.0.mean <- mean(fes[est.or, ]$Estimate)
   
-  result    <- x$sensi.estimates
-  result.mn <- stats::aggregate(.~n.remov,result,FUN=mean)
-  sig.tab <- x$sign.analysis
-  sig.tab.mn <- stats::aggregate(.~percent_sp_removed,sig.tab,FUN=mean)
+  ### simulated estimates
+  es$iteration <- as.factor(es$iteration)
+  es$n.percent <- as.factor(es$n.percent)
   
-  # classes of estimate.perc:
-  result$estimate.class <- "class"
-  ### Within 5%:
-  if (length(result[result$estimate.perc <= 5 ,]$estimate.class) >= 1){
-    result[result$estimate.perc <= 5,]$estimate.class <- "within 5%"
-  }
-  ### Higher than 5%
-  if (length(result[result$estimate.perc > 5
-                    & result$estimate.perc <= 10 ,]$estimate.class) >= 1){
-    result[result$estimate.perc > 5
-           & result$estimate.perc <= 10 ,]$estimate.class <- "higher than 5%"
-  }
-  ### Higher than 10%
-  if (length(result[result$estimate.perc > 10,]$estimate.class) >= 1){
-    result[result$estimate.perc > 10,]$estimate.class <- "higher than 10%"
-  }
+  ### sig table
+  sig <- x$sign.analysis
   
-  result$estimate.class <- as.factor(result$estimate.class)
-  estimate.0    <- as.numeric(x$full.model.estimates$coef[2])
-  estimate.5    <- .05*estimate.0
-  estimate.10   <- .1*estimate.0
-  
-  # classes of intercept.perc:
-  result$intercept.class <- "class"
-  ### Within 5%:
-  if (length(result[result$intercept.perc <= 5 ,]$intercept.class) >= 1){
-    result[result$intercept.perc <= 5,]$intercept.class <- "within 5%"
-  }
-  ### Higher than 5%
-  if (length(result[result$intercept.perc > 5
-                    & result$intercept.perc <= 10 ,]$intercept.class) >= 1){
-    result[result$intercept.perc > 5
-           & result$intercept.perc <= 10 ,]$intercept.class <- "higher than 5%"
-  }
-  ### Higher than 10%
-  if (length(result[result$intercept.perc > 10,]$intercept.class) >= 1){
-    result[result$intercept.perc > 10,]$intercept.class <- "higher than 10%"
-  }
-  
-  result$intercept.class <- as.factor(result$intercept.class)
-  intercept.0    <- as.numeric(x$full.model.estimates$coef[1])
-  intercept.5    <- .05*intercept.0
-  intercept.10   <- .1*intercept.0
-  
-  # reverting the order of the levels
-  result$estimate.class =
-    with(result, factor(estimate.class,
-                        levels = rev(levels(result$estimate.class))))
-  result$intercept.class =
-    with(result, factor(intercept.class,
-                        levels = rev(levels(result$intercept.class))))
-  
-  ## Organizing colours: estimate
-  if(length(levels(result$estimate.class)) == 3){
-    colS = c("skyblue","orange","red2")
-  }
-  if(length(levels(result$estimate.class)) == 2){
-    colS = c("skyblue","orange")
-  }
-  if(length(levels(result$estimate.class)) == 1){
-    colS = c("skyblue")
-  }
-  ## Organizing colours: intercept
-  if(length(levels(result$intercept.class)) == 3){
-    colI = c("skyblue","orange","red2")
-  }
-  if(length(levels(result$intercept.class)) == 2){
-    colI = c("skyblue","orange")
-  }
-  if(length(levels(result$intercept.class)) == 1){
-    colI = c("skyblue")
-  }
-  
-  ### Graphs--------------------------------------------------------------
-  
-  ### Estimated slopes across n.percent:
-  s1 <- ggplot2::ggplot(result,aes(y=estimate,x=n.percent,
-                                   colour=estimate.class),
-                        environment = parent.frame())+
-    
-    geom_point(size=4,position = "jitter",alpha=.5)+
-    scale_x_continuous(breaks=result$n.percent)+
-    ylab("Estimates")+
-    xlab("% of Species Removed ")+
-    scale_colour_manual(values=colS)+
-    geom_hline(yintercept=estimate.0,linetype=1,color="red",
-               size=1, alpha = .6)+
-    
-    geom_hline(yintercept=estimate.0+estimate.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=estimate.0-estimate.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=estimate.0+estimate.10,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=estimate.0-estimate.10,linetype=2,
-               alpha=.6)+
-    theme( legend.position = "none",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title=element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))
-  ### Estimated intercept across n.percent
-  i1<- ggplot2::ggplot(result,aes(y=intercept,x=n.percent,
-                                  colour=intercept.class),
-                       environment = parent.frame())+
-    
-    geom_point(size=4,position = "jitter",alpha=.5)+
-    scale_x_continuous(breaks=result$n.percent)+
-    ylab("Estimated intercepts")+
-    xlab("% of Species Removed ")+
-    scale_colour_manual(values=colI)+
-    geom_hline(yintercept=intercept.0,linetype=1,color="red",
-               size=1,alpha=.6)+
-    
-    geom_hline(yintercept=intercept.0+intercept.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=intercept.0-intercept.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=intercept.0+intercept.10,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=intercept.0-intercept.10,linetype=2,
-               alpha=.6)+
-    theme( legend.position = "none",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title=element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))
-  
-  ### Proportion of change.classes across n.percent
-  n.perc.times <- as.numeric(table(result$n.percent))
-  estimate.perc <- with(result,aggregate(data=result,estimate ~ estimate.class*n.percent,FUN=length))
-  a <- colSums(table(estimate.perc$estimate.class,estimate.perc$n.percent))
-  estimate.perc$estimate <- (estimate.perc$estimate/rep(n.perc.times,
-                                            times=a))*100
-  intercept.perc <- with(result,aggregate(data=result,intercept ~ intercept.class*n.percent,FUN=length))
-  b <- colSums(table(intercept.perc$intercept.class,intercept.perc$n.percent))
-  intercept.perc$intercept <- (intercept.perc$intercept/rep(n.perc.times,
-                                                            times=b))*100
-  ### Graph: Slope
-  s2 <- ggplot2::ggplot(estimate.perc,
-                        aes(y=estimate,x=n.percent,
-                            fill=factor(estimate.class)),
-                        environment = parent.frame())+
-    geom_bar(stat="identity",alpha=.5)+
-    scale_fill_manual(values=colS,name="Change in beta")+
-    scale_y_continuous(breaks=seq(0,100,10))+
-    scale_x_continuous(breaks=result$n.percent)+
-    theme( legend.position = "top",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title = element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))+
-    xlab("% of Species Removed")+
-    ylab("% of estimates")
-  
-  ### Graph: Intercept
-  i2 <- ggplot2::ggplot(intercept.perc,
-                        aes(y=intercept,x=n.percent,
-                            fill=factor(intercept.class)),
-                        environment = parent.frame())+
-    geom_bar(stat="identity",alpha=.5)+
-    scale_fill_manual(values=colI,name="Change in beta")+
-    scale_y_continuous(breaks=seq(0,100,10))+
-    scale_x_continuous(breaks=result$n.percent)+
-    theme( legend.position = "top",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title = element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))+
-    xlab("% of Species Removed")+
-    ylab("% of estimated intercepts")
-  
-  ### Optpar acros % removed species:
-  opt <- ggplot2::ggplot(result,aes(y=optpar,x=n.percent,group=as.factor(n.percent)))+
-    geom_point()+
-    geom_boxplot(fill="red",alpha=.5)+
-    scale_x_continuous(breaks=result$n.percent)+
-    theme(axis.title=element_text(size=12),
-          axis.text = element_text(size=12),
-          panel.background = element_rect(fill="white",
-                                          colour="black"))+
-    xlab("% of Species Removed")+
-    ylab("Phylogenetic model parameter")
-  
-  ## Significance Analysis : p.value of slope
-  
-  s4 <-ggplot2::ggplot(sig.tab.mn,
-                       aes(y=perc.sign.estimate*100,x=percent_sp_removed),
-                       environment = parent.frame())+
-    scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
-    scale_x_continuous(breaks=result$n.percent)+
-    xlab("% Species removed")+
-    geom_point(size=5,colour="red")+
-    geom_line(colour="red")+
-    ylab("% of significant estimates")+
+  ### plots ---------------------------------------------------------------------------------
+  # 1 Estimates across trees and % of removal
+  g1 <- ggplot(es, aes(y = estimate, x = n.percent, group = reorder(iteration, estimate))) + 
+    geom_jitter(size = .8, position= position_dodge(width = .8), color = "red") +
+    ggplot2::stat_summary(fun.y = "mean", size = 3, geom = "point", position= position_dodge(width = .8), color = "red") +
+    geom_hline(yintercept = e.0.mean, size = 1) +
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",
-                                          colour="black"))
+                                          colour="black"),
+          legend.position = "none") +
+    xlab("% Species removed") + ylab("estimate")
   
-  i4 <-ggplot2::ggplot(sig.tab,
-                       aes(y=perc.sign.intercept*100,x=percent_sp_removed),
-                       environment = parent.frame())+
+  
+  # 2 Sigificance table across trees and % of removal
+  g2 <- ggplot(sig, aes(y = perc.sign.estimate*100, x = percent_sp_removed)) +
+    geom_point(size = 1, position= position_dodge(width = .8), color = "red") +
+    ggplot2::stat_summary(fun.y = "mean", size = 5, geom = "point",
+                          position= position_dodge(width = .8), color = "red", alpha = .5) +
+    ggplot2::stat_summary(fun.y = "mean", size = 1, geom = "line", 
+                          position= position_dodge(width = .8), color = "red") +
     scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
-    scale_x_continuous(breaks=result$n.percent)+
-    xlab("% Species removed")+
-    geom_point(size=5,colour="red")+
-    geom_line(colour="red")+
-    ylab("% of significant intercepts")+
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",
-                                          colour="black"))
-  
-  which_plot(param = param, graphs = graphs,
-             s1 = s1, s2 = s2, s4 = s4, opt = opt,
-             i1 = i1, i2 = i2, i4 = i4, model = x$model)
+                                          colour="black"),
+          legend.position = "none") +
+    xlab("% Species removed") + ylab("% Significant estimate")
+    
+  ### Output-------------------------------------------------------------------------------
+  ### Plotting:
+  if (graphs=="all")
+    return(suppressMessages(multiplot(g1,g2, cols = 2)))
+  if (graphs==1)
+    return(suppressMessages(g1))
+  if (graphs==2)
+    return(suppressMessages(g2))
 }
 
 
