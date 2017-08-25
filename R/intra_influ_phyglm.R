@@ -92,8 +92,7 @@ intra_influ_phyglm <- function(formula, data, phy,
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
     stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-  else
-  
+
   #Matching tree and phylogeny using utils.R
   datphy<-match_dataphy(formula,data,phy)
   full.data<-datphy[[1]]
@@ -110,14 +109,11 @@ intra_influ_phyglm <- function(formula, data, phy,
   if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
   else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
   
-  #List to store information
-  intra.influ <- list ()
-  N  <- nrow(full.data)
-  
   #Start intra loop here
+  intra.influ <- list ()
   species.NA <- list()
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N*n.intra, style = 3)
+  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   counter = 1
   
   for (i in 1:n.intra) {
@@ -139,7 +135,7 @@ intra_influ_phyglm <- function(formula, data, phy,
     
     #skip iteration if there are NA's in the dataset
     species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
-    if(sum(is.na(full.data[,"predV"])>0)) next
+    if(sum(is.na(full.data[,"predV"]))>0) next
     
     #model
     #Run the model
@@ -150,7 +146,7 @@ intra_influ_phyglm <- function(formula, data, phy,
                                     cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE,...)
     
     if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + N
+    counter = counter + 1
   }
   
   names(intra.influ)<-1:n.intra
