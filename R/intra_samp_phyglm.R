@@ -100,8 +100,8 @@
 #'                                n.sim=10, n.intra = 3,
 #'                                breaks=seq(.1,.5,.1),
 #'                                Vx = "z", distrib="normal",x.transf=NULL)
-#' summary(samp)
-#' sensi_plot.sensiSamp(samp)
+#' summary(intra_samp)
+#' sensi_plot(intra_samp)
 
 #' @export
 
