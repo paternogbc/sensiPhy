@@ -118,8 +118,8 @@ intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy,
                                n.sim=10, n.intra = 3,
                                breaks=seq(.1,.5,.1),
                                Vx = "z", distrib="normal",x.transf=NULL)
-summary(samp)
-sensi_plot.sensiSamp(samp)
+summary(intra_samp)
+sensi_plot(intra_samp)
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
