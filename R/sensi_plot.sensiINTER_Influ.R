@@ -50,6 +50,7 @@ sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
                                           colour="black"),
           legend.position = "none",
           axis.text.x=element_text(angle=65,hjust=1)) +
+    scale_y_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
     annotate(geom = "text",x=Inf, y = Inf, vjust= 1.5, hjust= 1.2,
              label = paste("Number of iterations =", n.tree))
   

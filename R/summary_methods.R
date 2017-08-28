@@ -317,6 +317,7 @@ summary.sensiIntra_Influ <- function(object, ...){
   sp.estimate.tab <- data.frame("Species removed" = names(sp.estimate), 
                                 "Significant" = (as.numeric(sp.estimate)/n.tree)*100)
   colnames(sp.estimate.tab) <- c("Species removed", "(%) of iterations")
+  if(nrow(sp.estimate.tab) > 20) sp.estimate.tab <- sp.estimate.tab[1:20, ]
   
   sensi.estimates<-object$sensi.estimates
   #rows.estimate <- match(names(sp.estimate), sensi.estimates$species)
@@ -336,7 +337,9 @@ summary.sensiIntra_Influ <- function(object, ...){
   sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
   sp.inter.tab <- data.frame(names(sp.inter), (as.numeric(sp.inter)/n.tree)*100)
   colnames(sp.inter.tab) <- c("Species removed", "(%) of iterations")
-  #rows.inter <- match(names(sp.inter), sensi.estimates$species)
+  if(nrow(sp.inter.tab) > 20) sp.inter.tab <- sp.inter.tab[1:20, ]
+  
+  
   rows.inter <- sensi.estimates$species %in% sp.inter.tab$`Species removed`
   inter <- sensi.estimates[rows.inter, c("species","intercept","DIFintercept","intercept.perc","pval.intercept")]
   inter <- stats::aggregate(inter[,2:5],list(inter$species),mean)
@@ -356,48 +359,7 @@ summary.sensiIntra_Influ <- function(object, ...){
 
 #' @export
 summary.sensiTree_Influ <- function(object, ...){
-  n.tree <- length(unique(object$sensi.estimates$iteration))
-  
-  ## Estimate:
-  sp.estimate <- unlist(as.list(object$influential.species$influ.sp.estimate$influ.sp.estimate))
-  sp.estimate.tab <- table(sp.estimate)
-  sp.estimate <- sp.estimate.tab[order(sp.estimate.tab,decreasing=T)] 
-  sp.estimate.tab <- data.frame("Species removed" = names(sp.estimate), 
-                                "Significant" = (as.numeric(sp.estimate)/n.tree)*100)
-  colnames(sp.estimate.tab) <- c("Species removed", "(%) of iterations")
-  
-  sensi.estimates<-object$sensi.estimates
-  #rows.estimate <- match(names(sp.estimate), sensi.estimates$species)
-  rows.estimate <- sensi.estimates$species %in% sp.estimate.tab$`Species removed`
-  estimate <- sensi.estimates[rows.estimate, c("species","estimate","DIFestimate","estimate.perc","pval.estimate")]
-  estimate <- stats::aggregate(estimate[,2:5],list(estimate$species),mean)
-  names(estimate)[1]<-"species"
-  ord.estimate <- order(estimate$estimate.perc,decreasing = TRUE)
-  estimate <- estimate[ord.estimate, ]
-  rownames(estimate) <- NULL
-  colnames(estimate) <- c("Species removed", "Estimate", "DIFestimate", "Change(%)", "Pval")
-  
-  
-  ### Intercept:
-  sp.inter <-unlist(as.list(object$influential.species$influ.sp.intercept$influ.sp.intercept))
-  sp.inter.tab <- table(sp.inter)
-  sp.inter <- sp.inter.tab[order(sp.inter.tab,decreasing=T)] #Consider giving the counts, rather than just order> 
-  sp.inter.tab <- data.frame(names(sp.inter), (as.numeric(sp.inter)/n.tree)*100)
-  colnames(sp.inter.tab) <- c("Species removed", "(%) of iterations")
-  #rows.inter <- match(names(sp.inter), sensi.estimates$species)
-  rows.inter <- sensi.estimates$species %in% sp.inter.tab$`Species removed`
-  inter <- sensi.estimates[rows.inter, c("species","intercept","DIFintercept","intercept.perc","pval.intercept")]
-  inter <- stats::aggregate(inter[,2:5],list(inter$species),mean)
-  names(inter)[1]<-"species"
-  ord.inter <- order(inter$intercept.perc,decreasing = TRUE)
-  inter <- inter[ord.inter, ]
-  rownames(inter) <- NULL
-  colnames(inter) <- c("Species removed", "Intercept", "DIFintercept", "Change(%)", "Pval")
-  
-  res <- list("Most Common Influential species for the Estimate" = sp.estimate.tab, "Average Estimates" = estimate,
-              "Most Common Influential species for the Intercept" = sp.inter.tab, "Average Intercepts" = inter)
-  return(res)
-  
+  summary.sensiIntra_Influ(object, ...)
 }
 
 ### Summary method for class: sensiSamp:----------------------------------------
