@@ -171,6 +171,7 @@ intra_influ_phyglm <- function(formula, data, phy,
   
   #influ.estimates
   influ.estimates <- recombine(intra.influ, slot1 = 5)
+  influ.estimates$info <- NULL
   
   #Generates output:
   res <- list(call = match.call(),

@@ -94,6 +94,7 @@
 #'                                   clade.col = "cla", n.sim = 30, n.intra = 3,
 #'                                   y.transf = log, Vx = "z", distrib="normal")
 #' summary(intra_clade)
+#' sensi.plot(intra_clade)
 
 #' @export
 
@@ -185,7 +186,9 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.clade, slot1 = 3, slot2 = 1))
   clade.estimates <- recombine(intra.clade, slot1 = 4)
+  clade.estimates$info <- NULL
   null.dist       <- recombine(intra.clade, slot1 = 5)
+  null.dist$info <- NULL
   
   #Generates output:
   res <- list(call = match.call(),

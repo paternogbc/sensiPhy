@@ -155,7 +155,9 @@ tree_intra_phyglm <- function(formula, data, phy,
   names(tree.intra) <- trees
   
   mod_results <- recombine(tree.intra, slot1 = 4)
+  mod_results$info <- NULL
   names(mod_results)[1]<-"n.tree"
+  mod_results$n.tree <- as.numeric(mod_results$n.tree)
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability

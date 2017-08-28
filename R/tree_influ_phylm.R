@@ -144,6 +144,7 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
 
   #influ.estimates
   influ.estimates <- recombine(tree.influ, slot1 = 6)
+  influ.estimates$info <- NULL
 
   #Generates output:
   res <- list(call = match.call(),

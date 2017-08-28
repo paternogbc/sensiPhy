@@ -186,7 +186,9 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.samp, slot1 = 4, slot2 = 1))
   influ.estimates <- recombine(intra.samp, slot1 = 5)
+  influ.estimates$info <- NULL
   perc.sign <- recombine(intra.samp, slot1 = 6)
+  perc.sign$info <- NULL
   
   #Generates output:
   res <- list(call = match.call(),

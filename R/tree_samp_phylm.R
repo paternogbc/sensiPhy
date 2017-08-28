@@ -142,7 +142,9 @@ tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(tree.samp, slot1 = 4, slot2 = 1))
   samp.estimates <- recombine(tree.samp, slot1 = 5)
+  samp.estimates$info <- NULL
   perc.sign <- recombine(tree.samp, slot1 = 6)
+  perc.sign$info <- NULL
 
   
   #Generates output:

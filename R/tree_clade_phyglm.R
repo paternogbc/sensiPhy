@@ -156,7 +156,9 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(tree.clade, slot1 = 3, slot2 = 1))
   clade.estimates <- recombine(tree.clade, slot1 = 4)
+  clade.estimates$info <- NULL
   null.dist       <- recombine(tree.clade, slot1 = 5)
+  null.dist$info <- NULL
   
   #Generate output:
   res <- list(call = match.call(),
