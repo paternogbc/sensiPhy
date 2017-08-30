@@ -96,9 +96,8 @@ head(samp$sensi.estimates)
 # Visual diagnostics
 \dontrun{
 sensi_plot(samp)
-# You can specify which graph and parameter ("estimate" or "intercept") to print: 
-sensi_plot(samp, graphs = 1, param = "estimate")
-sensi_plot(samp, graphs = 2, param = "intercept")
+sensi_plot(samp, graphs = 1)
+sensi_plot(samp, graphs = 2)
 }
 }
 \references{

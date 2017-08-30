@@ -85,9 +85,8 @@
 #' # Visual diagnostics
 #' \dontrun{
 #' sensi_plot(samp)
-#' # You can specify which graph and parameter ("estimate" or "intercept") to print: 
-#' sensi_plot(samp, graphs = 1, param = "estimate")
-#' sensi_plot(samp, graphs = 2, param = "intercept")
+#' sensi_plot(samp, graphs = 1)
+#' sensi_plot(samp, graphs = 2)
 #' }
 #' @export
 
@@ -137,6 +136,7 @@ tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
     counter = counter + 1
   }
   
+  close(pb)
   names(tree.samp) <- trees
   
   # Merge lists into data.frames between iterations:

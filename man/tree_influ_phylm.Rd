@@ -90,15 +90,13 @@ Output can be visualised using \code{sensi_plot}.
 data(alien)
 # run analysis:
 tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
-data = alien$data, n.tree = 20)
+data = alien$data, n.tree = 5)
 # To check summary results:
 summary(tree_influ)
-# Most influential speciesL
-tree_influ$influential.species
 # Visual diagnostics
 sensi_plot(tree_influ)
-# You can specify which graph and parameter ("estimate" or "intercept") to print: 
-sensi_plot(tree_influ, param = "estimate", graphs = 2)
+sensi_plot(tree_influ, graphs = 1)
+sensi_plot(tree_influ, graphs = 2)
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

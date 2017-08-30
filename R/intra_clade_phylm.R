@@ -91,8 +91,8 @@
 #'  data = alien$data, clade.col = "family", n.sim = 30, n.intra = 5, 
 #'  y.transf = log, x.transf = log, Vy="SD_gesta")
 #' summary(intra_clade)
-#' sensi_plot(intra_clade, clade = "Bovidae")
-#' sensi_plot(intra_clade, clade = "Mustelidae")
+#' sensi_plot(intra_clade)
+#' sensi_plot(intra_clade, clade = "Bovidae", graphs = 2)
 #' sensi_plot(intra_clade, clade = "Mustelidae", graphs = 2)
 #' @export
 
@@ -189,6 +189,7 @@ intra_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
     counter = counter + 1
   }
   
+  close(pb)
   names(intra.clade) <- 1:n.intra
   
   # Merge lists into data.frames between iterations:

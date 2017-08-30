@@ -181,6 +181,7 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
     counter = counter + 1
   }
   
+  close(pb)
   names(intra.samp)<-1:n.intra
   
   # Merge lists into data.frames between iterations:

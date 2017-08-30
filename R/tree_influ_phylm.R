@@ -69,15 +69,13 @@
 #' data(alien)
 #' # run analysis:
 #' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
-#' data = alien$data, n.tree = 20)
+#' data = alien$data, n.tree = 5)
 #' # To check summary results:
 #'summary(tree_influ)
-#'# Most influential speciesL
-#'tree_influ$influential.species
 #'# Visual diagnostics
 #'sensi_plot(tree_influ)
-#'# You can specify which graph and parameter ("estimate" or "intercept") to print: 
-#'sensi_plot(tree_influ, param = "estimate", graphs = 2)
+#'sensi_plot(tree_influ, graphs = 1)
+#'sensi_plot(tree_influ, graphs = 2)
 #' @export
 
 
@@ -125,6 +123,7 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
     counter = counter + 1
   }
   
+  close(pb)
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:

@@ -89,12 +89,12 @@
 #' z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
 #' cla <- rep(c("A","B","C","D"), each = 25)
 #' dat = data.frame(y, x, z, cla)
-
 #' intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
 #'                                   clade.col = "cla", n.sim = 30, n.intra = 3,
 #'                                   y.transf = log, Vx = "z", distrib="normal")
-#' summary(intra_clade)
-#' sensi.plot(intra_clade)
+#'sensi_plot(intra_clade)
+#'sensi_plot(intra_clade, clade = "B", graphs = 2)
+
 
 #' @export
 
@@ -181,6 +181,7 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     counter = counter + 1
   }
   
+  close(pb)
   names(intra.clade) <- 1:n.intra
   
   # Merge lists into data.frames between iterations:

@@ -88,14 +88,14 @@ cols <- c("Without clade" = "red", "Full data" = "black", "Null distribution" = 
 n.sim <- table(nd.c$iteration)[1]
 n.int <- length(unique(nd.c$iteration))
 
-if (class(x) == "sensiTree_Clade") {
+if (class(x)[[1]] == "sensiTree_Clade") {
   XLAB <- "Tree"
   title <- paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
                  " n.tree = ", n.int,
                  "| Sig. iterations =",
                  s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")
   }
-if (class(x) == "sensiIntra_Clade") {
+if (class(x)[[1]] == "sensiIntra_Clade") {
   XLAB <- "Iteration"
   title <- paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
                  " n.intra = ", n.int,

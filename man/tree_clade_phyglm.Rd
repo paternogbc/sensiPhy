@@ -110,8 +110,8 @@ summary(tree_clade)
 sensi_plot(tree_clade)
 # Specify which clade removal to plot:
 sensi_plot(tree_clade, "B")
-sensi_plot(tree_clade, "C")
-sensi_plot(tree_clade, "D") #The clade with the largest effect on slope and intercept
+sensi_plot(tree_clade, "C", graphs = 2)
+sensi_plot(tree_clade, "D", graphs = 2) 
 }
 }
 \references{

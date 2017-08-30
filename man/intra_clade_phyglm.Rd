@@ -116,7 +116,8 @@ dat = data.frame(y, x, z, cla)
 intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
                                   clade.col = "cla", n.sim = 30, n.intra = 3,
                                   y.transf = log, Vx = "z", distrib="normal")
-summary(intra_clade)
+sensi_plot(intra_clade)
+sensi_plot(intra_clade, clade = "B", graphs = 2)
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

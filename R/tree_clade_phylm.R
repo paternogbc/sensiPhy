@@ -77,14 +77,15 @@
 #'data(primates)
 #'# run analysis:
 #'clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
-#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 50, n.tree = 10)
+#'phy = primates$phy, data = primates$data, clade.col = "family", n.sim = 50, n.tree = 5)
 #'# To check summary results and most influential clades:
 #'summary(clade_tree)
 #'# Visual diagnostics for clade removal:
 #'sensi_plot(clade_tree)
 #'# Specify which clade removal to plot:
+#'sensi_plot(clade_tree)
 #'sensi_plot(clade_tree, "Cercopithecidae")
-#'sensi_plot(clade_tree, "Cebidae")
+#'sensi_plot(clade_tree, clade = "Cebidae", graphs = 2,)
 #'}
 #' @export
 
@@ -145,6 +146,7 @@ tree_clade_phylm <- function(formula, data, phy, clade.col, n.species = 5,
     counter = counter + 1
   }
   
+  close(pb)
   names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:

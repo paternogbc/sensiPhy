@@ -166,7 +166,7 @@ intra_influ_phylm <- function(formula, data, phy,
   
   names(intra.influ)<-1:n.intra
   
-  on.exit(close(pb))
+  close(pb)
   
   # Merge lists into data.frames between iterations:
   full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 4, slot2 = 1))

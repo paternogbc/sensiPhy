@@ -90,8 +90,8 @@
 #'sensi_plot(tree_clade)
 #'# Specify which clade removal to plot:
 #'sensi_plot(tree_clade, "B")
-#'sensi_plot(tree_clade, "C")
-#'sensi_plot(tree_clade, "D") #The clade with the largest effect on slope and intercept
+#'sensi_plot(tree_clade, "C", graphs = 2)
+#'sensi_plot(tree_clade, "D", graphs = 2) 
 #'}
 #' @export
 
@@ -150,7 +150,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     counter = counter + 1
   }
   
-
+  close(pb)
   names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:

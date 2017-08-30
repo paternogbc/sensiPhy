@@ -78,9 +78,11 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x)
 #'# Run sensitivity analysis:
-#'samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 3, n.sim=10) 
-#'summary(samp)
-#'sensi_plot(samp)
+#'tree_samp <- tree_samp_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 3, n.sim=10) 
+#'summary(tree_samp)
+#'sensi_plot(tree_samp)
+#'sensi_plot(tree_samp, graphs = 1)
+#'sensi_plot(tree_samp, graphs = 2)
 
 
 tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
@@ -124,7 +126,7 @@ tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
     counter = counter + 1
   }
   
-
+  close(pb)
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:

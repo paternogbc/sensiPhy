@@ -92,9 +92,11 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-tree_influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 20)
+tree_influ <- tree_influ_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 5)
 summary(tree_influ)
 sensi_plot(tree_influ)
+sensi_plot(tree_influ, graphs = 1)
+sensi_plot(tree_influ, graphs = 2)
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

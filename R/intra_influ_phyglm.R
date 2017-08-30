@@ -149,6 +149,7 @@ intra_influ_phyglm <- function(formula, data, phy,
     counter = counter + 1
   }
   
+  close(pb)
   names(intra.influ)<-1:n.intra
   
   on.exit(close(pb))
