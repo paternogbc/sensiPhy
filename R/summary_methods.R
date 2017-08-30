@@ -452,7 +452,7 @@ summary.sensiTree <- function(object, ...){
 ### Summary method for class: sensiTree_Intra:--------------------------------------
 
 #' @export
-summary.sensiTree_intra <- function(object, ...){
+summary.sensiTree_Intra <- function(object, ...){
   res <- object$stats
   return(res)
 }
