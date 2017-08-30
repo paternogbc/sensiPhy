@@ -136,7 +136,7 @@ tree_samp_phylm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
     counter = counter + 1
   }
   
-  close(pb)
+  if(track==TRUE) close(pb)
   names(tree.samp) <- trees
   
   # Merge lists into data.frames between iterations:

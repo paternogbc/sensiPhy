@@ -126,7 +126,7 @@ tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2,
     counter = counter + 1
   }
   
-  close(pb)
+  if(track==TRUE) close(pb)
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:

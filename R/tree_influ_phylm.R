@@ -123,7 +123,7 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
     counter = counter + 1
   }
   
-  close(pb)
+  if(track==TRUE) close(pb)
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:

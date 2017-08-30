@@ -150,7 +150,7 @@ tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
     counter = counter + 1
   }
   
-  close(pb)
+  if(track==TRUE) close(pb)
   names(tree.clade) <- trees
   
   # Merge lists into data.frames between iterations:

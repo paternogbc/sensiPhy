@@ -151,7 +151,7 @@ tree_intra_phylm <- function(formula, data, phy,
         
       }
   
-  close(pb)
+  if(track==TRUE) close(pb)
   names(tree.intra) <- trees
   
   mod_results <- recombine(tree.intra, slot1 = 6)
