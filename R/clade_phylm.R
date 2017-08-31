@@ -59,6 +59,8 @@
 #' the optimised value (\code{optpar}) of the phylogenetic parameter 
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 #' are reported.
+#' @return \code{null.dist}: A data frame with estimates for the null distributions
+#' for all clades analysed.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
 #' @return \code{clade.col}: Which column was used to specify the clades?

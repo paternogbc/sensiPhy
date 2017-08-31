@@ -66,6 +66,8 @@
 #' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 #' the optimised value (\code{optpar}) of the phylogenetic parameter are
 #' reported.
+#' @return \code{null.dist}: A data frame with estimates for the null distributions
+#' for all clades analysed.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades where deletion resulted in errors.
 #' @return \code{clade.col}: Which column was used to specify the clades?
