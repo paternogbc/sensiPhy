@@ -39,7 +39,7 @@
 #' to the full model including all species.
 #' 
 #' Additionally, to account for the influence of the number of species on each 
-#' clade (clade sample size), this function also estimate a null distribution of estimates
+#' clade (clade sample size), this function also estimates a null distribution 
 #' expected for the number of species in a given clade. This is done by fitting
 #' models without the same number of species in the given clade. 
 #'  The number of simulations to be performed is set by 'n.sim'. To test if the 
