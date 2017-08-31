@@ -67,7 +67,8 @@
 #' @return \code{sp.pb}: Species that caused problems with data transformation (see details above).
 #' 
 #' @author Caterina Penone & Pablo Ariel Martinez
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{tree_phylm}}, \code{\link{intra_phylm}},
+#' \code{\link{tree_intra_phyglm}}, \code{\link{sensi_plot}}
 #' @references
 #' Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 #' Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 

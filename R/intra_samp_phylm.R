@@ -77,7 +77,7 @@
 #' in the (summary) output.
 #' @author Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone
 #' @seealso \code{\link[phylolm]{phylolm}},\code{\link{samp_phylm}}, 
-#' \code{\link{intra_phylm}}, \code{\link{_intra_samp_phyglm}},
+#' \code{\link{intra_phylm}}, \code{\link{intra_samp_phyglm}},
 #' \code{\link{sensi_plot}}
 #' @references 
 #' 

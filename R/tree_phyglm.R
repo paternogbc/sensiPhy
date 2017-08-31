@@ -35,7 +35,7 @@
 #' due to intraspecific variation. \code{CI_low} and \code{CI_high} are the lower and upper limits 
 #' of the 95% confidence interval.
 #' @author Caterina Penone & Pablo Ariel Martinez
-#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}},\code{\link{tree_phylm}}
 #' @references 
 #' Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
 #' Sensitivity Analyses in Comparative Biology. Philosophical Transactions:
