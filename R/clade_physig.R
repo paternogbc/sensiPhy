@@ -23,9 +23,9 @@
 #' comparison between the full data (with all species) and reduced data estimates
 #' (without the species belonging to a clade).
 #' 
-#' Additionally, to account for the influence of the number of species on each 
+#' To account for the influence of the number of species on each 
 #' clade (clade sample size), this function also estimate a null distribution of signal estimates
-#' expected by the removal of the same number of species in a given clade. This is done by estimating
+#' expected by the removal of the same number of species as in a given clade. This is done by estimating
 #' phylogenetic signal without the same number of species in the given clade. 
 #'  The number of simulations to be performed is set by 'n.sim'. To test if the 
 #'  clade influence differs from the null expectation for a clade of that size, 
