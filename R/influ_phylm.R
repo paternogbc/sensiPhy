@@ -44,7 +44,7 @@
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
 #' @return \code{sensi.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted clade. #' Columns report the calculated
+#' estimates. Each row represents a deleted clade. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DIFintercept}), the standardised
 #' difference (\code{sDIFintercept}), the percentage of change in intercept compared
