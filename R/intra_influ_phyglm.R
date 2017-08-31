@@ -70,12 +70,12 @@
 #'z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
 #'dat = data.frame(y, x, z)
 #'# Run sensitivity analysis:
-#'influ_test <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
+#'intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
 #'                                             n.intra = 3,track = TRUE,distrib="normal",x.transf=NULL) 
 #'# To check summary results and most influential species:
-#'summary(influ_test)
+#'summary(intra_influ)
 #'# Visual diagnostics for clade removal:
-#'sensi_plot(influ_test)
+#'sensi_plot(intra_influ)
 #' @export
 
 
