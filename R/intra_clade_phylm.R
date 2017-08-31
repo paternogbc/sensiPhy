@@ -60,7 +60,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{clade_phylm} returns a list with the following
+#' @return The function \code{intra_clade_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
