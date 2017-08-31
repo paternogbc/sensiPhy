@@ -13,8 +13,9 @@
 #'  has no NA in the variables included in `formula` and only rows that match phylogeny
 #'  tips. Returned phy has only tips that match data}
 #'  }
-#'  Used internally in \code{\link{samp_phylm}},\code{\link{samp_phyglm}},\code{\link{clade_phylm}},
-#'  \code{\link{clade_phyglm}},\code{\link{intra_phylm}},\code{\link{intra_phyglm}} and \code{\link{tree_phylm}}.
+#'  Used internally in \code{\link{samp_phylm}}, \code{\link{samp_phyglm}}, \code{\link{clade_phylm}},
+#'  \code{\link{clade_phyglm}}, \code{\link{intra_phylm}}, \code{\link{intra_phyglm}}, \code{\link{tree_phylm}},
+#'  \code{\link{tree_phyglm}} and all function analysing interactions.
 #'  Users can also directly use this function to combine a phylogeny and a dataset. 
 #'
 #' @param formula The model formula

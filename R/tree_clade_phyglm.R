@@ -66,8 +66,8 @@
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or trees where deletion resulted in errors.
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
-#'  \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{tree_phyglm}},
+#'  \code{\link{clade_phyglm}}, \code{\link{tree_clade_phylm}},
 #' \code{\link{sensi_plot}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
