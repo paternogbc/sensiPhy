@@ -79,7 +79,7 @@
 #' @examples 
 #'# Load data:
 #'data(alien)
-#'# run PGLS accounting for intraspecific variation:
+#'# run PGLS accounting for intraspecific and phylogenetic variation:
 #'intra.tree <- tree_intra_phylm(gestaLen ~ adultMass, data = alien$data, phy = alien$phy,
 #'Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
 #'# To check summary results:
