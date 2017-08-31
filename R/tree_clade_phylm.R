@@ -87,7 +87,7 @@
 #'# Specify which clade removal to plot:
 #'sensi_plot(clade_tree)
 #'sensi_plot(clade_tree, "Cercopithecidae")
-#'sensi_plot(clade_tree, clade = "Cebidae", graphs = 2,)
+#'sensi_plot(clade_tree, clade = "Cebidae", graphs = 2)
 #'}
 #' @export
 
