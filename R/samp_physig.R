@@ -49,7 +49,8 @@
 #' in the (summary) output.
 #' @author Gustavo Paterno & Gijsbert D.A. Werner
 #' @seealso
-#' \code{\link[phytools]{phylosig}}, \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
+#' \code{\link[phytools]{phylosig}}, 
+#' \code{\link{samp_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).

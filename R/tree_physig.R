@@ -30,7 +30,8 @@
 #' @return \code{stats}: Main statistics for phylogenetic estimates.\code{CI_low} and \code{CI_high} are the lower 
 #' and upper limits of the 95% confidence interval.
 #' @author Caterina Penone & Gustavo Paterno
-#' @seealso \code{\link[phylotools]{phylosig}}, \code{\link{sensi_plot}}, \code{\link{influ_physig}}
+#' @seealso \code{\link[phylotools]{phylosig}}, 
+#' \code{\link{tree_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
 #' Sensitivity Analyses in Comparative Biology. Philosophical Transactions:

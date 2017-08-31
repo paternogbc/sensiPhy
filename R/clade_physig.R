@@ -49,7 +49,8 @@
 #' @return \code{data}: Original full dataset.
 #' @author Gustavo Paterno
 #' 
-#' @seealso \code{\link[phytools]{phylosig}}
+#' @seealso \code{\link[phytools]{phylosig}}, 
+#' \code{\link{clade_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 
