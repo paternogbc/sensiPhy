@@ -4,9 +4,9 @@
 \alias{tree_intra_phyglm}
 \title{Interaction between phylogenetic uncertainty and intraspecific variability - Phylogenetic logistic Regression}
 \usage{
-tree_intra_phyglm(formula, data, phy, Vx = NULL, y.transf = NULL,
-  x.transf = NULL, n.intra = 10, n.tree = 2, distrib = "normal",
-  track = TRUE, btol = 50, ...)
+tree_intra_phyglm(formula, data, phy, Vx = NULL, x.transf = NULL,
+  n.intra = 10, n.tree = 2, distrib = "normal", track = TRUE,
+  btol = 50, ...)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}
@@ -17,9 +17,6 @@ tree_intra_phyglm(formula, data, phy, Vx = NULL, y.transf = NULL,
 
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
-
-\item{y.transf}{Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
-argument instead of transforming data in the formula directly (see also details below).}
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
@@ -38,12 +35,9 @@ Warning: we recommend to use normal distribution with Vx or Vy = standard deviat
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
+\item{btol}{Bound on searching space. For details see \code{phyloglm}}
+
 \item{...}{Further arguments to be passed to \code{phyloglm}}
-
-\item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
-variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
-
-\item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 }
 \value{
 The function \code{tree_intra_phylm} returns a list with the following

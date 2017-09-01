@@ -28,6 +28,9 @@ in \code{phy}.}
 #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
 
+\item{Vy}{Name of the column containing the standard deviation or the standard error of the response 
+variable. When information is not available for one taxon, the value can be 0 or \code{NA}.}
+
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 

@@ -5,8 +5,8 @@
 \title{Interaction between intraspecific variability and influential clade detection - Phylogenetic Logistic Regression}
 \usage{
 intra_clade_phyglm(formula, data, phy, clade.col, n.species = 5,
-  n.sim = 100, n.intra = 2, Vy = NULL, Vx = NULL, distrib = "normal",
-  y.transf = NULL, x.transf = NULL, model = "lambda", track = TRUE, ...)
+  n.sim = 100, n.intra = 2, Vx = NULL, distrib = "normal",
+  x.transf = NULL, btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -36,6 +36,8 @@ Warning: we recommend to use normal distribution with Vx or Vy = standard deviat
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
+
+\item{btol}{Bound on searching space. For details see \code{phyloglm}}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
@@ -116,7 +118,7 @@ cla <- rep(c("A","B","C","D"), each = 25)
 dat = data.frame(y, x, z, cla)
 intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
                                   clade.col = "cla", n.sim = 30, n.intra = 3,
-                                  y.transf = log, Vx = "z", distrib="normal")
+                                  x.transf = log, Vx = "z", distrib="normal")
 sensi_plot(intra_clade)
 sensi_plot(intra_clade, clade = "B", graphs = 2)
 }

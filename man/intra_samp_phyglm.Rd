@@ -23,6 +23,8 @@ in \code{phy}.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
 
+\item{btol}{Bound on searching space. For details see \code{phyloglm}}
+
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
@@ -37,11 +39,6 @@ argument instead of transforming data in the formula directly (see also details 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{...}{Further arguments to be passed to \code{phylolm}}
-
-\item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
-
-\item{y.transf}{Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
-argument instead of transforming data in the formula directly (see also details below).}
 }
 \value{
 The function \code{samp_phyglm} returns a list with the following
@@ -117,7 +114,7 @@ dat = data.frame(y, x, z)
 intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy, 
                                n.sim=10, n.intra = 3,
                                breaks=seq(.1,.5,.1),
-                               Vx = "z", distrib="normal",x.transf=NULL)
+                               Vx = "z", distrib="normal", x.transf=NULL)
 summary(intra_samp)
 sensi_plot(intra_samp)
 }

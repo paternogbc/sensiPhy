@@ -12,8 +12,6 @@
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
 \item{...}{further arguments to methods}
-
-\item{param}{choose which parameter ("intercept" or "estimate" should be printed)}
 }
 \description{
 \code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 

@@ -12,8 +12,6 @@
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
 \item{...}{further arguments to methods}
-
-\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
 }
 \description{
 \code{sensi_plot.sensiIntra_Samp} Plot results from \code{sensiIntra_Samp_phylm} and

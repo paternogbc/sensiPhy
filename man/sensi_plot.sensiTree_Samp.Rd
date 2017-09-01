@@ -4,15 +4,12 @@
 \alias{sensi_plot.sensiTree_Samp}
 \title{Graphical diagnostics for class 'sensiTree_samp'}
 \usage{
-\method{sensi_plot}{sensiTree_Samp}(x, graphs = "all", param = "estimate",
-  ...)
+\method{sensi_plot}{sensiTree_Samp}(x, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{sensiTree_Samp_phylm} or \code{sensiTree_Samp_phyglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
-
-\item{param}{choose which model parameter should be ploted  ("intercept" or "estimate")}
 
 \item{...}{further arguments to methods}
 }

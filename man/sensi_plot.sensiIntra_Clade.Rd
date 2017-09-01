@@ -11,6 +11,8 @@
 
 \item{clade}{The name of the clade to be evaluated (see details)}
 
+\item{graphs}{Choose which graph should be printed on the output ("all", 1 or 2). Defaults to "all".}
+
 \item{...}{further arguments to methods.}
 }
 \description{

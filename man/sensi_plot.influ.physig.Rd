@@ -10,6 +10,8 @@
 \item{x}{output from \code{influ_physig}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1, 2)}
+
+\item{...}{further arguments to methods.}
 }
 \description{
 \code{sensi_plot.influ_physig} Plot results from \code{influ_physig}
