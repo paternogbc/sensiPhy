@@ -113,8 +113,8 @@ y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
 dat = data.frame(y, x, z)
 # Run sensitivity analysis:
-intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
-                                            n.intra = 5,track = TRUE,distrib="normal",x.transf=NULL) 
+intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, 
+                       Vx = "z", n.intra = 5,track = TRUE,distrib="normal",x.transf=NULL) 
 # To check summary results and most influential species:
 summary(intra_influ)
 # Visual diagnostics for clade removal:

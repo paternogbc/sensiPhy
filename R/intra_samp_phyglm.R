@@ -110,7 +110,7 @@
 intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
                              breaks=seq(.1,.5,.1), 
                              Vx = NULL, distrib = "normal", x.transf = NULL, 
-                             btol = 50, track=TRUE,...) { 
+                             track=TRUE,...) { 
   
   #Error check
   if(is.null(Vx)) stop("Vx must be defined")

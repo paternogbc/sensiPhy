@@ -1,6 +1,9 @@
 ### Function to colapse into a single data.frame data stored in multiple lists
 ### Writen by Gustavo Paterno (2017)
 recombine <- function(sensi.list, slot1, slot2 = NULL){
+  ### Nulling variables:
+  is <- NULL
+  
   ### One level indexing list[[slot1]]:
   if (is.null(slot2)){
     x <- lapply(sensi.list, function(x) x[[slot1]])

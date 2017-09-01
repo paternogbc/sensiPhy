@@ -32,6 +32,8 @@
 #' @export
 
 sensi_plot.sensiTree_Clade <- function(x, clade = NULL, graphs = "all", ...){
+  ### Nulling variables:
+  estimate <- iteration <- Estimate <- NULL
    ### Get clade name:
   clades.names <- unique(x$sensi.estimates$clade)
   if (is.null(clade) == T){
@@ -68,11 +70,11 @@ nd.c$iteration  <- as.factor(nd.c$iteration)
 
 ### Plot 1: Estimated slopes for each clade between trees ----------------------
 g1 <-
-  ggplot(ces, aes(y = estimate, x = reorder(as.factor(strtrim(clade, 4)), estimate))) + 
-  geom_point(color = "red", size = .8) +
+  ggplot2::ggplot(ces, aes(y = estimate, x = reorder(as.factor(strtrim(clade, 4)), estimate))) + 
+  ggplot2::geom_point(color = "red", size = .8) +
   ggplot2::stat_summary(fun.y = "mean", size = 3, color = "red", geom = "point") +
   geom_hline(yintercept = mean(f$Estimate), size = 1) +
-  theme(axis.text=element_text(size=12),
+  ggplot2::theme(axis.text=element_text(size=12),
         axis.title=element_text(size=12),
         panel.background = element_rect(fill="white",
                                         colour="black"),
@@ -104,17 +106,17 @@ paste("Clade = ", clade, "| ", "n.sim = ", n.sim, " | ",
       " n.tree = ", n.int,
       "| Sig. iterations =", s.est[s.est$clade.removed == clade, ]$`Significant (%)`, "%")
 g2 <- 
-  ggplot(nd.c) +       
-  geom_jitter(width = .35, aes(y = estimate, x = as.factor(iteration), color = "Null distribution")) +
-  geom_line(data = f[f.ord, ], aes(y = Estimate, x = as.factor(iteration), color = "Full data",  group = 1), size = 1) +
-  geom_point(data = f[f.ord, ] , aes(y = Estimate, x = as.factor(iteration),  color = "Full data", group = 1), size = 1) +
-  geom_line(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
-  geom_point(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
+  ggplot2::ggplot(nd.c) +       
+  ggplot2::geom_jitter(width = .35, aes(y = estimate, x = as.factor(iteration), color = "Null distribution")) +
+  ggplot2::geom_line(data = f[f.ord, ], aes(y = Estimate, x = as.factor(iteration), color = "Full data",  group = 1), size = 1) +
+  ggplot2::geom_point(data = f[f.ord, ] , aes(y = Estimate, x = as.factor(iteration),  color = "Full data", group = 1), size = 1) +
+  ggplot2::geom_line(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
+  ggplot2::geom_point(data = ces.c, aes(y = estimate, x = as.factor(iteration), color = "Without clade", group = 1), size = 1) + 
  # geom_point(data = nd.c.out , aes(y = estimate, x = as.factor(iteration)), color = "blue",  size = .5) +
   
-  theme_bw() + 
+  ggplot2::theme_bw() + 
   scale_color_manual(name = "", values = cols) +
-  theme(legend.position = c(.15, .95),
+  ggplot2::theme(legend.position = c(.15, .95),
         legend.direction = "vertical",
         legend.text=element_text(size=12),
         axis.text=element_text(size=10),
@@ -124,7 +126,7 @@ g2 <-
         legend.background = element_blank(),
         panel.background = element_rect(fill="white",
                                         colour="black"),
-        axis.line = element_line(colour = "black"),
+        axis.line = ggplot2::element_line(colour = "black"),
         panel.grid = element_blank()) +
   xlab(XLAB) + ylab("estimate")+
   ggtitle(title) 

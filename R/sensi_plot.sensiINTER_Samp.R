@@ -28,7 +28,9 @@
 
 sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
 {
-  
+  ### Nulling variables:
+  estimate <- n.percent <- iteration <- position_dodge <- perc.sign.estimate <- NULL
+  percent_sp_removed <- NULL
   ### prepare data
   fes <- x$full.model.estimates
   es <- x$sensi.estimates
@@ -45,10 +47,10 @@ sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
   
   ### plots ---------------------------------------------------------------------------------
   # 1 Estimates across trees and % of removal
-  g1 <- ggplot(es, aes(y = estimate, x = n.percent, group = reorder(iteration, estimate))) + 
-    geom_jitter(size = .8, position= position_dodge(width = .8), color = "red") +
+  g1 <- ggplot2::ggplot(es, aes(y = estimate, x = n.percent, group = reorder(iteration, estimate))) + 
+    ggplot2::geom_jitter(size = .8, position= position_dodge(width = .8), color = "red") +
     ggplot2::stat_summary(fun.y = "mean", size = 3, geom = "point", position= position_dodge(width = .8), color = "red") +
-    geom_hline(yintercept = e.0.mean, size = 1) +
+    ggplot2::geom_hline(yintercept = e.0.mean, size = 1) +
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",
@@ -58,13 +60,13 @@ sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
   
   
   # 2 Sigificance table across trees and % of removal
-  g2 <- ggplot(sig, aes(y = perc.sign.estimate*100, x = percent_sp_removed)) +
-    geom_point(size = 1, position= position_dodge(width = .8), color = "red") +
+  g2 <- ggplot2::ggplot(sig, aes(y = perc.sign.estimate*100, x = percent_sp_removed)) +
+    ggplot2::geom_point(size = 1, position= position_dodge(width = .8), color = "red") +
     ggplot2::stat_summary(fun.y = "mean", size = 5, geom = "point",
                           position= position_dodge(width = .8), color = "red", alpha = .5) +
     ggplot2::stat_summary(fun.y = "mean", size = 1, geom = "line", 
                           position= position_dodge(width = .8), color = "red") +
-    scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
+    ggplot2::scale_y_continuous(limits=c(0,100),breaks=seq(0,100,10))+
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=12),
           panel.background = element_rect(fill="white",

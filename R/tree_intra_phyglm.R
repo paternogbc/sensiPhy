@@ -68,7 +68,7 @@
 #' 
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{tree_phyglm}}, \code{\link{intra_phyglm}},
-#' \code{\link{tree__intra_phylm}}, \code{\link{sensi_plot}}
+#' \code{\link{tree_intra_phylm}}, \code{\link{sensi_plot}}
 #' @references
 #' Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 #' Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 

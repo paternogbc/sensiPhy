@@ -22,6 +22,8 @@
 
 ### Start:
 sensi_plot.influ.physig <- function(x, graphs = "all", ...){
+  ### Nulling variables:
+  estimate <- pval <- NULL
   ### Organizing values:
   result <- x$influ.physig.estimates
   method <- x$call$method

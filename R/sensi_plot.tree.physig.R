@@ -18,9 +18,13 @@
 #' for each tree. Red vertical line represents the alpha significance level = 0.05.
 #' @importFrom grid unit 
 #' @importFrom stats plogis
+#' @importFrom stats reorder
 #' @export
 sensi_plot.tree.physig <- function(x, graphs="all", ...){
   
+  ### Nulling variables
+  pval <- DIFestimate <- Estimate <- Significant <- Species.removed  <- NULL
+  element_line <- estimate <- geom_jitter <- NULL
   ### Basic checking:
   method <- x$call$method
   if(is.null(x$call$method)) method <- "K"
@@ -79,6 +83,8 @@ sensi_plot.tree.physig <- function(x, graphs="all", ...){
 #' @importFrom stats plogis
 #' @export
 sensi_plot.intra.physig <- function(x, graphs="all", ...){
+  ### Nulling variables:
+  estimate <- pval <- NULL
   
   ### Basic checking:
   method <- x$call$method

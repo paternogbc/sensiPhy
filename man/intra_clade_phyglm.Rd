@@ -40,8 +40,6 @@ argument instead of transforming data in the formula directly (see also details 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
 \item{...}{Further arguments to be passed to \code{phyloglm}}
-
-\item{btol}{Bound on searching space. For details see \code{phyloglm}}
 }
 \value{
 The function \code{intra_clade_phyglm} returns a list with the following

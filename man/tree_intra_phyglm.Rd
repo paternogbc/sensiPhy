@@ -126,7 +126,7 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 }
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{tree_phyglm}}, \code{\link{intra_phyglm}},
-\code{\link{tree__intra_phylm}}, \code{\link{sensi_plot}}
+\code{\link{tree_intra_phylm}}, \code{\link{sensi_plot}}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

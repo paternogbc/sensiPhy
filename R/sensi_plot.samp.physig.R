@@ -27,7 +27,8 @@
 #' @export
 
 sensi_plot.samp.physig <- function(x, graphs = "all", ...){
-  
+### Nulling variables:
+estimate <- n.percent <- perc.sign <- percent_sp_removed <- NULL
 result    <- x$sensi.estimates
 sig.tab <- x$sign.analysis
 

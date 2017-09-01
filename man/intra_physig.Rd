@@ -11,6 +11,9 @@ intra_physig(trait.col, data, phy, V = NULL, n.intra = 100,
 \item{trait.col}{The name of a column in the provided data frame with trait 
 to be analyzed  (e.g. "Body_mass").#' @param data Data frame containing species traits and species names as row names.}
 
+\item{data}{Data frame containing species traits with row names matching tips
+in \code{phy}.}
+
 \item{phy}{A phylogeny (class 'phylo', see ?\code{ape}).}
 
 \item{V}{Name of the column containing the standard deviation or the standard error of the trait 
@@ -23,6 +26,8 @@ If NULL, \code{n.intra} = 30}
 and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 Uniform distribution: "uniform" (\code{\link{runif}})
 Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.}
+
+\item{method}{Method to compute signal: can be "K" or "lambda".}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
@@ -67,7 +72,8 @@ Output can be visualised using \code{sensi_plot}.
 \examples{
 data(alien)
 # Run sensitivity analysis:
-intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" , data = alien.data, phy = alien.phy[[1]])
+intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
+                     data = alien.data, phy = alien.phy[[1]])
 summary(intra)
 sensi_plot(intra)
 sensi_plot(intra, graphs = 1)

@@ -21,6 +21,9 @@
 
 ### Start:
 sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
+  ### nulling variables:
+  estimate <- model <- NULL
+  
   # check clade
   clades.names <- x$sensi.estimates$clade
   if (is.null(clade) == TRUE){
@@ -55,7 +58,7 @@ sensi_plot.clade.physig <- function(x, clade = NULL, ...) {
   leg.title <- paste("Estimated", method)
     
   ### Graph 1
-  p1 <- ggplot(nd, aes(x = nd$estimate)) + 
+  p1 <- ggplot2::ggplot(nd, aes(x = nd$estimate)) + 
       geom_histogram(fill="yellow",colour="black", size=.2, alpha = .3) +
       geom_vline(data = vl, aes(xintercept = estimate,
                                 colour = model, linetype = model),

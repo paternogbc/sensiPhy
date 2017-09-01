@@ -27,6 +27,9 @@
 
 ### Start:
 sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
+  ### Nulling variables:
+  Significant <- Species.removed <- iteration <- DIFestimate <- species <- NULL
+  species <- 
   ### Graph one
   n.tree <- length(unique(x$sensi.estimates$iteration))
   sp.estimate <- unlist(as.list(x$influential.species$influ.sp.estimate$influ.sp.estimate))
@@ -35,7 +38,7 @@ sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
   sp.estimate.tab <- data.frame("Species removed" = names(sp.estimate), 
                                 "Significant" = (as.numeric(sp.estimate)/n.tree)*100)
   g1 <- 
-    ggplot(sp.estimate.tab, aes(y = (Significant), 
+    ggplot2::ggplot(sp.estimate.tab, aes(y = (Significant), 
                                 x = reorder(Species.removed, - Significant))) +
     geom_bar(stat = "identity", fill = "lightblue") + 
     xlab("Species removed") + ylab("(%) iterations") +
@@ -46,7 +49,7 @@ sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
           legend.position = "none",
           axis.text.x=element_text(angle=65,hjust=1)) +
     scale_y_continuous(limits = c(0,100), breaks = seq(0,100,10)) +
-    annotate(geom = "text",x=Inf, y = Inf, vjust= 1.5, hjust= 1.2,
+    ggplot2::annotate(geom = "text",x=Inf, y = Inf, vjust= 1.5, hjust= 1.2,
              label = paste("Number of iterations =", n.tree))
   
   ### Graph two
@@ -57,7 +60,7 @@ sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
   ### ord species in the same order as graph 1
   es$species <- factor(es$species, levels = sp.estimate.tab$Species.removed)
   g2 <-
-    ggplot(es, aes(y = DIFestimate, x = species)) + 
+    ggplot2::ggplot(es, aes(y = DIFestimate, x = species)) + 
     geom_point(color = "red") +
     #scale_x_discrete(labels = c(strtrim(es$species, 4))) +
     ggplot2::stat_summary(fun.y = "mean", size = 5, color = "red", geom = "point") +
