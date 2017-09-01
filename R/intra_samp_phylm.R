@@ -16,6 +16,8 @@
 #' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' #' @param Vy Name of the column containing the standard deviation or the standard error of the response 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
+#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
+#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
 #' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 

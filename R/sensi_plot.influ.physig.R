@@ -3,6 +3,7 @@
 #' \code{sensi_plot.influ_physig} Plot results from \code{influ_physig}
 #' @param x output from \code{influ_physig}
 #' @param graphs choose which graph should be printed on the output ("all", 1, 2)
+#' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
 #' ggtitle element_blank

@@ -7,12 +7,8 @@
 #' @param formula The model formula: \code{response~predictor}. 
 #' @param data Data frame containing species traits and species names as row names.
 #' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
-#' @param Vy Name of the column containing the standard deviation or the standard error of the response 
-#' variable. When information is not available for one taxon, the value can be 0 or \code{NA}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
-#' @param y.transf Transformation for the response variable (e.g. \code{log} or \code{sqrt}). Please use this 
-#' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
@@ -24,7 +20,7 @@
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
-#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
+#' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
@@ -97,7 +93,7 @@
 
 
 tree_intra_phyglm <- function(formula, data, phy,
-                                          Vx = NULL, y.transf = NULL, x.transf = NULL,
+                                          Vx = NULL, x.transf = NULL,
                                           n.intra = 10, n.tree = 2, 
                                           distrib = "normal", 
                                           track = TRUE, btol=50,...){
@@ -108,7 +104,7 @@ tree_intra_phyglm <- function(formula, data, phy,
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-    stop("Please use arguments y.transf or x.transf for data transformation")
+    stop("Please use argument x.transf for data transformation")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
   
@@ -139,7 +135,7 @@ tree_intra_phyglm <- function(formula, data, phy,
       #model (remove warnings about standard deviation in intra)
 
       withCallingHandlers(tree.intra[[counter]] <- intra_phyglm(formula=formula, data=full.data, phy=tree,
-                          Vx, x.transf, y.transf, n.intra=n.intra,
+                          Vx, x.transf, n.intra=n.intra,
                            distrib=distrib, btol=btol, track=F, verbose=F),
                           
                           warning=function(w){
@@ -203,12 +199,11 @@ tree_intra_phyglm <- function(formula, data, phy,
   
   if (length(sp.pb) >0) 
     warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
-                   for x.transf or y.transf and check output$sp.pb",sep=" "))
+                   for x.transf and check output$sp.pb",sep=" "))
   
   
   res <- list(call = match.call(),
               formula = formula,
-              y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
               sensi.estimates = mod_results, N.obs = tree.intra[[1]]$N.obs,

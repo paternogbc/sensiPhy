@@ -4,7 +4,6 @@
 #' \code{intra_influ_phyglm}
 #' @param x output from \code{influ_phylm} or \code{intra_influ_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which parameter ("intercept" or "estimate" should be printed)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
@@ -90,7 +89,6 @@ sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
 #' \code{tree_influ_phyglm}
 #' @param x output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which parameter ("intercept" or "estimate" should be printed)
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab

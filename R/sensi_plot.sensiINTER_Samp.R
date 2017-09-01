@@ -4,7 +4,6 @@
 #' \code{sensiIntra_Samp_phyglm}
 #' @param x output from \code{sensiIntra_Samp_phylm} or \code{sensiIntra_Samp_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which model parameter should be ploted  ("intercept" or "estimate")
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
 #' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
@@ -92,7 +91,6 @@ sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
 #' \code{sensiTree_Samp_phyglm}
 #' @param x output from \code{sensiTree_Samp_phylm} or \code{sensiTree_Samp_phyglm}
 #' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
-#' @param param choose which model parameter should be ploted  ("intercept" or "estimate")
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
 #' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
@@ -116,6 +114,6 @@ sensi_plot.sensiIntra_Samp <- function(x, graphs = "all", ...)
 #'  model parameter is not available for model = "BM"
 #' @export
 
-sensi_plot.sensiTree_Samp <- function(x, graphs = "all", param = "estimate", ...){
+sensi_plot.sensiTree_Samp <- function(x, graphs = "all", ...){
   sensi_plot.sensiIntra_Samp(x, graphs, ...)
 }

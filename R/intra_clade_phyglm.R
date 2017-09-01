@@ -22,6 +22,7 @@
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
+#' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' @details
@@ -92,7 +93,7 @@
 #' dat = data.frame(y, x, z, cla)
 #' intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
 #'                                   clade.col = "cla", n.sim = 30, n.intra = 3,
-#'                                   y.transf = log, Vx = "z", distrib="normal")
+#'                                   x.transf = log, Vx = "z", distrib="normal")
 #'sensi_plot(intra_clade)
 #'sensi_plot(intra_clade, clade = "B", graphs = 2)
 
@@ -102,9 +103,8 @@
 
 intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
                               n.sim = 100, n.intra = 2,
-                              Vy = NULL, Vx = NULL, distrib = "normal",
-                              y.transf = NULL, x.transf = NULL,
-                              model = "lambda", track = TRUE,...) {
+                              Vx = NULL, distrib = "normal",
+                              x.transf = NULL,btol = 50, track = TRUE,...) {
   
   # Error checking:
   if(is.null(Vx)) stop("Vx must be defined")
@@ -113,7 +113,7 @@ intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-    stop("Please use arguments y.transf or x.transf for data transformation")
+    stop("Please use argument x.transf for data transformation")
   if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
   
   #Match data and phy

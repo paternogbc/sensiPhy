@@ -13,17 +13,15 @@
 #' \code{break}.
 #' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"}) 
 #' @param breaks A vector containing the percentages of species to remove.
-#' @param model The phylogenetic model to use (see Details). Default is \code{lambda}.
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 
 #' variable. When information is not available for one taxon, the value can be 0 or \code{NA}
-#' @param y.transf Transformation for the response variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
-#' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{"log"} or \code{"sqrt"}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
 #' Warning: we recommend to use normal distribution with Vx = standard deviation of the mean.
+#' @param btol Bound on searching space. For details see \code{phyloglm}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
@@ -100,7 +98,7 @@
 #' intra_samp <- intra_samp_phyglm(formula = y ~ x, data = dat, phy = phy, 
 #'                                n.sim=10, n.intra = 3,
 #'                                breaks=seq(.1,.5,.1),
-#'                                Vx = "z", distrib="normal",x.transf=NULL)
+#'                                Vx = "z", distrib="normal", x.transf=NULL)
 #' summary(intra_samp)
 #' sensi_plot(intra_samp)
 
@@ -118,7 +116,7 @@ intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
   if(class(phy) != "phylo") stop("phy must be class 'phylo'")
   if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-    stop("Please use arguments y.transf or x.transf for data transformation")
+    stop("Please use argument x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
   if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
 

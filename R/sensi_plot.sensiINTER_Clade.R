@@ -3,6 +3,7 @@
 #' Plot results from \code{tree_clade_phylm} and \code{tree_clade_phyglm}
 #' @param x output from \code{tree_clade_phylm} or \code{tree_clade_phyglm}
 #' @param clade The name of the clade to be evaluated (see details)
+#' @param graphs Choose which graph should be printed on the output ("all", 1 or 2). Defaults to "all".
 #' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
 #' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
@@ -147,6 +148,7 @@ if (graphs==2)
 #' Plot results from \code{intra_clade_phylm} and \code{intra_clade_phyglm}
 #' @param x output from \code{intra_clade_phylm} or \code{intra_clade_phyglm}
 #' @param clade The name of the clade to be evaluated (see details)
+#' @param graphs Choose which graph should be printed on the output ("all", 1 or 2). Defaults to "all".
 #' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
 #' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
