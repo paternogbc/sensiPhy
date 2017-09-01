@@ -76,8 +76,9 @@
 #' effect of species removal on p-values. Please also consult standardised differences
 #' in the (summary) output.
 #' @author Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-#' \code{\link{samp_phylm}},\code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phylolm}},\code{\link{samp_phylm}}, 
+#' \code{\link{intra_phylm}}, \code{\link{intra_samp_phyglm}},
+#' \code{\link{sensi_plot}}
 #' @references 
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).

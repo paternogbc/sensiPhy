@@ -60,8 +60,8 @@
 #' effect of species removal on p-values. Please also consult standardised differences
 #' in the (summary) output. 
 #' @author Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone
-#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
-#' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
+#' \code{\link{tree_phyglm}}, \code{\link{tree_samp_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
 #' A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation

@@ -54,7 +54,7 @@
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
 #' @return \code{sensi.estimates}: A data frame with all simulation
-#' estimates. Each row represents a deleted clade. Columns report the calculated
+#' estimates. Each row represents a deleted clade for a tree iteration. Columns report the calculated
 #' regression intercept (\code{intercept}), difference between simulation
 #' intercept and full model intercept (\code{DIFintercept}), the percentage of change
 #' in intercept compared to the full model (\code{intercept.perc}) and intercept
@@ -63,11 +63,13 @@
 #' the optimised value (\code{optpar}) of the phylogenetic parameter 
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 #' are reported.
+#' @return \code{null.dist}: A data frame with estimates for the null distributions
+#' for all clades analysed.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or trees where deletion resulted in errors.
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
-#'  \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{tree_phyglm}},
+#'  \code{\link{clade_phyglm}}, \code{\link{tree_clade_phylm}},
 #' \code{\link{sensi_plot}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.

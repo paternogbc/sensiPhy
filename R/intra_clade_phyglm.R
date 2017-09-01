@@ -36,7 +36,7 @@
 #' detect the influential species within that iteration. 
 #' 
 #' Additionally, to account for the influence of the number of species on each 
-#' clade (clade sample size), this function also estimate a null distribution of slopes
+#' clade (clade sample size), this function also estimate a null distribution 
 #' expected for the number of species in a given clade. This is done by fitting
 #' models without the same number of species in the given clade. 
 #'  The number of simulations to be performed is set by 'n.sim'. To test if the 
@@ -56,7 +56,7 @@
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{clade_phyglm} returns a list with the following
+#' @return The function \code{intra_clade_phyglm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{full.model.estimates}: Coefficients, aic and the optimised
@@ -72,12 +72,14 @@
 #' the optimised value (\code{optpar}) of the phylogenetic parameter 
 #' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 #' are reported.
+#' @return \code{null.dist}: A data frame with estimates for the null distributions
+#' for all clades analysed.
 #' @return \code{data}: Original full dataset.
 #' @return \code{errors}: Clades and/or iterations where deletion resulted in errors.
 #' @author Gustavo Paterno, Caterina Penone
-#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{samp_phyglm}},
-#' \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
-#' \code{\link{sensi_plot}}, \code{\link{intra_phyglm}}
+#' @seealso \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{intra_phyglm}},
+#' \code{\link{clade_phyglm}},  \code{\link{intra_clade_phylm}}, 
+#' \code{\link{sensi_plot}}
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples

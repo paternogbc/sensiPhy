@@ -47,17 +47,33 @@
 #' 
 #' Setting \code{n.intra} at high values can take a long time to exectue, since the total number of iterations equals \code{n.intra * nrow(data)}.
 #' 
-#' The function returns a list of \code{sensiInflu}-objects (the output of \code{influ_phylm} and \code{influ_phyglm}). 
-#' of length \code{n.intra}. The user can use \code{summary} to evaluate this list. This will give, both for the 
-#' regression slope and for the intercept, a table indicating how often across the \code{n.times} simulations a given
-#' species was identified as the most influential species, as well as a table listing the mean estimate (slope), DIFestimate, 
-#' Percentage change and P-value across all species that occured as most influential species in at least one simulation.
-#' 
-#' Additionally, users can evaluate each element in the list as a regula \code{sensiInflu}-object. 
-#' 
+#' @return The function \code{intra_influ_phylm} returns a list with the following
+#' components:
+#' @return \code{cutoff}: The value selected for \code{cutoff}
+#' @return \code{formula}: The formula
+#' @return \code{full.model.estimates}: Coefficients, aic and the optimised
+#' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
+#' without deleted species.
+#' @return \code{influential_species}: List of influential species, both
+#' based on standardised difference in interecept and in the slope of the
+#' regression. Species are ordered from most influential to less influential and
+#' only include species with a standardised difference > \code{cutoff}.
+#' @return \code{sensi.estimates}: A data frame with all simulation
+#' estimates. Each row represents a deleted clade for an iteration of resimulated
+#' data. Columns report the calculated regression intercept (\code{intercept}), 
+#' difference between simulation intercept and full model intercept (\code{DIFintercept}), 
+#' the standardised difference (\code{sDIFintercept}), the percentage of change in intercept compared
+#' to the full model (\code{intercept.perc}) and intercept p-value
+#' (\code{pval.intercept}). All these parameters are also reported for the regression
+#' slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
+#' the optimised value (\code{optpar}) of the phylogenetic parameter
+#' (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) are
+#' reported.
+#' @return \code{data}: Original full dataset.
+#' @return \code{errors}: Species where deletion resulted in errors. 
 #' @author Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
-#' \code{\link{influ_phylm}},\code{\link{intra_phylm}},\code{\link{sensi_plot}}.
+#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{intra_phyglm}},
+#' \code{\link{influ_phyglm}},\code{\link{intra_influ_phylm}},\code{\link{sensi_plot}}.
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
@@ -70,12 +86,12 @@
 #'z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
 #'dat = data.frame(y, x, z)
 #'# Run sensitivity analysis:
-#'influ_test <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
-#'                                             n.intra = 3,track = TRUE,distrib="normal",x.transf=NULL) 
+#'intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy, Vx = "z", 
+#'                                             n.intra = 5,track = TRUE,distrib="normal",x.transf=NULL) 
 #'# To check summary results and most influential species:
-#'summary(influ_test)
+#'summary(intra_influ)
 #'# Visual diagnostics for clade removal:
-#'sensi_plot(influ_test)
+#'sensi_plot(intra_influ)
 #' @export
 
 
