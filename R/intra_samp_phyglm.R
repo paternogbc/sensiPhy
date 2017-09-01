@@ -108,7 +108,7 @@
 
 
 intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
-                             breaks=seq(.1,.5,.1), 
+                             breaks=seq(.1,.5,.1), btol = 50,
                              Vx = NULL, distrib = "normal", x.transf = NULL, 
                              track=TRUE,...) { 
   
