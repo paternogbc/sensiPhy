@@ -102,7 +102,7 @@ be solved by increasing \code{times}, changing the transformation type and/or ch
 \examples{
 # Load data:
 data(alien)
-# run PGLS accounting for intraspecific variation:
+# run PGLS accounting for intraspecific and phylogenetic variation:
 intra.tree <- tree_intra_phylm(gestaLen ~ adultMass, data = alien$data, phy = alien$phy,
 Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
 # To check summary results:
@@ -121,7 +121,8 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link{tree_phylm}}, \code{\link{intra_phylm}},
+\code{\link{tree_intra_phyglm}}, \code{\link{sensi_plot}}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez

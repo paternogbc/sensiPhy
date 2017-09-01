@@ -134,8 +134,9 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-\code{\link{samp_phylm}},\code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}},\code{\link{samp_phylm}}, 
+\code{\link{intra_phylm}}, \code{\link{intra_samp_phyglm}},
+\code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone

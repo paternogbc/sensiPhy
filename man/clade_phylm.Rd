@@ -50,9 +50,14 @@ the optimised value (\code{optpar}) of the phylogenetic parameter
 (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 are reported.
 
+\code{null.dist}: A data frame with estimates for the null distributions
+for all clades analysed.
+
 \code{data}: Original full dataset.
 
 \code{errors}: Clades where deletion resulted in errors.
+
+\code{clade.col}: Which column was used to specify the clades?
 }
 \description{
 Estimate the impact on model estimates of phylogenetic linear regression after 
@@ -66,9 +71,9 @@ comparison between the full model (with all species) and the model without
 the species belonging to a clade.
 
 Additionally, to account for the influence of the number of species on each 
-clade (clade sample size), this function also estimate a null distribution of slopes
+clade (clade sample size), this function also estimates a null distribution
 expected for the number of species in a given clade. This is done by fitting
- models without the same number of species in the given clade. 
+ models without the same number of species as in the given clade. 
  The number of simulations to be performed is set by 'n.sim'. To test if the 
  clade influence differs from the null expectation for a clade of that size, 
  a randomization test can be performed using 'summary(x)'. 
@@ -107,9 +112,9 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
- \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phylm}},
+ \code{\link{influ_phylm}}, \code{\link{sensi_plot}},
+\code{\link{sensi_plot}},\code{\link{clade_phyglm}},
 }
 \author{
 Gustavo Paterno

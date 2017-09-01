@@ -110,8 +110,8 @@ in angiosperms. Nature Communications, 5, 4087.
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
-\code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
+\code{\link{tree_phyglm}}, \code{\link{tree_samp_phylm}},\code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone

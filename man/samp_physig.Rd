@@ -98,7 +98,8 @@ Kamilar, J. M., & Cooper, N. (2013). Phylogenetic signal in primate behaviour,
  B: Biological Sciences, 368: 20120341.
 }
 \seealso{
-\code{\link[phytools]{phylosig}}, \code{\link{influ_phylosig}},\code{\link{sensi_plot}}
+\code{\link[phytools]{phylosig}}, 
+\code{\link{samp_phylm}},\code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno & Gijsbert D.A. Werner

@@ -131,7 +131,8 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 }
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
-\code{\link{samp_phyglm}},\code{\link{sensi_plot}}
+\code{\link{intra_phyglm}},\code{\link{intra_samp_phylm}},
+\code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno, Gijsbert D.A. Werner & Caterina Penone

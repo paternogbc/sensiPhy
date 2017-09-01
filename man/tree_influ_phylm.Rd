@@ -45,7 +45,7 @@ regression. Species are ordered from most influential to less influential and
 only include species with a standardised difference > \code{cutoff}.
 
 \code{sensi.estimates}: A data frame with all simulation
-estimates. Each row represents a deleted clade. #' Columns report the calculated
+estimates. Each row represents a deleted clade for a given random tree. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
 intercept and full model intercept (\code{DIFintercept}), the standardised
 difference (\code{sDIFintercept}), the percentage of change in intercept compared
@@ -103,8 +103,8 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
-\code{\link{influ_phylm}},\code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link{tree_phylm}}, 
+\code{\link{influ_phylm}}, \code{\link{tree_influ_phyglm}}, \code{\link{sensi_plot}}
 }
 \author{
 Gustavo Paterno, Caterina Penone & Gijsbert D.A. Werner
