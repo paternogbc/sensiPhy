@@ -23,11 +23,11 @@
 \details{
 For 'x' from \code{tree_intra_phylm} or \code{tree_intra_phyglm}:
 
-Graphs 1 and 2: Distribution of estimated estimates and intercepts for each tree (for \code{tree_phylm}) or 
+\strong{Graphs 1 and 2:} Distribution of estimated estimates and intercepts for each tree (for \code{tree_phylm}) or 
 value generated within a given interval (\code{interaction_intra_tree_phylm})
 Red vertical line represents the mean estimate or intercept for all models. 
 
-Graph 3: Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
+\strong{Graph 3:} Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylm}}

@@ -1,4 +1,4 @@
-#' Graphical diagnostics for class 'sensiTree_Intra'
+#' Graphical diagnostics for class 'sensiIntra_Influ'
 #'
 #' \code{sensi_plot.intra_influ} Plot results from \code{intra_influ_phylm} and 
 #' \code{intra_influ_phyglm}
@@ -10,28 +10,23 @@
 #' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
 #' ggtitle element_blank
 #' @author Gustavo Paterno, Caterina Penone
-#' @seealso \code{\link[ggplot2]{ggplot}}
+#' @seealso \code{\link[sensiPhy]{intra_influ_phylm}}; 
+#' \code{\link[sensiPhy]{intra_influ_phyglm}}
 #' @details For 'x' from intra_influ_phylm or intra_influ_phyglm:
 #' 
-#' Graph 1: Distribution of estimated slopes or intercepts for each 
-#' simulation (leave-one-out deletion). Red vertical line represents the original
-#' slope or intercept from the full model (with all species). 
+#' \strong{Graph 1:} Most common influential species on model estimates.
+#'  Percentage of iterations (n.tree or n.intra) where the removal of individual
+#'   species caused significant change in model estimate (sDIFestimate > cutoff). 
 #' 
-#' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
-#' difference in slope or intercept is represented by a continous size scale. 
-#' The names of the most influential species (sDF > cutoff) are ploted in the
-#' graph. 
-#' 
-#' Graph 3: Distribution of standardized difference in slope or intercept. Red 
-#' colour indicates inbfluential species (with a standardised difference above 
-#' the value of \code{cutoff}).
-#' 
-#' Graph 4: Distribution of the percentage of change in slope or intercept.
+#' \strong{Graph 2:} Shift on model estimate after species removal for most influential
+#'  species. Small red dots represent individual reruns between different trees or 
+#'  simulations while large red dots represent the average DIFestimate among all 
+#'  iterations.
 #' @importFrom grid unit 
 #' @export
 
 ### Start:
-sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
+sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
   ### Graph one
   n.tree <- length(unique(x$sensi.estimates$iteration))
   sp.estimate <- unlist(as.list(x$influential.species$influ.sp.estimate$influ.sp.estimate))
@@ -86,7 +81,7 @@ sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
 }
 
 
-#' Graphical diagnostics for class 'sensiIntraInflu'
+#' Graphical diagnostics for class 'sensiTree_Influ'
 #'
 #' \code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
 #' \code{tree_influ_phyglm}
@@ -99,28 +94,19 @@ sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
 #' ggtitle element_blank
 #' @author Gustavo Paterno, Caterina Penone
 #' @seealso \code{\link[ggplot2]{ggplot}}
-#' @details For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
+#' @details For 'x' from sensiTree_Influ_phylm or sensiTree_Influ_phyglm:
 #' 
-#' Graph 1: Distribution of estimated estimates (slopes) or intercepts for each 
-#' simulation (leave-one-out deletion). Red vertical line represents the original
-#' slope or intercept from the full model (with all species). 
+#' \strong{Graph 1:} Most common influential species on model estimates.
+#'  Percentage of iterations (n.tree or n.intra) where the removal of individual
+#'   species caused significant change in model estimate (sDIFestimate > cutoff). 
 #' 
-#' Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
-#' difference in slope or intercept is represented by a continous size scale. 
-#' The names of the most influential species (sDF > cutoff) are ploted in the
-#' graph. 
-#' 
-#' Graph 3: Distribution of standardized difference in slope or intercept. Red 
-#' colour indicates inbfluential species (with a standardised difference above 
-#' the value of \code{cutoff}).
-#' 
-#' Graph 4: Distribution of the percentage of change in slope or intercept.
+#' \strong{Graph 2:} Shift on model estimate after species removal for most influential
+#'  species. Small red dots represent individual reruns between different trees or 
+#'  simulations while large red dots represent the average DIFestimate among all 
+#'  iterations.
 #' @importFrom grid unit 
 #' @export
-
-
-
 #' @export
-sensi_plot.sensiIntra_Influ <- function(x, graphs="all", ...){
-  sensi_plot.sensiTree_Influ(x, graphs, ...)
+sensi_plot.sensiTree_Influ <- function(x, graphs="all", ...){
+  sensi_plot.sensiIntra_Influ(x, graphs, ...)
 }

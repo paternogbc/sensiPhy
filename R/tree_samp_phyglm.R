@@ -83,7 +83,7 @@
 #'sensi_plot(tree_samp)
 #'sensi_plot(tree_samp, graphs = 1)
 #'sensi_plot(tree_samp, graphs = 2)
-
+#' @export
 
 tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
                              breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {

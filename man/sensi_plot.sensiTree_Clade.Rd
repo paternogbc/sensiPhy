@@ -2,42 +2,39 @@
 % Please edit documentation in R/sensi_plot.sensiINTER_Clade.R
 \name{sensi_plot.sensiTree_Clade}
 \alias{sensi_plot.sensiTree_Clade}
-\title{Graphical diagnostics for class 'sensiIntra_Clade'}
+\title{Graphical diagnostics for class 'sensiTree_Clade'}
 \usage{
 \method{sensi_plot}{sensiTree_Clade}(x, clade = NULL, graphs = "all", ...)
 }
 \arguments{
-\item{x}{output from \code{intra_clade_phylm} or \code{intra_clade_phyglm}}
+\item{x}{output from \code{tree_clade_phylm} or \code{tree_clade_phyglm}}
 
 \item{clade}{The name of the clade to be evaluated (see details)}
 
 \item{...}{further arguments to methods.}
 }
 \description{
-Plot results from \code{intra_clade_phylm} and \code{intra_clade_phyglm}
+Plot results from \code{tree_clade_phylm} and \code{tree_clade_phyglm}
 }
 \details{
-For 'x' from intra_clade_phylm or intra_clade_phyglm:
+For 'x' from tree_clade_phylm or tree_clade_phyglm:
 
-Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
-full dataset) and a comparison between the regression lines of the full model
-and the model without the selected clade (set by \code{clade}). For further
-details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
+\strong{Graph 1:} Estimated slopes after clade removal (reduced data) across multiple trees.
+ Small dots represent estimates reruns between phylogenetic trees while larger 
+ dots represents the average estimate between all trees for each clade. 
+ The solid black line represents the average slope estimate among trees
+ using the full dataset.
 
-Species from the selected clade are represented in red (removed species), black
-solid line represents the regression with the full model and red dashed line represents
-the regression of the model without the species from the selected clade.
-To check the available clades to plot, see \code{x$sensi.estimates$clade} 
-in the object returned from \code{intra_clade_phylm} or \code{intra_clade_phyglm}. 
-
-Graph 2: Distribution of the simulated slopes (Null distribution
-for a given clade sample size).
-The red dashed line represents the estimated slope for the reduced model 
-(without the focal clade) and the black line represents the slope for the 
-full model.
+\strong{Graph 2:} The effect of clade removal on slope estimate across all individual 
+phylogenetic trees for each clade analyzed. The black line indicates estimates 
+with the full dataset while the red line represent estimates without the focal
+ clade (reduced data) across different trees. The blue dots represent null expectation
+ estimates after removing the same number of species of the focal clade,
+ with dots falling outside the red line area indicating a larger than expected 
+ absolute effect.
 }
 \seealso{
-\code{\link[sensiPhy]{intra_clade_phylm}}
+\code{\link[sensiPhy]{tree_clade_phylm}}
 }
 \author{
 Gustavo Paterno, Caterina Penone

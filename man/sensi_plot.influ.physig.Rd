@@ -17,11 +17,11 @@
 \details{
 For 'x' from influ_physig:
 
-Graph 1: Distribution of estimated phylogenetic signal (K or lambda) for each 
+\strong{Graph 1:} Distribution of estimated phylogenetic signal (K or lambda) for each 
 simulation (leave-one-out deletion). Dashed red vertical line represents the original
  estimate of phylogenetic signal with the full data (with all species). 
 
-Graph 2: Distribution of P values for the phylogenetic signal (K or lambda) 
+strong{Graph 2:} Distribution of P values for the phylogenetic signal (K or lambda) 
 for each simulation (leave-one-out deletion). Red vertical line represents 
 the alpha significance level = 0.05.
 }

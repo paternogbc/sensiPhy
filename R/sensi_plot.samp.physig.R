@@ -11,17 +11,17 @@
 #' \code{\link[sensiPhy]{samp_physig}}
 #' @details For 'x' from samp_physig:
 #' 
-#' * Graph 1: Estimated phylogenetic signal for each simution across  
+#' \strong{Graph 1:} Estimated phylogenetic signal for each simution across  
 #' percentages of species removed. Colours represent percentage 
 #' of change in comparison with the full data estimate (blue = lower than 5, orange = 
 #' between 5 and 10 and red = higher than 10).
 #' The red horizontal line represents the original phylogenetic signal 
 #' estimated from the full model (with all species). 
 #' 
-#' * Graph 2: The proportion of estimated signal in each category 
+#' \strong{Graph 2:} The proportion of estimated signal in each category 
 #' across the percentage of species removed.
 #' 
-#' * Graph 3: The percentage of significant signal estimates across the 
+#' \strong{Graph 3:} The percentage of significant signal estimates across the 
 #' percentage of species removed. 
 #' @md 
 #' @export

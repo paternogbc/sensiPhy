@@ -19,7 +19,7 @@ Plot results from \code{clade_phylm} and \code{clade_phyglm}
 \details{
 For 'x' from clade_phylm or clade_phyglm:
 
-Graph 1: The original scatterplot \eqn{y = a + bx} (with the 
+\strong{Graph 1:} The original scatterplot \eqn{y = a + bx} (with the 
 full dataset) and a comparison between the regression lines of the full dataset
 and the rerun without the selected clade (set by \code{clade}). For further
 details about this method, see \code{\link[sensiPhy]{clade_phylm}}.
@@ -30,7 +30,7 @@ the regression of the model without the species from the selected clade.
 To check the available clades to plot, see \code{x$sensi.estimates$clade} 
 in the object returned from \code{clade_phylm} or \code{clade_phyglm}. 
 
-Graph 2: Distribution of the simulated slopes (Null distribution
+\strong{Graph 2:} Distribution of the simulated slopes (Null distribution
 for a given clade sample size).
 The red dashed line represents the estimated slope for the reduced model 
 (without the focal clade) and the black line represents the slope for the 

@@ -11,7 +11,7 @@
 #' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[phytools]{phylosig}}
 #' @details For 'x' from clade_physig:
 #' 
-#' Graph 1: Distribution of the simulated signal estimates (Null distribution
+#' \strong{Graph 1:} Distribution of the simulated signal estimates (Null distribution
 #' for a given clade sample size).
 #' The red dashed line represents the estimated signal for the reduced data 
 #' (without the focal clade) and the black line represents the signal estimate

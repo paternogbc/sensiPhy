@@ -20,18 +20,33 @@ sensi_plot recognize and print different sets of graphs depending
 on the function that generated 'x'. See the links below for details about
 the graphs generated for each sensiPhy function:
 \itemize{
- \item{\code{\link[sensiPhy]{sensi_plot.sensiClade}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiInflu}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiSamp}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiTree}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Influ}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiIntra_Samp}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Clade}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
- \item{\code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
+ 
+\strong{PGLS regressions (single uncertainty):}
+ \item{clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiClade}}}
+ \item{influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiInflu}}}
+ \item{samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiSamp}}}
+ \item{intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra}}}
+ \item{tree_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree}}}
+  }
+ \strong{PGLS regressions (interacting uncertainties):}
+ 
+ \itemize{
+ \item{tree_intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
+ \item{intra_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
+ \item{intra_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Influ}}}
+ \item{intra_samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Samp}}}
+ \item{tree_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Clade}}}
+ \item{tree_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
+ \item{tree_samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
+ }
+ 
+ \itemize{
+ \strong{Phylogenetic signal:}
+ \item{clade_physig: \code{\link[sensiPhy]{sensi_plot.clade.physig}}}
+ \item{influ_physig: \code{\link[sensiPhy]{sensi_plot.influ.physig}}}
+ \item{samp_physig:  \code{\link[sensiPhy]{sensi_plot.samp.physig}}}
+ \item{tree_physig:  \code{\link[sensiPhy]{sensi_plot.tree.physig}}}
+ \item{intra_physig:  \code{\link[sensiPhy]{sensi_plot.intra.physig}}}
  }
 }
 \references{

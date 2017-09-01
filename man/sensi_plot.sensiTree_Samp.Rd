@@ -23,21 +23,16 @@
 \details{
 For 'x' from sensiTree_Samp_phylm or sensiTree_Samp_phyglm:
 
-Graph 1: Estimated slopes (slopes) or intercepts for each simution across  
-percentages of species removed and intra simulations. Colours represent percentage 
-of change in comparison with the full model (blue = lower than 5, orange = 
-between 5 and 10 and red = higher than 10).
-The red horizontal line represents the original slope or 
-intercept from the full model (with all species). 
+\strong{Graph 1:} : Estimated estimates for each simulation across percentages of 
+species removed. Small red dots represent individual estimates for each iteration 
+(tree or intra) across percentages of removed species. Large dots represent the
+ average among these estimates within each iteration and percentage of species removal.
+  Different estimates within the same percentage interval represent different 
+  iterations (tree or intra). 
 
-Graph 2: The proportion of estimated slopes and intercepts in each category 
-across the percentage of species removed.
-
-Graph 3: Estimated phylogenetic model parameter for each simulation across
-the percentage of species removed.
-
-Graph 4: The percentage of significant slopes or intercepts across the 
-percentage of species removed.
+\strong{Graph 2:} : The percentage of significant estimates (p < 0.05) across the 
+percentage of species removed. Small red dots represent individual 
+iterations (tree or intra) while large dots represent the average among these iterations.
 }
 \note{
 If model = "BM", only plots 1, 2 and 4 are printed. Plot 3, phylogenetic

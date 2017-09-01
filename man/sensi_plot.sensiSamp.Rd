@@ -22,20 +22,20 @@
 \details{
 For 'x' from samp_phylm or samp_phyglm:
 
-Graph 1: Estimated slopes or intercepts for each simution across  
+\strong{Graph 1:} Estimated slopes or intercepts for each simulation across  
 percentages of species removed. Colours represent percentage 
 of change in comparison with the full model (blue = lower than 5, orange = 
 between 5 and 10 and red = higher than 10).
 The red horizontal line represents the original slope or 
 intercept from the full model (with all species). 
 
-Graph 2: The proportion of estimated slopes and intercepts in each category 
+\strong{Graph 2:} The proportion of estimated slopes and intercepts in each category 
 across the percentage of species removed.
 
-Graph 3: Estimated phylogenetic model parameter for each simulation across
+\strong{Graph 3:} Estimated phylogenetic model parameter for each simulation across
 the percentage of species removed.
 
-Graph 4: The percentage of significant slopes or intercepts across the 
+\strong{Graph 4:} The percentage of significant slopes or intercepts across the 
 percentage of species removed.
 }
 \note{

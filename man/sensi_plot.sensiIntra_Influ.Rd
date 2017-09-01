@@ -2,12 +2,12 @@
 % Please edit documentation in R/sensi_plot.sensiINTER_Influ.R
 \name{sensi_plot.sensiIntra_Influ}
 \alias{sensi_plot.sensiIntra_Influ}
-\title{Graphical diagnostics for class 'sensiIntraInflu'}
+\title{Graphical diagnostics for class 'sensiIntra_Influ'}
 \usage{
 \method{sensi_plot}{sensiIntra_Influ}(x, graphs = "all", ...)
 }
 \arguments{
-\item{x}{output from \code{tree_influ_phylm} or \code{tree_influ_phyglm}}
+\item{x}{output from \code{influ_phylm} or \code{intra_influ_phyglm}}
 
 \item{graphs}{choose which graph should be printed on the output ("all", 1,2,3 or 4)}
 
@@ -16,29 +16,24 @@
 \item{param}{choose which parameter ("intercept" or "estimate" should be printed)}
 }
 \description{
-\code{sensi_plot.sensiTree_Influ} Plot results from \code{tree_influ_phylm} and 
-\code{tree_influ_phyglm}
+\code{sensi_plot.intra_influ} Plot results from \code{intra_influ_phylm} and 
+\code{intra_influ_phyglm}
 }
 \details{
-For 'x' from sensiTree_Intra_phylm or sensiTree_Intra_phyglm:
+For 'x' from intra_influ_phylm or intra_influ_phyglm:
 
-Graph 1: Distribution of estimated estimates (slopes) or intercepts for each 
-simulation (leave-one-out deletion). Red vertical line represents the original
-slope or intercept from the full model (with all species). 
+\strong{Graph 1:} Most common influential species on model estimates.
+ Percentage of iterations (n.tree or n.intra) where the removal of individual
+  species caused significant change in model estimate (sDIFestimate > cutoff). 
 
-Graph 2: Original regression plot (\eqn{trait~predictor}). Standardized 
-difference in slope or intercept is represented by a continous size scale. 
-The names of the most influential species (sDF > cutoff) are ploted in the
-graph. 
-
-Graph 3: Distribution of standardized difference in slope or intercept. Red 
-colour indicates inbfluential species (with a standardised difference above 
-the value of \code{cutoff}).
-
-Graph 4: Distribution of the percentage of change in slope or intercept.
+\strong{Graph 2:} Shift on model estimate after species removal for most influential
+ species. Small red dots represent individual reruns between different trees or 
+ simulations while large red dots represent the average DIFestimate among all 
+ iterations.
 }
 \seealso{
-\code{\link[ggplot2]{ggplot}}
+\code{\link[sensiPhy]{intra_influ_phylm}}; 
+\code{\link[sensiPhy]{intra_influ_phyglm}}
 }
 \author{
 Gustavo Paterno, Caterina Penone

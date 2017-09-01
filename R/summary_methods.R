@@ -544,12 +544,12 @@ summary.clade.physig <- function(object, ...){
 
 ### Summary method for class: samp.physig:--------------------------------------
 #' @export
-summary.samp.physig <- function(obejct, ...){
-  method <- obejct$call$method
-  if (is.null(obejct$call$method)) method <- "K"
+summary.samp.physig <- function(object, ...){
+  method <- object$call$method
+  if (is.null(object$call$method)) method <- "K"
   
-  simu <- nrow(obejct$samp.physig.estimates)
-  res <- obejct$sign.analysis
+  simu <- nrow(object$samp.physig.estimates)
+  res <- object$sign.analysis
   res$perc.sign <- res$perc.sign * 100
   names(res) <- c("Species Removed (%)", 
                   paste("Significant", method, "(%)"),
