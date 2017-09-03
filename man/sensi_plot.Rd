@@ -20,7 +20,6 @@ sensi_plot recognize and print different sets of graphs depending
 on the function that generated 'x'. See the links below for details about
 the graphs generated for each sensiPhy function:
 \itemize{
- 
 \strong{PGLS regressions (single uncertainty):}
  \item{clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiClade}}}
  \item{influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiInflu}}}
@@ -29,7 +28,6 @@ the graphs generated for each sensiPhy function:
  \item{tree_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree}}}
   }
  \strong{PGLS regressions (interacting uncertainties):}
- 
  \itemize{
  \item{tree_intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
  \item{intra_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
@@ -39,7 +37,6 @@ the graphs generated for each sensiPhy function:
  \item{tree_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
  \item{tree_samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
  }
- 
  \itemize{
  \strong{Phylogenetic signal:}
  \item{clade_physig: \code{\link[sensiPhy]{sensi_plot.clade.physig}}}

@@ -9,7 +9,6 @@
 #' on the function that generated 'x'. See the links below for details about
 #' the graphs generated for each sensiPhy function:
 #' \itemize{
-#'  
 #' \strong{PGLS regressions (single uncertainty):}
 #'  \item{clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiClade}}}
 #'  \item{influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiInflu}}}
@@ -18,7 +17,6 @@
 #'  \item{tree_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree}}}
 #'   }
 #'  \strong{PGLS regressions (interacting uncertainties):}
-#'  
 #'  \itemize{
 #'  \item{tree_intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
 #'  \item{intra_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
@@ -28,7 +26,6 @@
 #'  \item{tree_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
 #'  \item{tree_samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
 #'  }
-#'  
 #'  \itemize{
 #'  \strong{Phylogenetic signal:}
 #'  \item{clade_physig: \code{\link[sensiPhy]{sensi_plot.clade.physig}}}
@@ -36,8 +33,6 @@
 #'  \item{samp_physig:  \code{\link[sensiPhy]{sensi_plot.samp.physig}}}
 #'  \item{tree_physig:  \code{\link[sensiPhy]{sensi_plot.tree.physig}}}
 #'  \item{intra_physig:  \code{\link[sensiPhy]{sensi_plot.intra.physig}}}
-
-
 #'  }
 #' 
 #' @author Gustavo Paterno
