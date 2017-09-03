@@ -1,6 +1,6 @@
 #' Interaction between phylogenetic uncertainty and influential species detection - Phylogenetic Linear Regression
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic linear regression,
+#' Performs leave-one-out deletion analysis for phylogenetic linear regression,
 #' and detects influential species while evaluating uncertainty in trees topology.
 #'
 #' @param formula The model formula

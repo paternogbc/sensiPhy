@@ -46,8 +46,8 @@ the percentage of change in signal compared to the full data estimate (\code{per
 and signal p-value for the reduced data estimate(\code{pval}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
-removed) this reports the percentage of statistically signficant (at p<0.05)
-phylogenetic signal over all repititions with reduced data sets.
+removed) this reports the percentage of statistically significant (at p<0.05)
+phylogenetic signal over all repetitions with reduced data sets.
 
 \code{data}: Original full dataset used in the analysis.
 #' @note Please be aware that dropping species may reduce power to detect 
@@ -66,7 +66,7 @@ This function randomly removes a given percentage of species (controlled by
 signal for a given trait (K or lambda) without these species using 
 \code{\link[phytools]{phylosig}}, then
 repeats the analysis many times (controlled by \code{n.sim}), stores the results and
-calculates the effect of random species removal on phylogenetic siganl estimates.
+calculates the effect of random species removal on phylogenetic signal estimates.
 
 Output can be visualised using \code{sensi_plot}.
 }

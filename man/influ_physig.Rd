@@ -52,7 +52,7 @@ test (\code{pval})
 \code{data}: Original full dataset.
 }
 \description{
-Performs leave-one-out deletion analyis for phylogenetic signal estimates,
+Performs leave-one-out deletion analysis for phylogenetic signal estimates,
 and detects influential species for K or lambda.
 }
 \details{

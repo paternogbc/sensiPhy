@@ -1,6 +1,6 @@
 #' Influential species detection - Phylogenetic signal
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic signal estimates,
+#' Performs leave-one-out deletion analysis for phylogenetic signal estimates,
 #' and detects influential species for K or lambda.
 #' @param trait.col The name of a column in the provided data frame with trait 
 #'  to be analyzed  (e.g. "Body_mass").

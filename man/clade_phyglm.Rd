@@ -2,7 +2,8 @@
 % Please edit documentation in R/clade_phyglm.R
 \name{clade_phyglm}
 \alias{clade_phyglm}
-\title{Influential clade detection - Phylogenetic Logistic Regression}
+\title{Estimate the impact on model estimates of phylogenetic logistic regression after 
+removing clades from the analysis.}
 \usage{
 clade_phyglm(formula, data, phy, btol = 50, track = TRUE, clade.col,
   n.species = 5, n.sim = 100, ...)
@@ -23,7 +24,7 @@ in \code{phy}.}
 clades (a character vector with clade names).}
 
 \item{n.species}{Minimum number of species in a clade for the clade to be
-included in the leave-one-out deletion analyis. Default is \code{5}.}
+included in the leave-one-out deletion analysis. Default is \code{5}.}
 
 \item{n.sim}{Number of simulations for the randomization test.}
 

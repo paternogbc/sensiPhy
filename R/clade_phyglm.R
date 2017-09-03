@@ -1,4 +1,3 @@
-#' Influential clade detection - Phylogenetic Logistic Regression
 #'
 #' Estimate the impact on model estimates of phylogenetic logistic regression after 
 #' removing clades from the analysis. 
@@ -12,7 +11,7 @@
 #' @param clade.col The column in the provided data frame which specifies the
 #' clades (a character vector with clade names).
 #' @param n.species Minimum number of species in a clade for the clade to be
-#' included in the leave-one-out deletion analyis. Default is \code{5}.
+#' included in the leave-one-out deletion analysis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param ... Further arguments to be passed to \code{phyloglm}
 #' 

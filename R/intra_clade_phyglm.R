@@ -11,7 +11,7 @@
 #' @param clade.col The column in the provided data frame which specifies the
 #' clades (a character vector with clade names).
 #' @param n.species Minimum number of species in a clade for the clade to be
-#' included in the leave-one-out deletion analyis. Default is \code{5}.
+#' included in the leave-one-out deletion analysis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param n.intra Number of datasets resimulated taking into account intraspecific variation (see: \code{"intra_phyglm"})
 #' @param Vx Name of the column containing the standard deviation or the standard error of the predictor 

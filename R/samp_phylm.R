@@ -49,8 +49,8 @@
 #' used) are reported. Lastly we reported the standardised difference in intercept 
 #' (\code{sDIFintercept}) and slope (\code{sDIFestimate}). 
 #' @return \code{sign.analysis} For each break (i.e. each percentage of species
-#' removed) this reports the percentage of statistically signficant (at p<0.05)
-#' intercepts (\code{perc.sign.intercept}) over all repititions as well as the
+#' removed) this reports the percentage of statistically significant (at p<0.05)
+#' intercepts (\code{perc.sign.intercept}) over all repetitions as well as the
 #' percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 #' @return \code{data}: Original full dataset.
 #' #' @note Please be aware that dropping species may reduce power to detect 

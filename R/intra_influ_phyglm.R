@@ -1,6 +1,6 @@
 #' Interaction between intraspecific variability and influential species - Phylogenetic Logistic Regression
 #'
-#' Performs leave-one-out deletion analyis for phylogenetic logistic regression,
+#' Performs leave-one-out deletion analysis for phylogenetic logistic regression,
 #' and detects influential species, while taking into account potential
 #' interactions with intraspecific variability.
 #'
@@ -55,7 +55,7 @@
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
 #' @return \code{influential_species}: List of influential species, both
-#' based on standardised difference in interecept and in the slope of the
+#' based on standardised difference in intercept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
 #' @return \code{sensi.estimates}: A data frame with all simulation

@@ -19,7 +19,7 @@
 \details{
 For 'x' from \code{tree_physig}
 
-\strong{Graphs 1:} Distribution of estimated phylosgentic signal (lambda or K) for each tree
+\strong{Graphs 1:} Distribution of estimated phylogenetic signal (lambda or K) for each tree
 Red vertical line represents the average signal among all estimates. 
 
 \strong{Graph 2:} Distribution of p-values for the phylogenetic signal (K or lambda) 

@@ -61,7 +61,7 @@ reported.
 \code{errors}: Species where deletion resulted in errors.
 }
 \description{
-Performs leave-one-out deletion analyis for phylogenetic linear regression,
+Performs leave-one-out deletion analysis for phylogenetic linear regression,
 and detects influential species while evaluating uncertainty in trees topology.
 }
 \details{

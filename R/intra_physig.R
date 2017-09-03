@@ -1,6 +1,6 @@
 #' Intraspecific variability - Phylogenetic Linear Regression
 #'
-#' Performs Phylogenetic siganl estimates evaluating
+#' Performs Phylogenetic signal estimates evaluating
 #' trait intraspecific variability
 #'
 #' @param trait.col The name of a column in the provided data frame with trait 

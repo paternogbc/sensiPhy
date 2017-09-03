@@ -50,7 +50,7 @@ components:
 and upper limits of the 95% confidence interval.
 }
 \description{
-Performs Phylogenetic siganl estimates evaluating
+Performs Phylogenetic signal estimates evaluating
 trait intraspecific variability
 }
 \details{

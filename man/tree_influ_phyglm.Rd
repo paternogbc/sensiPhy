@@ -60,7 +60,7 @@ the optimised value (\code{optpar}) of the phylogenetic parameter
 \code{errors}: Species where deletion resulted in errors.
 }
 \description{
-Performs leave-one-out deletion analyis for phylogenetic logistic regression,
+Performs leave-one-out deletion analysis for phylogenetic logistic regression,
 and detects influential species while evaluating uncertainty in trees topology.
 }
 \details{

@@ -39,12 +39,12 @@
 #' is the same as the number of tips in the phylogeny, the function assumes that the dataset and the 
 #' phylogeny are in the same order.
 #' 
-#' This ensures consistance between data and phylogeny only for the variables 
+#' This ensures consistency between data and phylogeny only for the variables 
 #' that are being used in the model (set by `formula`).
 #' 
 #' If phy is a 'multiphylo' object, all phylogenies will be cropped
 #' to match data. But the dataset order will only match the first tree provided.
-#' The returned phyogeny will be a 'multiphylo' object.
+#' The returned phylogeny will be a 'multiphylo' object.
 #' @note If tips are removed from the phylogeny and data or if rows containing
 #' missing values are removed from data, a message will be printed with the 
 #' details. Further, the final number of species that match data and phy will
