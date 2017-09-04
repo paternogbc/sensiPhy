@@ -100,6 +100,7 @@ be solved by increasing \code{times}, changing the transformation type and/or ch
 }
 
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # run PGLS accounting for intraspecific and phylogenetic variation:
@@ -109,7 +110,7 @@ Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
 summary(intra.tree)
 # Visual diagnostics
 sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type = "intra"
-
+}
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 

@@ -94,6 +94,7 @@ be solved by increasing \code{times}, changing the transformation type and/or ch
 }
 
 \examples{
+\dontrun{
 # Simulate data
 set.seed(6987)
 mphy = ape::rmtree(150, N = 30)
@@ -108,6 +109,7 @@ intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, n.intra = 10,
 summary(intra.tree)
 # Visual diagnostics for phylogenetic uncertainty:
 sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type = "intra"
+}
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 

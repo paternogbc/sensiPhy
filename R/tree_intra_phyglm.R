@@ -74,6 +74,7 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#' \dontrun{
 #'# Simulate data
 #'set.seed(6987)
 #'mphy = ape::rmtree(150, N = 30)
@@ -89,6 +90,7 @@
 #'summary(intra.tree)
 #'# Visual diagnostics for phylogenetic uncertainty:
 #'sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type = "intra"
+#'}
 #' @export
 
 
