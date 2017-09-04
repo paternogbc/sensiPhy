@@ -14,11 +14,11 @@ There were no ERRORs or WARNINGs.
 There were 1 NOTE:
 
 Possibly mis-spelled words in DESCRIPTION:
-  PGLS (13:20)
   Phylogenetic (15:10)
   clades (14:76)
   intraspecific (16:29)
   phylogenetic (10:59, 11:34)
   topologies (15:46)
+  PCM (12:59)
 
 __R:__ These words are not misspelled.
