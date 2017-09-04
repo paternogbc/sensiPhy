@@ -49,6 +49,7 @@
 #'  B: Biological Sciences, 368: 20120341.
 #'  
 #' @examples 
+#' \dontrun{
 #'# Load data:
 #'data(alien)
 #'# Logtransform data
@@ -59,6 +60,7 @@
 #'sensi_plot(tree)
 #'sensi_plot(tree, graphs = 1)
 #'sensi_plot(tree, graphs = 2)
+#'}
 #' @export
 tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", track = TRUE, ...){
 

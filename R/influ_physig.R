@@ -62,6 +62,7 @@
 #' 
 #' @importFrom phytools phylosig
 #' @examples 
+#' \dontrun{
 #'# Load data:
 #'data(alien)
 #'# Logtransform data
@@ -77,6 +78,7 @@
 #'# You can specify which graph to print: 
 #'sensi_plot(influ, graphs = 1)
 #'sensi_plot(influ, graphs = 2)
+#'}
 #' @export
 influ_physig <- function(trait.col, data, phy, method = "K", cutoff = 2, track = TRUE, ...){
   

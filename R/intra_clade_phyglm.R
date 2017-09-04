@@ -83,6 +83,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples
+#' \dontrun{
 #' set.seed(6987)
 #' phy = rtree(100)
 #' x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
@@ -96,8 +97,7 @@
 #'                                   x.transf = log, Vx = "z", distrib="normal")
 #'sensi_plot(intra_clade)
 #'sensi_plot(intra_clade, clade = "B", graphs = 2)
-
-
+#'}
 #' @export
 
 

@@ -65,6 +65,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#' \dontrun{
 #' # Load data:
 #' data(alien)
 #' # run analysis:
@@ -76,6 +77,7 @@
 #'sensi_plot(tree_influ)
 #'sensi_plot(tree_influ, graphs = 1)
 #'sensi_plot(tree_influ, graphs = 2)
+#'}
 #' @export
 
 

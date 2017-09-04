@@ -108,6 +108,7 @@ Currently, this function can only implement simple logistic models (i.e.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 set.seed(6987)
 phy = rtree(100)
 x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
@@ -121,6 +122,7 @@ intra_clade <- intra_clade_phyglm(formula=y ~ x, data = dat, phy = phy,
                                   x.transf = log, Vx = "z", distrib="normal")
 sensi_plot(intra_clade)
 sensi_plot(intra_clade, clade = "B", graphs = 2)
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

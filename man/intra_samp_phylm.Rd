@@ -112,6 +112,7 @@ effect of species removal on p-values. Please also consult standardised differen
 in the (summary) output.
 }
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # Run analysis:
@@ -121,7 +122,6 @@ samp <- intra_samp_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
 summary(samp)
 head(samp$sensi.estimates)
 # Visual diagnostics
-\dontrun{
 sensi_plot(samp)
 # You can specify which graph and parameter ("estimate" or "intercept") to print: 
 sensi_plot(samp, graphs = 1)

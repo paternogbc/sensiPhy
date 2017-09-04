@@ -93,6 +93,7 @@
 #' @import ape phylolm
 #' 
 #' @examples 
+#' \dontrun{
 #' # Load data:
 #' data(alien)
 #' # Run analysis:
@@ -102,7 +103,6 @@
 #' summary(samp)
 #' head(samp$sensi.estimates)
 #' # Visual diagnostics
-#' \dontrun{
 #' sensi_plot(samp)
 #' # You can specify which graph and parameter ("estimate" or "intercept") to print: 
 #' sensi_plot(samp, graphs = 1)

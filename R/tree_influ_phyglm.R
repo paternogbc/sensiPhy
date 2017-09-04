@@ -63,6 +63,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
+#' \dontrun{
 #'# Simulate Data:
 #'set.seed(6987)
 #'mphy = rmtree(100, N = 30)
@@ -76,6 +77,7 @@
 #'sensi_plot(tree_influ)
 #'sensi_plot(tree_influ, graphs = 1)
 #'sensi_plot(tree_influ, graphs = 2)
+#'}
 #' @export
 
 tree_influ_phyglm <- function(formula, data, phy, n.tree = 2, 

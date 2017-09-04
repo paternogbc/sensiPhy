@@ -53,6 +53,7 @@ to n trees, randomly picked in a multiPhylo file.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # Logtransform data
@@ -63,6 +64,7 @@ summary(tree)
 sensi_plot(tree)
 sensi_plot(tree, graphs = 1)
 sensi_plot(tree, graphs = 2)
+}
 }
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 

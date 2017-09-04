@@ -86,6 +86,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # Run analysis:
@@ -94,7 +95,6 @@ samp <- tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
 summary(samp)
 head(samp$sensi.estimates)
 # Visual diagnostics
-\dontrun{
 sensi_plot(samp)
 sensi_plot(samp, graphs = 1)
 sensi_plot(samp, graphs = 2)

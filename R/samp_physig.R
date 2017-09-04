@@ -71,6 +71,7 @@
 #' @importFrom phytools phylosig
 #' 
 #' @examples 
+#' \dontrun{
 #'data(alien)
 #'# Logtransform data
 #'alien.data$logMass <- log(alien.data$adultMass) 
@@ -81,6 +82,7 @@
 #'sensi_plot(samp)
 #'sensi_plot(samp, graphs = 1)
 #'sensi_plot(samp, graphs = 2)
+#'}
 #' @export
 samp_physig <- function(trait.col, data , phy, n.sim = 30,
                         breaks=seq(.1,.5,.1), method = "K", track = TRUE, ...){

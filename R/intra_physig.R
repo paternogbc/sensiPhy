@@ -64,6 +64,7 @@
 #'  B: Biological Sciences, 368: 20120341.
 #'  
 #' @examples 
+#' \dontrun{
 #'data(alien)
 #'# Run sensitivity analysis:
 #'intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
@@ -72,6 +73,7 @@
 #'sensi_plot(intra)
 #'sensi_plot(intra, graphs = 1)
 #'sensi_plot(intra, graphs = 2)
+#'}
 #' @export
 
 

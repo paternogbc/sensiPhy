@@ -114,6 +114,7 @@ equals \code{n.intra * nrow(data)}.
 }
 
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # run analysis:
@@ -122,7 +123,7 @@ data=alien$data,model="lambda",y.transf = log,x.transf = NULL,Vy="SD_gesta",Vx=N
 n.intra=30,distrib = "normal")
 summary(intra_influ)
 sensi_plot(intra_influ)
- 
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

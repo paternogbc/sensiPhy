@@ -87,6 +87,7 @@
 #' @references Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples
+#' \dontrun{
 #' #load data
 #' data(alien)
 #' intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
@@ -96,6 +97,7 @@
 #' sensi_plot(intra_clade)
 #' sensi_plot(intra_clade, clade = "Bovidae", graphs = 2)
 #' sensi_plot(intra_clade, clade = "Mustelidae", graphs = 2)
+#' }
 #' @export
 
 

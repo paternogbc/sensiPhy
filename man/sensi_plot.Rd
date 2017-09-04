@@ -26,9 +26,8 @@ the graphs generated for each sensiPhy function:
  \item{samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiSamp}}}
  \item{intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra}}}
  \item{tree_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree}}}
-  }
+
  \strong{PGLS regressions (interacting uncertainties):}
- \itemize{
  \item{tree_intra_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Intra}}}
  \item{intra_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Clade}}}
  \item{intra_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiIntra_Influ}}}
@@ -36,8 +35,7 @@ the graphs generated for each sensiPhy function:
  \item{tree_clade_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Clade}}}
  \item{tree_influ_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Influ}}}
  \item{tree_samp_phylm: \code{\link[sensiPhy]{sensi_plot.sensiTree_Samp}}}
- }
- \itemize{
+
  \strong{Phylogenetic signal:}
  \item{clade_physig: \code{\link[sensiPhy]{sensi_plot.clade.physig}}}
  \item{influ_physig: \code{\link[sensiPhy]{sensi_plot.influ.physig}}}

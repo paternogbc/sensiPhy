@@ -104,6 +104,7 @@ Setting \code{n.intra} at high values can take a long time to exectue, since the
 }
 
 \examples{
+\dontrun{
 #Generate data
 set.seed(6987)
 phy = rtree(100)
@@ -119,6 +120,7 @@ intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat, phy = phy,
 summary(intra_influ)
 # Visual diagnostics for clade removal:
 sensi_plot(intra_influ)
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

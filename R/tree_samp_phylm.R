@@ -75,6 +75,7 @@
 #' @import ape phylolm
 #' 
 #' @examples 
+#' \dontrun{
 #' # Load data:
 #' data(alien)
 #' # Run analysis:
@@ -83,7 +84,6 @@
 #' summary(samp)
 #' head(samp$sensi.estimates)
 #' # Visual diagnostics
-#' \dontrun{
 #' sensi_plot(samp)
 #' sensi_plot(samp, graphs = 1)
 #' sensi_plot(samp, graphs = 2)

@@ -69,6 +69,7 @@ value for the cutoff is 2 standardised differences in signal estimate.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Load data:
 data(alien)
 # Logtransform data
@@ -84,6 +85,7 @@ sensi_plot(influ)
 # You can specify which graph to print: 
 sensi_plot(influ, graphs = 1)
 sensi_plot(influ, graphs = 2)
+}
 }
 \references{
 Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 

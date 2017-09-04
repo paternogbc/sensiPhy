@@ -70,6 +70,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 data(alien)
 # Run sensitivity analysis:
 intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
@@ -78,6 +79,7 @@ summary(intra)
 sensi_plot(intra)
 sensi_plot(intra, graphs = 1)
 sensi_plot(intra, graphs = 2)
+}
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 

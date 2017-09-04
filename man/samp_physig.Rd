@@ -71,6 +71,7 @@ calculates the effect of random species removal on phylogenetic signal estimates
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 data(alien)
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass) 
@@ -81,6 +82,7 @@ summary(samp)
 sensi_plot(samp)
 sensi_plot(samp, graphs = 1)
 sensi_plot(samp, graphs = 2)
+}
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).

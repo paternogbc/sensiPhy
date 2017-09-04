@@ -84,6 +84,7 @@ predictor}). In the future we will implement more complex models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Simulate Data:
 set.seed(6987)
 mphy = rmtree(100, N = 30)
@@ -97,6 +98,7 @@ summary(tree_influ)
 sensi_plot(tree_influ)
 sensi_plot(tree_influ, graphs = 1)
 sensi_plot(tree_influ, graphs = 2)
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
