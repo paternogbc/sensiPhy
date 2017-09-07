@@ -5,14 +5,15 @@ Date: 2017-08-31
 Authors@R: c(
     person("Gustavo","Paterno", email = "paternogbc@gmail.com", role = c("cre","aut")),
     person("Gijsbert", "Werner", email = "gijsbert.werner@zoo.ox.ac.uk", role = "aut"),
-    person("Caterina", "Penone", email = "caterina.penone@gmail.com", role = "aut"))
+    person("Caterina", "Penone", email = "caterina.penone@gmail.com", role = "aut"),
+    person("Pablo", "Martinez", email = "pablo_sc82@hotmail.com", role = "ctb"))
 Maintainer: Gustavo Paterno <paternogbc@gmail.com>
 Description: An implementation of sensitivity analysis for phylogenetic comparative
-    methods. The package is an umbrella of statistical and graphical methods that 
-    estimate and report different types of uncertainty in PCM:
-    (i) Species Sampling uncertainty (sample size; influential species and clades).
-    (ii) Phylogenetic uncertainty (different topologies and/or branch lengths).
-    (iii) Data uncertainty (intraspecific variation and measurement error).
+ methods. The package is an umbrella of statistical and graphical methods that 
+ estimate and report different types of uncertainty in PCM:
+ (i) Species Sampling uncertainty (sample size; influential species and clades).
+ (ii) Phylogenetic uncertainty (different topologies and/or branch lengths).
+ (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
     R (>= 3.1.0),
     ape (>= 3.3),

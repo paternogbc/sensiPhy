@@ -99,6 +99,19 @@ sensi_plot(samp)
 sensi_plot(samp, graphs = 1)
 sensi_plot(samp, graphs = 2)
 }
+\dontshow{
+# Load data:
+data(alien)
+# Run analysis:
+samp <- tree_samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy,
+                                    data = alien$data, n.tree = 2, n.sim=2)
+summary(samp)
+head(samp$sensi.estimates)
+# Visual diagnostics
+sensi_plot(samp)
+sensi_plot(samp, graphs = 1)
+sensi_plot(samp, graphs = 2)
+}
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).

@@ -80,6 +80,15 @@ sensi_plot(intra)
 sensi_plot(intra, graphs = 1)
 sensi_plot(intra, graphs = 2)
 }
+
+\dontshow{
+data(alien)
+# Run sensitivity analysis:
+intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
+                     data = alien.data, n.intra = 5,
+                     phy = alien.phy[[1]])
+summary(intra)
+}
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 

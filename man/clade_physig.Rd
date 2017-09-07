@@ -72,7 +72,6 @@ phylogenetic signal without the same number of species in the given clade.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 data(alien)
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass) 
@@ -82,7 +81,6 @@ clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
 summary(clade)
 sensi_plot(clade, "Bovidae")
 sensi_plot(clade, "Sciuridae")
-}
 }
 \references{
 Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 

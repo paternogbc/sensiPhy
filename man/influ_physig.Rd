@@ -69,6 +69,17 @@ value for the cutoff is 2 standardised differences in signal estimate.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontshow{
+# Load data:
+data(alien)
+# Logtransform data
+alien.data$logMass <- log(alien.data$adultMass) 
+# Run sensitivity analysis:
+influ <- influ_physig("logMass", data = alien.data[1:20,],
+phy = alien.phy[[1]])
+# To check summary results:
+summary(influ)
+}
 \dontrun{
 # Load data:
 data(alien)

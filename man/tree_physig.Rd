@@ -53,18 +53,17 @@ to n trees, randomly picked in a multiPhylo file.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass) 
 # Run sensitivity analysis:
-tree <- tree_physig(trait.col = "logMass", data = alien.data, phy = alien.phy)
+tree <- tree_physig(trait.col = "logMass", data = alien.data, 
+phy = alien.phy, n.tree = 10)
 summary(tree)
 sensi_plot(tree)
 sensi_plot(tree, graphs = 1)
 sensi_plot(tree, graphs = 2)
-}
 }
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 

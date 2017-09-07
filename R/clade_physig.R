@@ -64,7 +64,6 @@
 #'  ecology and life history. Philosophical Transactions of the Royal Society 
 #'  B: Biological Sciences, 368: 20120341.
 #' @examples 
-#' \dontrun{
 #'data(alien)
 #'# Logtransform data
 #'alien.data$logMass <- log(alien.data$adultMass) 
@@ -74,7 +73,6 @@
 #'summary(clade)
 #'sensi_plot(clade, "Bovidae")
 #'sensi_plot(clade, "Sciuridae")
-#'}
 #' @export
 
 clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000, method = "K",  track = TRUE, ...) {

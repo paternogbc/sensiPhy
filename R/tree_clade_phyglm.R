@@ -95,6 +95,22 @@
 #'sensi_plot(tree_clade, "C", graphs = 2)
 #'sensi_plot(tree_clade, "D", graphs = 2) 
 #'}
+#'\dontshow{
+#'set.seed(6987)
+#'mphy = rmtree(150, N = 30)
+#'x = rTrait(n=1,phy=mphy[[1]])
+#'X = cbind(rep(1,150),x)
+#'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
+#'cla <- rep(c("A","B","C","D","E"), each = 30)
+#'dat = data.frame(y, x, cla)
+#'# Run sensitivity analysis:
+#'tree_clade <- tree_clade_phyglm(y ~ x, phy = mphy, data = dat, 
+#'                                n.tree = 2, n.sim = 1, clade.col = "cla")
+#'# To check summary results and most influential clades:
+#'summary(tree_clade)
+#'# Visual diagnostics for clade removal:
+#'sensi_plot(tree_clade)
+#'}
 #' @export
 
 tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5, 

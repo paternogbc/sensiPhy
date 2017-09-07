@@ -78,6 +78,12 @@
 #'sensi_plot(tree_influ, graphs = 1)
 #'sensi_plot(tree_influ, graphs = 2)
 #'}
+#' \dontshow{
+#' data(alien)
+#' tree_influ <- tree_influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
+#' data = alien$data[1:25, ], n.tree = 2)
+#'summary(tree_influ)
+#'}
 #' @export
 
 

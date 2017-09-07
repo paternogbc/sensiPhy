@@ -124,6 +124,16 @@ n.intra=30,distrib = "normal")
 summary(intra_influ)
 sensi_plot(intra_influ)
 }
+\dontshow{
+data(alien)
+# run analysis:
+intra_influ <- intra_influ_phylm(formula = gestaLen ~ adultMass, phy = alien$phy[[1]],
+                                data=alien$data[1:15, ],model="lambda",y.transf = log,
+                                x.transf = NULL,Vy="SD_gesta",Vx=NULL,
+                                n.intra=5,distrib = "normal")
+summary(intra_influ)
+sensi_plot(intra_influ)
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

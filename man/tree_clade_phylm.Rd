@@ -110,6 +110,15 @@ sensi_plot(clade_tree)
 sensi_plot(clade_tree, "Cercopithecidae")
 sensi_plot(clade_tree, clade = "Cebidae", graphs = 2)
 }
+\dontshow{
+data(primates)
+# run analysis:
+clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
+                              phy = primates$phy, data = primates$data, 
+                              clade.col = "family", n.sim = 10, n.tree = 2)
+# To check summary results and most influential clades:
+summary(clade_tree)
+}
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 

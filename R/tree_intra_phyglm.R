@@ -74,7 +74,6 @@
 #' Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 #' Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 #' @examples 
-#' \dontrun{
 #'# Simulate data
 #'set.seed(6987)
 #'mphy = ape::rmtree(150, N = 30)
@@ -84,13 +83,12 @@
 #'y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 #'dat = data.frame(y, x, x_sd)
 # Run sensitivity analysis:
-#'intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, n.intra = 10, 
-#'                                            n.tree = 10, Vx = "x_sd")
+#'intra.tree <- tree_intra_phyglm(y ~ x, data = dat, phy = mphy, n.intra = 3, 
+#'                                            n.tree = 3, Vx = "x_sd")
 #'# summary results:
 #'summary(intra.tree)
 #'# Visual diagnostics for phylogenetic uncertainty:
 #'sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type = "intra"
-#'}
 #' @export
 
 

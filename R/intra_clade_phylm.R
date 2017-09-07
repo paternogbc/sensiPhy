@@ -98,6 +98,13 @@
 #' sensi_plot(intra_clade, clade = "Bovidae", graphs = 2)
 #' sensi_plot(intra_clade, clade = "Mustelidae", graphs = 2)
 #' }
+#' \dontshow{
+#'data(alien)
+#'intra_clade <- intra_clade_phylm(gestaLen ~ adultMass, phy = alien$phy[[1]],
+#'                                 data = alien$data, clade.col = "family", n.sim = 1, n.intra = 1, 
+#'                                 y.transf = log, x.transf = log, Vy="SD_gesta")
+#'summary(intra_clade)
+#' }
 #' @export
 
 

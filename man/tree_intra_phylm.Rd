@@ -100,17 +100,15 @@ be solved by increasing \code{times}, changing the transformation type and/or ch
 }
 
 \examples{
-\dontrun{
 # Load data:
 data(alien)
 # run PGLS accounting for intraspecific and phylogenetic variation:
 intra.tree <- tree_intra_phylm(gestaLen ~ adultMass, data = alien$data, phy = alien$phy,
-Vy = "SD_gesta", n.intra = 10, n.tree = 10, y.transf = log, x.transf = log)
+Vy = "SD_gesta", n.intra = 3, n.tree = 3, y.transf = log, x.transf = log)
 # To check summary results:
 summary(intra.tree)
 # Visual diagnostics
 sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type = "intra"
-}
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 

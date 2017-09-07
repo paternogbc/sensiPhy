@@ -83,6 +83,18 @@
 #'sensi_plot(samp, graphs = 1)
 #'sensi_plot(samp, graphs = 2)
 #'}
+#' \dontshow{
+#'data(alien)
+#'# Logtransform data
+#'alien.data$logMass <- log(alien.data$adultMass) 
+#'# Run sensitivity analysis:
+#'samp <- samp_physig(trait.col = "logMass", data = alien.data, 
+#'n.sim = 3, phy = alien.phy[[1]])
+#'summary(samp)
+#'sensi_plot(samp)
+#'sensi_plot(samp, graphs = 1)
+#'sensi_plot(samp, graphs = 2)
+#'}
 #' @export
 samp_physig <- function(trait.col, data , phy, n.sim = 30,
                         breaks=seq(.1,.5,.1), method = "K", track = TRUE, ...){

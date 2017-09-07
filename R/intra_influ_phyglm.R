@@ -94,6 +94,23 @@
 #'# Visual diagnostics for clade removal:
 #'sensi_plot(intra_influ)
 #'}
+#'\dontshow{
+#Generate data
+#'phy = rtree(100)
+#'x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
+#'X = cbind(rep(1,100),x)
+#'y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
+#'z = rnorm(n = length(x),mean = mean(x),sd = 0.1*mean(x))
+#'dat = data.frame(y, x, z)
+#'# Run sensitivity analysis:
+#'intra_influ <- intra_influ_phyglm(formula = y ~ x, data = dat[1:20,], phy = phy, 
+#'                                  Vx = "z", n.intra = 2,track = TRUE,
+#'                                  distrib="normal",x.transf=NULL) 
+#'# To check summary results and most influential species:
+#'summary(intra_influ)
+#'# Visual diagnostics for clade removal:
+#'sensi_plot(intra_influ)
+#'}
 #' @export
 
 
