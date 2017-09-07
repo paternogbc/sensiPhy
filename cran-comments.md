@@ -11,7 +11,7 @@ This is a resubmission. In this version I have:
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
 
-There were 1 NOTE:
+There was 1 NOTE:
 
 Possibly mis-spelled words in DESCRIPTION:
   PCM (13:56)
@@ -20,5 +20,6 @@ Possibly mis-spelled words in DESCRIPTION:
   intraspecific (16:26)
   phylogenetic (11:60)
   topologies (15:43)
+
 
 __R:__ These words are not misspelled.
