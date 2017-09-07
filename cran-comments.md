@@ -4,7 +4,7 @@ This is a resubmission. In this version I have:
 * Updated the package to v0.7.0 and included new features and functions. Please see 'NEWS.md' for details.
 
 ## Test environments
-* local ubuntu 16.10 install, R 3.3.1
+* local deepin 15.4.1, R 3.3.3
 * win-builder (devel and release)
 * travis Ubuntu 12.04.5 LTS 
 
@@ -14,11 +14,6 @@ There were no ERRORs or WARNINGs.
 There were 1 NOTE:
 
 Possibly mis-spelled words in DESCRIPTION:
-  Phylogenetic (15:10)
-  clades (14:76)
-  intraspecific (16:29)
-  phylogenetic (10:59, 11:34)
-  topologies (15:46)
-  PCM (12:59)
+  PCM (13:56)
 
 __R:__ These words are not misspelled.

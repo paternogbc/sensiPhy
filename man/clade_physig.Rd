@@ -4,7 +4,7 @@
 \alias{clade_physig}
 \title{Influential clade detection - Phylogenetic signal}
 \usage{
-clade_physig(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000,
+clade_physig(trait.col, data, phy, clade.col, n.species = 5, n.sim = 100,
   method = "K", track = TRUE, ...)
 }
 \arguments{
@@ -76,7 +76,7 @@ data(alien)
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass) 
 # Run sensitivity analysis:
-clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
+clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 20,
                  phy = alien.phy[[1]], clade.col = "family", method = "K")
 summary(clade)
 sensi_plot(clade, "Bovidae")

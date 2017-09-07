@@ -68,14 +68,14 @@
 #'# Logtransform data
 #'alien.data$logMass <- log(alien.data$adultMass) 
 #'# Run sensitivity analysis:
-#'clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
+#'clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 20,
 #'                  phy = alien.phy[[1]], clade.col = "family", method = "K")
 #'summary(clade)
 #'sensi_plot(clade, "Bovidae")
 #'sensi_plot(clade, "Sciuridae")
 #' @export
 
-clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 1000, method = "K",  track = TRUE, ...) {
+clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 100, method = "K",  track = TRUE, ...) {
   # Error checking:
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
