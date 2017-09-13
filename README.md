@@ -22,7 +22,7 @@ devtools::install_github("paternogbc/sensiPhy")
 
 ## Quick turorial
 
-Get started with [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial)
+Get started with [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Online-tutorial)
 
 #### Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
