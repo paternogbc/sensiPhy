@@ -102,6 +102,6 @@ tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = lis
                  data=full.data,
                  sensi.estimates=sensi.estimates,N.obs=n,
                  stats = round(statresults[c(1:4),],digits=6))
-  class(res) <- "sensiTree_char_evol"
+  class(res) <- "sensiTree.TraitEvol"
   return(res)
 }
