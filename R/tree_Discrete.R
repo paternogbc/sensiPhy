@@ -14,6 +14,7 @@
 #'  tree_binary_ARD<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "none",n.tree = 10,track = T)
 #'  tree_binary_ARD_lambda<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "lambda",n.tree = 10,track = T)
 #'#Visual and other diagnostics to do still 
+#' summary.sensiTree.TraitEvol(tree_binary_ARD_lambda)
 #' @export
 
 tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = list(),
@@ -97,7 +98,7 @@ tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = lis
                           mean=apply(sensi.estimates,2,mean),
                           median=apply(sensi.estimates,2,median),
                           sd=apply(sensi.estimates,2,sd))[-1,]
-  
+  #Cut the CIs, but can put back in. 
   res <- list(   call = match.call(),
                  data=full.data,
                  sensi.estimates=sensi.estimates,N.obs=n,
