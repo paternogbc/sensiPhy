@@ -305,3 +305,35 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
     suppressMessages(return(p1))
   
 }
+
+
+
+
+#########
+###Still to fully write Check sensi.Intra for general strategy
+
+sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
+  q12_fig<-ggplot()+
+    geom_histogram(aes(x$sensi.estimates$q12))+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$q12)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$q12)),colour="blue")+
+    theme_minimal()
+  q21_fig<-ggplot()+
+    geom_histogram(aes(x$sensi.estimates$q21))+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$q21)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$q21)),colour="blue")+
+    theme_minimal()
+  aicc_fig<-ggplot()+
+    geom_histogram(aes(x$sensi.estimates$aicc))+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$aicc)),colour="red")+
+    geom_vline(aes(xintercept=mediean(x$sensi.estimates$aicc)),colour="blue")+
+    theme_minimal()
+  optpar_fig<-ggplot()+
+    geom_histogram(aes(x$sensi.estimates$optpar))+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$optpar)),colour="red")+
+    geom_vline(aes(xintercept=mediean(x$sensi.estimates$optpar)),colour="blue")+
+    theme_minimal()
+  
+  if (graphs=="all")
+    suppressMessages(return(multiplot(q12_fig,q21_fig,aicc_fig,optpar_fig, cols=2)))
+}
