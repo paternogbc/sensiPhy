@@ -580,3 +580,13 @@ summary.intra.physig <- function(object, ...){
   names(res) <- c("Call", "Summary")
   return(res)
 }
+
+
+### Summary method for class: sensiTree.TraitEvol:--------------------------------------
+
+#' @export
+summary.sensiTree.TraitEvol <- function(object, ...){
+  res <- list(round(object$stats,4))
+  names(res) <- c("Summary")
+  return(res)
+}
