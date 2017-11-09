@@ -13,14 +13,9 @@
 #'  #Use a different model or transformation
 #'  tree_binary_ARD<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "none",n.tree = 10,track = T)
 #'  tree_binary_ARD_lambda<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "lambda",n.tree = 10,track = T)
-<<<<<<< HEAD
 #'#Visual and other diagnostics to refine still 
 #' summary.sensiTree.TraitEvol(tree_binary_ARD_lambda)
 #' sensi_plot.sensiTree.TraitEvol(tree_binary_ARD_lambda)
-=======
-#'#Visual and other diagnostics to do still 
-#' summary.sensiTree.TraitEvol(tree_binary_ARD_lambda)
->>>>>>> 9806029da549f0850e4034ac3cd0a30c1ccdb89a
 #' @export
 
 tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = list(),
