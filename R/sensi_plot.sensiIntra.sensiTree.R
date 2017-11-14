@@ -326,12 +326,12 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
   aicc_fig<-ggplot()+
     geom_histogram(aes(x$sensi.estimates$aicc))+
     geom_vline(aes(xintercept=mean(x$sensi.estimates$aicc)),colour="red")+
-    geom_vline(aes(xintercept=mediean(x$sensi.estimates$aicc)),colour="blue")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$aicc)),colour="blue")+
     theme_minimal()
   optpar_fig<-ggplot()+
     geom_histogram(aes(x$sensi.estimates$optpar))+
     geom_vline(aes(xintercept=mean(x$sensi.estimates$optpar)),colour="red")+
-    geom_vline(aes(xintercept=mediean(x$sensi.estimates$optpar)),colour="blue")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$optpar)),colour="blue")+
     theme_minimal()
   
   if (graphs=="all")

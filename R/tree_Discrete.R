@@ -102,7 +102,7 @@ tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = lis
   #Cut the CIs, but can put back in. 
   res <- list(   call = match.call(),
                  data=full.data,
-                 sensi.estimates=sensi.estimates,N.obs=n,
+                 sensi.estimates=sensi.estimates,N.obs=n.tree,
                  stats = statresults[c(1:4),])
   class(res) <- "sensiTree.TraitEvol"
   return(res)
