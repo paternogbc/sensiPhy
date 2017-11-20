@@ -9,17 +9,20 @@
 #' adultMass_binary<-as.factor(as.factor(adultMass_binary))
 #' names(adultMass_binary)<-rownames(primates.data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' tree_binary<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ER",transform = "none",n.tree = 30,track = T)
-#'  #Use a different model or transformation
-#'  tree_binary_ARD<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "none",n.tree = 10,track = T)
-#'  tree_binary_ARD_lambda<-tree_Discrete(data = adultMass_binary,phy = primates.phy,model = "ARD",transform = "lambda",n.tree = 10,track = T)
-#'#Visual and other diagnostics to refine still 
-#' summary.sensiTree.TraitEvol(tree_binary_ARD_lambda)
-#' sensi_plot.sensiTree.TraitEvol(tree_binary_ARD_lambda)
+#' tree_binary<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "ARD",transform = "none",n.tree = 30,track = T)
+#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' summary(tree_binary)
+#' sensi_plot(tree_binary)
+#' #Use a different evolutionary model or transformation
+#' tree_binary_SYM<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "SYM",transform = "none",n.tree = 10,track = T)
+#' summary(tree_binary_SYM)
+#' tree_binary_lambda<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "ARD",transform = "lambda",n.tree = 10,track = T)
+#' summary(tree_binary_lambda)
+#' sensi_plot(tree_binary_lamda)  
 #' @export
 
 tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = list(),
-                         n.tree=2,track=TRUE,...){
+                         n.tree=5,track=TRUE,...){
   #Error check
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor(")
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
