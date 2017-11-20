@@ -305,13 +305,36 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
     suppressMessages(return(p1))
   
 }
-
-
-
-
-#########
-###Still to fully write Check sensi.Intra for general strategy
-
+#' Graphical diagnostics for class 'sensiTree.TraitEvol'
+#'
+#' \code{sensi_plot.sensiTree.TraitEvol} Plot results from \code{tree_fitDiscrete} and \code{tree_fitContinuous}.
+#' @param x output from \code{tree_fitDiscrete} or \code{tree_fitContinuous}
+#' @param graphs choose which graph should be printed in the output ("all", "q12", "q21", "aic" or" "optpar")
+#' @param ... further arguments to methods
+#' @importFrom ggplot2 geom_histogram geom_density geom_vline xlab theme
+#' @author Gijsbert Werner
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_fitDiscrete}}
+#' \code{\link[sensiPhy]{tree_fitContinuous}}
+#' 
+#' \strong{Graph q12:} Distribution of estimated parameter values for transition rates q12 for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' \strong{Graph q21:} Distribution of estimated parameter values for transition rates q21 for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#'
+#' \strong{Graph aicc:} Distribution of estimated AICc-values across each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' \strong{Graph optpar:} Distribution of estimated values for optimisation parameter specified using 'transform' (if applicable)
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' @importFrom grid unit 
+#' @importFrom stats plogis
+#' @importFrom stats reorder
+#' @export
 sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
   q12_fig<-ggplot()+
     geom_histogram(aes(x$sensi.estimates$q12),
