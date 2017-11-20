@@ -13,12 +13,17 @@
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_binary)
 #' sensi_plot(tree_binary)
-#' #Use a different evolutionary model or transformation
-#' tree_binary_SYM<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "SYM",transform = "none",n.tree = 10,track = T)
-#' summary(tree_binary_SYM)
+#' sensi_plot(tree_binary,graphs="q12")
+#' sensi_plot(tree_binary,graphs="q21")
+#' #Use a different evolutionary model or transformation.
 #' tree_binary_lambda<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "ARD",transform = "lambda",n.tree = 10,track = T)
-#' summary(tree_binary_lambda)
+#' summary(tree_binary_lambda) #Using Pagel's Lambda
 #' sensi_plot(tree_binary_lamda)  
+#' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
+#' tree_binary_SYM_EB<-tree_Discrete(data = adultMass_binary,phy = primates$phy,model = "SYM",transform = "EB",n.tree = 10,track = T)
+#' summary(tree_binary_SYM_EB)
+#' sensi_plot(tree_binary_lamda) 
+#' sensi_plot(tree_binary_lamda,graphs="optpar") 
 #' @export
 
 tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = list(),
