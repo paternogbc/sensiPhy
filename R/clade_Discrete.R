@@ -167,20 +167,12 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
                  aicc=aicc.0,
                  optpar=optpar.0)
   
-  #Calculate stats
-  statresults<-data.frame(min=apply(sensi.estimates,2,min),
-                          max=apply(sensi.estimates,2,max),
-                          mean=apply(sensi.estimates,2,mean),
-                          median=apply(sensi.estimates,2,median),
-                          sd=apply(sensi.estimates,2,sd))[-1,]
-  
   #Generates output:
   res <- list(   call = match.call(),
                  data = full.data,
                  full.model.estimates = param0,
                  sensi.estimates=sensi.estimates,
                  null.dist = null.dist,
-                 stats = statresults[c(1:4),],
                  errors = errors,
                  optpar = transform,
                  clade.col = clade.col)
