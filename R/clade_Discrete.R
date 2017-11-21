@@ -41,7 +41,7 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
   trait_vec_full<-full.data[,trait.col]
   trait_vec_full<-as.factor(trait_vec_full)
   if(length(levels(trait_vec_full))>2) stop("discrete data can have maximal two levels")
-  rownames(trait_vec_full)<-rownames(full.data)
+  names(trait_vec_full)<-rownames(full.data)
   
   N                   <- nrow(full.data)
   mod.0               <- geiger::fitDiscrete(phy = phy,dat = trait_vec_full,
@@ -92,12 +92,11 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     
     ### Fit reduced model (without clade)
     crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
-    crop.sp <-   which(full.data[ ,clade.col] %in% A)
-    crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
-    crop.trait_vec_full<-crop.data[,trait.col]
-    crop.trait_vec_full<-as.factor(crop.trait_vec_full)
-    rownames(crop.trait_vec_full)<-rownames(crop.data)
-    mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec_full,
+    crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
+    crop.trait_vec<-crop.data[,trait.col]
+    crop.trait_vec<-as.factor(crop.trait_vec_full)
+    names(crop.trait_vec)<-rownames(crop.data)
+    mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
                         model = model,transform = transform,
                         bounds = bounds,ncores = NULL,...),TRUE)
     q12               <- mod$opt$q12
@@ -135,11 +134,11 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     for (i in 1:n.sim) {
       exclude <- sample(1:N, cN)
       crop.data <- full.data[-exclude,]
-      crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-      crop.trait_vec_full<-crop.data[,trait.col]
-      crop.trait_vec_full<-as.factor(crop.trait_vec_full)
-      rownames(crop.trait_vec_full)<-rownames(crop.data)
-      mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec_full,
+      crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
+      crop.trait_vec<-crop.data[,trait.col]
+      crop.trait_vec<-as.factor(crop.trait_vec)
+      names(crop.trait_vec)<-rownames(crop.data)
+      mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
                                     model = model,transform = transform,
                                     bounds = bounds,ncores = NULL,...),TRUE)
       q12               <- mod$opt$q12
