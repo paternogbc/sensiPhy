@@ -95,7 +95,7 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
     crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
     crop.trait_vec<-crop.data[,trait.col]
-    crop.trait_vec<-as.factor(crop.trait_vec_full)
+    crop.trait_vec<-as.factor(crop.trait_vec)
     names(crop.trait_vec)<-rownames(crop.data)
     mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
                         model = model,transform = transform,
