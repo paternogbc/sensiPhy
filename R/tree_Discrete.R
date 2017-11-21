@@ -82,7 +82,6 @@ tree_Discrete <- function(data,phy,n.tree=5,model = "ARD",
 
   
   #Matching tree and phylogeny using utils.R
-  #datphy<-match_dataphy(formula,data,phy, ...) #We could update this to work for what is needed for fitDiscrete
   full.data<-data
   phy<-phy
 
