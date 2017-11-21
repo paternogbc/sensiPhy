@@ -1,6 +1,49 @@
-#' Phylogenetic uncertainty - Trait evolution (Binary traits)
+#' Phylogenetic uncertainty - Trait Evolution Discrete Characters
+#' 
+#' Fits models for trait evolution of discrete (binary) characters, 
+#' evaluating phylogenetic uncertainty. 
 #'
-
+#' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
+#' @param phy Phylogenies (class 'multiPhylo', see ?\code{ape}).
+#' @param n.tree Number of times to repeat the analysis with n different trees picked 
+#' randomly in the multiPhylo file. If NULL, \code{n.tree} = 5
+#' @param model The Mkn model to use (see Details). Default is \code{ARD}.
+#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param track Print a report tracking function progress (default = TRUE)
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @details
+#' This function fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}
+#' to n trees, randomly picked in a multiPhylo file. Currenlty, only binary discrete traits are supported
+#'
+#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
+#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
+#'
+#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' 
+#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' 
+#' Output can be visualised using \code{sensi_plot}.
+#'
+#' @return The function \code{tree_Discrete} returns a list with the following
+#' components:
+#' @return \code{call}: The function call
+#' @return \code{data}: The original full data vector
+#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
+#' for each analysis with a different phylogenetic tree.
+#' @return \code{N.tree}: Number of trees \code{n.tree} analysed
+#' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+#' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
+#' @author Gijsbert Werner
+#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @references 
+#' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
+#' 
+#' Harmon Luke J, Jason T Weir, Chad D Brock, Richard E Glor, and Wendell Challenger. 2008.
+#' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
+#' 
 #' @examples 
 #' #Load data:
 #' data("primates")
@@ -26,8 +69,9 @@
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 
 #' @export
 
-tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = list(),
-                         n.tree=5,track=TRUE,...){
+tree_Discrete <- function(data,phy,n.tree=5,model = "ARD",
+                          transform = "none",bounds = list(),
+                         track=TRUE,...){
   #Error check
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor(")
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
@@ -60,7 +104,7 @@ tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = lis
     
       #phylolm model
       mod = try(geiger::fitDiscrete(phy = phy[[j]],dat = full.data,model = model,transform = transform,
-                                    bounds = bounds,ncores = NULL),FALSE)
+                                    bounds = bounds,ncores = NULL,...),FALSE)
 
       if(isTRUE(class(mod)=="try-error")) {
         error <- j
@@ -110,7 +154,7 @@ tree_Discrete <- function(data,phy,model = "ARD",transform = "none",bounds = lis
   #Cut the CIs, but can put back in. 
   res <- list(   call = match.call(),
                  data=full.data,
-                 sensi.estimates=sensi.estimates,N.obs=n.tree,
+                 sensi.estimates=sensi.estimates,N.tree=n.tree,
                  stats = statresults[c(1:4),],
                  optpar = transform)
   class(res) <- "sensiTree.TraitEvol"
