@@ -150,7 +150,7 @@ tree_Discrete <- function(data,phy,n.tree=5,model = "ARD",
                           mean=apply(sensi.estimates,2,mean),
                           median=apply(sensi.estimates,2,median),
                           sd=apply(sensi.estimates,2,sd))[-1,]
-  #Cut the CIs, but can put back in. 
+  #Output
   res <- list(   call = match.call(),
                  data=full.data,
                  sensi.estimates=sensi.estimates,N.tree=n.tree,
