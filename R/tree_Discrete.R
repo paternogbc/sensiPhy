@@ -36,7 +36,7 @@
 #' @return \code{N.tree}: Number of trees \code{n.tree} analysed
 #' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-#' @author Gijsbert Werner
+#' @author Gijsbert Werner & Caterina Penone
 #' @seealso \code{\link[geiger]{fitDiscrete}}
 #' @references 
 #' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
