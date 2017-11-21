@@ -69,7 +69,7 @@
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 
 #' @export
 
-tree_Discrete <- function(data,phy,n.tree=5,model = "ARD",
+tree_Discrete <- function(data,phy,n.tree=10,model = "ARD",
                           transform = "none",bounds = list(),
                          track=TRUE,...){
   #Error check
