@@ -123,7 +123,6 @@ summary.sensiClade.TraitEvol <- function(object, ...){
       q12 = ces$q12,
       DIFq12 = ces$DIFq12,
       ces$q12.perc,
-      Pval = ces$pval.q12,
       m.null.q12 = mean((nes$q12)),
       Pval.randomization = p.q12)
     names(stats.q12)[5] <- "Change (%)"      
@@ -140,7 +139,6 @@ summary.sensiClade.TraitEvol <- function(object, ...){
       q21 = ces$q21,
       DIFq21 = ces$DIFq21,
       ces$q21.perc,
-      Pval = ces$pval.q12,
       m.null.q21 = mean((nes$q21)),
       Pval.randomization = p.q21)
     
