@@ -80,6 +80,84 @@ summary.sensiClade <- function(object, ...){
     res
 }
 
+### Summary method for class: sensiClade.TraitEvol:--------------------------------------
+
+#' @export
+summary.sensiClade.TraitEvol <- function(object, ...){
+  ### Permutation test:
+  ce <- object$sensi.estimates
+  nd <- object$null.dist
+  c <- levels(nd$clade)
+  
+  
+  stats.q12 <- data.frame("clade removed" = c, 
+                          "N.species" = ce$N.species,
+                          "q12" = numeric(length(c)),
+                          "DIFq12" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "m.null.q12" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  stats.q21 <- data.frame("clade removed" = c, 
+                          "N.species" = ce$N.species,
+                          "intercept" = numeric(length(c)),
+                          "DIFintercept" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "m.null.q21" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  aa <- 1
+  for(j in c) {
+    
+    nes <- nd[nd$clade == j, ] # null estimates
+    ces <- ce[ce$clade == j, ] # reduced model estimates
+    times <- nrow(nes)
+    
+    ### Permutation test q12:
+    if (ces$DIFq12 > 0){
+      p.q12 <- sum(nes$q12 >= ces$q12)/times
+    }
+    if (ces$DIFq12 < 0){
+      p.q12 <- sum(nes$q12 <= ces$q12)/times
+    }
+    
+    stats.q12[aa, -c(1:2)] <- data.frame(
+      q12 = ces$q12,
+      DIFq12 = ces$DIFq12,
+      ces$q12.perc,
+      Pval = ces$pval.q12,
+      m.null.q12 = mean((nes$q12)),
+      Pval.randomization = p.q12)
+    names(stats.q12)[5] <- "Change (%)"      
+    
+    ### Permutation test q21:
+    if (ces$DIFq21 > 0){
+      p.q21 <- sum(nes$q21 >= ces$q21)/times
+    }
+    if (ces$DIFq21 < 0){
+      p.q21 <- sum(nes$q21 <= ces$q21)/times
+    }
+    
+    stats.q21[aa, -c(1:2)] <- data.frame(
+      q21 = ces$q21,
+      DIFq21 = ces$DIFq21,
+      ces$q21.perc,
+      Pval = ces$pval.q12,
+      m.null.q21 = mean((nes$q21)),
+      Pval.randomization = p.q21)
+    
+    names(stats.q21)[5] <- "Change (%)"
+    
+    aa <- aa+1
+  }
+  
+  
+  ### Sort by % of change:
+  ord.q12 <- order(object$sensi.estimates$q12.perc, decreasing = TRUE)
+  
+  res <- list(stats.q12[ord.q12, ], stats.q21[ord.q12, ])
+  names(res) <- c("q12", "q21")
+  res
+}
+
 ### Summary method for class: sensiIntra_Clade:--------------------------------------
 
 #' @export
