@@ -6,6 +6,7 @@
 #' primate_phy_pruned<-drop.tip(phy=primates$phy,tip=setdiff(primates$phy$tip.label,rownames(primates.data)))
 #' clade_test<-clade_Discrete(data=primates.data,phy = primate_phy_pruned,
 #' trait.col = "adultMass_binary",clade.col="family",nsim=20)
+#' summary(clade_test)
 #' @export
 
 clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
