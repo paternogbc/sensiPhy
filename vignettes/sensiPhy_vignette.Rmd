@@ -1,0 +1,140 @@
+---
+title: "sensiPhy: R-package for sensitivity analysis in phylogenetic comparative methods."
+author: "Gustavo Paterno, Caterina Penone, Gijsbert Werner"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sensiPhy: R-package for sensitivity analysis in phylogenetic comparative methods}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction to sensiPhy
+The **sensiPhy** package provides simple functions to perform sensitivity analyses in phylogenetic comparative methods. It uses several simulation methods to estimate the impact of different types of uncertainty on Phylogenetic comparative methods:
+
+(i) Species Sampling uncertainty (sample size; influential species and clades)
+(ii) Phylogenetic uncertainty
+(iii) Data uncertainty (intraspecific variation and measurement error)
+
+**Functions for sensitivity analysis**
+
+sensiPhy functions use a common syntax that combines the type of uncertainty and the type of analysis:
+
+- xxx_**phylm** (for linear regressions)
+- xxx_**phyglm** (for logistic regressions)
+- xxx_**physig** (for phylogenetic signal)
+
+where "xxx" can be one of the 5 sensiPhy methods (see Figure below):
+
+- **Species sampling uncertainty**: influ; clade; samp;
+- **Phylogenetic uncertainty**: tree
+- **Data uncertainty**: intra
+
+**sensiPhy** workflow & functions
+
+
+```{r, out.width = "600px", echo=FALSE}
+knitr::include_graphics("sensiPhy_workflow_functions.tif")
+```
+
+**Additional functions**
+
+| Function      | Description                                         |
+|---------------|-----------------------------------------------------|
+| match_dataPhy | Match data and phylogeny based on model formula     |
+| miss.phylo.d  | Calculates the phylogenetic signal for missing data |
+
+
+
+
+## **Sampling uncertainty**
+### Sensitivity analysis for influential species
+
+The `influ` method performs leave-one-out deletion analyis and detects influential species on parameter estimates.
+
+##### *1. influ_phylm(): Phylogenetic linear regression*
+
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+library(sensiPhy)
+# run analysis:
+influ <- influ_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
+                     data = alien$data, track=FALSE)
+```
+Note that `track = TRUE` shows the progress of the analysis
+
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+# To check summary results:
+summary(influ)
+
+# Most influential species
+influ$influential.species
+
+# Visual diagnostics
+sensi_plot(influ)
+
+# Check most influential species on the original regression plot:
+sensi_plot(influ, graphs = 2)
+```
+
+##### *2. influ_physig(): Phylogenetic signal*
+
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6} 
+# # Logtransform data
+# alien.data$logMass <- log(alien.data$adultMass) 
+# # Run sensitivity analysis:
+# influ <- influ_physig("logMass", data = alien.data, phy = alien.phy[[1]], track=FALSE)
+# # You can change the method used to estimate signal:
+# influ2 <- influ_physig("logMass", data = alien.data, phy = alien.phy[[1]], method = "lambda", track=FALSE)
+# 
+# # To check summary results:
+# summary(influ)
+# # Most influential speciesL
+# influ$influential.species
+# # Visual diagnostics
+# sensi_plot(influ)
+# sensi_plot(influ2)
+# # You can specify which graph to print: 
+# sensi_plot(influ, graphs = 1)
+# sensi_plot(influ2, graphs = 1)
+```
+
+### Sensitivity analysis for influential clades
+
+The `clade` method can be used to estimate and test the influence of specific clades on parameter estimates.
+
+##### *1. clade_phylm(): Phylogenetic linear regression*
+Additional arguments:
+**clade.col**: The name of a column in the provided data frame with clades specification (a character vector with clade names).
+**n.species**: Minimum number of species in the clade in order to include this clade in the leave-one-out deletion analysis. Default is 5.
+**n.sim**: The number of repetitions for the randomization test
+
+```{r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6} 
+data(primates)
+# run analysis:
+clade <- clade_phylm(log(sexMaturity) ~ log(adultMass), phy = primates$phy[[1]],
+                     data = primates$data, clade.col = "family", track=FALSE)
+# To check summary results and most influential clades:
+summary(clade)
+```
+
+
+```{r echo=TRUE, warning=FALSE, message=FALSE} 
+# Visual diagnostics for clade removal:
+sensi_plot(clade, "Cercopithecidae")
+```
+
+```
+sensi_plot(clade, "Cebidae")
+```
+
+##### *1. clade_physig(): Phylogenetic signal*
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6} 
+# # Logtransform data
+# alien.data$logMass <- log(alien.data$adultMass) 
+# # Run sensitivity analysis:
+# clade <- clade_physig(trait.col = "logMass", data = alien.data, n.sim = 100,
+#                       phy = alien.phy[[1]], clade.col = "family", method = "K", track=FALSE)
+# summary(clade)
+# sensi_plot(clade, "Bovidae")
+# sensi_plot(clade, "Sciuridae")
+```
