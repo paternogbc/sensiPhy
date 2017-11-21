@@ -69,15 +69,17 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     
   #Create dataframe to store estmates for each clade
   sensi.estimates<-data.frame("clade" =I(as.character()),"N.species" = numeric(),
-                              "q12"=numeric(),"q21"=numeric(),
+                              "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
+                              "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
                               "aicc"=numeric(),"optpar"=numeric()) 
   
   # Create dataframe store simulations (null distribution)
   null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
                           "q12"= numeric(length(uc)*n.sim),
+                          "DIFq12"= numeric(length(uc)*n.sim),
                           "q21" = numeric(length(uc)*n.sim),
-                          "aicc"=numeric(length(uc)*n.sim),
-                          "optpar"=numeric(length(uc)*n.sim))
+                          "DIFq21" = numeric(length(uc)*n.sim))
+
   
   ### START LOOP between CLADES:
   # counters:
@@ -126,7 +128,9 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     }
     
     # Store reduced model parameters: 
-    estim.simu <- data.frame(A, cN, q12, q21, aicc, optpar,
+    estim.simu <- data.frame(A, cN, q12, DIFq12,q12.perc,
+                             q21, DIFq21,q21.perc,
+                             aicc, optpar,
                              stringsAsFactors = F)
     sensi.estimates[aa, ]  <- estim.simu
     
@@ -150,8 +154,8 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
       
       null.dist[bb, ] <- data.frame(clade = as.character(A), 
                                      q12,
-                                     q21,
                                      DIFq12,
+                                     q21,
                                      DIFq21)
       
       if(track==TRUE) utils::setTxtProgressBar(pb, bb)
