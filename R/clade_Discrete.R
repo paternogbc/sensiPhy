@@ -1,21 +1,28 @@
-
+#' @examples 
+#' #Load data:
+#' data("primates")
+#' #Create a binary trait factor 
+#' primates.data$adultMass_binary<-ifelse(primates.data$adultMass > 7350, "big", "small")
+#' primate_phy_pruned<-drop.tip(phy=primates$phy,tip=setdiff(primates$phy$tip.label,rownames(primates.data)))
+#' clade_test<-clade_Discrete(data=primates.data,phy = primate_phy_pruned,trait.col = "adultMass_binary",clade.col="family")
 #' @export
 
 clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
-                              track = TRUE,clade.col, n.species = 5, n.sim = 100, ...) {
+                           trait.col,clade.col,
+                            track=TRUE,n.species = 5, n.sim = 100, ...) {
   # Error checking:
-  if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor(")
-  if(length(levels(data))>2) stop("discrete data can have maximal two levels")
+  if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+  if(length(which(!phy$tip.label %in% rownames(data)))>0) stop("not all tips are present in data, prune tree")
+  if(length(which(!rownames(data) %in% phy$tip.label))>0) stop("not all data species are present in tree, remove superfluous data points")
   else
-  
+    
   #Calculates the full model, extracts model parameters
-  data_phy <- match_dataphy(formula, data, phy, ...)
-  phy <- data_phy$phy
-  full.data <- data_phy$data
+  full.data<-data
+  phy <- phy
   if (is.na(match(clade.col, names(full.data)))) {
     stop("Names column '", clade.col, "' not found in data frame'")
   }
@@ -31,32 +38,45 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
                                   problem",sep=""))
   
   # FULL MODEL PARAMETERS:
-  N               <- nrow(full.data)
-  mod.0           <- phylolm::phylolm(formula, data=full.data,
-                                      model=model,phy=phy)
-  intercept.0      <- mod.0$coefficients[[1]]
-  estimate.0          <- mod.0$coefficients[[2]]
-  pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
-  pval.estimate.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-  optpar.0 <- mod.0$optpar
+  trait_vec_full<-full.data[,trait.col]
+  trait_vec_full<-as.factor(trait_vec_full)
+  if(length(levels(trait_vec_full))>2) stop("discrete data can have maximal two levels")
+  rownames(trait_vec_full)<-rownames(full.data)
   
+  N                   <- nrow(full.data)
+  mod.0               <- geiger::fitDiscrete(phy = phy,dat = trait_vec_full,
+                                             model = model,transform = transform,
+                                             bounds = bounds,ncores = NULL,...)
+  q12.0               <- mod.0$opt$q12
+  q21.0               <- mod.0$opt$q12
+  aicc.0              <- mod.0$opt$aicc
+    if (transform == "none"){
+      optpar.0 <- NA
+    }
+    if (transform == "EB"){
+      optpar.0               <- mod.0$opt$a
+    }
+    if (transform == "lambda"){
+      optpar.0               <- mod.0$opt$lambda
+    }
+    if (transform == "kappa"){
+      optpar.0               <- mod.0$opt$kappa
+    }
+    if (transform == "delta"){
+      optpar.0               <- mod.0$opt$delta
+    }
+    
   #Create dataframe to store estmates for each clade
-  sensi.estimates <-
-    data.frame("clade" =I(as.character()), 
-               "N.species" = numeric(),"intercept"=numeric(),
-               "DIFintercept"=numeric(),"intercept.perc"=numeric(),
-               "pval.intercept"=numeric(),"estimate"=numeric(),
-               "DIFestimate"=numeric(),"estimate.perc"=numeric(),
-               "pval.estimate"=numeric(),"AIC"=numeric(),
-               "optpar" = numeric())
+  sensi.estimates<-data.frame("clade" =I(as.character()),"N.species" = numeric(),
+                              "q12"=numeric(),"q21"=numeric(),
+                              "aicc"=numeric(),"optpar"=numeric()) 
   
   # Create dataframe store simulations (null distribution)
   null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
-                          "intercept"= numeric(length(uc)*n.sim),
-                          "estimate" = numeric(length(uc)*n.sim),
-                          "DIFintercept"=numeric(length(uc)*n.sim),
-                          "DIFestimate"=numeric(length(uc)*n.sim))
-  
+                          "q12"= numeric(length(uc)*n.sim),
+                          "q21" = numeric(length(uc)*n.sim),
+                          "aicc"=numeric(length(uc)*n.sim),
+                          "optpar"=numeric(length(uc)*n.sim))
   
   ### START LOOP between CLADES:
   # counters:
@@ -74,30 +94,39 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
     crop.sp <-   which(full.data[ ,clade.col] %in% A)
     crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
-    mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
-                             phy=crop.phy),TRUE)
-    intercept           <- mod$coefficients[[1]]
-    estimate            <- mod$coefficients[[2]]
-    DIFintercept        <- intercept - intercept.0
-    DIFestimate         <- estimate - estimate.0
-    intercept.perc      <- round((abs(DIFintercept / intercept.0)) * 100,
-                                  digits = 1)
-    estimate.perc       <- round((abs(DIFestimate / estimate.0)) * 100,
-                                  digits = 1)
-    pval.intercept      <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-    pval.estimate       <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
-    aic.mod             <- mod$aic
-    if (model == "BM" | model == "trend"){
+    crop.trait_vec_full<-crop.data[,trait.col]
+    crop.trait_vec_full<-as.factor(crop.trait_vec_full)
+    rownames(crop.trait_vec_full)<-rownames(crop.data)
+    mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec_full,
+                        model = model,transform = transform,
+                        bounds = bounds,ncores = NULL,...),TRUE)
+    q12               <- mod$opt$q12
+    q21               <- mod$opt$q12
+    DIFq12            <- q12 - q12.0
+    DIFq21            <- q21 - q21.0
+    q12.perc      <- round((abs(DIFq12 / q12.0)) * 100,
+                                 digits = 1)
+    q21.perc       <- round((abs(DIFq21 / q21.0)) * 100,
+                                 digits = 1)
+    aicc              <- mod$opt$aicc
+    if (transform == "none"){
       optpar <- NA
     }
-    if (model != "BM" & model != "trend" ){
-      optpar               <- mod$optpar
+    if (transform == "EB"){
+      optpar               <- mod$opt$a
+    }
+    if (transform == "lambda"){
+      optpar               <- mod$opt$lambda
+    }
+    if (transform == "kappa"){
+      optpar               <- mod$opt$kappa
+    }
+    if (transform == "delta"){
+      optpar               <- mod$opt$delta
     }
     
     # Store reduced model parameters: 
-    estim.simu <- data.frame(A, cN, intercept, DIFintercept, intercept.perc,
-                             pval.intercept, estimate, DIFestimate, estimate.perc,
-                             pval.estimate, aic.mod, optpar,
+    estim.simu <- data.frame(A, cN, q12, q21, aicc, optpar,
                              stringsAsFactors = F)
     sensi.estimates[aa, ]  <- estim.simu
     
@@ -107,18 +136,23 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
       exclude <- sample(1:N, cN)
       crop.data <- full.data[-exclude,]
       crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-      mod <- try(phylolm::phylolm(formula, data = crop.data,
-                                  model = model,phy = crop.phy),TRUE)
-      intercept       <- mod$coefficients[[1]]
-      estimate        <- mod$coefficients[[2]]
-      DIFintercept    <- intercept - intercept.0
-      DIFestimate     <- estimate - estimate.0
+      crop.trait_vec_full<-crop.data[,trait.col]
+      crop.trait_vec_full<-as.factor(crop.trait_vec_full)
+      rownames(crop.trait_vec_full)<-rownames(crop.data)
+      mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec_full,
+                                    model = model,transform = transform,
+                                    bounds = bounds,ncores = NULL,...),TRUE)
+      q12               <- mod$opt$q12
+      q21               <- mod$opt$q12
+      aicc              <- mod$opt$aicc
+      DIFq12            <- q12 - q12.0
+      DIFq21            <- q21 - q21.0
       
       null.dist[bb, ] <- data.frame(clade = as.character(A), 
-                                     intercept,
-                                     estimate,
-                                     DIFintercept,
-                                     DIFestimate)
+                                     q12,
+                                     q21,
+                                     DIFq12,
+                                     DIFq21)
       
       if(track==TRUE) utils::setTxtProgressBar(pb, bb)
       bb <- bb + 1
@@ -129,21 +163,28 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
   
   #OUTPUT
   #full model estimates:
-  param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
-                 aic=phylolm::summary.phylolm(mod.0)$aic,
-                 optpar=mod.0$optpar)
+  param0 <- list(q12=q12.0,q21=q21.0,
+                 aicc=aicc.0,
+                 optpar=optpar.0)
+  
+  #Calculate stats
+  statresults<-data.frame(min=apply(sensi.estimates,2,min),
+                          max=apply(sensi.estimates,2,max),
+                          mean=apply(sensi.estimates,2,mean),
+                          median=apply(sensi.estimates,2,median),
+                          sd=apply(sensi.estimates,2,sd))[-1,]
   
   #Generates output:
-  res <- list(call = match.call(),
-              model = model,
-              formula = formula,
-              full.model.estimates = param0,
-              sensi.estimates = sensi.estimates,
-              null.dist = null.dist, 
-              data = full.data,
-              errors = errors,
-              clade.col = clade.col)
-  class(res) <- "sensiClade"
+  res <- list(   call = match.call(),
+                 data = full.data,
+                 full.model.estimates = param0,
+                 sensi.estimates=sensi.estimates,
+                 null.dist = null.dist,
+                 stats = statresults[c(1:4),],
+                 errors = errors,
+                 optpar = transform,
+                 clade.col = clade.col)
+  class(res) <- "sensiClade.TraitEvol"
   ### Warnings:
   if (length(res$errors) >0){
     warning("Some clades deletion presented errors, please check: output$errors")}
