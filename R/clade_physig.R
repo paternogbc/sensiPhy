@@ -176,7 +176,7 @@ clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim =
     }
     aa <- aa + 1
   }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   #OUTPUT
   #full model estimates:
