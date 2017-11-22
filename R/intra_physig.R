@@ -129,7 +129,7 @@ intra_physig <- function(trait.col, data, phy,
     estimate <- mod.s[[1]] 
     pval     <- mod.s$P
     
-    if(track == TRUE) utils::setTxtProgressBar(pb, i)
+    if(track == TRUE) (utils::setTxtProgressBar(pb, i))
     #write in a table
     estim.simu <- data.frame(i, estimate, pval)
     intra.physig.estimates[counter, ]  <- estim.simu
