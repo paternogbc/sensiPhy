@@ -171,7 +171,7 @@ clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim =
                                      estimate = mod.s[[1]], DF)
                                      
       
-      if(track==TRUE) utils::setTxtProgressBar(pb, bb)
+      if(track==TRUE) (utils::setTxtProgressBar(pb, bb))
       bb <- bb + 1
     }
     aa <- aa + 1
