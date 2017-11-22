@@ -136,7 +136,7 @@ intra_physig <- function(trait.col, data, phy,
     counter = counter + 1
       
     }
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   statresults <- data.frame(min = apply(intra.physig.estimates, 2, min),
                             max = apply(intra.physig.estimates, 2, max),
