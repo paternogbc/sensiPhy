@@ -1,7 +1,9 @@
 
 #' @export
 
-influ_phylm <- function(formula,data,phy,model="lambda",cutoff=2,track=TRUE,...){
+influ_Discrete <- function(data,phy,model="ARD",
+                           transform = "none",bounds = list(),
+                           cutoff=2,track=TRUE,...){
         if(class(formula)!="formula") stop("formula must be class 'formula'")
         if(class(data)!="data.frame") stop("data must be class 'data.frame'")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
