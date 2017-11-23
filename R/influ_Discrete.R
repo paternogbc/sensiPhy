@@ -18,15 +18,29 @@ influ_Discrete <- function(data,phy,model="ARD",
         phy<-phy
           
         #Calculates the full model, extracts model parameters
-        N               <- nrow(full.data)
-        mod.0           <- phylolm::phylolm(formula, data=full.data,
-                                            model=model,phy=phy)
-        intercept.0      <- mod.0$coefficients[[1]]
-        estimate.0          <- mod.0$coefficients[[2]]
-        pval.intercept.0 <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
-        pval.estimate.0     <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-        optpar.0 <- mod.0$optpar
-        
+        N                   <- nrow(full.data)
+        mod.0               <- geiger::fitDiscrete(phy = phy,dat = full_data,
+                                                   model = model,transform = transform,
+                                                   bounds = bounds,ncores = NULL,...)
+        q12.0               <- mod.0$opt$q12
+        q21.0               <- mod.0$opt$q12
+        aicc.0              <- mod.0$opt$aicc
+        if (transform == "none"){
+          optpar.0 <- NA
+        }
+        if (transform == "EB"){
+          optpar.0               <- mod.0$opt$a
+        }
+        if (transform == "lambda"){
+          optpar.0               <- mod.0$opt$lambda
+        }
+        if (transform == "kappa"){
+          optpar.0               <- mod.0$opt$kappa
+        }
+        if (transform == "delta"){
+          optpar.0               <- mod.0$opt$delta
+        }
+
 
         #Creates empty data frame to store model outputs
         sensi.estimates<-
