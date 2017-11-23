@@ -59,32 +59,41 @@ samp_Discrete <- function(data,phy,n.sim=30,
         if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
         for (i in limit){
             for (j in 1:n.sim){
+              #Prep simulation data
                 exclude <- sample(1:N,i)
-                crop.data <- full.data[-exclude,]
-                crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
-                mod <- try(phylolm::phylolm(formula, data = crop.data,
-                                            model = model,phy = crop.phy),TRUE)
+                crop.data <- full.data[-exclude]
+                crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
+              #Run the model
+                mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
+                                              model = model,transform = transform,
+                                              bounds = bounds,ncores = NULL,...),TRUE)
                 if(isTRUE(class(mod) == "try-error")) {next}
                 else {  
-                intercept       <- mod$coefficients[[1]]
-                estimate        <- mod$coefficients[[2]]
-                optpar          <- mod$optpar
-                pval.intercept  <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-                pval.estimate   <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
-                aic             <- mod$aic
-                DIFintercept    <- intercept - intercept.0
-                DIFestimate     <- estimate - estimate.0
-                intercept.perc  <- round( (abs(DIFintercept / intercept.0)) * 100, digits = 1)
-                estimate.perc   <- round( (abs(DIFestimate / estimate.0)) * 100, digits = 1)
-                aic             <- mod$aic
-                
-                if (model == "BM" | model == "trend"){
+                  q12               <- mod$opt$q12
+                  q21               <- mod$opt$q12
+                  DIFq12            <- q12 - q12.0
+                  DIFq21            <- q21 - q21.0
+                  q12.perc          <- round((abs(DIFq12 / q12.0)) * 100,
+                                             digits = 1)
+                  q21.perc          <- round((abs(DIFq21 / q21.0)) * 100,
+                                             digits = 1)
+                  aicc              <- mod$opt$aicc
+                  if (transform == "none"){
                     optpar <- NA
-                }
-                if (model != "BM" & model != "trend" ){
-                    optpar               <- mod$optpar
-                }
-                
+                  }
+                  if (transform == "EB"){
+                    optpar               <- mod$opt$a
+                  }
+                  if (transform == "lambda"){
+                    optpar               <- mod$opt$lambda
+                  }
+                  if (transform == "kappa"){
+                    optpar               <- mod$opt$kappa
+                  }
+                  if (transform == "delta"){
+                    optpar               <- mod$opt$delta
+                  }
+                  
                 n.remov <- i
                 n.percent <- round( (n.remov / N) * 100,digits = 0)
                 #rep <- j
