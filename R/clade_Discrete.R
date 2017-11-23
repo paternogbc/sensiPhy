@@ -5,9 +5,13 @@
 #' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
 #' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
-#' clade_binary<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,
-#' trait.col = "adultMass_binary",clade.col="family",nsim=5)
-#' summary(clade_test)
+#' clade_binary<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,model="SYM",
+#' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=10)
+#' summary(clade_binary)
+#' #Change the evolutionary model, tree transformation or minimum numher of species per clade
+#' clade_binary_2<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
+#' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=8)
+#' summary(clade_binary)
 #' @export
 
 clade_Discrete <- function(data, phy, model,transform = "none",
@@ -52,7 +56,7 @@ clade_Discrete <- function(data, phy, model,transform = "none",
                                              model = model,transform = transform,
                                              bounds = bounds,ncores = NULL,...)
   q12.0               <- mod.0$opt$q12
-  q21.0               <- mod.0$opt$q12
+  q21.0               <- mod.0$opt$q21
   aicc.0              <- mod.0$opt$aicc
   if (transform == "none"){
     optpar.0 <- NA
@@ -106,7 +110,7 @@ clade_Discrete <- function(data, phy, model,transform = "none",
                                   model = model,transform = transform,
                                   bounds = bounds,ncores = NULL,...),TRUE)
     q12               <- mod$opt$q12
-    q21               <- mod$opt$q12
+    q21               <- mod$opt$q21
     DIFq12            <- q12 - q12.0
     DIFq21            <- q21 - q21.0
     q12.perc      <- round((abs(DIFq12 / q12.0)) * 100,
@@ -158,7 +162,7 @@ clade_Discrete <- function(data, phy, model,transform = "none",
       else 
         
         q12               <- mod$opt$q12
-      q21               <- mod$opt$q12
+      q21               <- mod$opt$q21
       aicc              <- mod$opt$aicc
       DIFq12            <- q12 - q12.0
       DIFq21            <- q21 - q21.0

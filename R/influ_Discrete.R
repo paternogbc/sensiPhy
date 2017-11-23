@@ -43,7 +43,7 @@ influ_Discrete <- function(data,phy,model,
                                              model = model,transform = transform,
                                              bounds = bounds,ncores = NULL,...)
   q12.0               <- mod.0$opt$q12
-  q21.0               <- mod.0$opt$q12
+  q21.0               <- mod.0$opt$q21
   aicc.0              <- mod.0$opt$aicc
   if (transform == "none"){
     optpar.0 <- NA
@@ -86,7 +86,7 @@ influ_Discrete <- function(data,phy,model,
       next }
     else {  sp                   <- phy$tip.label[i]
     q12               <- mod$opt$q12
-    q21               <- mod$opt$q12
+    q21               <- mod$opt$q21
     DIFq12            <- q12 - q12.0
     DIFq21            <- q21 - q21.0
     q12.perc          <- round((abs(DIFq12 / q12.0)) * 100,
