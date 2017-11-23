@@ -19,11 +19,10 @@
 
 samp_Discrete <- function(data,phy,n.sim=30,
                           breaks=seq(.1,.5,.1),
-                          model,transform="none",
+                          model="ARD",transform="none",
                           bounds=list(),track=TRUE,...){
   
   #Error check
-  if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
