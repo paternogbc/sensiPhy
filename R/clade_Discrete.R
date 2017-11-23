@@ -5,7 +5,7 @@
 #' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
 #' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
-#' clade_test<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,
+#' clade_binary<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,
 #' trait.col = "adultMass_binary",clade.col="family",nsim=5)
 #' summary(clade_test)
 #' @export
