@@ -54,7 +54,7 @@ influ_Discrete <- function(data,phy,model="ARD",
         for (i in 1:N){
                 
                 crop.data <- full.data[c(1:N)[-i],]
-                crop.phy <-  ape::drop.tip(phy,phy$tip.label[i])
+                crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
                 mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
                                          phy=crop.phy),
                         TRUE)
