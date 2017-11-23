@@ -11,8 +11,8 @@
 #' @export
 
 clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
-                           trait.col,clade.col,
-                            track=TRUE,n.species = 5, n.sim = 100, ...) {
+                           trait.col,clade.col,n.species = 5, n.sim = 100,
+                            bounds = list(), track=TRUE, ...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
