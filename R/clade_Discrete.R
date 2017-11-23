@@ -1,3 +1,70 @@
+#' Influential Clade Detection - Trait Evolution Discrete Characters
+#' 
+#' Fits models for trait evolution of discrete (binary) characters, 
+#' detecting influential clades
+#'
+#' @param data Data frame containing species traits with row names matching tips
+#' in \code{phy}.
+#' @param phy A phylogeny (class 'phylo') matching \code{data}.
+#' @param model The Mkn model to use (see Details). 
+#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param trait.col The column in the provided data frame which specifies the
+#' trait to analyse (which should be a factor with two level)
+#' @param clade.col The column in the provided data frame which specifies the
+#' clades (a character vector with clade names).
+#' @param n.species Minimum number of species in a clade for the clade to be
+#' included in the leave-one-out deletion analysis. Default is \code{5}.
+#' @param n.sim Number of simulations for the randomization test.
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param track Print a report tracking function progress (default = TRUE)
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @details
+#' #' This function sequentially removes one clade at a time,
+#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
+#' the effects on model parameters Currently, only binary discrete traits are supported. 
+#' 
+#' Additionally, to account for the influence of the number of species on each 
+#' clade (clade sample size), this function also estimates a null distribution
+#' expected for the number of species in a given clade. This is done by fitting
+#'  models without the same number of species as in the given clade.The number of 
+#'  simulations to be performed is set by 'n.sim'. To test if the 
+#'  clade influence differs from the null expectation for a clade of that size, 
+#'  a randomization test can be performed using 'summary(x)'. 
+#'
+#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
+#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
+#'
+#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' 
+#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' 
+#' Output can be visualised using \code{sensi_plot}.
+#'
+#' @return The function \code{tree_discrete} returns a list with the following
+#' components:
+#' @return \code{call}: The function call
+#' @return \code{data}: The original full data frame. 
+#' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
+#' for the full model without deleted clades.
+#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
+#' for each analysis with a different phylogenetic tree.
+#' @return \code{null.dist}: A data frame with estimates for the null distributions
+#' for all clades analysed.
+#' @return \code{errors}: Clades where deletion resulted in errors.
+#' @return \code{clade.col}: Which column was used to specify the clades?
+#' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
+#' @author Gijsbert Werner & Gustavo Paterno
+#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @references 
+#' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
+#' 
+#' Harmon Luke J, Jason T Weir, Chad D Brock, Richard E Glor, and Wendell Challenger. 2008.
+#' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
+#' 
 #' @examples 
 #' #Load data:
 #' data("primates")
