@@ -380,6 +380,34 @@ summary.sensiInflu <- function(object, ...){
     
 }
 
+### Summary method for class: sensiInflu.TraitEvol:--------------------------------------
+
+#' @export
+summary.sensiInflu.TraitEvol <- function(object, ...){
+  sp.q12 <- object$influential.species$influ.sp.q12
+  rows.q12 <- match(sp.q12, object$sensi.estimates$species)
+  q12 <- object$sensi.estimates[rows, c("species","q12","DIFq12","q12.perc")]
+  ord.q12 <- order(q12$q12.perc, 
+                        decreasing = TRUE)
+  q12 <- q12[q12, ]
+  rownames(q12) <- NULL
+  colnames(q12) <- c("Species removed", "q12", "DIFq12", "Change(%)")
+  
+  spq21 <-object$influential.species$influ.sp.q21
+  rows.q21 <- match(spq21, object$sensi.estimates$species)
+  q21 <- object$sensi.estimates[rowsq21, c("species","q21","DIFq21","q21.perc")]
+  ord.inter <- order(inter$intercept.perc, 
+                     decreasing = TRUE)
+  inter <- inter[ord.inter, ]
+  rownames(inter) <- NULL
+  colnames(inter) <- c("Species removed", "Intercept", "DIFintercept", "Change(%)", "Pval")
+  
+  res <- list("Influential species for the Estimate" = sp.estimate, "Estimate" = estimate,
+              "Influential species for the Intercept" = sp.inter, "Intercept" = inter)
+  return(res)
+  
+}
+
 ### Summary method for class: sensiIntra_Influ:--------------------------------------
 
 #' @export
