@@ -40,16 +40,12 @@ influ_Discrete <- function(data,phy,model="ARD",
         if (transform == "delta"){
           optpar.0               <- mod.0$opt$delta
         }
-
-
+        
         #Creates empty data frame to store model outputs
-        sensi.estimates<-
-                data.frame("species" =numeric(), "intercept"=numeric(),
-                           "DIFintercept"=numeric(),"intercept.perc"=numeric(),
-                           "pval.intercept"=numeric(),"estimate"=numeric(),
-                           "DIFestimate"=numeric(),"estimate.perc"=numeric(),
-                           "pval.estimate"=numeric(),"AIC"=numeric(),
-                           "optpar" = numeric())
+        sensi.estimates<-data.frame("species" =numeric(),
+                                    "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
+                                    "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
+                                    "aicc"=numeric(),"optpar"=numeric()) 
 
         #Loops over all species, and removes each one individually
         counter <- 1
