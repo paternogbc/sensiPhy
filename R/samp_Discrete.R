@@ -18,26 +18,38 @@ samp_Discrete <- function(data,phy,n.sim=30,
     #Matching tree and phylogeny using utils.R
     full.data<-data
     phy<-phy
-  
-        full.data         <- data_phy$data
-        phy               <- data_phy$phy
-        N                 <- nrow(full.data)
-        mod.0             <- phylolm::phylolm(formula, data = full.data, model = model, phy = phy)
-        intercept.0       <- mod.0$coefficients[[1]]
-        estimate.0        <- mod.0$coefficients[[2]]
-        pval.intercept.0  <- phylolm::summary.phylolm(mod.0)$coefficients[[1,4]]
-        pval.estimate.0   <- phylolm::summary.phylolm(mod.0)$coefficients[[2,4]]
-        optpar.0          <- mod.0$optpar
-        aic.0             <- mod.0$aic
-        
-        #Creates empty data frame to store model outputs
-        sensi.estimates <-
-            data.frame("n.remov" = numeric(), "n.percent"= numeric(),
-                       "intercept"= numeric(),"DIFintercept"= numeric(),
-                       "intercept.perc"= numeric(),"pval.intercept"=numeric(),
-                       "estimate"= numeric(),"DIFestimate"= numeric(),
-                       "estimate.perc"= numeric(),"pval.estimate"= numeric(),
-                       "AIC"= numeric(),"optpar" = numeric())
+    
+    #Calculates the full model, extracts model parameters
+    N                   <- length(full.data)
+    mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
+                                               model = model,transform = transform,
+                                               bounds = bounds,ncores = NULL,...)
+    q12.0               <- mod.0$opt$q12
+    q21.0               <- mod.0$opt$q12
+    aicc.0              <- mod.0$opt$aicc
+    if (transform == "none"){
+      optpar.0 <- NA
+    }
+    if (transform == "EB"){
+      optpar.0               <- mod.0$opt$a
+    }
+    if (transform == "lambda"){
+      optpar.0               <- mod.0$opt$lambda
+    }
+    if (transform == "kappa"){
+      optpar.0               <- mod.0$opt$kappa
+    }
+    if (transform == "delta"){
+      optpar.0               <- mod.0$opt$delta
+    }
+    
+    
+    #Creates empty data frame to store model outputs
+    sensi.estimates<-data.frame("n.remov" = numeric(), "n.percent"= numeric(),
+                                "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
+                                "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
+                                "aicc"=numeric(),"optpar"=numeric()) 
+
         
         #Loops over breaks, remove percentage of species determined by 'breaks
         #and repeat determined by 'n.sim'.
