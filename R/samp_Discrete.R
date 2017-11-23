@@ -100,11 +100,11 @@ samp_Discrete <- function(data,phy,n.sim=30,
                 
                 if(track == TRUE) (utils::setTxtProgressBar(pb, counter))
                 # Stores values for each simulation
-                estim.simu <- data.frame(n.remov, n.percent, intercept, 
-                                         DIFintercept, intercept.perc,
-                                         pval.intercept, estimate,
-                                         DIFestimate, estimate.perc,
-                                         pval.estimate, aic, optpar,
+                # Stores values for each simulation
+                # Store reduced model parameters: 
+                estim.simu <- data.frame(n.remov, n.percent, q12, DIFq12,q12.perc,
+                                         q21, DIFq21,q21.perc,
+                                         aicc, optpar,
                                          stringsAsFactors = F)
                 sensi.estimates[counter, ]  <- estim.simu
                 counter <- counter + 1
