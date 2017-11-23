@@ -72,10 +72,11 @@
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 
 #' @export
 
-tree_Discrete <- function(data,phy,n.tree=10,model = "ARD",
+tree_Discrete <- function(data,phy,n.tree=10,
                           transform = "none",bounds = list(),
                          track=TRUE,...){
   #Error check
+  if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")

@@ -21,11 +21,12 @@
 
 #' @export
 
-influ_Discrete <- function(data,phy,model="ARD",
+influ_Discrete <- function(data,phy,
                            transform = "none",bounds = list(),
                            cutoff=2,track=TRUE,...){
   
   #Error check
+  if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
