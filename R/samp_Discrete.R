@@ -1,4 +1,4 @@
-#' Sampling uncertainty - Trait Evolution Discrete Characters
+#' Species Sampling uncertainty - Trait Evolution Discrete Characters
 #' 
 #' Fits models for trait evolution of discrete (binary) characters, 
 #' evaluating sampling uncertainty. 
@@ -13,10 +13,10 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
-#' This function randomly removes a given percentage of species (controlled by \code{breaks}) and 
+#' This function randomly removes a given percentage of species (controlled by \code{breaks}),  
 #' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported
+#' the effects on model parameters Currently, only binary discrete traits are supported.
 #' 
 #' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
