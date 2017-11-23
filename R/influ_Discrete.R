@@ -6,18 +6,18 @@ influ_Discrete <- function(data,phy,model="ARD",
                            cutoff=2,track=TRUE,...){
   
         #Error check
-        if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor(")
+        if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
         if(length(levels(data))>2) stop("discrete data can have maximal two levels")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
         if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
         if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
         else
-
-        # Check match between data and phy 
-        data_phy <- match_dataphy(formula, data, phy, ...)
+          
+        #Matching tree and phylogeny using utils.R
+        full.data<-data
+        phy<-phy
+          
         #Calculates the full model, extracts model parameters
-        full.data <- data_phy$data
-        phy <- data_phy$phy
         N               <- nrow(full.data)
         mod.0           <- phylolm::phylolm(formula, data=full.data,
                                             model=model,phy=phy)
