@@ -1,3 +1,59 @@
+#' Sampling uncertainty - Trait Evolution Discrete Characters
+#' 
+#' Fits models for trait evolution of discrete (binary) characters, 
+#' evaluating sampling uncertainty. 
+#'
+#' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
+#' @param phy A phylogeny (class 'phylo') matching \code{data}.
+#' @param n.sim The number of times species are randomly deleted for each \code{break}.
+#' @param breaks A vector containing the percentages of species to remove.
+#' @param model The Mkn model to use (see Details). 
+#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param track Print a report tracking function progress (default = TRUE)
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @details
+#' This function randomly removes a given percentage of species (controlled by \code{breaks}) and 
+#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
+#' the effects on model parameters Currently, only binary discrete traits are supported
+#' 
+#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
+#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
+#'
+#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' 
+#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' 
+#' Output can be visualised using \code{sensi_plot}. [Not yet!]
+#'
+#' @return The function \code{tree_discrete} returns a list with the following
+#' components:
+#' @return \code{call}: The function call
+#' @return \code{data}: The original full data vector
+#' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
+#' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
+#' for the full model without deleted species.
+#' @return \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
+#' of species removal on percentage and absolute change in paramerters q12 and q21. 
+#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
+#' for each analysis with a different phylogenetic tree.
+#' @return \code{N.tree}: Number of trees \code{n.tree} analysed
+#' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+#' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
+#' @author Gijsbert Werner & Gustavo Paterno
+#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @references 
+#' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
+#' 
+#' Harmon Luke J, Jason T Weir, Chad D Brock, Richard E Glor, and Wendell Challenger. 2008.
+#' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
+#' 
+#' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014). 
+#' A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation in angiosperms. Nature Communications, 5, 4087.
 #' @examples 
 #' #Load data:
 #' data("primates")
