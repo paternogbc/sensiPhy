@@ -21,7 +21,7 @@
 
 #' @export
 
-influ_Discrete <- function(data,phy,
+influ_Discrete <- function(data,phy,model,
                            transform = "none",bounds = list(),
                            cutoff=2,track=TRUE,...){
   
