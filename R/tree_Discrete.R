@@ -6,8 +6,8 @@
 #' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
 #' @param phy Phylogenies (class 'multiPhylo', see ?\code{ape}).
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
-#' randomly in the multiPhylo file. If NULL, \code{n.tree} = 5
-#' @param model The Mkn model to use (see Details). Default is \code{ARD}.
+#' randomly in the multiPhylo file. If NULL, \code{n.tree} = 10
+#' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param track Print a report tracking function progress (default = TRUE)
