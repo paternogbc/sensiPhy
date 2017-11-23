@@ -386,24 +386,25 @@ summary.sensiInflu <- function(object, ...){
 summary.sensiInflu.TraitEvol <- function(object, ...){
   sp.q12 <- object$influential.species$influ.sp.q12
   rows.q12 <- match(sp.q12, object$sensi.estimates$species)
-  q12 <- object$sensi.estimates[rows, c("species","q12","DIFq12","q12.perc")]
+  q12 <- object$sensi.estimates[rows.q12, c("species","q12","DIFq12","q12.perc")]
   ord.q12 <- order(q12$q12.perc, 
                         decreasing = TRUE)
-  q12 <- q12[q12, ]
+  q12 <- q12[ord.q12, ]
   rownames(q12) <- NULL
   colnames(q12) <- c("Species removed", "q12", "DIFq12", "Change(%)")
   
-  spq21 <-object$influential.species$influ.sp.q21
-  rows.q21 <- match(spq21, object$sensi.estimates$species)
-  q21 <- object$sensi.estimates[rowsq21, c("species","q21","DIFq21","q21.perc")]
-  ord.inter <- order(inter$intercept.perc, 
+  sp.q21 <-object$influential.species$influ.sp.q21
+  rows.q21 <- match(sp.q21, object$sensi.estimates$species)
+  q21 <- object$sensi.estimates[rows.q21, c("species","q21","DIFq21","q21.perc")]
+  ord.q21 <- order(q21$q21.perc, 
                      decreasing = TRUE)
-  inter <- inter[ord.inter, ]
-  rownames(inter) <- NULL
-  colnames(inter) <- c("Species removed", "Intercept", "DIFintercept", "Change(%)", "Pval")
+  q21 <- q21[ord.q21, ]
+  rownames(q21) <- NULL
+  colnames(q21) <- c("Species removed", "q21", "DIFq21", "Change(%)")
   
-  res <- list("Influential species for the Estimate" = sp.estimate, "Estimate" = estimate,
-              "Influential species for the Intercept" = sp.inter, "Intercept" = inter)
+  res <- list("Influential species for q12" = sp.q12, "q12" = q12,
+              "Influential species for q21" = sp.q21, "q21" = q21)
+>>>>>>> 44a8e75e6ab97e565fee8bfd11d3ca213bedf4a9
   return(res)
   
 }
