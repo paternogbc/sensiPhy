@@ -488,6 +488,27 @@ summary.sensiSamp <- function(object, ...){
     return(sig)
 }
 
+### Summary method for class: sensiSamp.TraitEvol:----------------------------------------
+
+#' @export
+summary.sensiSamp.TraitEvol <- function(object, ...){
+  simu <- nrow(object$sensi.estimates)
+  sig <- object$breaks.summary.tab
+  names(sig) <- c("% Species Removed", 
+                  "Mean q12 Change (%)",
+                  "Mean sDIFq12",
+                  "Median sDIFq12",
+                  "Mean q21 Change (%)",
+                  "Mean sDIFq21",
+                  "Median sDIFq21",)
+  
+  message(paste(simu, "simulations saved," ,
+                "see output$sensi.estimates to acess all simulations"))
+  return(sig)
+}
+
+
+
 
 ### Summary method for class: sensiTree_Samp:----------------------------------------
 
