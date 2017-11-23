@@ -1,4 +1,20 @@
-
+#' @examples 
+#' #Load data:
+#' data("primates")
+#' #Create a binary trait factor 
+#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
+#' names(adultMass_binary)<-rownames(primates$data)
+#' #Model trait evolution accounting for phylogenetic uncertainty
+#' samp_binary<-samp_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' n.sim=30,breaks=seq(.1,.3,.1),model = "ARD",transform = "none",track = T)
+#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' summary(samp_binary)
+#' #Use a different evolutionary model or transformation, 
+#' e.g. symmetrical rates, with an Early Burst (EB) model of trait evolution
+#' samp_binary_SYM_EB<-samp_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' n.sim=30,breaks=seq(.1,.3,.1),model = "SYM",transform = "EB",track = T)
+#' summary(samp_binary_SYM_EB)
 #' @export
 
 samp_Discrete <- function(data,phy,n.sim=30,
@@ -54,7 +70,7 @@ samp_Discrete <- function(data,phy,n.sim=30,
         #Loops over breaks, remove percentage of species determined by 'breaks
         #and repeat determined by 'n.sim'.
         counter <- 1
-        limit <- sort(round( (breaks) * nrow(full.data),digits=0))
+        limit <- sort(round( (breaks) * length(full.data),digits=0))
         NL <- length(breaks) * n.sim
         if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
         for (i in limit){
@@ -62,7 +78,7 @@ samp_Discrete <- function(data,phy,n.sim=30,
               #Prep simulation data
                 exclude <- sample(1:N,i)
                 crop.data <- full.data[-exclude]
-                crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
+                crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
               #Run the model
                 mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
                                               model = model,transform = transform,
@@ -130,21 +146,30 @@ samp_Discrete <- function(data,phy,n.sim=30,
         mean.sDIFq21  <- with(res,tapply(sDIFq21,n.remov,mean))
         mean.perc.q21 <- with(res,tapply(q21.perc,n.remov,mean))
         mean.perc.q12  <- with(res,tapply(q12.perc,n.remov,mean))
+        median.sDIFq12   <- with(res,tapply(sDIFq12,n.remov,median))
+        median.sDIFq21  <- with(res,tapply(sDIFq21,n.remov,median))
+        breaks.summary.tab       <- data.frame(percent_sp_removed=breaks,
+                                          mean.perc.q12 = as.numeric(mean.perc.q12),
+                                          mean.sDIFq12 = as.numeric(mean.sDIFq12),
+                                          median.sDIFq12 = as.numeric(median.sDIFq12),
+                                          mean.perc.q21 = as.numeric(mean.perc.q21),
+                                          mean.sDIFq21 = as.numeric(mean.sDIFq21),
+                                          median.sDIFq21 = as.numeric(median.sDIFq21))
         
         #Creates a list with full model estimates:
-        param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
-            aic = phylolm::summary.phylolm(mod.0)$aic,
-            optpar = optpar.0)
+        param0 <- list(q12=q12.0,q21=q21.0,
+                       aicc=aicc.0,
+                       optpar=optpar.0)
         
         #Generates output:
-        res <- list(call = match.call(),
-                    model = model,
-                    formula = formula,
-                    full.model.estimates = param0,
-                    sensi.estimates = sensi.estimates,
-                    sign.analysis = perc.sign.tab,
-                    data = full.data)
-        class(res) <- "sensiSamp"
+        res <- list(   call = match.call(),
+                       data = full.data,
+                       optpar = transform,
+                       full.model.estimates = param0,
+                       breaks.summary.tab = breaks.summary.tab,
+                       sensi.estimates=sensi.estimates)
+        
+        class(res) <- "sensiSamp.TraitEvol"
         return(res)
         
         }
