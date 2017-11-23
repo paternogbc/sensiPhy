@@ -32,7 +32,7 @@ samp_Discrete <- function(data,phy,n.sim=30,
     stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   else
 
-    #Matching tree and phylogeny using utils.R
+    #Matching tree and phylogeny
     full.data<-data
     phy<-phy
     
