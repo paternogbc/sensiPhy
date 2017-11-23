@@ -6,13 +6,13 @@
 #' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
 #' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
 #' clade_test<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,
-#' trait.col = "adultMass_binary",clade.col="family",nsim=20)
+#' trait.col = "adultMass_binary",clade.col="family",nsim=5)
 #' summary(clade_test)
 #' @export
 
 clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
-                           trait.col,clade.col,n.species = 5, n.sim = 100,
-                            bounds = list(), track=TRUE, ...) {
+                           trait.col,clade.col,n.species = 5, n.sim = 20,
+                           bounds = list(), track=TRUE, ...) {
   # Error checking:
   if(!is.data.frame(data)) stop("data must be class 'data.frame'")
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
@@ -23,9 +23,9 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
   if(length(which(!rownames(data) %in% phy$tip.label))>0) stop("not all data species are present in tree, remove superfluous data points")
   else
     
-  #Calculates the full model, extracts model parameters
-  full.data<-data
-  phy <- phy
+    #Calculates the full model, extracts model parameters
+    full.data<-data
+    phy <- phy
   if (is.na(match(clade.col, names(full.data)))) {
     stop("Names column '", clade.col, "' not found in data frame'")
   }
@@ -53,22 +53,22 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
   q12.0               <- mod.0$opt$q12
   q21.0               <- mod.0$opt$q12
   aicc.0              <- mod.0$opt$aicc
-    if (transform == "none"){
-      optpar.0 <- NA
-    }
-    if (transform == "EB"){
-      optpar.0               <- mod.0$opt$a
-    }
-    if (transform == "lambda"){
-      optpar.0               <- mod.0$opt$lambda
-    }
-    if (transform == "kappa"){
-      optpar.0               <- mod.0$opt$kappa
-    }
-    if (transform == "delta"){
-      optpar.0               <- mod.0$opt$delta
-    }
-    
+  if (transform == "none"){
+    optpar.0 <- NA
+  }
+  if (transform == "EB"){
+    optpar.0               <- mod.0$opt$a
+  }
+  if (transform == "lambda"){
+    optpar.0               <- mod.0$opt$lambda
+  }
+  if (transform == "kappa"){
+    optpar.0               <- mod.0$opt$kappa
+  }
+  if (transform == "delta"){
+    optpar.0               <- mod.0$opt$delta
+  }
+  
   #Create dataframe to store estmates for each clade
   sensi.estimates<-data.frame("clade" =I(as.character()),"N.species" = numeric(),
                               "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
@@ -81,7 +81,7 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
                           "DIFq12"= numeric(length(uc)*n.sim),
                           "q21" = numeric(length(uc)*n.sim),
                           "DIFq21" = numeric(length(uc)*n.sim))
-
+  
   
   ### START LOOP between CLADES:
   # counters:
@@ -89,7 +89,7 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
   errors <- NULL
   
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
-                              style = 3)
+                                              style = 3)
   for (A in names(uc)){
     
     ### Number of species in clade A
@@ -102,16 +102,16 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
     crop.trait_vec<-as.factor(crop.trait_vec)
     names(crop.trait_vec)<-rownames(crop.data)
     mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
-                        model = model,transform = transform,
-                        bounds = bounds,ncores = NULL,...),TRUE)
+                                  model = model,transform = transform,
+                                  bounds = bounds,ncores = NULL,...),TRUE)
     q12               <- mod$opt$q12
     q21               <- mod$opt$q12
     DIFq12            <- q12 - q12.0
     DIFq21            <- q21 - q21.0
     q12.perc      <- round((abs(DIFq12 / q12.0)) * 100,
-                                 digits = 1)
+                           digits = 1)
     q21.perc       <- round((abs(DIFq21 / q21.0)) * 100,
-                                 digits = 1)
+                            digits = 1)
     aicc              <- mod$opt$aicc
     if (transform == "none"){
       optpar <- NA
@@ -155,18 +155,18 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
         errors <- c(errors,error)
         next }
       else 
-      
-      q12               <- mod$opt$q12
+        
+        q12               <- mod$opt$q12
       q21               <- mod$opt$q12
       aicc              <- mod$opt$aicc
       DIFq12            <- q12 - q12.0
       DIFq21            <- q21 - q21.0
       
       null.dist[bb, ] <- data.frame(clade = as.character(A), 
-                                     q12,
-                                     DIFq12,
-                                     q21,
-                                     DIFq21)
+                                    q12,
+                                    DIFq12,
+                                    q21,
+                                    DIFq21)
       
       if(track==TRUE) utils::setTxtProgressBar(pb, bb)
       bb <- bb + 1
