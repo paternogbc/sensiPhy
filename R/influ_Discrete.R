@@ -1,22 +1,22 @@
 #' @examples 
 #' #Load data:
-#' data("alien")
+#' data("primates")
 #' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(alien$data$adultMass > 50000, "big", "small")
+#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(alien$data)
+#' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' influ_binary<-influ_Discrete(data = adultMass_binary,phy = alien$phy,
+#' influ_binary<-influ_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
 #' #Use a different evolutionary model or transformation, 
 #' e.g. symmetrical rates, with an Early Burst (EB) model of trait evolution
-#' influ_binary_SYM_EB<-influ_Discrete(data = adultMass_binary,phy = alien$phy,
+#' influ_binary_SYM_EB<-influ_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "EB",n.tree = 30,track = T)
 #' summary(influ_binary_SYM_EB)
 #' #Or change the cutoff
-#' influ_binary<-influ_Discrete(data = adultMass_binary,phy = alien$phy,
+#' influ_binary<-influ_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 4,track = T)
 
 #' @export
@@ -34,11 +34,11 @@ influ_Discrete <- function(data,phy,model="ARD",
     
     #Matching tree and phylogeny using utils.R
     full.data<-data
-  phy<-phy
+    phy<-phy
   
   #Calculates the full model, extracts model parameters
-  N                   <- nrow(full.data)
-  mod.0               <- geiger::fitDiscrete(phy = phy,dat = full_data,
+  N                   <- length(full.data)
+  mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
                                              model = model,transform = transform,
                                              bounds = bounds,ncores = NULL,...)
   q12.0               <- mod.0$opt$q12
@@ -72,8 +72,8 @@ influ_Discrete <- function(data,phy,model="ARD",
   if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 3)
   for (i in 1:N){
     
-    crop.data <- full.data[c(1:N)[-i],]
-    crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
+    crop.data <- full.data[c(1:N)[-i]]
+    crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
     
     mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
                                   model = model,transform = transform,
@@ -152,8 +152,8 @@ influ_Discrete <- function(data,phy,model="ARD",
                  data = full.data,
                  optpar = transform,
                  full.model.estimates = param0,
-                 influential.species= list(influ.sp.estimate=influ.sp.estimate,
-                                           influ.sp.q12=influ.sp.q12),
+                 influential.species= list(influ.sp.q12=influ.sp.q12,
+                                           influ.sp.q21=influ.sp.q21),
                  sensi.estimates=sensi.estimates,
                  errors = errors)
   class(res) <- "sensiInflu.TrailEvol"
