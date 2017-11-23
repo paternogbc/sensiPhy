@@ -112,37 +112,24 @@ samp_Discrete <- function(data,phy,n.sim=30,
             }
         }
         if(track==TRUE) on.exit(close(pb))
+                
+        #Calculates Standardized DFbeta and DIFq12
+        sDIFq12 <- sensi.estimates$DIFq12/
+          stats::sd(sensi.estimates$DIFq12)
+        sDIFq21     <- sensi.estimates$DIFq21/
+          stats::sd(sensi.estimates$DIFq21)
         
-        #Calculates Standardized DFbeta and DIFintercept
-        sDIFintercept <- sensi.estimates$DIFintercept/
-          stats::sd(sensi.estimates$DIFintercept)
-        sDIFestimate     <- sensi.estimates$DIFestimate/
-          stats::sd(sensi.estimates$DIFestimate)
+        sensi.estimates$sDIFq21     <- sDIFq21
+        sensi.estimates$sDIFq12     <- sDIFq12
         
-        sensi.estimates$sDIFintercept <- sDIFintercept
-        sensi.estimates$sDIFestimate     <- sDIFestimate
-        
-        #Calculates percentages of signficant intercepts & slopes within breaks.
+        #Calculates stats
         res                 <- sensi.estimates
         n.sim               <- table(res$n.remov)
         breaks              <- unique(res$n.percent)
-        sign.intercept      <- res$pval.intercept > .05
-        sign.estimate       <- res$pval.estimate > .05
-        res$sign.intercept  <- sign.intercept
-        res$sign.estimate   <- sign.estimate
-        perc.sign.intercept <- 1-(with(res,tapply(sign.intercept,n.remov,sum))) / n.sim
-        perc.sign.estimate  <- 1-(with(res,tapply(sign.estimate,n.remov,sum))) / n.sim
-        mean.sDIFestimate   <- with(res,tapply(sDIFestimate,n.remov,mean))
-        mean.sDIFintercept  <- with(res,tapply(sDIFintercept,n.remov,mean))
-        mean.perc.intercept <- with(res,tapply(intercept.perc,n.remov,mean))
-        mean.perc.estimate  <- with(res,tapply(estimate.perc,n.remov,mean))
-        perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
-                                          perc.sign.intercept = as.numeric(perc.sign.intercept),
-                                          mean.perc.intercept = as.numeric(mean.perc.intercept),
-                                          mean.sDIFintercept = as.numeric(mean.sDIFintercept),
-                                          perc.sign.estimate = as.numeric(perc.sign.estimate),
-                                          mean.perc.estimate = as.numeric(mean.perc.estimate),
-                                          mean.sDIFestimate = as.numeric(mean.sDIFestimate))
+        mean.sDIFq12   <- with(res,tapply(sDIFq12,n.remov,mean))
+        mean.sDIFq21  <- with(res,tapply(sDIFq21,n.remov,mean))
+        mean.perc.q21 <- with(res,tapply(q21.perc,n.remov,mean))
+        mean.perc.q12  <- with(res,tapply(q12.perc,n.remov,mean))
         
         #Creates a list with full model estimates:
         param0 <- list(coef=phylolm::summary.phylolm(mod.0)$coefficients,
