@@ -62,18 +62,18 @@
 #' adultMass_binary<-as.factor(as.factor(adultMass_binary))
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' samp_binary<-samp_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_binary)
 #' #Use a different evolutionary model or transformation, 
 #' e.g. all-rates-different, with an Early Burst (EB) model of trait evolution
-#' samp_binary_ARD_EB<-samp_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' samp_binary_ARD_EB<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "EB",track = T)
 #' summary(samp_binary_ARD_EB)
 #' @export
 
-samp_Discrete <- function(data,phy,n.sim=30,
+samp_discrete <- function(data,phy,n.sim=30,
                           breaks=seq(.1,.5,.1),
                           model,transform="none",
                           bounds=list(),track=TRUE,...){

@@ -5,16 +5,16 @@
 #' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
 #' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
-#' clade_binary<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,model="SYM",
+#' clade_binary<-clade_discrete(data=primates$data,phy = primate_phy_pruned,model="SYM",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=10)
 #' summary(clade_binary)
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_binary_2<-clade_Discrete(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
+#' clade_binary_2<-clade_discrete(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=8)
 #' summary(clade_binary)
 #' @export
 
-clade_Discrete <- function(data, phy, model,transform = "none",
+clade_discrete <- function(data, phy, model,transform = "none",
                            trait.col,clade.col,n.species = 5, n.sim = 20,
                            bounds = list(), track=TRUE, ...) {
           # Error checking:

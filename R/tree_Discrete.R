@@ -26,7 +26,7 @@
 #' 
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{tree_Discrete} returns a list with the following
+#' @return The function \code{tree_discrete} returns a list with the following
 #' components:
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data vector
@@ -52,7 +52,7 @@
 #' adultMass_binary<-as.factor(as.factor(adultMass_binary))
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' tree_binary<-tree_Discrete(data = adultMass_binary,phy = primates$phy,
+#' tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "ARD",transform = "none",n.tree = 30,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_binary)
@@ -60,19 +60,19 @@
 #' sensi_plot(tree_binary,graphs="q12")
 #' sensi_plot(tree_binary,graphs="q21")
 #' #Use a different evolutionary model or transformation.
-#' tree_binary_lambda<-tree_Discrete(data = adultMass_binary,phy = primates$phy,
+#' tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "SYM",transform = "lambda",n.tree = 30,track = T)
 #' summary(tree_binary_lambda) #Using Pagel's Lambda
 #' sensi_plot(tree_binary_lamda)  
 #' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
-#' tree_binary_SYM_EB<-tree_Discrete(data = adultMass_binary,phy = primates$phy,
+#' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "SYM",transform = "EB",n.tree = 30,track = T)
 #' summary(tree_binary_SYM_EB)
 #' sensi_plot(tree_binary_lamda) 
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 
 #' @export
 
-tree_Discrete <- function(data,phy,n.tree=10,model,
+tree_discrete <- function(data,phy,n.tree=10,model,
                           transform = "none",bounds = list(),
                          track=TRUE,...){
   #Error check
