@@ -166,7 +166,7 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
     }
   }
   
-  close(pb)
+  if(track==TRUE) on.exit(close(pb))
   
   #Calculates Standardized DFestimate
   sDF <- samp.physig.estimates$DF/

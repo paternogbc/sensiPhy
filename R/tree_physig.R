@@ -93,7 +93,7 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
       estimate <- mod.s[[1]]
       pval     <- mod.s$P
       
-      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+      if(track==TRUE) (utils::setTxtProgressBar(pb, counter))
       #write in a table
       estim.simu <- data.frame(j, estimate, pval)
       tree.physig.estimates[counter, ]  <- estim.simu
@@ -101,7 +101,7 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
       
     }
     
-    on.exit(close(pb))
+    if(track==TRUE) on.exit(close(pb))
     #calculate mean and sd for each parameter
     #mean_by_tree <- stats::aggregate(. ~ n.tree, data = tree.physig.estimates, mean)
     

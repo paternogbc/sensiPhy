@@ -139,11 +139,11 @@ influ_physig <- function(trait.col, data, phy, method = "K", cutoff = 2, track =
     
     influ.physig.estimates[counter, ]  <- estim.simu
     counter=counter+1
-    utils::setTxtProgressBar(pb, i)
+    if(track==TRUE) (utils::setTxtProgressBar(pb, i))
     
   }
   
-  on.exit(close(pb))
+  if(track==TRUE) on.exit(close(pb))
   
   
   #Calculates Standardized DFbeta and DFintercept
