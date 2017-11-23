@@ -17,7 +17,7 @@
 #' summary(influ_binary_SYM_EB)
 #' #Or change the cutoff
 #' influ_binary<-influ_Discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 4,track = T)
+#' model = "ARD",transform = "none",cutoff = 1.2,track = T)
 
 #' @export
 
