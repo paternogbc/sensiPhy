@@ -4,11 +4,13 @@
 influ_Discrete <- function(data,phy,model="ARD",
                            transform = "none",bounds = list(),
                            cutoff=2,track=TRUE,...){
-        if(class(formula)!="formula") stop("formula must be class 'formula'")
-        if(class(data)!="data.frame") stop("data must be class 'data.frame'")
+  
+        #Error check
+        if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor(")
+        if(length(levels(data))>2) stop("discrete data can have maximal two levels")
         if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-        if ( (model == "trend") & (ape::is.ultrametric(phy)))
-        stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+        if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+        if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
         else
 
         # Check match between data and phy 
