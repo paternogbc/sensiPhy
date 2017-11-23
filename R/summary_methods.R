@@ -99,8 +99,8 @@ summary.sensiClade.TraitEvol <- function(object, ...){
                           "Pval.randomization" = numeric(length(c)))
   stats.q21 <- data.frame("clade removed" = c, 
                           "N.species" = ce$N.species,
-                          "intercept" = numeric(length(c)),
-                          "DIFintercept" = numeric(length(c)),
+                          "q21" = numeric(length(c)),
+                          "DIFq21" = numeric(length(c)),
                           "change" = numeric(length(c)),
                           "m.null.q21" = numeric(length(c)),
                           "Pval.randomization" = numeric(length(c)))
