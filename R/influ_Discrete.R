@@ -55,9 +55,10 @@ influ_Discrete <- function(data,phy,model="ARD",
                 
                 crop.data <- full.data[c(1:N)[-i],]
                 crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
-                mod=try(phylolm::phylolm(formula, data=crop.data,model=model,
-                                         phy=crop.phy),
-                        TRUE)
+                
+                mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
+                                              model = model,transform = transform,
+                                              bounds = bounds,ncores = NULL,...),TRUE)
                 if(isTRUE(class(mod)=="try-error")) {
                         error <- i
                         names(error) <- rownames(full.data$data)[i]
