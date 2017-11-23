@@ -148,6 +148,14 @@ clade_Discrete <- function(data, phy, model = "ARD",transform = "none",
       mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
                                     model = model,transform = transform,
                                     bounds = bounds,ncores = NULL,...),TRUE)
+      
+      if(isTRUE(class(mod)=="try-error")) {
+        error <- i
+        names(error) <- rownames(full.data$data)[i]
+        errors <- c(errors,error)
+        next }
+      else 
+      
       q12               <- mod$opt$q12
       q21               <- mod$opt$q12
       aicc              <- mod$opt$aicc
