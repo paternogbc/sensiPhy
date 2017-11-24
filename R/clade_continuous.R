@@ -91,7 +91,7 @@ clade_discrete <- function(data, phy, model,transform = "none",
                                       " column with clade names.")
           if(class(phy)!="phylo") stop("phy must be class 'phylo'")
           if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
-          if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
+          if ( model == "drift" & ape::is.ultrametric(phy)) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
           if(length(which(!phy$tip.label %in% rownames(data)))>0) stop("not all tips are present in data, prune tree")
           if(length(which(!rownames(data) %in% phy$tip.label))>0) stop("not all data species are present in tree, remove superfluous data points")
           else
