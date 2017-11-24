@@ -239,7 +239,7 @@ influ_continuous <- function(data,phy,model,
                                                      influ.sp.optpar=influ.sp.optpar),
                            sensi.estimates=sensi.estimates,
                            errors = errors)
-            class(res) <- "sensiInflu.TrailEvol"
+            class(res) <- "sensiInflu.TraitEvol"
             ### Warnings:
             if (length(res$errors) >0){
               warning("Some species deletion presented errors, please check: output$errors")}
