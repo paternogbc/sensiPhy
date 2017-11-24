@@ -99,17 +99,20 @@ influ_continuous <- function(data,phy,model,
             mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
                                                        model = model,transform = transform,
                                                        bounds = bounds,ncores = NULL,...)
-            q12.0               <- mod.0$opt$q12
-            q21.0               <- mod.0$opt$q21
+            sigsq.0               <- mod.0$opt$sigsq
+            z0.0                  <- mod.0$opt$z0
             aicc.0              <- mod.0$opt$aicc
-            if (transform == "none"){
+            if (model == "BM"){
               optpar.0 <- NA
+            }
+            if (model == "OU"){
+              optpar.0        <- mod.0$opt$alpha
             }
             if (transform == "EB"){
               optpar.0               <- mod.0$opt$a
             }
-            if (transform == "lambda"){
-              optpar.0               <- mod.0$opt$lambda
+            if (transform == "trend"){
+              optpar.0               <- mod.0$opt$slope
             }
             if (transform == "kappa"){
               optpar.0               <- mod.0$opt$kappa
@@ -117,12 +120,16 @@ influ_continuous <- function(data,phy,model,
             if (transform == "delta"){
               optpar.0               <- mod.0$opt$delta
             }
+            if (transform == "drift"){
+              optpar.0               <- mod.0$opt$drift
+            }
             
             #Creates empty data frame to store model outputs
             sensi.estimates<-data.frame("species" =numeric(),
-                                        "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
-                                        "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
-                                        "aicc"=numeric(),"optpar"=numeric()) 
+                                        "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
+                                        "z0"=numeric(),"DIFz0"= numeric(),"z0.perc"= numeric(),
+                                        "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
+                                        "aicc"=numeric()) 
             
             #Loops over all species, and removes each one individually
             counter <- 1
