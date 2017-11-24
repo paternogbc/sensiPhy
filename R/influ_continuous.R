@@ -180,6 +180,7 @@ influ_continuous <- function(data,phy,model,
               if (model == "drift"){
                 optpar              <- mod$opt$drift
               }
+              
               DIFoptpar            <- optpar - optpar.0
               optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
                                            digits = 1)
@@ -198,7 +199,6 @@ influ_continuous <- function(data,phy,model,
               }
             }
             if(track==TRUE) on.exit(close(pb))
-            
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
@@ -220,8 +220,8 @@ influ_continuous <- function(data,phy,model,
               sensi.estimates$sDIFsigsq),decreasing=T),c("species","sDIFsigsq")]
             influ.sp.sigsq           <-as.character(reorder.on.sigsq$species[abs(
               reorder.on.sigsq$sDIFsigsq)>cutoff])
-            if(model == "BM"){
-              influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated."
+            if(model=="BM"){
+              influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated"
             } else{
             reorder.on.optpar     <-sensi.estimates[order(abs(
               sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
