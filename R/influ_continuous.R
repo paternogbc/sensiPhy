@@ -114,6 +114,9 @@ influ_continuous <- function(data,phy,model,
             if (transform == "trend"){
               optpar.0               <- mod.0$opt$slope
             }
+            if (transform == "lambda"){
+              optpar.0               <- mod.0$opt$lambda
+            }
             if (transform == "kappa"){
               optpar.0               <- mod.0$opt$kappa
             }
@@ -127,8 +130,8 @@ influ_continuous <- function(data,phy,model,
             #Creates empty data frame to store model outputs
             sensi.estimates<-data.frame("species" =numeric(),
                                         "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
-                                        "z0"=numeric(),"DIFz0"= numeric(),"z0.perc"= numeric(),
                                         "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
+                                        "z0"=numeric(),
                                         "aicc"=numeric()) 
             
             #Loops over all species, and removes each one individually
@@ -141,7 +144,7 @@ influ_continuous <- function(data,phy,model,
               crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
               
               mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
-                                            model = model,transform = transform,
+                                            model = model,
                                             bounds = bounds,ncores = NULL,...),TRUE)
               if(isTRUE(class(mod)=="try-error")) {
                 error <- i
@@ -149,20 +152,24 @@ influ_continuous <- function(data,phy,model,
                 errors <- c(errors,error)
                 next }
               else {  sp                   <- phy$tip.label[i]
-              q12               <- mod$opt$q12
-              q21               <- mod$opt$q21
-              DIFq12            <- q12 - q12.0
-              DIFq21            <- q21 - q21.0
-              q12.perc          <- round((abs(DIFq12 / q12.0)) * 100,
-                                         digits = 1)
-              q21.perc          <- round((abs(DIFq21 / q21.0)) * 100,
+              sigsq               <- mod$opt$sigsq
+              z0                  <- mod$opt$z0
+              aicc              <- mod$opt$aicc
+              DIFsigsq            <- sigsq - sigsq.0
+              sigsq.perc          <- round((abs(sigsq / sigsq.0)) * 100,
                                          digits = 1)
               aicc              <- mod$opt$aicc
               if (transform == "none"){
                 optpar <- NA
               }
+              if (model == "OU"){
+                optpar        <- mod$opt$alpha
+              }
               if (transform == "EB"){
                 optpar               <- mod$opt$a
+              }
+              if (transform == "trend"){
+                optpar               <- mod$opt$slope
               }
               if (transform == "lambda"){
                 optpar               <- mod$opt$lambda
@@ -173,13 +180,22 @@ influ_continuous <- function(data,phy,model,
               if (transform == "delta"){
                 optpar               <- mod$opt$delta
               }
+              if (transform == "drift"){
+                optpar              <- mod$opt$drift
+              }
+              
+              DIFoptpar            <- optpar - optpar.0
+              optpar.perc        <- round((abs(optpar / optpar.0)) * 100,
+                                           digits = 1)
               
               if(track==TRUE) utils::setTxtProgressBar(pb, i)
               # Stores values for each simulation
               # Store reduced model parameters: 
-              estim.simu <- data.frame(sp, q12, DIFq12,q12.perc,
-                                       q21, DIFq21,q21.perc,
-                                       aicc, optpar,
+              estim.simu <- data.frame(sp, 
+                                       sigsq, DIFsigsq,sigsq.perc,
+                                       optpar,DIFoptpar,optpar.perc,
+                                       z0,
+                                       aicc,
                                        stringsAsFactors = F)
               sensi.estimates[counter, ]  <- estim.simu
               counter=counter+1
@@ -187,29 +203,30 @@ influ_continuous <- function(data,phy,model,
             }
             if(track==TRUE) on.exit(close(pb))
             #Calculates Standardized DFbeta and DIFq12
-            sDIFq12 <- sensi.estimates$DIFq12/
-              stats::sd(sensi.estimates$DIFq12)
-            sDIFq21     <- sensi.estimates$DIFq21/
-              stats::sd(sensi.estimates$DIFq21)
+            sDIFsigsq <- sensi.estimates$DIFsigsq/
+              stats::sd(sensi.estimates$DIFsigsq)
+            sDIFoptpar     <- sensi.estimates$DIFoptpar/
+              stats::sd(sensi.estimates$DIFz0)
             
-            sensi.estimates$sDIFq21     <- sDIFq21
-            sensi.estimates$sDIFq12     <- sDIFq12
+            sensi.estimates$sDIFsigsq     <- sDIFsigsq
+            sensi.estimates$sDIFoptpar     <- sDIFoptpar
             
             #Creates a list with full model estimates:
             #full model estimates:
-            param0 <- list(q12=q12.0,q21=q21.0,
-                           aicc=aicc.0,
-                           optpar=optpar.0)
+            param0 <- list(sigsq=sigsq.0,
+                           optpar=optpar.0,
+                           z0=z0.0,
+                           aicc=aicc.0)
             
             #Identifies influencital species (sDF > cutoff) and orders by influence
-            reorder.on.q21         <-sensi.estimates[order(abs(
-              sensi.estimates$sDIFq21),decreasing=T),c("species","sDIFq21")]
-            influ.sp.q21           <-as.character(reorder.on.q21$species[abs(
-              reorder.on.q21$sDIFq21)>cutoff])
-            reorder.on.q12     <-sensi.estimates[order(abs(
-              sensi.estimates$sDIFq12),decreasing=T),c("species","sDIFq12")]
-            influ.sp.q12       <-as.character(reorder.on.q12$species[abs(
-              reorder.on.q12$sDIFq12)>cutoff])
+            reorder.on.sigsq         <-sensi.estimates[order(abs(
+              sensi.estimates$sDIFsigsq),decreasing=T),c("species","sDIFsigsq")]
+            influ.sp.sigsq           <-as.character(reorder.on.sigsq$species[abs(
+              reorder.on.sigsq$sDIFsigsq)>cutoff])
+            reorder.on.optpar     <-sensi.estimates[order(abs(
+              sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
+            influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
+              reorder.on.optpar$sDIFoptpar)>cutoff])
             
             #Generates output:
             res <- list(   call = match.call(),
@@ -217,8 +234,8 @@ influ_continuous <- function(data,phy,model,
                            data = full.data,
                            optpar = transform,
                            full.model.estimates = param0,
-                           influential.species= list(influ.sp.q12=influ.sp.q12,
-                                                     influ.sp.q21=influ.sp.q21),
+                           influential.species= list(influ.sp.sigsq=influ.sp.sigsq,
+                                                     influ.sp.optpar=influ.sp.optpar),
                            sensi.estimates=sensi.estimates,
                            errors = errors)
             class(res) <- "sensiInflu.TrailEvol"
