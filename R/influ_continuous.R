@@ -180,7 +180,6 @@ influ_continuous <- function(data,phy,model,
               if (model == "drift"){
                 optpar              <- mod$opt$drift
               }
-              
               DIFoptpar            <- optpar - optpar.0
               optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
                                            digits = 1)
@@ -199,6 +198,7 @@ influ_continuous <- function(data,phy,model,
               }
             }
             if(track==TRUE) on.exit(close(pb))
+            
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
