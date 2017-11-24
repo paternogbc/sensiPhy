@@ -78,7 +78,6 @@ tree_discrete <- function(data,phy,n.tree=10,model,
   #Error check
   if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
-  if(length(levels(data))>2) stop("discrete data can have maximal two levels")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")

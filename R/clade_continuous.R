@@ -116,7 +116,6 @@ clade_discrete <- function(data, phy, model,transform = "none",
           # FULL MODEL PARAMETERS:
           trait_vec_full<-full.data[,trait.col]
           trait_vec_full<-as.factor(trait_vec_full)
-          if(length(levels(trait_vec_full))>2) stop("discrete data can have maximal two levels")
           names(trait_vec_full)<-rownames(full.data)
           
           N                   <- nrow(full.data)

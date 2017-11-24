@@ -1,33 +1,32 @@
 #' Influential Species Detection - Trait Evolution Continous Characters
-#' Change help still 
-#' Fits models for trait evolution of discrete (binary) characters, 
+#'
+#' Fits models for trait evolution of continuous characters, 
 #' detecting influential species. 
 #'
 #' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param model The Mkn model to use (see Details). 
-#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param model The evolutionary model (see Details). 
+#' @param cutoff The cut-off parameter for influential species (see Details). 
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
 #' This function sequentially removes one species at a time,  
-#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported.
+#' the effects on model parameters.
 #' 
-#' #' \code{influ_discrete} detects influential species based on the standardised
-#' difference in q12 or q21 when removing a given species compared
-#' to the full model including all species. Species with a standardised difference
-#' above the value of \code{cutoff} are identified as influential. 
-#' 
-#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
-#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
+#' #' \code{influ_continuous} detects influential species based on the standardised
+#' difference in the rate parameter \code{sigsq} and the optimisation parameter \code{optpar} 
+#' (e.g. lamda, kappa, alpha, depending on which \code{model} is set), when removing 
+#' a given species compared to the full model including all species. 
+#' Species with a standardised difference above the value of 
+#' \code{cutoff} are identified as influential. 
 #'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
-#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' All evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+#' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
-#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models. 
 #' 
 #' Output can be visualised using \code{sensi_plot}. [Not yet!]
 #'
@@ -37,17 +36,18 @@
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{data}: The original full data vector
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-#' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
+#' root state \code{z0} and where applicable \code{optpar}), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted species.
 #' @return \code{influential_species}: List of influential species, based on standardised 
-#' difference in estimates for q12 and q21. Species are ordered from most influential to 
+#' difference in estimates for sigsq and optpar. Species are ordered from most influential to 
 #' less influential and only include species with a standardised difference > \code{cutoff}.
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
-#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
+#' @return \code{sensi.estimates}: Parameter estimates, AICc and the optimised value of 
+#' the phylogenetic transformation parameter (e.g. \code{lambda}) for each analysis 
+#' with a different phylogenetic tree.
 #' @author Gijsbert Werner & Gustavo Paterno
-#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @seealso \code{\link[geiger]{fitContinuous}}
 #' @references 
 #' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
 #' 
@@ -57,23 +57,20 @@
 #' @examples 
 #' #Load data:
 #' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 2,track = T)
+#' adultMass<-primates$data$adultMass
+#' names(adultMass)<-rownames(primates$data)
+#' influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "OU",cutoff = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
-#' summary(influ_binary)
-#' #Use a different evolutionary model or transformation, 
-#' e.g. symmetrical rates, with an Early Burst (EB) model of trait evolution
-#' influ_binary_SYM_EB<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "EB",n.tree = 30,track = T)
-#' summary(influ_binary_SYM_EB)
-#' #Or change the cutoff
-#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 1.2,track = T)
+#' summary(influ_cont)
+#' #Use a different evolutionary model or cutoff 
+#' influ_cont2<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "lambda",cutoff = 1.2,track = T)
+#' summary(influ_cont2)
+#' influ_cont3<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "BM",cutoff = 2,track = T)
+#' summary(influ_cont3)
 
 #' @export
 
@@ -83,10 +80,9 @@ influ_continuous <- function(data,phy,model,
   
             #Error check
             if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
-            if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
-            if(length(levels(data))>2) stop("discrete data can have maximal two levels")
+            if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
             if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-            if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+            if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
             if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
             else
               
@@ -96,8 +92,8 @@ influ_continuous <- function(data,phy,model,
             
             #Calculates the full model, extracts model parameters
             N                   <- length(full.data)
-            mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
-                                                       model = model,transform = transform,
+            mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
+                                                       model = model,
                                                        bounds = bounds,ncores = NULL,...)
             sigsq.0               <- mod.0$opt$sigsq
             z0.0                  <- mod.0$opt$z0
@@ -108,22 +104,22 @@ influ_continuous <- function(data,phy,model,
             if (model == "OU"){
               optpar.0        <- mod.0$opt$alpha
             }
-            if (transform == "EB"){
+            if (model == "EB"){
               optpar.0               <- mod.0$opt$a
             }
-            if (transform == "trend"){
+            if (model == "trend"){
               optpar.0               <- mod.0$opt$slope
             }
-            if (transform == "lambda"){
+            if (model == "lambda"){
               optpar.0               <- mod.0$opt$lambda
             }
-            if (transform == "kappa"){
+            if (model == "kappa"){
               optpar.0               <- mod.0$opt$kappa
             }
-            if (transform == "delta"){
+            if (model == "delta"){
               optpar.0               <- mod.0$opt$delta
             }
-            if (transform == "drift"){
+            if (model == "drift"){
               optpar.0               <- mod.0$opt$drift
             }
             
@@ -143,7 +139,7 @@ influ_continuous <- function(data,phy,model,
               crop.data <- full.data[c(1:N)[-i]]
               crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
               
-              mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
+              mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
                                             model = model,
                                             bounds = bounds,ncores = NULL,...),TRUE)
               if(isTRUE(class(mod)=="try-error")) {
@@ -159,28 +155,28 @@ influ_continuous <- function(data,phy,model,
               sigsq.perc          <- round((abs(sigsq / sigsq.0)) * 100,
                                          digits = 1)
               aicc              <- mod$opt$aicc
-              if (transform == "none"){
+              if (model == "none"){
                 optpar <- NA
               }
               if (model == "OU"){
                 optpar        <- mod$opt$alpha
               }
-              if (transform == "EB"){
+              if (model == "EB"){
                 optpar               <- mod$opt$a
               }
-              if (transform == "trend"){
+              if (model == "trend"){
                 optpar               <- mod$opt$slope
               }
-              if (transform == "lambda"){
+              if (model == "lambda"){
                 optpar               <- mod$opt$lambda
               }
-              if (transform == "kappa"){
+              if (model == "kappa"){
                 optpar               <- mod$opt$kappa
               }
-              if (transform == "delta"){
+              if (model == "delta"){
                 optpar               <- mod$opt$delta
               }
-              if (transform == "drift"){
+              if (model == "drift"){
                 optpar              <- mod$opt$drift
               }
               
@@ -206,7 +202,7 @@ influ_continuous <- function(data,phy,model,
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
             sDIFoptpar     <- sensi.estimates$DIFoptpar/
-              stats::sd(sensi.estimates$DIFz0)
+              stats::sd(sensi.estimates$DIFoptpar)
             
             sensi.estimates$sDIFsigsq     <- sDIFsigsq
             sensi.estimates$sDIFoptpar     <- sDIFoptpar
@@ -232,7 +228,7 @@ influ_continuous <- function(data,phy,model,
             res <- list(   call = match.call(),
                            cutoff=cutoff,
                            data = full.data,
-                           optpar = transform,
+                           optpar = model,
                            full.model.estimates = param0,
                            influential.species= list(influ.sp.sigsq=influ.sp.sigsq,
                                                      influ.sp.optpar=influ.sp.optpar),
