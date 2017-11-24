@@ -3,7 +3,7 @@
 #' Fits models for trait evolution of continuous characters, 
 #' detecting influential species. 
 #'
-#' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
+#' @param data Data vector for a single continuous trait, with names matching tips in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param model The evolutionary model (see Details). 
 #' @param cutoff The cut-off parameter for influential species (see Details). 

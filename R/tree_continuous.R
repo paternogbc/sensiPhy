@@ -1,43 +1,40 @@
-#' Phylogenetic uncertainty - Trait Evolution Discrete Characters
+#' Phylogenetic uncertainty - Trait Evolution Continuous Characters
 #' 
-#' Fits models for trait evolution of discrete (binary) characters, 
+#' Fits models for trait evolution of continuous characters, 
 #' evaluating phylogenetic uncertainty. 
 #'
-#' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
+#' @param data Data vector for a single continuous trait, with names matching tips in \code{phy}.
 #' @param phy Phylogenies (class 'multiPhylo', see ?\code{ape}).
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file. If NULL, \code{n.tree} = 10
-#' @param model The Mkn model to use (see Details). 
-#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param model The evolutionary model (see Details). 
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
-#' This function fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}
-#' to n trees, randomly picked in a multiPhylo file. Currenlty, only binary discrete traits are supported
+#' This function fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}
+#' to n trees, randomly picked in a multiPhylo file. 
 #'
-#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
-#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
-#'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
-#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+#' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
-#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 #' 
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{tree_discrete} returns a list with the following
+#' @return The function \code{tree_continuous} returns a list with the following
 #' components:
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data vector
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{sensi.estimates}:  (rate of evolution \code{sigsq}, 
+#' root state \code{z0} and where applicable \code{optpar}),
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for each analysis with a different phylogenetic tree.
 #' @return \code{N.tree}: Number of trees \code{n.tree} analysed
 #' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
-#' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
+#' @return \code{optpar}: Evolutionary model used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @author Gijsbert Werner & Caterina Penone
-#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @seealso \code{\link[geiger]{fitContinuous}}
 #' @references 
 #' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
 #' 
