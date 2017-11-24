@@ -152,7 +152,7 @@ influ_continuous <- function(data,phy,model,
               z0                  <- mod$opt$z0
               aicc              <- mod$opt$aicc
               DIFsigsq            <- sigsq - sigsq.0
-              sigsq.perc          <- round((abs(sigsq / sigsq.0)) * 100,
+              sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
                                          digits = 1)
               aicc              <- mod$opt$aicc
               if (model == "none"){
@@ -181,7 +181,7 @@ influ_continuous <- function(data,phy,model,
               }
               
               DIFoptpar            <- optpar - optpar.0
-              optpar.perc        <- round((abs(optpar / optpar.0)) * 100,
+              optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
                                            digits = 1)
               
               if(track==TRUE) utils::setTxtProgressBar(pb, i)
