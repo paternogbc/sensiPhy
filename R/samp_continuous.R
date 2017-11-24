@@ -1,14 +1,13 @@
 #' Species Sampling uncertainty - Trait Evolution Continuous Characters
 #' 
-#' Fits models for trait evolution of continuous (binary) characters, 
+#' Fits models for trait evolution of continuous characters, 
 #' evaluating sampling uncertainty. 
 #'
 #' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param n.sim The number of times species are randomly deleted for each \code{break}.
 #' @param breaks A vector containing the percentages of species to remove.
-#' @param model The Mkn model to use (see Details). 
-#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param model The evolutionary model (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
@@ -16,13 +15,10 @@
 #' This function randomly removes a given percentage of species (controlled by \code{breaks}),  
 #' fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary continuous traits are supported.
+#' the effects on model parameters.
 #' 
-#' Different character model from \code{fitContinuous} can be used, including \code{ER} (equal-rates), 
-#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
-#'
-#' All transformations to the phylogenetic tree from \code{fitContinuous} can be used, i.e. \code{none},
-#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+#' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
 #' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 #' 
@@ -33,12 +29,13 @@
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data vector
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-#' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
+#' root state \code{z0} and where applicable \code{optpar}), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted species.
 #' @return \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
-#' of species removal on percentage and absolute change in paramerters q12 and q21. 
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' of species removal on percentage and absolute change parameter estimates. 
+#' @return \code{sensi.estimates}: Parameter estimates, 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for each analysis with a different phylogenetic tree.
 #' @return \code{N.tree}: Number of trees \code{n.tree} analysed
