@@ -68,17 +68,19 @@
 #' @examples 
 #' #Load data:
 #' data("primates")
-#' #Create a binary trait factor 
-#' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
-#' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
-#' clade_binary<-clade_continuous(data=primates$data,phy = primate_phy_pruned,model="SYM",
-#' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=10)
-#' summary(clade_binary)
+#' #Model trait evolution accounting for phylogenetic uncertainty
+#' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
+#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=10,track=TRUE)
+#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' summary(clade_cont)
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_binary_2<-clade_continuous(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
-#' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=8)
-#' summary(clade_binary)
+#' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="lambda",
+#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=10,track=TRUE)
+#' summary(clade_cont2)
+#' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
+#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
+#' summary(clade_cont3)
+#' 
 #' @export
 
 clade_continuous <- function(data, phy, model,
@@ -115,7 +117,6 @@ clade_continuous <- function(data, phy, model,
           
           # FULL MODEL PARAMETERS:
           trait_vec_full<-full.data[,trait.col]
-          trait_vec_full<-as.factor(trait_vec_full)
           names(trait_vec_full)<-rownames(full.data)
           
           N                   <- nrow(full.data)
@@ -180,40 +181,51 @@ clade_continuous <- function(data, phy, model,
             crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
             crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
             crop.trait_vec<-crop.data[,trait.col]
-            crop.trait_vec<-as.factor(crop.trait_vec)
             names(crop.trait_vec)<-rownames(crop.data)
             mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
-                                          model = model,transform = transform,
+                                          model = model,
                                           bounds = bounds,ncores = NULL,...),TRUE)
-            q12               <- mod$opt$q12
-            q21               <- mod$opt$q21
-            DIFq12            <- q12 - q12.0
-            DIFq21            <- q21 - q21.0
-            q12.perc      <- round((abs(DIFq12 / q12.0)) * 100,
-                                   digits = 1)
-            q21.perc       <- round((abs(DIFq21 / q21.0)) * 100,
-                                    digits = 1)
+            sigsq               <- mod$opt$sigsq
+            z0                  <- mod$opt$z0
             aicc              <- mod$opt$aicc
-            if (transform == "none"){
+            DIFsigsq            <- sigsq - sigsq.0
+            sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
+                                         digits = 1)
+            if (model == "BM"){
               optpar <- NA
             }
-            if (transform == "EB"){
+            if (model == "OU"){
+              optpar        <- mod$opt$alpha
+            }
+            if (model == "EB"){
               optpar               <- mod$opt$a
             }
-            if (transform == "lambda"){
+            if (model == "trend"){
+              optpar               <- mod$opt$slope
+            }
+            if (model == "lambda"){
               optpar               <- mod$opt$lambda
             }
-            if (transform == "kappa"){
+            if (model == "kappa"){
               optpar               <- mod$opt$kappa
             }
-            if (transform == "delta"){
+            if (model == "delta"){
               optpar               <- mod$opt$delta
             }
+            if (model == "drift"){
+              optpar              <- mod$opt$drift
+            }
+            
+            DIFoptpar            <- optpar - optpar.0
+            optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
+                                        digits = 1)
             
             # Store reduced model parameters: 
-            estim.simu <- data.frame(A, cN, q12, DIFq12,q12.perc,
-                                     q21, DIFq21,q21.perc,
-                                     aicc, optpar,
+            estim.simu <- data.frame(A, cN,
+                                     sigsq, DIFsigsq,sigsq.perc,
+                                     optpar,DIFoptpar,optpar.perc,
+                                     z0,
+                                     aicc,
                                      stringsAsFactors = F)
             sensi.estimates[aa, ]  <- estim.simu
             
@@ -224,10 +236,9 @@ clade_continuous <- function(data, phy, model,
               crop.data <- full.data[-exclude,]
               crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
               crop.trait_vec<-crop.data[,trait.col]
-              crop.trait_vec<-as.factor(crop.trait_vec)
               names(crop.trait_vec)<-rownames(crop.data)
               mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
-                                            model = model,transform = transform,
+                                            model = model,
                                             bounds = bounds,ncores = NULL,...),TRUE)
               
               if(isTRUE(class(mod)=="try-error")) {
@@ -236,18 +247,41 @@ clade_continuous <- function(data, phy, model,
                 errors <- c(errors,error)
                 next }
               else 
-                
-                q12               <- mod$opt$q12
-              q21               <- mod$opt$q21
+              sigsq               <- mod$opt$sigsq
               aicc              <- mod$opt$aicc
-              DIFq12            <- q12 - q12.0
-              DIFq21            <- q21 - q21.0
+              DIFsigsq            <- sigsq - sigsq.0
+              if (model == "BM"){
+                optpar <- NA
+              }
+              if (model == "OU"){
+                optpar        <- mod$opt$alpha
+              }
+              if (model == "EB"){
+                optpar               <- mod$opt$a
+              }
+              if (model == "trend"){
+                optpar               <- mod$opt$slope
+              }
+              if (model == "lambda"){
+                optpar               <- mod$opt$lambda
+              }
+              if (model == "kappa"){
+                optpar               <- mod$opt$kappa
+              }
+              if (model == "delta"){
+                optpar               <- mod$opt$delta
+              }
+              if (model == "drift"){
+                optpar              <- mod$opt$drift
+              }
+              
+              DIFoptpar            <- optpar - optpar.0
               
               null.dist[bb, ] <- data.frame(clade = as.character(A), 
-                                            q12,
-                                            DIFq12,
-                                            q21,
-                                            DIFq21)
+                                            sigsq,
+                                            DIFsigsq,
+                                            optpar,
+                                            DIFoptpar)
               
               if(track==TRUE) utils::setTxtProgressBar(pb, bb)
               bb <- bb + 1
@@ -258,9 +292,9 @@ clade_continuous <- function(data, phy, model,
           
           #OUTPUT
           #full model estimates:
-          param0 <- list(q12=q12.0,q21=q21.0,
-                         aicc=aicc.0,
-                         optpar=optpar.0)
+          param0 <- list(sigsq=sigsq.0,optpar=optpar.0,
+                         optpar=optpar.0,
+                         aicc=aicc.0)
           
           #Generates output:
           res <- list(   call = match.call(),
@@ -269,7 +303,7 @@ clade_continuous <- function(data, phy, model,
                          sensi.estimates=sensi.estimates,
                          null.dist = null.dist,
                          errors = errors,
-                         optpar = transform,
+                         optpar = model,
                          clade.col = clade.col)
           class(res) <- "sensiClade.TraitEvol"
           ### Warnings:
