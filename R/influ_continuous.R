@@ -220,10 +220,14 @@ influ_continuous <- function(data,phy,model,
               sensi.estimates$sDIFsigsq),decreasing=T),c("species","sDIFsigsq")]
             influ.sp.sigsq           <-as.character(reorder.on.sigsq$species[abs(
               reorder.on.sigsq$sDIFsigsq)>cutoff])
+            if(model == "BM"){
+              influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated."
+            } else{
             reorder.on.optpar     <-sensi.estimates[order(abs(
               sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
             influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
               reorder.on.optpar$sDIFoptpar)>cutoff])
+            }
             
             #Generates output:
             res <- list(   call = match.call(),
