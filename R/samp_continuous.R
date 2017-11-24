@@ -80,7 +80,7 @@ samp_discrete <- function(data,phy,n.sim=30,
   
   #Error check
   if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
-  if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
+  if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
   if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
