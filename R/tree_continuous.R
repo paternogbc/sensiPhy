@@ -63,7 +63,7 @@ tree_continuous <- function(data,phy,n.tree=10,model,
                           bounds = list(),
                          track=TRUE,...){
   #Error check
-  if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
+  if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
   if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if ((model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
@@ -71,7 +71,6 @@ tree_continuous <- function(data,phy,n.tree=10,model,
   if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
   else
 
-  
   #Matching tree and phylogeny using utils.R
   full.data<-data
   phy<-phy
