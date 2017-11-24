@@ -1,6 +1,6 @@
-#' Influential Clade Detection - Trait Evolution Discrete Characters
+#' Influential Clade Detection - Trait Evolution Continuous Characters
 #' 
-#' Fits models for trait evolution of discrete (binary) characters, 
+#' Fits models for trait evolution of continuous (binary) characters, 
 #' detecting influential clades
 #'
 #' @param data Data frame containing species traits with row names matching tips
@@ -15,14 +15,14 @@
 #' @param n.species Minimum number of species in a clade for the clade to be
 #' included in the leave-one-out deletion analysis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
 #' #' This function sequentially removes one clade at a time,
-#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported. 
+#' the effects on model parameters Currently, only binary continuous traits are supported. 
 #' 
 #' Additionally, to account for the influence of the number of species on each 
 #' clade (clade sample size), this function also estimates a null distribution
@@ -32,17 +32,17 @@
 #'  clade influence differs from the null expectation for a clade of that size, 
 #'  a randomization test can be performed using 'summary(x)'. 
 #'
-#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
+#' Different character model from \code{fitContinuous} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 #'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' All transformations to the phylogenetic tree from \code{fitContinuous} can be used, i.e. \code{none},
 #' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 #' 
-#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 #' 
 #' Output can be visualised using \code{sensi_plot}.
 #'
-#' @return The function \code{tree_discrete} returns a list with the following
+#' @return The function \code{tree_continuous} returns a list with the following
 #' components:
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data frame. 
@@ -58,7 +58,7 @@
 #' @return \code{clade.col}: Which column was used to specify the clades?
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @author Gijsbert Werner & Gustavo Paterno
-#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @seealso \code{\link[geiger]{fitContinuous}}
 #' @references 
 #' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
 #' 
@@ -72,16 +72,16 @@
 #' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' primate_phy_pruned<-drop.tip(phy=primates$phy[[1]],
 #' tip=setdiff(primates$phy$tip.label,rownames(primates$data)))
-#' clade_binary<-clade_discrete(data=primates$data,phy = primate_phy_pruned,model="SYM",
+#' clade_binary<-clade_continuous(data=primates$data,phy = primate_phy_pruned,model="SYM",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=10)
 #' summary(clade_binary)
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_binary_2<-clade_discrete(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
+#' clade_binary_2<-clade_continuous(data=primates$data,phy = primate_phy_pruned,model="ARD",transform="kappa",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=8)
 #' summary(clade_binary)
 #' @export
 
-clade_discrete <- function(data, phy, model,transform = "none",
+clade_continuous <- function(data, phy, model,
                            trait.col,clade.col,n.species = 5, n.sim = 20,
                            bounds = list(), track=TRUE, ...) {
           # Error checking:
@@ -119,42 +119,51 @@ clade_discrete <- function(data, phy, model,transform = "none",
           names(trait_vec_full)<-rownames(full.data)
           
           N                   <- nrow(full.data)
-          mod.0               <- geiger::fitDiscrete(phy = phy,dat = trait_vec_full,
-                                                     model = model,transform = transform,
+          mod.0               <- geiger::fitContinuous(phy = phy,dat = trait_vec_full,
+                                                     model = model,
                                                      bounds = bounds,ncores = NULL,...)
-          q12.0               <- mod.0$opt$q12
-          q21.0               <- mod.0$opt$q21
+          sigsq.0               <- mod.0$opt$sigsq
+          z0.0                  <- mod.0$opt$z0
           aicc.0              <- mod.0$opt$aicc
-          if (transform == "none"){
+          if (model == "BM"){
             optpar.0 <- NA
           }
-          if (transform == "EB"){
+          if (model == "OU"){
+            optpar.0        <- mod.0$opt$alpha
+          }
+          if (model == "EB"){
             optpar.0               <- mod.0$opt$a
           }
-          if (transform == "lambda"){
+          if (model == "trend"){
+            optpar.0               <- mod.0$opt$slope
+          }
+          if (model == "lambda"){
             optpar.0               <- mod.0$opt$lambda
           }
-          if (transform == "kappa"){
+          if (model == "kappa"){
             optpar.0               <- mod.0$opt$kappa
           }
-          if (transform == "delta"){
+          if (model == "delta"){
             optpar.0               <- mod.0$opt$delta
+          }
+          if (model == "drift"){
+            optpar.0               <- mod.0$opt$drift
           }
           
           #Create dataframe to store estmates for each clade
           sensi.estimates<-data.frame("clade" =I(as.character()),"N.species" = numeric(),
-                                      "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
-                                      "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
-                                      "aicc"=numeric(),"optpar"=numeric()) 
+                                      "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
+                                      "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
+                                      "z0"=numeric(),
+                                      "aicc"=numeric()) 
           
           # Create dataframe store simulations (null distribution)
           null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
-                                  "q12"= numeric(length(uc)*n.sim),
-                                  "DIFq12"= numeric(length(uc)*n.sim),
-                                  "q21" = numeric(length(uc)*n.sim),
-                                  "DIFq21" = numeric(length(uc)*n.sim))
-          
-          
+                                  "sigsq"= numeric(length(uc)*n.sim),
+                                  "DIFsigsq"= numeric(length(uc)*n.sim),
+                                  "optpar" = numeric(length(uc)*n.sim),
+                                  "DIFoptpar" = numeric(length(uc)*n.sim))
+
           ### START LOOP between CLADES:
           # counters:
           aa <- 1; bb <- 1
@@ -173,7 +182,7 @@ clade_discrete <- function(data, phy, model,transform = "none",
             crop.trait_vec<-crop.data[,trait.col]
             crop.trait_vec<-as.factor(crop.trait_vec)
             names(crop.trait_vec)<-rownames(crop.data)
-            mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
+            mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
                                           model = model,transform = transform,
                                           bounds = bounds,ncores = NULL,...),TRUE)
             q12               <- mod$opt$q12
@@ -217,7 +226,7 @@ clade_discrete <- function(data, phy, model,transform = "none",
               crop.trait_vec<-crop.data[,trait.col]
               crop.trait_vec<-as.factor(crop.trait_vec)
               names(crop.trait_vec)<-rownames(crop.data)
-              mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.trait_vec,
+              mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
                                             model = model,transform = transform,
                                             bounds = bounds,ncores = NULL,...),TRUE)
               
