@@ -147,7 +147,8 @@ influ_continuous <- function(data,phy,model,
                 names(error) <- rownames(full.data$data)[i]
                 errors <- c(errors,error)
                 next }
-              else {  sp                   <- phy$tip.label[i]
+              else { 
+              sp                   <- phy$tip.label[i]
               sigsq               <- mod$opt$sigsq
               z0                  <- mod$opt$z0
               aicc              <- mod$opt$aicc
@@ -155,7 +156,7 @@ influ_continuous <- function(data,phy,model,
               sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
                                          digits = 1)
               aicc              <- mod$opt$aicc
-              if (model == "none"){
+              if (model == "BM"){
                 optpar <- NA
               }
               if (model == "OU"){
