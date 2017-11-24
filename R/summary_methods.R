@@ -404,7 +404,6 @@ summary.sensiInflu.TraitEvol <- function(object, ...){
   
   res <- list("Influential species for q12" = sp.q12, "q12" = q12,
               "Influential species for q21" = sp.q21, "q21" = q21)
->>>>>>> 44a8e75e6ab97e565fee8bfd11d3ca213bedf4a9
   return(res)
   
 }
