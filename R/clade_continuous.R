@@ -1,13 +1,12 @@
 #' Influential Clade Detection - Trait Evolution Continuous Characters
 #' 
-#' Fits models for trait evolution of continuous (binary) characters, 
+#' Fits models for trait evolution of continuous characters, 
 #' detecting influential clades
-#'
+#' 
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
-#' @param model The Mkn model to use (see Details). 
-#' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param model The evolutionary model (see Details). 
 #' @param trait.col The column in the provided data frame which specifies the
 #' trait to analyse (which should be a factor with two level)
 #' @param clade.col The column in the provided data frame which specifies the
@@ -32,13 +31,10 @@
 #'  clade influence differs from the null expectation for a clade of that size, 
 #'  a randomization test can be performed using 'summary(x)'. 
 #'
-#' Different character model from \code{fitContinuous} can be used, including \code{ER} (equal-rates), 
-#' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
-#'
-#' All transformations to the phylogenetic tree from \code{fitContinuous} can be used, i.e. \code{none},
-#' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
+#' Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+#' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
-#' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
+#' See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models. 
 #' 
 #' Output can be visualised using \code{sensi_plot}.
 #'
@@ -46,12 +42,13 @@
 #' components:
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data frame. 
-#' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
+#' root state \code{z0} and where applicable \code{optpar}), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted clades.
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{sensi.estimates}: Parameter estimates, 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
+#' for each repeat with a clade removed.
 #' @return \code{null.dist}: A data frame with estimates for the null distributions
 #' for all clades analysed.
 #' @return \code{errors}: Clades where deletion resulted in errors.
@@ -74,12 +71,9 @@
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(clade_cont)
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="lambda",
-#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=10,track=TRUE)
-#' summary(clade_cont2)
-#' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
+#' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
 #' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
-#' summary(clade_cont3)
+#' summary(clade_cont2)
 #' 
 #' @export
 

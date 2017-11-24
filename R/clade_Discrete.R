@@ -51,7 +51,7 @@
 #' for the full model without deleted clades.
 #' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
+#' for each repeat with a clade removed.
 #' @return \code{null.dist}: A data frame with estimates for the null distributions
 #' for all clades analysed.
 #' @return \code{errors}: Clades where deletion resulted in errors.
