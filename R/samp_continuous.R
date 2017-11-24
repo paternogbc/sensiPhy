@@ -1,6 +1,6 @@
-#' Species Sampling uncertainty - Trait Evolution Discrete Characters
+#' Species Sampling uncertainty - Trait Evolution Continuous Characters
 #' 
-#' Fits models for trait evolution of discrete (binary) characters, 
+#' Fits models for trait evolution of continuous (binary) characters, 
 #' evaluating sampling uncertainty. 
 #'
 #' @param data Data vector for a single binary trait, with names matching tips in \code{phy}.
@@ -9,26 +9,26 @@
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
+#' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
 #' This function randomly removes a given percentage of species (controlled by \code{breaks}),  
-#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported.
+#' the effects on model parameters Currently, only binary continuous traits are supported.
 #' 
-#' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
+#' Different character model from \code{fitContinuous} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 #'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' All transformations to the phylogenetic tree from \code{fitContinuous} can be used, i.e. \code{none},
 #' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 #' 
-#' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
+#' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 #' 
 #' Output can be visualised using \code{sensi_plot}. [Not yet!]
 #'
-#' @return The function \code{tree_discrete} returns a list with the following
+#' @return The function \code{tree_continuous} returns a list with the following
 #' components:
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data vector
@@ -45,7 +45,7 @@
 #' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @author Gijsbert Werner & Gustavo Paterno
-#' @seealso \code{\link[geiger]{fitDiscrete}}
+#' @seealso \code{\link[geiger]{fitContinuous}}
 #' @references 
 #' Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
 #' 
@@ -54,28 +54,29 @@
 #' 
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014). 
 #' A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation in angiosperms. Nature Communications, 5, 4087.
+#' 
 #' @examples 
 #' #Load data:
 #' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",track = T)
+#' adultMass<-primates$data$adultMass
+#' names(adultMass)<-rownames(primates$data)
+#' samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "OU",n.sim=25,breaks=seq(.1,.3,.1),track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
-#' summary(samp_binary)
-#' #Use a different evolutionary model or transformation, 
-#' e.g. all-rates-different, with an Early Burst (EB) model of trait evolution
-#' samp_binary_ARD_EB<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "EB",track = T)
-#' summary(samp_binary_ARD_EB)
+#' summary(samp_cont)
+#' #Use a different evolutionary model 
+#' samp_cont2<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "lambda",n.sim=25,breaks=seq(.1,.3,.1),track = T)
+#' summary(samp_cont2)
+#' samp_cont3<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "BM",n.sim=25,breaks=seq(.1,.3,.1),track = T)
+#' summary(samp_cont3)
 #' @export
 
-samp_discrete <- function(data,phy,n.sim=30,
+samp_continuous <- function(data,phy,n.sim=30,
                           breaks=seq(.1,.5,.1),
-                          model,transform="none",
+                          model,
                           bounds=list(),track=TRUE,...){
   
   #Error check
@@ -94,35 +95,43 @@ samp_discrete <- function(data,phy,n.sim=30,
     
     #Calculates the full model, extracts model parameters
     N                   <- length(full.data)
-    mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
-                                               model = model,transform = transform,
+    mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
+                                               model = model,
                                                bounds = bounds,ncores = NULL,...)
-    q12.0               <- mod.0$opt$q12
-    q21.0               <- mod.0$opt$q21
+    sigsq.0               <- mod.0$opt$sigsq
+    z0.0                  <- mod.0$opt$z0
     aicc.0              <- mod.0$opt$aicc
-    if (transform == "none"){
+    if (model == "BM"){
       optpar.0 <- NA
     }
-    if (transform == "EB"){
+    if (model == "OU"){
+      optpar.0        <- mod.0$opt$alpha
+    }
+    if (model == "EB"){
       optpar.0               <- mod.0$opt$a
     }
-    if (transform == "lambda"){
+    if (model == "trend"){
+      optpar.0               <- mod.0$opt$slope
+    }
+    if (model == "lambda"){
       optpar.0               <- mod.0$opt$lambda
     }
-    if (transform == "kappa"){
+    if (model == "kappa"){
       optpar.0               <- mod.0$opt$kappa
     }
-    if (transform == "delta"){
+    if (model == "delta"){
       optpar.0               <- mod.0$opt$delta
     }
-    
+    if (model == "drift"){
+      optpar.0               <- mod.0$opt$drift
+    }
     
     #Creates empty data frame to store model outputs
     sensi.estimates<-data.frame("n.remov" = numeric(), "n.percent"= numeric(),
-                                "q12"=numeric(),"DIFq12"= numeric(),"q12.perc"= numeric(),
-                                "q21"=numeric(),"DIFq21"= numeric(),"q21.perc"= numeric(),
-                                "aicc"=numeric(),"optpar"=numeric()) 
-
+                                "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
+                                "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
+                                "z0"=numeric(),
+                                "aicc"=numeric())
         
         #Loops over breaks, remove percentage of species determined by 'breaks
         #and repeat determined by 'n.sim'.
@@ -137,47 +146,56 @@ samp_discrete <- function(data,phy,n.sim=30,
                 crop.data <- full.data[-exclude]
                 crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
               #Run the model
-                mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
-                                              model = model,transform = transform,
+                mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
+                                              model = model,
                                               bounds = bounds,ncores = NULL,...),TRUE)
                 if(isTRUE(class(mod) == "try-error")) {next}
-                else {  
-                  q12               <- mod$opt$q12
-                  q21               <- mod$opt$q21
-                  DIFq12            <- q12 - q12.0
-                  DIFq21            <- q21 - q21.0
-                  q12.perc          <- round((abs(DIFq12 / q12.0)) * 100,
-                                             digits = 1)
-                  q21.perc          <- round((abs(DIFq21 / q21.0)) * 100,
-                                             digits = 1)
+                else {
+                  sigsq               <- mod$opt$sigsq
+                  z0                  <- mod$opt$z0
                   aicc              <- mod$opt$aicc
-                  if (transform == "none"){
+                  DIFsigsq            <- sigsq - sigsq.0
+                  sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
+                                               digits = 1)
+                  if (model == "BM"){
                     optpar <- NA
                   }
-                  if (transform == "EB"){
+                  if (model == "OU"){
+                    optpar        <- mod$opt$alpha
+                  }
+                  if (model == "EB"){
                     optpar               <- mod$opt$a
                   }
-                  if (transform == "lambda"){
+                  if (model == "trend"){
+                    optpar               <- mod$opt$slope
+                  }
+                  if (model == "lambda"){
                     optpar               <- mod$opt$lambda
                   }
-                  if (transform == "kappa"){
+                  if (model == "kappa"){
                     optpar               <- mod$opt$kappa
                   }
-                  if (transform == "delta"){
+                  if (model == "delta"){
                     optpar               <- mod$opt$delta
                   }
+                  if (model == "drift"){
+                    optpar              <- mod$opt$drift
+                  }
+                  DIFoptpar            <- optpar - optpar.0
+                  optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
+                                              digits = 1)
                   
                 n.remov <- i
                 n.percent <- round( (n.remov / N) * 100,digits = 0)
                 #rep <- j
                 
                 if(track == TRUE) (utils::setTxtProgressBar(pb, counter))
-                # Stores values for each simulation
-                # Stores values for each simulation
                 # Store reduced model parameters: 
-                estim.simu <- data.frame(n.remov, n.percent, q12, DIFq12,q12.perc,
-                                         q21, DIFq21,q21.perc,
-                                         aicc, optpar,
+                estim.simu <- data.frame(n.remov, n.percent,
+                                         sigsq, DIFsigsq,sigsq.perc,
+                                         optpar,DIFoptpar,optpar.perc,
+                                         z0,
+                                         aicc,
                                          stringsAsFactors = F)
                 sensi.estimates[counter, ]  <- estim.simu
                 counter <- counter + 1
@@ -186,42 +204,42 @@ samp_discrete <- function(data,phy,n.sim=30,
         }
         if(track==TRUE) on.exit(close(pb))
                 
-        #Calculates Standardized DFbeta and DIFq12
-        sDIFq12 <- sensi.estimates$DIFq12/
-          stats::sd(sensi.estimates$DIFq12)
-        sDIFq21     <- sensi.estimates$DIFq21/
-          stats::sd(sensi.estimates$DIFq21)
+        #Calculates Standardized DFs
+        sDIFsigsq <- sensi.estimates$DIFsigsq/
+          stats::sd(sensi.estimates$DIFsigsq)
+        sDIFoptpar     <- sensi.estimates$DIFoptpar/
+          stats::sd(sensi.estimates$DIFoptpar)
         
-        sensi.estimates$sDIFq21     <- sDIFq21
-        sensi.estimates$sDIFq12     <- sDIFq12
+        sensi.estimates$sDIFsigsq     <- sDIFsigsq
+        sensi.estimates$sDIFoptpar    <- sDIFoptpar
         
         #Calculates stats
         res                 <- sensi.estimates
         n.sim               <- table(res$n.remov)
         breaks              <- unique(res$n.percent)
-        mean.sDIFq12   <- with(res,tapply(sDIFq12,n.remov,mean))
-        mean.sDIFq21  <- with(res,tapply(sDIFq21,n.remov,mean))
-        mean.perc.q21 <- with(res,tapply(q21.perc,n.remov,mean))
-        mean.perc.q12  <- with(res,tapply(q12.perc,n.remov,mean))
-        median.sDIFq12   <- with(res,tapply(sDIFq12,n.remov,median))
-        median.sDIFq21  <- with(res,tapply(sDIFq21,n.remov,median))
+        mean.sDIFsigsq   <- with(res,tapply(sDIFsigsq,n.remov,mean))
+        mean.sDIFoptpar  <- with(res,tapply(sDIFoptpar,n.remov,mean))
+        mean.perc.optpar <- with(res,tapply(optpar.perc,n.remov,mean))
+        mean.perc.sigsq  <- with(res,tapply(sigsq.perc,n.remov,mean))
+        median.sDIFsigsq   <- with(res,tapply(sDIFsigsq,n.remov,median))
+        median.sDIFoptpar  <- with(res,tapply(sDIFoptpar,n.remov,median))
         breaks.summary.tab       <- data.frame(percent_sp_removed=breaks,
-                                          mean.perc.q12 = as.numeric(mean.perc.q12),
-                                          mean.sDIFq12 = as.numeric(mean.sDIFq12),
-                                          median.sDIFq12 = as.numeric(median.sDIFq12),
-                                          mean.perc.q21 = as.numeric(mean.perc.q21),
-                                          mean.sDIFq21 = as.numeric(mean.sDIFq21),
-                                          median.sDIFq21 = as.numeric(median.sDIFq21))
+                                          mean.perc.sigsq = as.numeric(mean.perc.sigsq),
+                                          mean.sDIFsigsq = as.numeric(mean.sDIFsigsq),
+                                          median.sDIFsigsq = as.numeric(median.sDIFsigsq),
+                                          mean.perc.optpar = as.numeric(mean.perc.optpar),
+                                          mean.sDIFoptpar = as.numeric(mean.sDIFoptpar),
+                                          median.sDIFoptpar = as.numeric(median.sDIFoptpar))
         
         #Creates a list with full model estimates:
-        param0 <- list(q12=q12.0,q21=q21.0,
-                       aicc=aicc.0,
-                       optpar=optpar.0)
+        param0 <- list(sigsq=sigsq.0,optpar=optpar.0,
+                       z0=z0.0,
+                       aicc=aicc.0)
         
         #Generates output:
         res <- list(   call = match.call(),
                        data = full.data,
-                       optpar = transform,
+                       optpar = model,
                        full.model.estimates = param0,
                        breaks.summary.tab = breaks.summary.tab,
                        sensi.estimates=sensi.estimates)
