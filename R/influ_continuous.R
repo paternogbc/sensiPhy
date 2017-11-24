@@ -57,13 +57,11 @@
 #' @examples 
 #' #Load data:
 #' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 2,track = T)
+#' adultMass<-primates$data$adultMass
+#' names(adultMass)<-rownames(primates$data)
+#' influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+#' model = "OU",cutoff = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
 #' #Use a different evolutionary model or transformation, 
@@ -83,10 +81,9 @@ influ_continuous <- function(data,phy,model,
   
             #Error check
             if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
-            if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
-            if(length(levels(data))>2) stop("discrete data can have maximal two levels")
+            if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
             if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-            if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+            if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
             if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
             else
               
