@@ -84,6 +84,7 @@ samp_discrete <- function(data,phy,n.sim=30,
   if(length(levels(data))>2) stop("discrete data can have maximal two levels")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
   if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+  if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
   if(length(breaks) < 2) 
     stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   else
