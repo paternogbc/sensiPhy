@@ -85,7 +85,7 @@ clade_discrete <- function(data, phy, model,transform = "none",
                            trait.col,clade.col,n.species = 5, n.sim = 20,
                            bounds = list(), track=TRUE, ...) {
           # Error checking:
-          if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
+          if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
           if(!is.data.frame(data)) stop("data must be class 'data.frame'")
           if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                                       " column with clade names.")

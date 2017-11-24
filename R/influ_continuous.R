@@ -79,7 +79,7 @@ influ_continuous <- function(data,phy,model,
                            cutoff=2,track=TRUE,...){
   
             #Error check
-            if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
+            if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
             if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
             if(class(phy)!="phylo") stop("phy must be class 'phylo'")
             if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
