@@ -382,6 +382,52 @@ summary.sensiInflu <- function(object, ...){
 
 ### Summary method for class: sensiInflu.TraitEvol:--------------------------------------
 
+
+#' @export
+summary.sensiInflu.TraitEvol <- function(object, ...){
+  sp.1 <- object$influential.species[1]
+  var_name1<-as.character(names(object$influential.species[1]))
+  rows.1 <- match(sp.1, object$sensi.estimates$species)
+  dat1 <- object$sensi.estimates[rows.1, 
+                               c("species",
+                                 var_name1,
+                                 paste0("DIF",var_name1),
+                                 paste0(var_name1,".perc")
+                                 )]
+  ord.1 <- order(dat1[,4], 
+                   decreasing = TRUE)
+  dat1 <- dat1[ord.1, ]
+  rownames(dat1) <- NULL
+  colnames(dat1) <- c("Species removed", 
+                    var_name1,
+                    paste0("DIF",var_name1), 
+                    "Change(%)")
+
+  sp.2 <- object$influential.species[2]
+  var_name2<-as.character(names(object$influential.species[2]))
+  rows.2 <- match(sp.2, object$sensi.estimates$species)
+  dat2 <- object$sensi.estimates[rows.2, 
+                               c("species",
+                                 var_name2,
+                                 paste0("DIF",var_na,e),
+                                 paste0(var_name2,".perc")
+                               )]
+  ord.2 <- order(dat2[,4], 
+                 decreasing = TRUE)
+  dat2 <- dat2[ord.2, ]
+  rownames(dat2) <- NULL
+  colnames(dat2) <- c("Species removed", 
+                    var_name2,
+                    paste0("DIF",var_name2), 
+                    "Change(%)")
+  
+  #res <- list(paste0("Influential species for ",var_name1) = sp.1, var_name1 = dat1,
+  #            paste0("Influential species for ",var_name2) = sp.2, var_name2 = dat2)
+  return(res)
+  
+}
+
+
 #' @export
 summary.sensiInflu.TraitEvol <- function(object, ...){
   sp.q12 <- object$influential.species$influ.sp.q12
