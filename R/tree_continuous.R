@@ -47,37 +47,24 @@
 #' @examples 
 #' #Load data:
 #' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
-#' tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "ARD",transform = "none",n.tree = 30,track = T)
+#' adultMass<-primates$data$adultMass
+#' names(adultMass)<-rownames(primates$data)
+#' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
+#' model = "OU",n.tree=30,track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
-#' summary(tree_binary)
-#' sensi_plot(tree_binary)
-#' sensi_plot(tree_binary,graphs="q12")
-#' sensi_plot(tree_binary,graphs="q21")
-#' #Use a different evolutionary model or transformation.
-#' tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "lambda",n.tree = 30,track = T)
-#' summary(tree_binary_lambda) #Using Pagel's Lambda
-#' sensi_plot(tree_binary_lamda)  
-#' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
-#' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "EB",n.tree = 30,track = T)
-#' summary(tree_binary_SYM_EB)
-#' sensi_plot(tree_binary_lamda) 
-#' sensi_plot(tree_binary_lamda,graphs="optpar") 
+#' summary(tree_cont)
+#' #Use a different evolutionary model 
+#' tree_cont2<-tree_continuous(data = adultMass,phy = primates$phy,
+#' model = "lambda",n.tree=30,track = TRUE)
 #' @export
 
-tree_discrete <- function(data,phy,n.tree=10,model,
-                          transform = "none",bounds = list(),
+tree_continuous <- function(data,phy,n.tree=10,model,
+                          bounds = list(),
                          track=TRUE,...){
   #Error check
   if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
-  if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
+  if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
@@ -93,8 +80,9 @@ tree_discrete <- function(data,phy,n.tree=10,model,
   trees<-sample(length(phy),n.tree,replace=F)
 
   #Create the results data.frame
-  sensi.estimates<-data.frame("n.tree"=numeric(),"q12"=numeric(),"q21"=numeric(),
-                              "aicc"=numeric(),"optpar"=numeric()) 
+  sensi.estimates<-data.frame("n.tree"=numeric(),"sigsq"=numeric(),"optpar"=numeric(),
+                              "z0"=numeric(),"aicc"=numeric()) 
+  
   #Model calculation
   counter=1
   errors <- NULL
@@ -106,7 +94,7 @@ tree_discrete <- function(data,phy,n.tree=10,model,
       full.data <- full.data[phy[[j]]$tip.label]
     
       #phylolm model
-      mod = try(geiger::fitDiscrete(phy = phy[[j]],dat = full.data,model = model,transform = transform,
+      mod = try(geiger::fitContinuous(phy = phy[[j]],dat = full.data,model = model,
                                     bounds = bounds,ncores = NULL,...),FALSE)
 
       if(isTRUE(class(mod)=="try-error")) {
@@ -116,30 +104,39 @@ tree_discrete <- function(data,phy,n.tree=10,model,
         next }
       
       else{
-        q12           <- mod$opt$q12
-        q21           <- mod$opt$q21
-        aicc          <- mod$opt$aicc
-
-        if (transform == "none"){
+        sigsq               <- mod$opt$sigsq
+        z0                  <- mod$opt$z0
+        aicc                <- mod$opt$aicc
+        
+        if (model == "none"){
           optpar <- NA
         }
-        if (transform == "EB"){
+        if (model == "OU"){
+          optpar        <- mod$opt$alpha
+        }
+        if (model == "EB"){
           optpar               <- mod$opt$a
         }
-        if (transform == "lambda"){
+        if (model == "trend"){
+          optpar               <- mod$opt$slope
+        }
+        if (model == "lambda"){
           optpar               <- mod$opt$lambda
         }
-        if (transform == "kappa"){
+        if (model == "kappa"){
           optpar               <- mod$opt$kappa
         }
-        if (transform == "delta"){
+        if (model == "delta"){
           optpar               <- mod$opt$delta
+        }
+        if (model == "drift"){
+          optpar              <- mod$opt$drift
         }
         
         if(track==TRUE) utils::setTxtProgressBar(pb, counter)
         
         #write in a table
-        estim.simu <- data.frame(j, q12, q21, aicc, optpar,
+        estim.simu <- data.frame(j, sigsq, optpar, z0, aicc,
                                  stringsAsFactors = F)
         sensi.estimates[counter, ]  <- estim.simu
         counter=counter+1
