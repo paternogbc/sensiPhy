@@ -7,6 +7,7 @@
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param cutoff The cut-off parameter for influential species (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
