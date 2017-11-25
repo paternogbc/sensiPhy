@@ -580,3 +580,14 @@ summary.intra.physig <- function(object, ...){
   names(res) <- c("Call", "Summary")
   return(res)
 }
+
+### METHODS for: diversification rate--------------------------------------------
+### tree.physig
+
+#' @export
+summary.tree.bd <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+  return(res)
+}
