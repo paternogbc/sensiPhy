@@ -44,10 +44,12 @@ Output can be visualised using \code{sensi_plot}.
 data("primates")
 # To estimate diversification rate with Magallon and Sanderson method:
 fit <- tree_bd(phy = primates.phy, n.tree = 30, method = "ms")
-fit$stats
+summary(fit)
+sensi_plot(fit)
 # To estimate speciation rate Kendall-Moran method
 fit <- tree_bd(phy = primates.phy, n.tree = 30, method = "km")
-fit$stats
+summary(fit)
+sensi_plot(fit)
 }
 \references{
 Magallon S and MJ Sanderson. 2000. Absolute diversification rates in 

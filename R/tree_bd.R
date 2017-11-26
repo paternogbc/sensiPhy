@@ -34,10 +34,12 @@
 #'data("primates")
 #'# To estimate diversification rate with Magallon and Sanderson method:
 #'fit <- tree_bd(phy = primates.phy, n.tree = 30, method = "ms")
-#'fit$stats
+#'summary(fit)
+#'sensi_plot(fit)
 #'# To estimate speciation rate Kendall-Moran method
 #'fit <- tree_bd(phy = primates.phy, n.tree = 30, method = "km")
-#'fit$stats
+#'summary(fit)
+#'sensi_plot(fit)
 #' @export
 #'@importFrom geiger bd.ms bd.km
 tree_bd <- function(phy, n.tree = "all", method = "ms", track = F, ...){
