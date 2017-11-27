@@ -68,14 +68,13 @@
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
 #' #Use a different evolutionary model. 
-#' e.g. an Early Burst (EB) model of trait evolution
-#' influ_binary_SYM_EB<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "EB",n.tree = 30,track = T)
-#' summary(influ_binary_SYM_EB)
+#' influ_binary2<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' model = "SYM",transform = "delta",track = T)
+#' summary(influ_binary2)
 #' #Or change the cutoff and fransformation
-#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' influ_binary3<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 1.2,track = T)
-
+#' summary(influ_binary3)
 #' @export
 
 influ_discrete <- function(data,phy,model,
