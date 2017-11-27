@@ -71,7 +71,6 @@
 #' influ_cont3<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
 #' model = "BM",cutoff = 2,track = T)
 #' summary(influ_cont3)
-
 #' @export
 
 influ_continuous <- function(data,phy,model,
@@ -202,8 +201,11 @@ influ_continuous <- function(data,phy,model,
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
+            if(stats::sd(sensi.estimates$DIFoptpar)==0){
+              sDIFoptpar<-NA
+            } else{
             sDIFoptpar     <- sensi.estimates$DIFoptpar/
-              stats::sd(sensi.estimates$DIFoptpar)
+              stats::sd(sensi.estimates$DIFoptpar)}
             
             sensi.estimates$sDIFsigsq     <- sDIFsigsq
             sensi.estimates$sDIFoptpar     <- sDIFoptpar
@@ -220,9 +222,14 @@ influ_continuous <- function(data,phy,model,
               sensi.estimates$sDIFsigsq),decreasing=T),c("species","sDIFsigsq")]
             influ.sp.sigsq           <-as.character(reorder.on.sigsq$species[abs(
               reorder.on.sigsq$sDIFsigsq)>cutoff])
+
             if(model=="BM"){
               influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated"
-            } else{
+            }  
+            if(stats::sd(sensi.estimates$DIFoptpar)==0){
+              influ.sp.optpar<-"No variation in optpar. Influential species not calculated"
+            } 
+            else{
             reorder.on.optpar     <-sensi.estimates[order(abs(
               sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
             influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
