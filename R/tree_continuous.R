@@ -49,13 +49,16 @@
 #' names(adultMass)<-rownames(primates$data)
 #' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
 #' model = "OU",n.tree=30,track = TRUE)
-#' sensi_plot(tree_cont)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_cont)
+#' sensi_plot(tree_cont)
+#' sensi_plot(tree_cont,graphs="sigsq")
+#' sensi_plot(tree_cont,graphs="optpar")
 #' #Use a different evolutionary model 
 #' tree_cont2<-tree_continuous(data = adultMass,phy = primates$phy,
 #' model = "delta",n.tree=30,track = TRUE)
 #' summary(tree_cont2)
+#' sensi_plot(tree_cont2)
 #' @export
 
 tree_continuous <- function(data,phy,n.tree=10,model,
@@ -65,7 +68,7 @@ tree_continuous <- function(data,phy,n.tree=10,model,
   if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
   if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if ((model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
+  #if ((model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
   else
