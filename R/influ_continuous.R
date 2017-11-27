@@ -27,8 +27,6 @@
 #' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
 #' See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models. 
-#' 
-#' Output can be visualised using \code{sensi_plot}. [Not yet!]
 #'
 #' @return The function \code{tree_discrete} returns a list with the following
 #' components:

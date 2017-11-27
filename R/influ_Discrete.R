@@ -29,8 +29,6 @@
 #' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 #' 
 #' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
-#' 
-#' Output can be visualised using \code{sensi_plot}. [Not yet!]
 #'
 #' @return The function \code{tree_discrete} returns a list with the following
 #' components:
