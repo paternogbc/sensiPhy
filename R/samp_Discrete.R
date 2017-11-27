@@ -66,11 +66,10 @@
 #' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_binary)
-#' #Use a different evolutionary model or transformation, 
-#' e.g. all-rates-different, with an Early Burst (EB) model of trait evolution
-#' samp_binary_ARD_EB<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "EB",track = T)
-#' summary(samp_binary_ARD_EB)
+#' #Use a different evolutionary model or transformation 
+#' samp_binary2<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",track = T)
+#' summary(samp_binary2)
 #' @export
 
 samp_discrete <- function(data,phy,n.sim=30,
