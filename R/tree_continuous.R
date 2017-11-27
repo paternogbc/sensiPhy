@@ -154,7 +154,7 @@ tree_continuous <- function(data,phy,n.tree=10,model,
                  data=full.data,
                  sensi.estimates=sensi.estimates,N.tree=n.tree,
                  stats = statresults[c(1:4),],
-                 optpar = transform)
+                 optpar = model)
   class(res) <- "sensiTree.TraitEvol"
   return(res)
 }

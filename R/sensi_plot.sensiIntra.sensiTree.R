@@ -336,6 +336,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
 #' @importFrom stats reorder
 #' @export
 sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
+  if(as.character(x$call[[1]])=="tree_discrete"){
   q12_fig<-ggplot()+
     geom_histogram(aes(x$sensi.estimates$q12),
                    fill = "yellow",colour = "black", size = .2,
@@ -399,4 +400,72 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
     suppressMessages(return(aicc_fig))
   if (graphs=="optpar")
     suppressMessages(return(optpar_fig))
+  } 
+  
+  if(as.character(x$call[[1]])=="tree_continuous"){
+    sigsq_fig<-ggplot()+
+      geom_histogram(aes(x$sensi.estimates$sigsq),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$sigsq)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$sigsq)),colour="blue")+
+      xlab("Estimated sigsq") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    z0_fig<-ggplot()+
+      geom_histogram(aes(x$sensi.estimates$z0),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$z0)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$z0)),colour="blue")+
+      xlab("Estimated z0") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    aicc_fig<-ggplot()+
+      geom_histogram(aes(x$sensi.estimates$aicc),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$aicc)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$aicc)),colour="blue")+
+      xlab("Estimated AICc") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    optpar_fig<-ggplot()+
+      geom_histogram(aes(x$sensi.estimates$optpar),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$optpar)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$optpar)),colour="blue")+
+      xlab(paste("Estimated",x$optpar,"parameter",sep=" ")) +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    
+    if (graphs=="all"){
+      if(x$optpar=="none"){
+        suppressMessages(return(multiplot(sigsq_fig,z0_fig,aicc_fig, cols=2))) #When transformation = "none" was used, don't print the visualisation for the optimisation parameter
+      } else
+        suppressMessages(return(multiplot(sigsq_fig,z0_fig,aicc_fig,optpar_fig, cols=2)))
+    }
+    if (graphs=="sigsq")
+      suppressMessages(return(sigsq_fig))
+    if (graphs=="z0")
+      suppressMessages(return(z0_fig))
+    if (graphs=="aic")
+      suppressMessages(return(aicc_fig))
+    if (graphs=="optpar")
+      suppressMessages(return(optpar_fig))
+  }
+  
 }
