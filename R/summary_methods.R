@@ -84,7 +84,7 @@ summary.sensiClade <- function(object, ...){
 
 #' @export
 summary.sensiClade.TraitEvol <- function(object, ...){
-  if(as.character(object$call[[1]])=="clade_discrete"){ ##First check what type of TraitEvol we are dealing with here
+  if(as.character(object$call[[1]])=="clade_discrete"){ #Check what type of TraitEvolution is evaluated
   ### Permutation test:
   ce <- object$sensi.estimates
   nd <- object$null.dist
@@ -156,8 +156,8 @@ summary.sensiClade.TraitEvol <- function(object, ...){
   names(res) <- c("q12", "q21")
   res
   }
-  
-    if(as.character(object$call[[1]])=="clade_continuous"){ ####If it's the continuous type
+  #Check again what type of TraitEvolution is evaluated. If not discrete, it should be continuous. 
+    if(as.character(object$call[[1]])=="clade_continuous"){
     ### Permutation test:
     ce <- object$sensi.estimates
     nd <- object$null.dist
