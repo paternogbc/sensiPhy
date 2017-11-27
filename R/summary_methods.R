@@ -156,8 +156,8 @@ summary.sensiClade.TraitEvol <- function(object, ...){
   names(res) <- c("q12", "q21")
   res
   }
-  ####If it's the continuous type
-  if(as.character(object$call[[1]])=="clade_continuous"){
+  
+    if(as.character(object$call[[1]])=="clade_continuous"){ ####If it's the continuous type
     ### Permutation test:
     ce <- object$sensi.estimates
     nd <- object$null.dist
@@ -201,15 +201,7 @@ summary.sensiClade.TraitEvol <- function(object, ...){
         Pval.randomization = p.sigsq)
       names(stats.sigsq)[5] <- "Change (%)"      
       
-      ### Sort by % of change:
-      ord.sigsq <- order(object$sensi.estimates$sigsq.perc, decreasing = TRUE)
-      
-      if(object$optpar=="BM"){
-        res <- list(stats.sigsq[ord.sigsq, ])
-        names(res) <- c("sigsq")
-        res
-      } else{
-      
+      if(object$optpar!="BM"){
       ### Permutation test optpar:
       if (ces$DIFoptpar > 0){
         p.optpar <- sum(nes$optpar >= ces$optpar)/times
@@ -226,12 +218,25 @@ summary.sensiClade.TraitEvol <- function(object, ...){
         Pval.randomization = p.optpar)
       
       names(stats.optpar)[5] <- "Change (%)"
+      }
       
       aa <- aa+1
-      }
+    }
+    
+    
+    ### Sort by % of change:
+    ord.sigsq <- order(object$sensi.estimates$sigsq.perc, decreasing = TRUE)
+    
+    if(object$optpar!="BM") {
     res <- list(stats.sigsq[ord.sigsq, ], stats.optpar[ord.sigsq, ])
     names(res) <- c("sigsq", "optpar")
-    res
+    return(res)
+    }
+    
+    if(object$optpar=="BM") {
+      res <- list(stats.sigsq[ord.sigsq, ])
+      names(res) <- c("sigsq")
+      return(res)
     }
   }
 }
