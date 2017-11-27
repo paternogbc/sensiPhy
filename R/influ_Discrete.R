@@ -65,6 +65,7 @@
 #' model = "SYM",transform = "none",cutoff = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
+#' sensi_plot(influ_binary) #q12 and q21 are, as expected, exactly the same in symmetrical model. 
 #' #Use a different evolutionary model. 
 #' influ_binary2<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "delta",track = T)
@@ -73,6 +74,7 @@
 #' influ_binary3<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 1.2,track = T)
 #' summary(influ_binary3)
+#' sensi_plot(influ_binary3) 
 #' @export
 
 influ_discrete <- function(data,phy,model,
