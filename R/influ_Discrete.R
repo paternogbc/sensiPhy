@@ -64,15 +64,15 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 2,track = T)
+#' model = "SYM",transform = "none",cutoff = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
-#' #Use a different evolutionary model or transformation, 
-#' e.g. symmetrical rates, with an Early Burst (EB) model of trait evolution
+#' #Use a different evolutionary model. 
+#' e.g. an Early Burst (EB) model of trait evolution
 #' influ_binary_SYM_EB<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "EB",n.tree = 30,track = T)
 #' summary(influ_binary_SYM_EB)
-#' #Or change the cutoff
+#' #Or change the cutoff and fransformation
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 1.2,track = T)
 
