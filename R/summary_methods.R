@@ -382,54 +382,9 @@ summary.sensiInflu <- function(object, ...){
 
 ### Summary method for class: sensiInflu.TraitEvol:--------------------------------------
 
-
 #' @export
 summary.sensiInflu.TraitEvol <- function(object, ...){
-  sp.1 <- object$influential.species[1]
-  var_name1<-as.character(names(object$influential.species[1]))
-  rows.1 <- match(sp.1, object$sensi.estimates$species)
-  dat1 <- object$sensi.estimates[rows.1, 
-                               c("species",
-                                 var_name1,
-                                 paste0("DIF",var_name1),
-                                 paste0(var_name1,".perc")
-                                 )]
-  ord.1 <- order(dat1[,4], 
-                   decreasing = TRUE)
-  dat1 <- dat1[ord.1, ]
-  rownames(dat1) <- NULL
-  colnames(dat1) <- c("Species removed", 
-                    var_name1,
-                    paste0("DIF",var_name1), 
-                    "Change(%)")
-
-  sp.2 <- object$influential.species[2]
-  var_name2<-as.character(names(object$influential.species[2]))
-  rows.2 <- match(sp.2, object$sensi.estimates$species)
-  dat2 <- object$sensi.estimates[rows.2, 
-                               c("species",
-                                 var_name2,
-                                 paste0("DIF",var_na,e),
-                                 paste0(var_name2,".perc")
-                               )]
-  ord.2 <- order(dat2[,4], 
-                 decreasing = TRUE)
-  dat2 <- dat2[ord.2, ]
-  rownames(dat2) <- NULL
-  colnames(dat2) <- c("Species removed", 
-                    var_name2,
-                    paste0("DIF",var_name2), 
-                    "Change(%)")
-  
-  #res <- list(paste0("Influential species for ",var_name1) = sp.1, var_name1 = dat1,
-  #            paste0("Influential species for ",var_name2) = sp.2, var_name2 = dat2)
-  return(res)
-  
-}
-
-
-#' @export
-summary.sensiInflu.TraitEvol <- function(object, ...){
+  if(as.character(object$call[[1]])=="influ_discrete"){
   sp.q12 <- object$influential.species$influ.sp.q12
   rows.q12 <- match(sp.q12, object$sensi.estimates$species)
   q12 <- object$sensi.estimates[rows.q12, c("species","q12","DIFq12","q12.perc")]
@@ -451,7 +406,30 @@ summary.sensiInflu.TraitEvol <- function(object, ...){
   res <- list("Influential species for q12" = sp.q12, "q12" = q12,
               "Influential species for q21" = sp.q21, "q21" = q21)
   return(res)
-  
+  }
+  if(as.character(object$call[[1]])=="influ_continuous"){
+    sp.sigsq <- object$influential.species$influ.sp.sigsq
+    rows.sigsq <- match(sp.sigsq, object$sensi.estimates$species)
+    sigsq <- object$sensi.estimates[rows.sigsq, c("species","sigsq","DIFsigsq","sigsq.perc")]
+    ord.sigsq <- order(sigsq$sigsq.perc, 
+                     decreasing = TRUE)
+    sigsq <- sigsq[ord.sigsq, ]
+    rownames(sigsq) <- NULL
+    colnames(sigsq) <- c("Species removed", "sigsq", "DIFsigsq", "Change(%)")
+    
+    sp.optpar <-object$influential.species$influ.sp.optpar
+    rows.optpar <- match(sp.optpar, object$sensi.estimates$species)
+    optpar <- object$sensi.estimates[rows.optpar, c("species","optpar","DIFoptpar","optpar.perc")]
+    ord.optpar <- order(optpar$optpar.perc, 
+                     decreasing = TRUE)
+    optpar <- optpar[ord.optpar, ]
+    rownames(optpar) <- NULL
+    colnames(optpar) <- c("Species removed", "optpar", "DIFoptpar", "Change(%)")
+    
+    res <- list("Influential species for sigsq" = sp.sigsq, "sigsq" = sigsq,
+                "Influential species for optpar" = sp.optpar, "optpar" = optpar)
+    return(res)
+  }
 }
 
 ### Summary method for class: sensiIntra_Influ:--------------------------------------
