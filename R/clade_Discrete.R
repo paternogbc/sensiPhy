@@ -76,7 +76,7 @@
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
 #' clade_binary_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="ARD",transform="kappa",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=10,n.species=8)
-#' summary(clade_binary)
+#' summary(clade_binary_2)
 #' @export
 
 clade_discrete <- function(data, phy, model,transform = "none",
