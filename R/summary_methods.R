@@ -602,13 +602,26 @@ summary.sensiSamp <- function(object, ...){
 summary.sensiSamp.TraitEvol <- function(object, ...){
   simu <- nrow(object$sensi.estimates)
   sig <- object$breaks.summary.tab
+  
+  if(as.character(object$call[[1]])=="samp_discrete"){ 
   names(sig) <- c("% Species Removed", 
                   "Mean q12 Change (%)",
                   "Mean sDIFq12",
                   "Median sDIFq12",
                   "Mean q21 Change (%)",
                   "Mean sDIFq21",
-                  "Median sDIFq21",)
+                  "Median sDIFq21")
+  }
+  
+  if(as.character(object$call[[1]])=="samp_continuous"){ 
+    names(sig) <- c("% Species Removed", 
+                    "Mean sigsq Change (%)",
+                    "Mean sDIFsigsq",
+                    "Median sDIFsigsq",
+                    "Mean optpar Change (%)",
+                    "Mean sDIFoptpar",
+                    "Median sDIFoptpar")
+  }
   
   message(paste(simu, "simulations saved," ,
                 "see output$sensi.estimates to acess all simulations"))
