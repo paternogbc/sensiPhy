@@ -71,7 +71,7 @@
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(clade_cont)
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
+#' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="delta",
 #' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
 #' summary(clade_cont2)
 #' 

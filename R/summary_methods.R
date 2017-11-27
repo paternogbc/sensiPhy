@@ -84,6 +84,7 @@ summary.sensiClade <- function(object, ...){
 
 #' @export
 summary.sensiClade.TraitEvol <- function(object, ...){
+  if(as.character(object$call[[1]])=="clade_discrete"){ ##First check what type of TraitEvol we are dealing with here
   ### Permutation test:
   ce <- object$sensi.estimates
   nd <- object$null.dist
@@ -154,6 +155,85 @@ summary.sensiClade.TraitEvol <- function(object, ...){
   res <- list(stats.q12[ord.q12, ], stats.q21[ord.q12, ])
   names(res) <- c("q12", "q21")
   res
+  }
+  ####If it's the continuous type
+  if(as.character(object$call[[1]])=="clade_continuous"){
+    ### Permutation test:
+    ce <- object$sensi.estimates
+    nd <- object$null.dist
+    c <- levels(nd$clade)
+    
+    
+    stats.sigsq <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "sigsq" = numeric(length(c)),
+                            "DIFsigsq" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "m.null.sigsq" = numeric(length(c)),
+                            "Pval.randomization" = numeric(length(c)))
+    stats.optpar <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "optpar" = numeric(length(c)),
+                            "DIFoptpar" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "m.null.optpar" = numeric(length(c)),
+                            "Pval.randomization" = numeric(length(c)))
+    aa <- 1
+    for(j in c) {
+      
+      nes <- nd[nd$clade == j, ] # null estimates
+      ces <- ce[ce$clade == j, ] # reduced model estimates
+      times <- nrow(nes)
+      
+      ### Permutation test sigsq:
+      if (ces$DIFsigsq > 0){
+        p.sigsq <- sum(nes$sigsq >= ces$sigsq)/times
+      }
+      if (ces$DIFsigsq < 0){
+        p.sigsq <- sum(nes$sigsq <= ces$sigsq)/times
+      }
+      
+      stats.sigsq[aa, -c(1:2)] <- data.frame(
+        sigsq = ces$sigsq,
+        DIFsigsq = ces$DIFsigsq,
+        ces$sigsq.perc,
+        m.null.sigsq = mean((nes$sigsq)),
+        Pval.randomization = p.sigsq)
+      names(stats.sigsq)[5] <- "Change (%)"      
+      
+      ### Sort by % of change:
+      ord.sigsq <- order(object$sensi.estimates$sigsq.perc, decreasing = TRUE)
+      
+      if(object$optpar=="BM"){
+        res <- list(stats.sigsq[ord.sigsq, ])
+        names(res) <- c("sigsq")
+        res
+      } else{
+      
+      ### Permutation test optpar:
+      if (ces$DIFoptpar > 0){
+        p.optpar <- sum(nes$optpar >= ces$optpar)/times
+      }
+      if (ces$DIFoptpar < 0){
+        p.optpar <- sum(nes$optpar <= ces$optpar)/times
+      }
+      
+      stats.optpar[aa, -c(1:2)] <- data.frame(
+        optpar = ces$optpar,
+        DIFoptpar = ces$DIFoptpar,
+        ces$optpar.perc,
+        m.null.optpar = mean((nes$optpar)),
+        Pval.randomization = p.optpar)
+      
+      names(stats.optpar)[5] <- "Change (%)"
+      
+      aa <- aa+1
+      }
+    res <- list(stats.sigsq[ord.sigsq, ], stats.optpar[ord.sigsq, ])
+    names(res) <- c("sigsq", "optpar")
+    res
+    }
+  }
 }
 
 ### Summary method for class: sensiIntra_Clade:--------------------------------------
