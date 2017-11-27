@@ -49,11 +49,13 @@
 #' names(adultMass)<-rownames(primates$data)
 #' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
 #' model = "OU",n.tree=30,track = TRUE)
+#' sensi_plot(tree_cont)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_cont)
 #' #Use a different evolutionary model 
 #' tree_cont2<-tree_continuous(data = adultMass,phy = primates$phy,
-#' model = "lambda",n.tree=30,track = TRUE)
+#' model = "delta",n.tree=30,track = TRUE)
+#' summary(tree_cont2)
 #' @export
 
 tree_continuous <- function(data,phy,n.tree=10,model,
