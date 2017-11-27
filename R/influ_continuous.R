@@ -201,9 +201,12 @@ influ_continuous <- function(data,phy,model,
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
+            if(model !="BM"){
             if(stats::sd(sensi.estimates$DIFoptpar)==0){
               sDIFoptpar<-NA
-            } else{
+            }
+            }
+              else{
             sDIFoptpar     <- sensi.estimates$DIFoptpar/
               stats::sd(sensi.estimates$DIFoptpar)}
             
@@ -225,15 +228,14 @@ influ_continuous <- function(data,phy,model,
 
             if(model=="BM"){
               influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated"
-            }  
-            if(stats::sd(sensi.estimates$DIFoptpar)==0){
-              influ.sp.optpar<-"No variation in optpar. Influential species not calculated"
-            } 
-            else{
+            }  else{
             reorder.on.optpar     <-sensi.estimates[order(abs(
               sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
             influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
               reorder.on.optpar$sDIFoptpar)>cutoff])
+                if(stats::sd(sensi.estimates$DIFoptpar)==0){
+                influ.sp.optpar<-"No variation in optpar. Influential species not calculated"
+                  }
             }
             
             #Generates output:
