@@ -63,7 +63,7 @@
 #' tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "SYM",transform = "lambda",n.tree = 30,track = T)
 #' summary(tree_binary_lambda) #Using Pagel's Lambda
-#' sensi_plot(tree_binary_lamda)  
+#' sensi_plot(tree_binary_lambda)  
 #' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
 #' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "SYM",transform = "EB",n.tree = 30,track = T)

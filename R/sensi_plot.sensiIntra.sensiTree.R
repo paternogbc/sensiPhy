@@ -353,7 +353,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
 #' @export
 sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
   if(as.character(x$call[[1]])=="tree_discrete"){
-  q12_fig<-ggplot()+
+  q12_fig<-ggplot2::ggplot()+
     geom_histogram(aes(x$sensi.estimates$q12),
                    fill = "yellow",colour = "black", size = .2,
                    alpha = .3)+
@@ -365,7 +365,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
           axis.text = element_text(size = 12),
           panel.background = element_rect(fill = "white",
                                           colour = "black"))
-  q21_fig<-ggplot()+
+  q21_fig<-ggplot2::ggplot()+
     geom_histogram(aes(x$sensi.estimates$q21),
                    fill = "yellow",colour = "black", size = .2,
                    alpha = .3)+
@@ -377,7 +377,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
           axis.text = element_text(size = 12),
           panel.background = element_rect(fill = "white",
                                           colour = "black"))
-  aicc_fig<-ggplot()+
+  aicc_fig<-ggplot2::ggplot()+
     geom_histogram(aes(x$sensi.estimates$aicc),
                    fill = "yellow",colour = "black", size = .2,
                    alpha = .3)+
@@ -389,7 +389,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
           axis.text = element_text(size = 12),
           panel.background = element_rect(fill = "white",
                                           colour = "black"))
-  optpar_fig<-ggplot()+
+  optpar_fig<-ggplot2::ggplot()+
     geom_histogram(aes(x$sensi.estimates$optpar),
                    fill = "yellow",colour = "black", size = .2,
                    alpha = .3)+
@@ -419,7 +419,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
   } 
   
   if(as.character(x$call[[1]])=="tree_continuous"){
-    sigsq_fig<-ggplot()+
+    sigsq_fig<-ggplot2::ggplot()+
       geom_histogram(aes(x$sensi.estimates$sigsq),
                      fill = "yellow",colour = "black", size = .2,
                      alpha = .3)+
@@ -431,7 +431,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
             axis.text = element_text(size = 12),
             panel.background = element_rect(fill = "white",
                                             colour = "black"))
-    z0_fig<-ggplot()+
+    z0_fig<-ggplot2::ggplot()+
       geom_histogram(aes(x$sensi.estimates$z0),
                      fill = "yellow",colour = "black", size = .2,
                      alpha = .3)+
@@ -443,7 +443,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
             axis.text = element_text(size = 12),
             panel.background = element_rect(fill = "white",
                                             colour = "black"))
-    aicc_fig<-ggplot()+
+    aicc_fig<-ggplot2::ggplot()+
       geom_histogram(aes(x$sensi.estimates$aicc),
                      fill = "yellow",colour = "black", size = .2,
                      alpha = .3)+
@@ -455,7 +455,7 @@ sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
             axis.text = element_text(size = 12),
             panel.background = element_rect(fill = "white",
                                             colour = "black"))
-    optpar_fig<-ggplot()+
+    optpar_fig<-ggplot2::ggplot()+
       geom_histogram(aes(x$sensi.estimates$optpar),
                      fill = "yellow",colour = "black", size = .2,
                      alpha = .3)+
