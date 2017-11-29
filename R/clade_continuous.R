@@ -76,7 +76,7 @@
 #' summary(clade_cont2)
 #' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
 #' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
-#' summary(clade_cont3)cla
+#' summary(clade_cont3)
 #' @export
 
 clade_continuous <- function(data, phy, model,
