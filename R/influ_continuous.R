@@ -16,7 +16,7 @@
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
 #' the effects on model parameters.
 #' 
-#' #' \code{influ_continuous} detects influential species based on the standardised
+#' \code{influ_continuous} detects influential species based on the standardised
 #' difference in the rate parameter \code{sigsq} and the optimisation parameter \code{optpar} 
 #' (e.g. lamda, kappa, alpha, depending on which \code{model} is set), when removing 
 #' a given species compared to the full model including all species. 

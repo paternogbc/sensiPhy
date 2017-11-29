@@ -154,7 +154,7 @@ summary.sensiClade.TraitEvol <- function(object, ...){
   
   res <- list(stats.q12[ord.q12, ], stats.q21[ord.q12, ])
   names(res) <- c("q12", "q21")
-  res
+  return(res)
   }
   #Check again what type of TraitEvolution is evaluated. If not discrete, it should be continuous. 
     if(as.character(object$call[[1]])=="clade_continuous"){

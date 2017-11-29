@@ -17,7 +17,7 @@
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
 #' the effects on model parameters Currently, only binary discrete traits are supported.
 #' 
-#' #' \code{influ_discrete} detects influential species based on the standardised
+#' \code{influ_discrete} detects influential species based on the standardised
 #' difference in q12 or q21 when removing a given species compared
 #' to the full model including all species. Species with a standardised difference
 #' above the value of \code{cutoff} are identified as influential. 
@@ -70,7 +70,8 @@
 #' influ_binary2<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "delta",track = T)
 #' summary(influ_binary2)
-#' #Or change the cutoff and fransformation
+#' sensi_plot(influ_binary2)
+#' #Or change the cutoff and transformation
 #' influ_binary3<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "ARD",transform = "none",cutoff = 1.2,track = T)
 #' summary(influ_binary3)

@@ -19,10 +19,10 @@
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
-#' #' This function sequentially removes one clade at a time,
+#' This function sequentially removes one clade at a time,
 #' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported. 
+#' the effects on model parameters. Currently, only binary discrete traits are supported. 
 #' 
 #' Additionally, to account for the influence of the number of species on each 
 #' clade (clade sample size), this function also estimates a null distribution
