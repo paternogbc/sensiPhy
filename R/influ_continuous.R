@@ -204,19 +204,21 @@ influ_continuous <- function(data,phy,model,
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
+            sensi.estimates$sDIFsigsq     <- sDIFsigsq
+            
+            if(model =="BM"){
+                sDIFoptpar<-NA
+            }
             if(model !="BM"){
-              if(stats::sd(sensi.estimates$DIFoptpar)==0){
+              if((stats::sd(sensi.estimates$DIFoptpar))==0) {
                 sDIFoptpar<-NA
               }
-            }
               else{
-            sDIFoptpar     <- sensi.estimates$DIFoptpar/
-              stats::sd(sensi.estimates$DIFoptpar)
+              sDIFoptpar     <- sensi.estimates$DIFoptpar/
+                stats::sd(sensi.estimates$DIFoptpar)
+                sensi.estimates$sDIFoptpar     <- sDIFoptpar
+              }
             }
-            
-            sensi.estimates$sDIFsigsq     <- sDIFsigsq
-            sensi.estimates$sDIFoptpar     <- sDIFoptpar
-            
             #Creates a list with full model estimates:
             #full model estimates:
             param0 <- list(sigsq=sigsq.0,
@@ -232,14 +234,17 @@ influ_continuous <- function(data,phy,model,
 
             if(model=="BM"){
               influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated"
-            }  else{
-            reorder.on.optpar     <-sensi.estimates[order(abs(
-              sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
-            influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
-              reorder.on.optpar$sDIFoptpar)>cutoff])
-                if(stats::sd(sensi.estimates$DIFoptpar)==0){
+            } 
+            if(model!="BM"){
+              if((stats::sd(sensi.estimates$DIFoptpar))==0) {
                 influ.sp.optpar<-"No variation in optpar. Influential species not calculated"
-                  }
+              }
+              else {
+                reorder.on.optpar     <-sensi.estimates[order(abs(
+                  sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
+                influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
+                  reorder.on.optpar$sDIFoptpar)>cutoff])
+              }
             }
             
             #Generates output:
