@@ -200,17 +200,19 @@ influ_continuous <- function(data,phy,model,
               }
             }
             if(track==TRUE) on.exit(close(pb))
+            
             #Calculates Standardized DFbeta and DIFq12
             sDIFsigsq <- sensi.estimates$DIFsigsq/
               stats::sd(sensi.estimates$DIFsigsq)
             if(model !="BM"){
-            if(stats::sd(sensi.estimates$DIFoptpar)==0){
-              sDIFoptpar<-NA
-            }
+              if(stats::sd(sensi.estimates$DIFoptpar)==0){
+                sDIFoptpar<-NA
+              }
             }
               else{
             sDIFoptpar     <- sensi.estimates$DIFoptpar/
-              stats::sd(sensi.estimates$DIFoptpar)}
+              stats::sd(sensi.estimates$DIFoptpar)
+            }
             
             sensi.estimates$sDIFsigsq     <- sDIFsigsq
             sensi.estimates$sDIFoptpar     <- sDIFoptpar
