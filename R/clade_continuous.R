@@ -67,15 +67,18 @@
 #' data("primates")
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
-#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=10,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,track=TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(clade_cont)
+#' sensi_plot(clade_cont,graph="all")
+#' sensi_plot(clade_cont,clade="Cercopithecidae",graph = "sigsq")
+#' sensi_plot(clade_cont,clade="Cercopithecidae",graph = "optpar")
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
 #' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="delta",
-#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,track=TRUE)
 #' summary(clade_cont2)
 #' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
-#' trait.col = "adultMass",clade.col="family",n.sim=10,n.species=5,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,track=TRUE)
 #' summary(clade_cont3)
 #' @export
 
