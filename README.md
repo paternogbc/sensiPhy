@@ -20,7 +20,7 @@ install.packages("caper")
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
-## Quick turorial
+## Quick tutorial
 
 Get started with [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Online-tutorial)
 
