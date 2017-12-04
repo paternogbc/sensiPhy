@@ -165,7 +165,7 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
 #' @importFrom stats model.frame qt plogis 
 #' @export
 
-sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
+sensi_plot.sensiClade.TraitEvol <- function(x, clade = NULL,graph="all",...) {
   
   if(as.character(x$call[[1]])=="clade_continuous"){ #Check what type of TraitEvolution is evaluated
     if(is.null(graph)) stop("Specify what graph to print (sigsq or optpar)")
