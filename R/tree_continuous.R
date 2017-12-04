@@ -9,6 +9,7 @@
 #' randomly in the multiPhylo file. If NULL, \code{n.tree} = 10
 #' @param model The evolutionary model (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
@@ -48,7 +49,7 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
-#' model = "OU",n.tree=30,track = TRUE)
+#' model = "OU",n.tree=30,n.cores = 2,track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_cont)
 #' sensi_plot(tree_cont)
@@ -56,14 +57,14 @@
 #' sensi_plot(tree_cont,graphs="optpar")
 #' #Use a different evolutionary model 
 #' tree_cont2<-tree_continuous(data = adultMass,phy = primates$phy,
-#' model = "delta",n.tree=30,track = TRUE)
+#' model = "delta",n.tree=30,n.cores = 2,track = TRUE)
 #' summary(tree_cont2)
 #' sensi_plot(tree_cont2)
 #' @export
 
 tree_continuous <- function(data,phy,n.tree=10,model,
                           bounds = list(),
-                         track=TRUE,...){
+                          n.cores = NULL,track=TRUE,...){
   #Error check
   if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
   if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
@@ -96,7 +97,7 @@ tree_continuous <- function(data,phy,n.tree=10,model,
     
       #phylolm model
       mod = try(geiger::fitContinuous(phy = phy[[j]],dat = full.data,model = model,
-                                    bounds = bounds,ncores = NULL,...),FALSE)
+                                    bounds = bounds,ncores = n.cores,...),FALSE)
 
       if(isTRUE(class(mod)=="try-error")) {
         error <- j
