@@ -71,16 +71,18 @@
 #' data("primates")
 #' #Create a binary trait factor 
 #' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' clade_binary<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
+#' clade_disc<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=30,n.species=10,n.cores = 2)
-#' summary(clade_binary)
-#' sensi_plot(clade_cont)
-#' sensi_plot(clade_cont,graph="all",clade="Cercopithecidae")
-#' sensi_plot(clade_cont,graph="q12",clade="Cercopithecidae")
+#' summary(clade_disc)
+#' sensi_plot(clade_disc)
+#' sensi_plot(clade_disc, clade = "Cebidae", graph = "q12")
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
-#' clade_binary_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="ARD",transform="kappa",
+#' clade_disc_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="ARD",transform="kappa",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=30,n.species=8,n.cores = 2)
-#' summary(clade_binary_2)
+#' summary(clade_disc_2)
+#' sensi_plot(clade_disc_2)
+#' sensi_plot(clade_disc_2, graph = "q12")
+#' sensi_plot(clade_disc_2, graph = "q21")
 #' @export
 
 clade_discrete <- function(data, phy, model,transform = "none",
