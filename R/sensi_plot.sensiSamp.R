@@ -393,7 +393,7 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     xlab("% of Species Removed")+
     ylab(paste("% of estimated sigsq change"))
 
-    ### Export two graphs:
+      ### Export two graphs:
   if (graphs == 1) 
     suppressMessages(return(s1))
   if (graphs == 2) 
