@@ -729,11 +729,15 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
       suppressMessages(return(s1))
     if (graphs == 2) 
       suppressMessages(return(s2))
-    if (graphs == 1) 
+    if (graphs == 3) 
       suppressMessages(return(s3))
-    if (graphs == 2) 
+    if (graphs == 4) 
       suppressMessages(return(s4))
-    if (graphs == "all")
+    if (graphs == "all"){
+      if(x$optpar !="BM"){
       suppressMessages(return(multiplot(s1,s3,s2,s4, cols = 2)))
+      } else
+        suppressMessages(return(multiplot(s1,s2, cols = 2)))
+    }
   }
 }
