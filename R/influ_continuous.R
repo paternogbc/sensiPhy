@@ -8,6 +8,7 @@
 #' @param model The evolutionary model (see Details). 
 #' @param cutoff The cut-off parameter for influential species (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
@@ -59,7 +60,7 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "OU",cutoff = 2,track = T)
+#' model = "OU",cutoff = 2,n.cores = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_cont)
 #' sensi_plot(influ_cont)
@@ -67,17 +68,17 @@
 #' #' sensi_plot(influ_cont,graphs="optpar")
 #' #Use a different evolutionary model or cutoff 
 #' influ_cont2<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "lambda",cutoff = 1.2,track = T)
+#' model = "lambda",cutoff = 1.2,n.cores = 2,track = T)
 #' summary(influ_cont2)
 #' sensi_plot(influ_cont2)
 #' influ_cont3<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "BM",cutoff = 2,track = T)
+#' model = "BM",cutoff = 2,n.cores = 2,track = T)
 #' summary(influ_cont3)
 #' @export
 
 influ_continuous <- function(data,phy,model,
                            bounds = list(),
-                           cutoff=2,track=TRUE,...){
+                           cutoff=2,n.cores = NULL,track=TRUE,...){
   
             #Error check
             if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
@@ -95,7 +96,7 @@ influ_continuous <- function(data,phy,model,
             N                   <- length(full.data)
             mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
                                                        model = model,
-                                                       bounds = bounds,ncores = NULL,...)
+                                                       bounds = bounds,ncores = n.cores,...)
             sigsq.0               <- mod.0$opt$sigsq
             z0.0                  <- mod.0$opt$z0
             aicc.0              <- mod.0$opt$aicc
@@ -142,7 +143,7 @@ influ_continuous <- function(data,phy,model,
               
               mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
                                             model = model,
-                                            bounds = bounds,ncores = NULL,...),TRUE)
+                                            bounds = bounds,ncores = n.cores,...),TRUE)
               if(isTRUE(class(mod)=="try-error")) {
                 error <- i
                 names(error) <- rownames(full.data$data)[i]

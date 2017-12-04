@@ -9,6 +9,7 @@
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The evolutionary model (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
@@ -59,21 +60,21 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "OU",n.sim=25,breaks=seq(.1,.3,.1),track = T)
+#' model = "OU",n.sim=25,breaks=seq(.1,.3,.1),n.cores = 2, track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_cont)
 #' #Use a different evolutionary model 
 #' samp_cont2<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "lambda",n.sim=25,breaks=seq(.1,.3,.1),track = T)
+#' model = "lambda",n.sim=25,breaks=seq(.1,.3,.1),n.cores = 2,track = T)
 #' summary(samp_cont2)
 #' samp_cont3<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "BM",n.sim=25,breaks=seq(.1,.3,.1),track = T)
+#' model = "BM",n.sim=25,breaks=seq(.1,.3,.1),n.cores = 2,track = T)
 #' summary(samp_cont3)
 #' @export
 
 samp_continuous <- function(data,phy,n.sim=30,
                           breaks=seq(.1,.5,.1),
-                          model,
+                          model,n.cores = NULL,
                           bounds=list(),track=TRUE,...){
   
   #Error check
@@ -94,7 +95,7 @@ samp_continuous <- function(data,phy,n.sim=30,
     N                   <- length(full.data)
     mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
                                                model = model,
-                                               bounds = bounds,ncores = NULL,...)
+                                               bounds = bounds,ncores = n.cores,...)
     sigsq.0               <- mod.0$opt$sigsq
     z0.0                  <- mod.0$opt$z0
     aicc.0              <- mod.0$opt$aicc
@@ -145,7 +146,7 @@ samp_continuous <- function(data,phy,n.sim=30,
               #Run the model
                 mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
                                               model = model,
-                                              bounds = bounds,ncores = NULL,...),TRUE)
+                                              bounds = bounds,ncores = n.cores,...),TRUE)
                 if(isTRUE(class(mod) == "try-error")) {next}
                 else {
                   sigsq               <- mod$opt$sigsq

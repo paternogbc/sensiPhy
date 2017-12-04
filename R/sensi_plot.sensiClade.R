@@ -138,19 +138,20 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
 }
 
 
-
 #' Graphical diagnostics for class 'sensiClade.TraitEvol'
 #'
-#' \code{plot_clade_physig} Plot results from \code{clade_physig}
-#' @param x output from \code{influ_physig}
+#' Plot results from \code{clade_discrete} and \code{clade_continuous}
+#' @param x output from \code{clade_discrete} or \code{clade_continuous}
 #' @param clade The name of the clade to be evaluated (see details)
 #' @param ... further arguments to methods.
-#' @importFrom ggplot2 aes geom_histogram geom_density geom_vline 
-#' xlab theme element_text geom_point scale_colour_gradient element_rect ylab xlab
-#' ggtitle element_blank
-#' @author Gustavo Paterno
-#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[phytools]{phylosig}}
-#' @details For 'x' from clade_physig:
+#' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
+#' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
+#' guide_legend element_rect
+#' guides
+#' 
+#' @author Gustavo Paterno & Gijsbert Werner
+#' @seealso \code{\link[sensiPhy]{clade_phylm}} 
+#' @details For 'x' from clade_discrete or clade_continuous:
 #' 
 #' \strong{Graph 1:} Distribution of the simulated signal estimates (Null distribution
 #' for a given clade sample size).
@@ -158,9 +159,10 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
 #' (without the focal clade) and the black line represents the signal estimate
 #'  for the full data.
 #' 
+#' @importFrom ggplot2 aes_string
+#' @importFrom stats model.frame qt plogis 
 #' @export
 
-### Start:
 sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
   
   if(as.character(x$call[[1]])=="clade_continuous"){ #Check what type of TraitEvolution is evaluated

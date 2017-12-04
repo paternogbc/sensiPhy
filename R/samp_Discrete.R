@@ -9,6 +9,7 @@
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
@@ -63,19 +64,20 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",track = T)
+#' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_binary)
 #' #Use a different evolutionary model or transformation 
 #' samp_binary2<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",track = T)
+#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",n.cores = 2,track = T)
 #' summary(samp_binary2)
 #' @export
 
 samp_discrete <- function(data,phy,n.sim=30,
                           breaks=seq(.1,.5,.1),
                           model,transform="none",
-                          bounds=list(),track=TRUE,...){
+                          bounds=list(),n.cores = NULL,
+                          track=TRUE,...){
   
   #Error check
   if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
@@ -95,7 +97,7 @@ samp_discrete <- function(data,phy,n.sim=30,
     N                   <- length(full.data)
     mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
                                                model = model,transform = transform,
-                                               bounds = bounds,ncores = NULL,...)
+                                               bounds = bounds,ncores = n.cores,...)
     q12.0               <- mod.0$opt$q12
     q21.0               <- mod.0$opt$q21
     aicc.0              <- mod.0$opt$aicc
@@ -138,7 +140,7 @@ samp_discrete <- function(data,phy,n.sim=30,
               #Run the model
                 mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
                                               model = model,transform = transform,
-                                              bounds = bounds,ncores = NULL,...),TRUE)
+                                              bounds = bounds,ncores = n.cores,...),TRUE)
                 if(isTRUE(class(mod) == "try-error")) {next}
                 else {  
                   q12               <- mod$opt$q12

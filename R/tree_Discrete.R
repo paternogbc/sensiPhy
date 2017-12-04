@@ -10,6 +10,7 @@
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
@@ -53,7 +54,7 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "ARD",transform = "none",n.tree = 30,track = T)
+#' model = "ARD",transform = "none",n.tree = 30,n.cores = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_binary)
 #' sensi_plot(tree_binary)
@@ -61,12 +62,12 @@
 #' sensi_plot(tree_binary,graphs="q21")
 #' #Use a different evolutionary model or transformation.
 #' tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "lambda",n.tree = 30,track = T)
+#' model = "SYM",transform = "lambda",n.tree = 30,n.cores = 2,track = T)
 #' summary(tree_binary_lambda) #Using Pagel's Lambda
 #' sensi_plot(tree_binary_lambda)  
 #' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
 #' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "EB",n.tree = 30,track = T)
+#' model = "SYM",transform = "EB",n.tree = 30,n.cores = 2,track = T)
 #' summary(tree_binary_SYM_EB)
 #' sensi_plot(tree_binary_lamda) 
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 
@@ -74,7 +75,7 @@
 
 tree_discrete <- function(data,phy,n.tree=10,model,
                           transform = "none",bounds = list(),
-                         track=TRUE,...){
+                          n.cores = NULL,track=TRUE,...){
   #Error check
   if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
   if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
@@ -107,7 +108,7 @@ tree_discrete <- function(data,phy,n.tree=10,model,
     
       #phylolm model
       mod = try(geiger::fitDiscrete(phy = phy[[j]],dat = full.data,model = model,transform = transform,
-                                    bounds = bounds,ncores = NULL,...),FALSE)
+                                    bounds = bounds,ncores = n.cores,...),FALSE)
 
       if(isTRUE(class(mod)=="try-error")) {
         error <- j

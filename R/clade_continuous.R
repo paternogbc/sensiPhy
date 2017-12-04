@@ -15,6 +15,7 @@
 #' included in the leave-one-out deletion analysis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
 #' @details
@@ -67,7 +68,7 @@
 #' data("primates")
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
-#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,n.cores = 2,track=TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(clade_cont)
 #' sensi_plot(clade_cont,graph="all")
@@ -75,16 +76,16 @@
 #' sensi_plot(clade_cont,clade="Cercopithecidae",graph = "optpar")
 #' #Change the evolutionary model, tree transformation or minimum numher of species per clade
 #' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="delta",
-#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 #' summary(clade_cont2)
 #' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
-#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 #' summary(clade_cont3)
 #' @export
 
 clade_continuous <- function(data, phy, model,
                            trait.col,clade.col,n.species = 5, n.sim = 20,
-                           bounds = list(), track=TRUE, ...) {
+                           bounds = list(),n.cores = NULL,track=TRUE, ...) {
           # Error checking:
           if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
           if(!is.data.frame(data)) stop("data must be class 'data.frame'")
@@ -121,7 +122,7 @@ clade_continuous <- function(data, phy, model,
           N                   <- nrow(full.data)
           mod.0               <- geiger::fitContinuous(phy = phy,dat = trait_vec_full,
                                                      model = model,
-                                                     bounds = bounds,ncores = NULL,...)
+                                                     bounds = bounds,ncores = n.cores,...)
           sigsq.0               <- mod.0$opt$sigsq
           z0.0                  <- mod.0$opt$z0
           aicc.0              <- mod.0$opt$aicc
@@ -183,7 +184,7 @@ clade_continuous <- function(data, phy, model,
             names(crop.trait_vec)<-rownames(crop.data)
             mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
                                           model = model,
-                                          bounds = bounds,ncores = NULL,...),TRUE)
+                                          bounds = bounds,ncores = n.cores,...),TRUE)
             sigsq               <- mod$opt$sigsq
             z0                  <- mod$opt$z0
             aicc              <- mod$opt$aicc
@@ -238,7 +239,7 @@ clade_continuous <- function(data, phy, model,
               names(crop.trait_vec)<-rownames(crop.data)
               mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
                                             model = model,
-                                            bounds = bounds,ncores = NULL,...),TRUE)
+                                            bounds = bounds,ncores = n.cores,...),TRUE)
               
               if(isTRUE(class(mod)=="try-error")) {
                 error <- i

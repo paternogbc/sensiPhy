@@ -9,6 +9,7 @@
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
 #' @param cutoff The cut-off parameter for influential species (see Details). 
 #' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
@@ -62,25 +63,25 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "none",cutoff = 2,track = T)
+#' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
 #' sensi_plot(influ_binary) #q12 and q21 are, as expected, exactly the same in symmetrical model. 
 #' #Use a different evolutionary model. 
 #' influ_binary2<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "delta",track = T)
+#' model = "SYM",transform = "delta",n.cores = 2,track = T)
 #' summary(influ_binary2)
 #' sensi_plot(influ_binary2)
 #' #Or change the cutoff and transformation
 #' influ_binary3<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 1.2,track = T)
+#' model = "ARD",transform = "none",cutoff = 1.2,n.cores = 2,track = T)
 #' summary(influ_binary3)
 #' sensi_plot(influ_binary3) 
 #' @export
 
 influ_discrete <- function(data,phy,model,
                            transform = "none",bounds = list(),
-                           cutoff=2,track=TRUE,...){
+                           cutoff=2,n.cores = NULL,track=TRUE,...){
   
             #Error check
             if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
@@ -98,7 +99,7 @@ influ_discrete <- function(data,phy,model,
             N                   <- length(full.data)
             mod.0               <- geiger::fitDiscrete(phy = phy,dat = full.data,
                                                        model = model,transform = transform,
-                                                       bounds = bounds,ncores = NULL,...)
+                                                       bounds = bounds,ncores = n.cores,...)
             q12.0               <- mod.0$opt$q12
             q21.0               <- mod.0$opt$q21
             aicc.0              <- mod.0$opt$aicc
@@ -135,7 +136,7 @@ influ_discrete <- function(data,phy,model,
               
               mod = try(geiger::fitDiscrete(phy = crop.phy,dat = crop.data,
                                             model = model,transform = transform,
-                                            bounds = bounds,ncores = NULL,...),TRUE)
+                                            bounds = bounds,ncores = n.cores,...),TRUE)
               if(isTRUE(class(mod)=="try-error")) {
                 error <- i
                 names(error) <- rownames(full.data$data)[i]
