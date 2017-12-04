@@ -392,124 +392,14 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
                                            colour="black"))+
     xlab("% of Species Removed")+
     ylab(paste("% of estimated sigsq change"))
-  
-  ####Redo the exact same thing for the optpar
-  ### Nulling variables:
-  estimate.optpar <- n.percent <- perc.sign <- percent_sp_removed <- NULL
-  result.optpar    <- x$sensi.estimates
-  
-  # classes of perc:
-  result.optpar$class <- "class"
-  ### Within 5%:
-  if (length(result.optpar[result.optpar$optpar.perc <= 5 ,]$class) >= 1){
-    result.optpar[result.optpar$optpar.perc <= 5,]$class <- "within 5%"
-  }
-  ### Higher than 5%
-  if (length(result.optpar[result.optpar$optpar.perc> 5
-                    & result.optpar$optpar.perc <= 10 ,]$class) >= 1){
-    result.optpar[result.optpar$optpar.perc > 5
-           & result.optpar$optpar.perc <= 10 ,]$class <- "higher than 5%"
-  }
-  ### Higher than 10%
-  if (length(result.optpar[result.optpar$optpar.perc > 10,]$class) >= 1){
-    result.optpar[result.optpar$optpar.perc > 10,]$class <- "higher than 10%"
-  }
-  
-  result.optpar$class <- as.factor(result.optpar$class)
-  e.0    <- as.numeric(x$full.model.estimates$optpar)
-  e.5    <- .05*e.0
-  e.10   <- .1*e.0
-  
-  # reverting the order of the levels
-  result.optpar$class =
-    with(result.optpar, factor(class,
-                        levels = rev(levels(result.optpar$class))))
-  
-  ## Organizing colours
-  if(length(levels(result.optpar$class)) == 3){
-    colS.optpar = c("skyblue","orange","red2")
-  }
-  if(length(levels(result.optpar$class)) == 2){
-    colS.optpar = c("skyblue","orange")
-  }
-  if(length(levels(result.optpar$class)) == 1){
-    colS.optpar = c("skyblue")
-  }
-  
-  ### Graphs--------------------------------------------------------------
-  
-  ### Estimated across n.percent:
-  s3 <- ggplot2::ggplot(result.optpar,aes(y=optpar,x=n.percent,
-                                   colour=class),
-                        environment = parent.frame())+
-    
-    geom_point(size=4,position = "jitter",alpha=.5)+
-    scale_x_continuous(breaks=result.optpar$n.percent)+
-    ylab("Estimated optpar")+
-    xlab("% of Species Removed ")+
-    scale_colour_manual(values=colS.optpar)+
-    geom_hline(yintercept=e.0,linetype=1,color="red",
-               size=1, alpha = .6)+
-    
-    geom_hline(yintercept=e.0+e.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=e.0-e.5,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=e.0+e.10,linetype=2,
-               alpha=.6)+
-    geom_hline(yintercept=e.0-e.10,linetype=2,
-               alpha=.6)+
-    theme( legend.position = "none",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title=element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))
-  
-  
-  ### Graph2
-  ### Proportion of change.classes across n.percent
-  n.perc.times <- as.numeric(table(result.optpar$n.percent))
-  perc <- with(result.optpar,aggregate(data=result.optpar,optpar ~ class*n.percent,FUN=length))
-  a <- colSums(table(perc$class,perc$n.percent))
-  perc$optpar <- (perc$optpar/rep(n.perc.times,
-                                times=a))*100
-  s4 <- ggplot2::ggplot(perc,
-                        aes(y=optpar,x=n.percent,
-                            fill=factor(class)),
-                        environment = parent.frame())+
-    geom_bar(stat="identity",alpha=.5)+
-    scale_fill_manual(values=colS.optpar,name="Change in optpar")+
-    scale_y_continuous(breaks=seq(0,100,10))+
-    scale_x_continuous(breaks=result.optpar$n.percent)+
-    theme( legend.position = "top",
-           legend.direction = "horizontal",
-           legend.text=element_text(size=12),
-           legend.title = element_text(size=12),
-           axis.text=element_text(size=12),
-           axis.title=element_text(size=12),
-           legend.key.width=unit(.5,"line"),
-           legend.key.size = unit(.5,"cm"),
-           panel.background = element_rect(fill="white",
-                                           colour="black"))+
-    xlab("% of Species Removed")+
-    ylab(paste("% of estimated optpar change"))
-  
-  ### Export four graphs:
+
+    ### Export two graphs:
   if (graphs == 1) 
     suppressMessages(return(s1))
   if (graphs == 2) 
     suppressMessages(return(s2))
-  if (graphs == 1) 
-    suppressMessages(return(s3))
-  if (graphs == 2) 
-    suppressMessages(return(s4))
   if (graphs == "all")
-    suppressMessages(return(multiplot(s1,s3,s2,s4, cols = 2)))
+    suppressMessages(return(multiplot(s1,s2, cols = 2)))
   }
   ##When a samp_discrete object has been called
   if(as.character(x$call[[1]])=="samp_discrete"){ #Check what type of TraitEvolution is evaluated
