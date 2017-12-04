@@ -143,17 +143,19 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
 #' Plot results from \code{clade_discrete} and \code{clade_continuous}
 #' @param x output from \code{clade_discrete} or \code{clade_continuous}
 #' @param clade The name of the clade to be evaluated (see details)
+#' @param graph The graph to be printed. Default \code{all}, or 
+#' for \code{clade_continuous} set \code{sigsq} or \code{optpar} 
+#' and for \code{clade_discrete} set\code{q12} or \code{q21}. 
 #' @param ... further arguments to methods.
 #' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
 #' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
 #' guide_legend element_rect
 #' guides
-#' 
 #' @author Gustavo Paterno & Gijsbert Werner
-#' @seealso \code{\link[sensiPhy]{clade_phylm}} 
+#' @seealso \code{\link[sensiPhy]{clade_continuous}} or \code{\link[sensiPhy]{clade_discrete}} 
 #' @details For 'x' from clade_discrete or clade_continuous:
 #' 
-#' \strong{Graph 1:} Distribution of the simulated signal estimates (Null distribution
+#' \strong{Graph 1:} Distribution of the simulated parameter estimates (Null distribution
 #' for a given clade sample size).
 #' The red dashed line represents the estimated signal for the reduced data 
 #' (without the focal clade) and the black line represents the signal estimate
@@ -220,7 +222,7 @@ sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
     ylab("Frequency")+
     xlab(paste("Simulated sigsq | N.species = ", 
                N.species, "| N.sim = ", times)) +
-    ggtitle(paste("Randomization test for", clade, " | P = ", 
+    ggtitle(paste("Randomization test", clade, " | P = ", 
                   sprintf("%.3f", P)))
   #Make the optpar graph
     ces       <- x$sensi.estimates 
@@ -261,7 +263,7 @@ sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
       ylab("Frequency")+
       xlab(paste("Simulated optpar | N.species = ", 
                  N.species, "| N.sim = ", times)) +
-      ggtitle(paste("Randomization test for", clade, " | P = ", 
+      ggtitle(paste("Randomization test", clade, " | P = ", 
                     sprintf("%.3f", P)))
     
     if (graph=="all"){
@@ -328,7 +330,7 @@ sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
       ylab("Frequency")+
       xlab(paste("Simulated q12 | N.species = ", 
                  N.species, "| N.sim = ", times)) +
-      ggtitle(paste("Randomization test for", clade, " | P = ", 
+      ggtitle(paste("Randomization test", clade, " | P = ", 
                     sprintf("%.3f", P)))
     #Make the q21 graph
     ces       <- x$sensi.estimates 
@@ -369,7 +371,7 @@ sensi_plot.sensiClade.TraiEvol <- function(x, clade = NULL,graph="all",...) {
       ylab("Frequency")+
       xlab(paste("Simulated q21 | N.species = ", 
                  N.species, "| N.sim = ", times)) +
-      ggtitle(paste("Randomization test for", clade, " | P = ", 
+      ggtitle(paste("Randomization test", clade, " | P = ", 
                     sprintf("%.3f", P)))
     
     if (graph=="all"){
