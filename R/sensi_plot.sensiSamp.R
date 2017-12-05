@@ -287,7 +287,7 @@ optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NUL
 #####Plotting method for sensi_plot.sensiSamp.TraitEvol
 #' @export
 
-sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
+sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...) {
   if(as.character(x$call[[1]])=="samp_continuous"){ #Check what type of TraitEvolution is evaluated
     ### Nulling variables:
     estimate.sigsq <- n.percent <- perc.sign <- percent_sp_removed <- NULL
@@ -402,7 +402,8 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     if (graphs == "all")
       suppressMessages(return(multiplot(s1,s2, cols = 2)))
   }
-  ##When a samp_discrete object has been called
+
+    ##When a samp_discrete object has been called
   if(as.character(x$call[[1]])=="samp_discrete"){ #Check what type of TraitEvolution is evaluated
     ### Nulling variables:
     estimate.q12 <- n.percent <- perc.sign <- percent_sp_removed <- NULL
@@ -417,7 +418,7 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     ### Higher than 5%
     if (length(result.q12[result.q12$q12.perc> 5
                           & result.q12$q12.perc <= 10 ,]$class) >= 1){
-      result.q12[result.q12$q12.perc > 5
+      result.q12[result.q12$q12.perc > 5 
                  & result.q12$q12.perc <= 10 ,]$class <- "higher than 5%"
     }
     ### Higher than 10%
@@ -434,7 +435,7 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     result.q12$class =
       with(result.q12, factor(class,
                               levels = rev(levels(result.q12$class))))
-    
+
     ## Organizing colours
     if(length(levels(result.q12$class)) == 3){
       colS.q12 = c("skyblue","orange","red2")
@@ -488,6 +489,7 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     a <- colSums(table(perc$class,perc$n.percent))
     perc$q12 <- (perc$q12/rep(n.perc.times,
                               times=a))*100
+                              
     s2 <- ggplot2::ggplot(perc,
                           aes(y=q12,x=n.percent,
                               fill=factor(class)),
@@ -521,9 +523,9 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
       result.q21[result.q21$q21.perc <= 5,]$class <- "within 5%"
     }
     ### Higher than 5%
-    if (length(result.q21[result.q21$q21.perc> 5
+    if (length(result.q21[result.q21$q21.perc> 5 
                           & result.q21$q21.perc <= 10 ,]$class) >= 1){
-      result.q21[result.q21$q21.perc > 5
+      result.q21[result.q21$q21.perc > 5 
                  & result.q21$q21.perc <= 10 ,]$class <- "higher than 5%"
     }
     ### Higher than 10%
@@ -540,7 +542,7 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     result.q21$class =
       with(result.q21, factor(class,
                               levels = rev(levels(result.q21$class))))
-    
+
     ## Organizing colours
     if(length(levels(result.q21$class)) == 3){
       colS.q21 = c("skyblue","orange","red2")
@@ -632,4 +634,3 @@ sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
     }
   }
 }
-
