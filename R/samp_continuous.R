@@ -60,19 +60,19 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "OU",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2, track = T)
+#' model = "OU",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2, track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_cont)
 #' sensi_plot(samp_cont)
 #' sensi_plot(samp_cont, graphs = 1)
 #' #Use a different evolutionary model 
 #' samp_cont2<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "kappa",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2,track = T)
+#' model = "kappa",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2,track = TRUE)
 #' summary(samp_cont2)
 #' sensi_plot(samp_cont2)
 #' sensi_plot(samp_cont2, graphs = 2)
 #' samp_cont3<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "BM",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2,track = T)
+#' model = "BM",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2,track = TRUE)
 #' summary(samp_cont3)
 #' @export
 
