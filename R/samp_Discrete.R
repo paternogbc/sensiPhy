@@ -67,10 +67,14 @@
 #' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = T)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_binary)
+#' sensi_plot(samp_binary)
+#' sensi_plot(samp_binary,graphs==1)
+#' sensi_plot(samp_binary,graphs==2)
 #' #Use a different evolutionary model or transformation 
 #' samp_binary2<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",n.cores = 2,track = T)
 #' summary(samp_binary2)
+#' sensi_plot(samp_binary2)
 #' @export
 
 samp_discrete <- function(data,phy,n.sim=30,
