@@ -282,3 +282,354 @@ optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NUL
                    s1 = s1, s2 = s2, s4 = s4, opt = opt,
                    i1 = i1, i2 = i2, i4 = i4, model = x$model)
 }
+
+
+#####Plotting method for sensi_plot.sensiSamp.TraitEvol
+#' @export
+
+sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
+  if(as.character(x$call[[1]])=="samp_continuous"){ #Check what type of TraitEvolution is evaluated
+    ### Nulling variables:
+    estimate.sigsq <- n.percent <- perc.sign <- percent_sp_removed <- NULL
+    result.sigsq    <- x$sensi.estimates
+    
+    # classes of perc:
+    result.sigsq$class <- "class"
+    ### Within 5%:
+    if (length(result.sigsq[result.sigsq$sigsq.perc <= 5 ,]$class) >= 1){
+      result.sigsq[result.sigsq$sigsq.perc <= 5,]$class <- "within 5%"
+    }
+    ### Higher than 5%
+    if (length(result.sigsq[result.sigsq$sigsq.perc> 5
+                            & result.sigsq$sigsq.perc <= 10 ,]$class) >= 1){
+      result.sigsq[result.sigsq$sigsq.perc > 5
+                   & result.sigsq$sigsq.perc <= 10 ,]$class <- "higher than 5%"
+    }
+    ### Higher than 10%
+    if (length(result.sigsq[result.sigsq$sigsq.perc > 10,]$class) >= 1){
+      result.sigsq[result.sigsq$sigsq.perc > 10,]$class <- "higher than 10%"
+    }
+    
+    result.sigsq$class <- as.factor(result.sigsq$class)
+    e.0    <- as.numeric(x$full.model.estimates$sigsq)
+    e.5    <- .05*e.0
+    e.10   <- .1*e.0
+    
+    # reverting the order of the levels
+    result.sigsq$class =
+      with(result.sigsq, factor(class,
+                                levels = rev(levels(result.sigsq$class))))
+    
+    ## Organizing colours
+    if(length(levels(result.sigsq$class)) == 3){
+      colS.sigsq = c("skyblue","orange","red2")
+    }
+    if(length(levels(result.sigsq$class)) == 2){
+      colS.sigsq = c("skyblue","orange")
+    }
+    if(length(levels(result.sigsq$class)) == 1){
+      colS.sigsq = c("skyblue")
+    }
+    
+    ### Graphs--------------------------------------------------------------
+    
+    ### Estimated across n.percent:
+    s1 <- ggplot2::ggplot(result.sigsq,aes(y=sigsq,x=n.percent,
+                                           colour=class),
+                          environment = parent.frame())+
+      
+      geom_point(size=4,position = "jitter",alpha=.5)+
+      scale_x_continuous(breaks=result.sigsq$n.percent)+
+      ylab("Estimated sigsq")+
+      xlab("% of Species Removed ")+
+      scale_colour_manual(values=colS.sigsq)+
+      geom_hline(yintercept=e.0,linetype=1,color="red",
+                 size=1, alpha = .6)+
+      
+      geom_hline(yintercept=e.0+e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0+e.10,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.10,linetype=2,
+                 alpha=.6)+
+      theme( legend.position = "none",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title=element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))
+    
+    
+    ### Graph2
+    ### Proportion of change.classes across n.percent
+    n.perc.times <- as.numeric(table(result.sigsq$n.percent))
+    perc <- with(result.sigsq,aggregate(data=result.sigsq,sigsq ~ class*n.percent,FUN=length))
+    a <- colSums(table(perc$class,perc$n.percent))
+    perc$sigsq <- (perc$sigsq/rep(n.perc.times,
+                                  times=a))*100
+    s2 <- ggplot2::ggplot(perc,
+                          aes(y=sigsq,x=n.percent,
+                              fill=factor(class)),
+                          environment = parent.frame())+
+      geom_bar(stat="identity",alpha=.5)+
+      scale_fill_manual(values=colS.sigsq,name="Change in sigsq")+
+      scale_y_continuous(breaks=seq(0,100,10))+
+      scale_x_continuous(breaks=result.sigsq$n.percent)+
+      theme( legend.position = "top",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title = element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))+
+      xlab("% of Species Removed")+
+      ylab(paste("% of estimated sigsq change"))
+    
+    ### Export two graphs:
+    if (graphs == 1) 
+      suppressMessages(return(s1))
+    if (graphs == 2) 
+      suppressMessages(return(s2))
+    if (graphs == "all")
+      suppressMessages(return(multiplot(s1,s2, cols = 2)))
+  }
+  ##When a samp_discrete object has been called
+  if(as.character(x$call[[1]])=="samp_discrete"){ #Check what type of TraitEvolution is evaluated
+    ### Nulling variables:
+    estimate.q12 <- n.percent <- perc.sign <- percent_sp_removed <- NULL
+    result.q12    <- x$sensi.estimates
+    
+    # classes of perc:
+    result.q12$class <- "class"
+    ### Within 5%:
+    if (length(result.q12[result.q12$q12.perc <= 5 ,]$class) >= 1){
+      result.q12[result.q12$q12.perc <= 5,]$class <- "within 5%"
+    }
+    ### Higher than 5%
+    if (length(result.q12[result.q12$q12.perc> 5
+                          & result.q12$q12.perc <= 10 ,]$class) >= 1){
+      result.q12[result.q12$q12.perc > 5
+                 & result.q12$q12.perc <= 10 ,]$class <- "higher than 5%"
+    }
+    ### Higher than 10%
+    if (length(result.q12[result.q12$q12.perc > 10,]$class) >= 1){
+      result.q12[result.q12$q12.perc > 10,]$class <- "higher than 10%"
+    }
+    
+    result.q12$class <- as.factor(result.q12$class)
+    e.0    <- as.numeric(x$full.model.estimates$q12)
+    e.5    <- .05*e.0
+    e.10   <- .1*e.0
+    
+    # reverting the order of the levels
+    result.q12$class =
+      with(result.q12, factor(class,
+                              levels = rev(levels(result.q12$class))))
+    
+    ## Organizing colours
+    if(length(levels(result.q12$class)) == 3){
+      colS.q12 = c("skyblue","orange","red2")
+    }
+    if(length(levels(result.q12$class)) == 2){
+      colS.q12 = c("skyblue","orange")
+    }
+    if(length(levels(result.q12$class)) == 1){
+      colS.q12 = c("skyblue")
+    }
+    
+    ### Graphs--------------------------------------------------------------
+    
+    ### Estimated across n.percent:
+    s1 <- ggplot2::ggplot(result.q12,aes(y=q12,x=n.percent,
+                                         colour=class),
+                          environment = parent.frame())+
+      
+      geom_point(size=4,position = "jitter",alpha=.5)+
+      scale_x_continuous(breaks=result.q12$n.percent)+
+      ylab("Estimated q12")+
+      xlab("% of Species Removed ")+
+      scale_colour_manual(values=colS.q12)+
+      geom_hline(yintercept=e.0,linetype=1,color="red",
+                 size=1, alpha = .6)+
+      
+      geom_hline(yintercept=e.0+e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0+e.10,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.10,linetype=2,
+                 alpha=.6)+
+      theme( legend.position = "none",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title=element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))
+    
+    
+    ### Graph2
+    ### Proportion of change.classes across n.percent
+    n.perc.times <- as.numeric(table(result.q12$n.percent))
+    perc <- with(result.q12,aggregate(data=result.q12,q12 ~ class*n.percent,FUN=length))
+    a <- colSums(table(perc$class,perc$n.percent))
+    perc$q12 <- (perc$q12/rep(n.perc.times,
+                              times=a))*100
+    s2 <- ggplot2::ggplot(perc,
+                          aes(y=q12,x=n.percent,
+                              fill=factor(class)),
+                          environment = parent.frame())+
+      geom_bar(stat="identity",alpha=.5)+
+      scale_fill_manual(values=colS.q12,name="Change in q12")+
+      scale_y_continuous(breaks=seq(0,100,10))+
+      scale_x_continuous(breaks=result.q12$n.percent)+
+      theme( legend.position = "top",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title = element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))+
+      xlab("% of Species Removed")+
+      ylab(paste("% of estimated q12 change"))
+    
+    ####Redo the exact same thing for the q21
+    ### Nulling variables:
+    estimate.q21 <- n.percent <- perc.sign <- percent_sp_removed <- NULL
+    result.q21    <- x$sensi.estimates
+    
+    # classes of perc:
+    result.q21$class <- "class"
+    ### Within 5%:
+    if (length(result.q21[result.q21$q21.perc <= 5 ,]$class) >= 1){
+      result.q21[result.q21$q21.perc <= 5,]$class <- "within 5%"
+    }
+    ### Higher than 5%
+    if (length(result.q21[result.q21$q21.perc> 5
+                          & result.q21$q21.perc <= 10 ,]$class) >= 1){
+      result.q21[result.q21$q21.perc > 5
+                 & result.q21$q21.perc <= 10 ,]$class <- "higher than 5%"
+    }
+    ### Higher than 10%
+    if (length(result.q21[result.q21$q21.perc > 10,]$class) >= 1){
+      result.q21[result.q21$q21.perc > 10,]$class <- "higher than 10%"
+    }
+    
+    result.q21$class <- as.factor(result.q21$class)
+    e.0    <- as.numeric(x$full.model.estimates$q21)
+    e.5    <- .05*e.0
+    e.10   <- .1*e.0
+    
+    # reverting the order of the levels
+    result.q21$class =
+      with(result.q21, factor(class,
+                              levels = rev(levels(result.q21$class))))
+    
+    ## Organizing colours
+    if(length(levels(result.q21$class)) == 3){
+      colS.q21 = c("skyblue","orange","red2")
+    }
+    if(length(levels(result.q21$class)) == 2){
+      colS.q21 = c("skyblue","orange")
+    }
+    if(length(levels(result.q21$class)) == 1){
+      colS.q21 = c("skyblue")
+    }
+    
+    ### Graphs--------------------------------------------------------------
+    
+    ### Estimated across n.percent:
+    s3 <- ggplot2::ggplot(result.q21,aes(y=q21,x=n.percent,
+                                         colour=class),
+                          environment = parent.frame())+
+      
+      geom_point(size=4,position = "jitter",alpha=.5)+
+      scale_x_continuous(breaks=result.q21$n.percent)+
+      ylab("Estimated q21")+
+      xlab("% of Species Removed ")+
+      scale_colour_manual(values=colS.q21)+
+      geom_hline(yintercept=e.0,linetype=1,color="red",
+                 size=1, alpha = .6)+
+      
+      geom_hline(yintercept=e.0+e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.5,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0+e.10,linetype=2,
+                 alpha=.6)+
+      geom_hline(yintercept=e.0-e.10,linetype=2,
+                 alpha=.6)+
+      theme( legend.position = "none",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title=element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))
+    
+    
+    ### Graph2
+    ### Proportion of change.classes across n.percent
+    n.perc.times <- as.numeric(table(result.q21$n.percent))
+    perc <- with(result.q21,aggregate(data=result.q21,q21 ~ class*n.percent,FUN=length))
+    a <- colSums(table(perc$class,perc$n.percent))
+    perc$q21 <- (perc$q21/rep(n.perc.times,
+                              times=a))*100
+    s4 <- ggplot2::ggplot(perc,
+                          aes(y=q21,x=n.percent,
+                              fill=factor(class)),
+                          environment = parent.frame())+
+      geom_bar(stat="identity",alpha=.5)+
+      scale_fill_manual(values=colS.q21,name="Change in q21")+
+      scale_y_continuous(breaks=seq(0,100,10))+
+      scale_x_continuous(breaks=result.q21$n.percent)+
+      theme( legend.position = "top",
+             legend.direction = "horizontal",
+             legend.text=element_text(size=12),
+             legend.title = element_text(size=12),
+             axis.text=element_text(size=12),
+             axis.title=element_text(size=12),
+             legend.key.width=unit(.5,"line"),
+             legend.key.size = unit(.5,"cm"),
+             panel.background = element_rect(fill="white",
+                                             colour="black"))+
+      xlab("% of Species Removed")+
+      ylab(paste("% of estimated q21 change"))
+    
+    ### Export four graphs:
+    if (graphs == 1) 
+      suppressMessages(return(s1))
+    if (graphs == 2) 
+      suppressMessages(return(s2))
+    if (graphs == 3) 
+      suppressMessages(return(s3))
+    if (graphs == 4) 
+      suppressMessages(return(s4))
+    if (graphs == "all"){
+      if(x$optpar !="BM"){
+        suppressMessages(return(multiplot(s1,s3,s2,s4, cols = 2)))
+      } else
+        suppressMessages(return(multiplot(s1,s2, cols = 2)))
+    }
+  }
+}
+
