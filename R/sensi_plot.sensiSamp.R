@@ -285,7 +285,7 @@ optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NUL
 
 
 #####
-
+#' @export
 sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
   if(as.character(x$call[[1]])=="samp_continuous"){ #Check what type of TraitEvolution is evaluated
   ### Nulling variables:

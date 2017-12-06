@@ -78,11 +78,11 @@
 #' clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="delta",
 #' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 #' summary(clade_cont2)
-#' sensi_plot.sensiClade.TraitEvol(clade_cont2)
+#' sensi_plot(clade_cont2)
 #' clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
 #' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 #' summary(clade_cont3)
-#' sensi_plot.sensiClade.TraitEvol(clade_cont3,graph="sigsq")
+#' sensi_plot(clade_cont3,graph="sigsq")
 #' @export
 
 clade_continuous <- function(data, phy, model,

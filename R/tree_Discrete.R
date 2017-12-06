@@ -54,7 +54,7 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "ARD",transform = "none",n.tree = 30,n.cores = 2,track = T)
+#' model = "ARD",transform = "none",n.tree = 30,n.cores = 2,track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(tree_binary)
 #' sensi_plot(tree_binary)
@@ -62,12 +62,12 @@
 #' sensi_plot(tree_binary,graphs="q21")
 #' #Use a different evolutionary model or transformation.
 #' tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "lambda",n.tree = 30,n.cores = 2,track = T)
+#' model = "SYM",transform = "lambda",n.tree = 30,n.cores = 2,track = TRUE)
 #' summary(tree_binary_lambda) #Using Pagel's Lambda
 #' sensi_plot(tree_binary_lambda)  
 #' #Symmetrical rates, with an Early Burst (EB) model of trait evolution
 #' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-#' model = "SYM",transform = "EB",n.tree = 30,n.cores = 2,track = T)
+#' model = "SYM",transform = "EB",n.tree = 30,n.cores = 2,track = TRUE)
 #' summary(tree_binary_SYM_EB)
 #' sensi_plot(tree_binary_lamda) 
 #' sensi_plot(tree_binary_lamda,graphs="optpar") 

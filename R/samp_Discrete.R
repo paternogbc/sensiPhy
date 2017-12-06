@@ -64,7 +64,7 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = T)
+#' n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(samp_binary)
 #' sensi_plot(samp_binary)
@@ -72,7 +72,7 @@
 #' sensi_plot(samp_binary,graphs=2)
 #' #Use a different evolutionary model or transformation 
 #' samp_binary2<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",n.cores = 2,track = T)
+#' n.sim=25,breaks=seq(.1,.3,.1),model = "ARD",transform = "lambda",n.cores = 2,track = TRUE)
 #' summary(samp_binary2)
 #' sensi_plot(samp_binary2)
 #' sensi_plot(samp_binary2,graphs=1)
