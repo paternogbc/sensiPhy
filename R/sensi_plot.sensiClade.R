@@ -137,3 +137,254 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
     return(suppressMessages(multiplot(g.out, g2, cols=2)))
 }
 
+
+#' Graphical diagnostics for class 'sensiClade.TraitEvol'
+#'
+#' Plot results from \code{clade_discrete} and \code{clade_continuous}
+#' @param x output from \code{clade_discrete} or \code{clade_continuous}
+#' @param clade The name of the clade to be evaluated (see details)
+#' @param graph The graph to be printed. Default \code{all}, or 
+#' for \code{clade_continuous} set \code{sigsq} or \code{optpar} 
+#' and for \code{clade_discrete} set\code{q12} or \code{q21}. 
+#' @param ... further arguments to methods.
+#' @importFrom ggplot2 aes theme element_text geom_point element_rect ylab xlab
+#' ggtitle element_blank geom_abline scale_shape_manual scale_linetype_manual 
+#' guide_legend element_rect
+#' guides
+#' @author Gustavo Paterno & Gijsbert Werner
+#' @seealso \code{\link[sensiPhy]{clade_continuous}} or \code{\link[sensiPhy]{clade_discrete}} 
+#' @details For 'x' from clade_discrete or clade_continuous:
+#' 
+#' \strong{Graph 1:} Distribution of the simulated parameter estimates (Null distribution
+#' for a given clade sample size).
+#' The red dashed line represents the estimated signal for the reduced data 
+#' (without the focal clade) and the black line represents the signal estimate
+#'  for the full data.
+#' 
+#' @importFrom ggplot2 aes_string
+#' @importFrom stats model.frame qt plogis 
+#' @export
+
+sensi_plot.sensiClade.TraitEvol <- function(x, clade = NULL,graph="all",...) {
+  
+  if(as.character(x$call[[1]])=="clade_continuous"){ #Check what type of TraitEvolution is evaluated
+    if(is.null(graph)) stop("Specify what graph to print (sigsq or optpar)")
+    if(any(graph %in% c("q12","q21"))) stop("q12 and q12 are not allowed for clade_discrete, specify 'all', 'sigsq' or 'optpar'")
+    else
+  # check clade
+  clades.names <- x$sensi.estimates$clade
+  if (is.null(clade) == TRUE){
+    clade <- clades.names[1]
+    message("Clade argument was not defined. Plotting results for clade: ",
+            clade,"
+            Use clade = 'clade name' to plot results for other clades")
+  }
+  
+  times <- x$call$n.sim
+  if(is.null(x$call$n.sim)) times <- 1000
+  
+  #Makde the sigsq graph
+  ces       <- x$sensi.estimates 
+  N.species <- ces[ces$clade==clade, ]$N.species
+  p.values <- summary(x)$sigsq
+  P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
+  
+  wcf <- x$sensi.estimates$clade %in% clade
+  wcn <- x$null.dist$clade %in% clade
+  if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
+  
+  # Full estimate
+  e.0 <- x$full.model.estimates$sigsq 
+  # Withou clade estimate
+  c.e <- x$sensi.estimates[wcf, ]$sigsq
+  nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
+  
+  ## Estimates dataframe
+  vl <- data.frame(model = c("Full data", "Without clade"), 
+                   estimate = c(e.0,c.e))
+  leg.title <- paste("Estimated sigsq")
+  
+  ### Graph 1
+  p1 <- ggplot2::ggplot(nd, aes(x = nd$sigsq)) + 
+    geom_histogram(fill="yellow",colour="black", size=.2, alpha = .3) +
+    geom_vline(data = vl, aes(xintercept = estimate,
+                              colour = model, linetype = model),
+               size = 1.2) + 
+    scale_color_manual(leg.title, values = c("black","red")) +
+    scale_linetype_manual(leg.title, values = c(1,2)) +
+    theme(axis.title=element_text(size=12),
+          axis.text = element_text(size=12),
+          panel.background = element_rect(fill="white",
+                                          colour="black"),
+          legend.key = element_rect(fill = "transparent"),
+          legend.background = element_rect(fill = "transparent"),
+          legend.position = c(.9,.9))+
+    ylab("Frequency")+
+    xlab(paste("Simulated sigsq | N.species = ", 
+               N.species, "| N.sim = ", times)) +
+    ggtitle(paste("Randomization test", clade, " | P = ", 
+                  sprintf("%.3f", P)))
+  #Make the optpar graph
+    ces       <- x$sensi.estimates 
+    N.species <- ces[ces$clade==clade, ]$N.species
+    p.values <- summary(x)$optpar
+    P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
+    
+    wcf <- x$sensi.estimates$clade %in% clade
+    wcn <- x$null.dist$clade %in% clade
+    if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
+    
+    # Full estimate
+    e.0 <- x$full.model.estimates$optpar 
+    # Withou clade estimate
+    c.e <- x$sensi.estimates[wcf, ]$optpar
+    nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
+    
+    ## Estimates dataframe
+    vl <- data.frame(model = c("Full data", "Without clade"), 
+                     estimate = c(e.0,c.e))
+    leg.title <- paste("Estimated optpar")
+    
+    ### Graph 1
+    p2 <- ggplot2::ggplot(nd, aes(x = nd$optpar)) + 
+      geom_histogram(fill="yellow",colour="black", size=.2, alpha = .3) +
+      geom_vline(data = vl, aes(xintercept = estimate,
+                                colour = model, linetype = model),
+                 size = 1.2) + 
+      scale_color_manual(leg.title, values = c("black","red")) +
+      scale_linetype_manual(leg.title, values = c(1,2)) +
+      theme(axis.title=element_text(size=12),
+            axis.text = element_text(size=12),
+            panel.background = element_rect(fill="white",
+                                            colour="black"),
+            legend.key = element_rect(fill = "transparent"),
+            legend.background = element_rect(fill = "transparent"),
+            legend.position = c(.9,.9))+
+      ylab("Frequency")+
+      xlab(paste("Simulated optpar | N.species = ", 
+                 N.species, "| N.sim = ", times)) +
+      ggtitle(paste("Randomization test", clade, " | P = ", 
+                    sprintf("%.3f", P)))
+    
+    if (graph=="all"){
+    suppressMessages(return(multiplot(p1,p2, cols=2))) 
+      } 
+    if (graph=="sigsq")
+      suppressMessages(return(p1))
+    if (graph=="optpar")
+      suppressMessages(return(p2))
+  }
+
+  if(as.character(x$call[[1]])=="clade_discrete"){ #Check what type of TraitEvolution is evaluated
+    if(is.null(graph)) stop("Specify what graph to print (q12 or q21)")
+    if(any(graph %in% c("sigsq","optpar"))) stop("sigsq and optpar are not allowed for clade_discrete, specify 'all', 'q12' or 'q21'")
+    else
+      # check clade
+      clades.names <- x$sensi.estimates$clade
+    if (is.null(clade) == TRUE){
+      clade <- clades.names[1]
+      message("Clade argument was not defined. Plotting results for clade: ",
+              clade,"
+              Use clade = 'clade name' to plot results for other clades")
+    }
+    
+    times <- x$call$n.sim
+    if(is.null(x$call$n.sim)) times <- 1000
+    
+    #Makde the q12 graph
+    ces       <- x$sensi.estimates 
+    N.species <- ces[ces$clade==clade, ]$N.species
+    p.values <- summary(x)$q12
+    P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
+    
+    wcf <- x$sensi.estimates$clade %in% clade
+    wcn <- x$null.dist$clade %in% clade
+    if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
+    
+    # Full estimate
+    e.0 <- x$full.model.estimates$q12 
+    # Withou clade estimate
+    c.e <- x$sensi.estimates[wcf, ]$q12
+    nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
+    
+    ## Estimates dataframe
+    vl <- data.frame(model = c("Full data", "Without clade"), 
+                     estimate = c(e.0,c.e))
+    leg.title <- paste("Estimated q12")
+    
+    ### Graph 1
+    p1 <- ggplot2::ggplot(nd, aes(x = nd$q12)) + 
+      geom_histogram(fill="yellow",colour="black", size=.2, alpha = .3) +
+      geom_vline(data = vl, aes(xintercept = estimate,
+                                colour = model, linetype = model),
+                 size = 1.2) + 
+      scale_color_manual(leg.title, values = c("black","red")) +
+      scale_linetype_manual(leg.title, values = c(1,2)) +
+      theme(axis.title=element_text(size=12),
+            axis.text = element_text(size=12),
+            panel.background = element_rect(fill="white",
+                                            colour="black"),
+            legend.key = element_rect(fill = "transparent"),
+            legend.background = element_rect(fill = "transparent"),
+            legend.position = c(.9,.9))+
+      ylab("Frequency")+
+      xlab(paste("Simulated q12 | N.species = ", 
+                 N.species, "| N.sim = ", times)) +
+      ggtitle(paste("Randomization test", clade, " | P = ", 
+                    sprintf("%.3f", P)))
+    #Make the q21 graph
+    ces       <- x$sensi.estimates 
+    N.species <- ces[ces$clade==clade, ]$N.species
+    p.values <- summary(x)$q21
+    P <- p.values[p.values$clade.removed == clade, ]$Pval.randomization   
+    
+    wcf <- x$sensi.estimates$clade %in% clade
+    wcn <- x$null.dist$clade %in% clade
+    if(sum(wcf) == 0) stop(paste(clade, "is not a valid clade name", sep = " "))
+    
+    # Full estimate
+    e.0 <- x$full.model.estimates$q21 
+    # Withou clade estimate
+    c.e <- x$sensi.estimates[wcf, ]$q21
+    nd <- x$null.dist[wcn, ] ### CLADE NULL DIST
+    
+    ## Estimates dataframe
+    vl <- data.frame(model = c("Full data", "Without clade"), 
+                     estimate = c(e.0,c.e))
+    leg.title <- paste("Estimated q21")
+    
+    ### Graph 1
+    p2 <- ggplot2::ggplot(nd, aes(x = nd$q21)) + 
+      geom_histogram(fill="yellow",colour="black", size=.2, alpha = .3) +
+      geom_vline(data = vl, aes(xintercept = estimate,
+                                colour = model, linetype = model),
+                 size = 1.2) + 
+      scale_color_manual(leg.title, values = c("black","red")) +
+      scale_linetype_manual(leg.title, values = c(1,2)) +
+      theme(axis.title=element_text(size=12),
+            axis.text = element_text(size=12),
+            panel.background = element_rect(fill="white",
+                                            colour="black"),
+            legend.key = element_rect(fill = "transparent"),
+            legend.background = element_rect(fill = "transparent"),
+            legend.position = c(.9,.9))+
+      ylab("Frequency")+
+      xlab(paste("Simulated q21 | N.species = ", 
+                 N.species, "| N.sim = ", times)) +
+      ggtitle(paste("Randomization test", clade, " | P = ", 
+                    sprintf("%.3f", P)))
+    
+    if (graph=="all"){
+      suppressMessages(return(multiplot(p1,p2, cols=2))) 
+    } 
+    if (graph=="q12")
+      suppressMessages(return(p1))
+    if (graph=="q21")
+      suppressMessages(return(p2))
+    }
+  
+  }
+
+
+
+
