@@ -55,6 +55,7 @@
 #' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
 #' 
 #' @examples 
+#' \dontshow{
 #' #Load data:
 #' data("primates")
 #' #Create a binary trait factor 
@@ -64,7 +65,18 @@
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = TRUE)
-#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' }
+#' \dontrun{
+#' #Load data:
+#' data("primates")
+#' #Create a binary trait factor 
+#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
+#' names(adultMass_binary)<-rownames(primates$data)
+#' #Model trait evolution accounting for phylogenetic uncertainty
+#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+#' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = TRUE)
+#' #Print summary statistics
 #' summary(influ_binary)
 #' sensi_plot(influ_binary) #q12 and q21 are, as expected, exactly the same in symmetrical model. 
 #' #Use a different evolutionary model. 
@@ -77,6 +89,7 @@
 #' model = "ARD",transform = "none",cutoff = 1.2,n.cores = 2,track = TRUE)
 #' summary(influ_binary3)
 #' sensi_plot(influ_binary3) 
+#' }
 #' @export
 
 influ_discrete <- function(data,phy,model,

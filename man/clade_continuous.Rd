@@ -86,12 +86,19 @@ See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontshow{
 #Load data:
 data("primates")
 #Model trait evolution accounting for phylogenetic uncertainty
 clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
-trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,n.cores = 2,track=TRUE)
-#Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+}
+\dontrun{
+data("primates")
+#Model trait evolution accounting for phylogenetic uncertainty
+clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]], model="OU",
+trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+#Print summary statistics
 summary(clade_cont)
 sensi_plot(clade_cont,graph="all")
 sensi_plot(clade_cont,clade="Cercopithecidae",graph = "sigsq")
@@ -105,6 +112,7 @@ clade_cont3<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="
 trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 summary(clade_cont3)
 sensi_plot(clade_cont3,graph="sigsq")
+}
 }
 \references{
 Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 

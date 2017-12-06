@@ -73,7 +73,7 @@ names(adultMass_binary)<-rownames(primates$data)
 #Model trait evolution accounting for phylogenetic uncertainty
 tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 model = "ARD",transform = "none",n.tree = 30,n.cores = 2,track = TRUE)
-#Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#Print summary statistics
 summary(tree_binary)
 sensi_plot(tree_binary)
 sensi_plot(tree_binary,graphs="q12")

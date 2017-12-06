@@ -43,6 +43,16 @@
 #' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
 #' 
 #' @examples 
+#' \dontshow{
+#' #Load data:
+#' data("primates")
+#' #Model trait evolution accounting for phylogenetic uncertainty
+#' adultMass<-primates$data$adultMass
+#' names(adultMass)<-rownames(primates$data)
+#' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
+#' model = "OU",n.tree=1,n.cores = 2,track = TRUE)
+#' }
+#' \dontrun{
 #' #Load data:
 #' data("primates")
 #' #Model trait evolution accounting for phylogenetic uncertainty
@@ -50,7 +60,7 @@
 #' names(adultMass)<-rownames(primates$data)
 #' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
 #' model = "OU",n.tree=30,n.cores = 2,track = TRUE)
-#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' #Print summary statistics
 #' summary(tree_cont)
 #' sensi_plot(tree_cont)
 #' sensi_plot(tree_cont,graphs="sigsq")
@@ -60,6 +70,7 @@
 #' model = "delta",n.tree=30,n.cores = 2,track = TRUE)
 #' summary(tree_cont2)
 #' sensi_plot(tree_cont2)
+#' }
 #' @export
 
 tree_continuous <- function(data,phy,n.tree=10,model,

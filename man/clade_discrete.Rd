@@ -91,22 +91,34 @@ See \code{\link[geiger]{fitDiscrete}} for more details on character models and t
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontshow{
 #Load data:
 data("primates")
 #Create a binary trait factor 
 primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 clade_disc<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
-trait.col = "adultMass_binary",clade.col="family",nsim=30,n.species=10,n.cores = 2)
+trait.col = "adultMass_binary",clade.col="family",nsim=1,n.species=10,n.cores = 2)
+}
+\dontrun{
+#Load data:
+data("primates")
+#Create a binary trait factor 
+primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+clade_disc<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
+trait.col = "adultMass_binary",clade.col="family",nsim=1,n.species=10,n.cores = 2)
 summary(clade_disc)
 sensi_plot(clade_disc)
 sensi_plot(clade_disc, clade = "Cebidae", graph = "q12")
 #Change the evolutionary model, tree transformation or minimum numher of species per clade
-clade_disc_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="ARD",transform="kappa",
-trait.col = "adultMass_binary",clade.col="family",nsim=30,n.species=8,n.cores = 2)
+clade_disc_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],
+model="ARD",transform="kappa",
+trait.col = "adultMass_binary",clade.col="family",nsim=30,
+n.species=8,n.cores = 2)
 summary(clade_disc_2)
 sensi_plot(clade_disc_2)
 sensi_plot(clade_disc_2, graph = "q12")
 sensi_plot(clade_disc_2, graph = "q21")
+}
 }
 \references{
 Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 

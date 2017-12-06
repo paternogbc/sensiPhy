@@ -64,12 +64,19 @@
 #' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
 #' 
 #' @examples 
+#' \dontshow{
 #' #Load data:
 #' data("primates")
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
-#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,n.cores = 2,track=TRUE)
-#' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#' trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+#' }
+#' \dontrun{
+#' data("primates")
+#' #Model trait evolution accounting for phylogenetic uncertainty
+#' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]], model="OU",
+#' trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+#' #Print summary statistics
 #' summary(clade_cont)
 #' sensi_plot(clade_cont,graph="all")
 #' sensi_plot(clade_cont,clade="Cercopithecidae",graph = "sigsq")
@@ -83,6 +90,7 @@
 #' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 #' summary(clade_cont3)
 #' sensi_plot(clade_cont3,graph="sigsq")
+#' }
 #' @export
 
 clade_continuous <- function(data, phy, model,

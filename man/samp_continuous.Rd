@@ -71,6 +71,16 @@ See \code{\link[geiger]{fitContinuous}} for more details on character models and
 Output can be visualised using \code{sensi_plot}. [Not yet!]
 }
 \examples{
+\dontshow{
+#Load data:
+data("primates")
+#Model trait evolution accounting for phylogenetic uncertainty
+adultMass<-primates$data$adultMass
+names(adultMass)<-rownames(primates$data)
+samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
+model = "OU",n.sim=1,breaks=c(.1,.2),n.cores = 2, track = TRUE)
+}
+\dontrun{
 #Load data:
 data("primates")
 #Model trait evolution accounting for phylogenetic uncertainty
@@ -78,7 +88,7 @@ adultMass<-primates$data$adultMass
 names(adultMass)<-rownames(primates$data)
 samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
 model = "OU",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2, track = TRUE)
-#Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#Print summary statistics
 summary(samp_cont)
 sensi_plot(samp_cont)
 sensi_plot(samp_cont, graphs = 1)
@@ -91,6 +101,7 @@ sensi_plot(samp_cont2, graphs = 2)
 samp_cont3<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
 model = "BM",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2,track = TRUE)
 summary(samp_cont3)
+}
 }
 \references{
 Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 

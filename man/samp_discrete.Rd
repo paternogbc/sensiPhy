@@ -77,6 +77,18 @@ See \code{\link[geiger]{fitDiscrete}} for more details on character models and t
 Output can be visualised using \code{sensi_plot}. [Not yet!]
 }
 \examples{
+\dontshow{
+#Load data:
+data("primates")
+#Create a binary trait factor 
+adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+adultMass_binary<-as.factor(as.factor(adultMass_binary))
+names(adultMass_binary)<-rownames(primates$data)
+#Model trait evolution accounting for phylogenetic uncertainty
+samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+n.sim=1,breaks=c(.1,.2),model = "SYM",transform = "none",n.cores = 2,track = TRUE)
+}
+\dontrun{
 #Load data:
 data("primates")
 #Create a binary trait factor 
@@ -86,7 +98,7 @@ names(adultMass_binary)<-rownames(primates$data)
 #Model trait evolution accounting for phylogenetic uncertainty
 samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = TRUE)
-#Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+#Print summary statistics
 summary(samp_binary)
 sensi_plot(samp_binary)
 sensi_plot(samp_binary,graphs=1)
@@ -98,6 +110,7 @@ summary(samp_binary2)
 sensi_plot(samp_binary2)
 sensi_plot(samp_binary2,graphs=1)
 sensi_plot(samp_binary2,graphs=3)
+}
 }
 \references{
 Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
