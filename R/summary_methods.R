@@ -828,12 +828,23 @@ summary.intra.physig <- function(object, ...){
   return(res)
 }
 
-
+### METHODS for: diversification rate--------------------------------------------
 ### Summary method for class: sensiTree.TraitEvol:--------------------------------------
-
 #' @export
 summary.sensiTree.TraitEvol <- function(object, ...){
   res <- list(round(object$stats,4))
   names(res) <- c("Summary")
   return(res)
 }
+
+### METHODS for: diversification rate--------------------------------------------
+### tree.bd
+#' @export
+
+summary.tree.bd <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+}  
+
+
