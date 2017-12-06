@@ -69,8 +69,8 @@
 #' tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
 #' model = "SYM",transform = "EB",n.tree = 30,n.cores = 2,track = TRUE)
 #' summary(tree_binary_SYM_EB)
-#' sensi_plot(tree_binary_lamda) 
-#' sensi_plot(tree_binary_lamda,graphs="optpar") 
+#' sensi_plot(tree_binary_SYM_EB) 
+#' sensi_plot(tree_binary_SYM_EB,graphs="optpar") 
 #' @export
 
 tree_discrete <- function(data,phy,n.tree=10,model,
