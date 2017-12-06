@@ -63,18 +63,18 @@
 #' names(adultMass_binary)<-rownames(primates$data)
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "none",cutoff = 2,n.cores = 2)
+#' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = TRUE)
 #' #Print summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
 #' summary(influ_binary)
 #' sensi_plot(influ_binary) #q12 and q21 are, as expected, exactly the same in symmetrical model. 
 #' #Use a different evolutionary model. 
 #' influ_binary2<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "delta",n.cores = 2)
+#' model = "SYM",transform = "delta",n.cores = 2,track = TRUE)
 #' summary(influ_binary2)
 #' sensi_plot(influ_binary2)
 #' #Or change the cutoff and transformation
 #' influ_binary3<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "ARD",transform = "none",cutoff = 1.2,n.cores = 2)
+#' model = "ARD",transform = "none",cutoff = 1.2,n.cores = 2,track = TRUE)
 #' summary(influ_binary3)
 #' sensi_plot(influ_binary3) 
 #' @export
