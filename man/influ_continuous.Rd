@@ -75,7 +75,7 @@ See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models.
 \dontrun{
 #Load data:
 data("primates")
-#Model trait evolution accounting for phylogenetic uncertainty
+#Model trait evolution accounting for influential species
 adultMass<-primates$data$adultMass
 names(adultMass)<-rownames(primates$data)
 influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],

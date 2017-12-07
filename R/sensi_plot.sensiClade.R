@@ -166,6 +166,8 @@ sensi_plot.sensiClade <- function(x, clade = NULL, ...){
 #' @export
 
 sensi_plot.sensiClade.TraitEvol <- function(x, clade = NULL,graph="all",...) {
+  ### Nulling variables.
+  estimate <- model <- sigsq <- q12 <- q21 <- NULL
   
   if(as.character(x$call[[1]])=="clade_continuous"){ #Check what type of TraitEvolution is evaluated
     if(is.null(graph)) stop("Specify what graph to print (sigsq or optpar)")

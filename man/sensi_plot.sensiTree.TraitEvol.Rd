@@ -17,8 +17,8 @@
 \code{sensi_plot.sensiTree.TraitEvol} Plot results from \code{tree_discrete} and \code{tree_continuous}.
 }
 \seealso{
-\code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_fitDiscrete}}
-\code{\link[sensiPhy]{tree_fitContinuous}}
+\code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_discrete}}
+\code{\link[sensiPhy]{tree_continuous}}
 
 The following graphs are printed. 
 

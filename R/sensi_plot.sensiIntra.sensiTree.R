@@ -314,8 +314,8 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 geom_histogram geom_density geom_vline xlab theme
 #' @author Gijsbert Werner
-#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_fitDiscrete}}
-#' \code{\link[sensiPhy]{tree_fitContinuous}}
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_discrete}}
+#' \code{\link[sensiPhy]{tree_continuous}}
 #' 
 #'The following graphs are printed. 
 #'
@@ -349,7 +349,7 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
 #' 
 #' @importFrom grid unit 
 #' @importFrom stats plogis
-#' @importFrom stats reorder
+#' @importFrom stats reorder median sd
 #' @export
 sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
   if(as.character(x$call[[1]])=="tree_discrete"){

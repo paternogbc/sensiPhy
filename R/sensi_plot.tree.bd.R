@@ -23,6 +23,7 @@
 sensi_plot.tree.bd <- function(x, graphs="all", ...){
   
   ### Nulling variables
+  estimate <- n.tree <- model <- NULL
   ### Basic checking:
   method <- x$call$method
   if(is.null(x$call$method)) method <- "ms"

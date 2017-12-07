@@ -95,7 +95,7 @@ data("primates")
 adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 adultMass_binary<-as.factor(as.factor(adultMass_binary))
 names(adultMass_binary)<-rownames(primates$data)
-#Model trait evolution accounting for phylogenetic uncertainty
+#Model trait evolution accounting for sampling size 
 samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 n.sim=25,breaks=seq(.1,.3,.1),model = "SYM",transform = "none",n.cores = 2,track = TRUE)
 #Print summary statistics
