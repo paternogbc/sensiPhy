@@ -55,17 +55,6 @@
 #' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
 #' 
 #' @examples 
-#' \dontshow{
-#' #Load data:
-#' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
-#' #Model trait evolution accounting for phylogenetic uncertainty
-#' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = TRUE)
-#' }
 #' \dontrun{
 #' #Load data:
 #' data("primates")

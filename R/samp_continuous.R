@@ -61,7 +61,7 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
-#' model = "OU",n.sim=1,breaks=c(.1,.2),n.cores = 2, track = TRUE)
+#' model = "BM",n.sim=1,breaks=c(.1,.2),n.cores = 2, track = TRUE)
 #' }
 #' \dontrun{
 #' #Load data:

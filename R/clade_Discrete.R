@@ -67,14 +67,6 @@
 #' GEIGER: investigating evolutionary radiations. Bioinformatics 24:129-131.
 #' 
 #' @examples 
-#' \dontshow{
-#' #Load data:
-#' data("primates")
-#' #Create a binary trait factor 
-#' primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' clade_disc<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
-#' trait.col = "adultMass_binary",clade.col="family",nsim=1,n.species=10,n.cores = 2)
-#' }
 #' \dontrun{
 #' #Load data:
 #' data("primates")

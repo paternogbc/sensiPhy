@@ -90,8 +90,8 @@ Output can be visualised using \code{sensi_plot}.
 #Load data:
 data("primates")
 #Model trait evolution accounting for phylogenetic uncertainty
-clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="OU",
-trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="BM",
+trait.col = "adultMass",clade.col="family",n.sim=1,n.species=20,n.cores = 2,track=TRUE)
 }
 \dontrun{
 data("primates")

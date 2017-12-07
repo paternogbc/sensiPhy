@@ -72,15 +72,6 @@ All evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\c
 See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models.
 }
 \examples{
-\dontshow{
-#Load data:
-data("primates")
-#Model trait evolution accounting for phylogenetic uncertainty
-adultMass<-primates$data$adultMass
-names(adultMass)<-rownames(primates$data)
-influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
-model = "OU",cutoff = 2,n.cores = 2,track = TRUE)
-}
 \dontrun{
 #Load data:
 data("primates")

@@ -59,7 +59,7 @@
 #' adultMass<-primates$data$adultMass
 #' names(adultMass)<-rownames(primates$data)
 #' tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
-#' model = "OU",n.tree=30,n.cores = 2,track = TRUE)
+#' model = "OU",n.tree=1,n.cores = 2,track = TRUE)
 #' #Print summary statistics
 #' summary(tree_cont)
 #' sensi_plot(tree_cont)
