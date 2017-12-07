@@ -22,4 +22,7 @@ notifications:
     on_success: change
     on_failure: change
 
-install: travis_wait 30 mvn install
+script: 
+  - |
+    travis_wait 20 R CMD build .
+    travis_wait 20 R CMD check sensiPhy*tar.gz
