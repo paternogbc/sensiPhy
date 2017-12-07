@@ -265,3 +265,20 @@ print.sensiIntra_SampL <- function(x, ...)
   cat("\n")
   cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
+
+### 4. PRINT diversification ------------------------------------------
+### tree.physig:---------------------------------------
+#' @export
+print.tree.bd <- function(x, ...) 
+{
+  cat("Sensitivity analysis of net diversification rate \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of trees evaluated: ")
+  cat(nrow(x$tree.bd.estimates))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$tree.bd.estimates to access sensitivity analysis data"))
+}

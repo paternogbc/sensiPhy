@@ -305,3 +305,183 @@ sensi_plot.sensiTree_Intra <- function(x, graphs="all", uncer.type = "all",...){
     suppressMessages(return(p1))
   
 }
+
+#' Graphical diagnostics for class 'sensiTree.TraitEvol'
+#'
+#' \code{sensi_plot.sensiTree.TraitEvol} Plot results from \code{tree_discrete} and \code{tree_continuous}.
+#' @param x output from \code{tree_fitDiscrete} or \code{tree_fitContinuous}
+#' @param graphs choose which graph should be printed in the output ("all", "q12", "q21", "aic" or" "optpar")
+#' @param ... further arguments to methods
+#' @importFrom ggplot2 geom_histogram geom_density geom_vline xlab theme
+#' @author Gijsbert Werner
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_discrete}}
+#' \code{\link[sensiPhy]{tree_continuous}}
+#' 
+#'The following graphs are printed. 
+#'
+#' \strong{Graph aicc:} Distribution of estimated AICc-values across each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' \strong{Graph optpar:} Distribution of estimated values for optimisation parameter specified using 'transform' (if applicable)
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' Additionally, only for \code{tree_discrete} the function creates the following graphs. 
+#' 
+#' \strong{Graph q12:} Distribution of estimated parameter values for transition rates q12 for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' \strong{Graph q21:} Distribution of estimated parameter values for transition rates q21 for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' While only for \code{tree_continuous} the function creates the following graphs. 
+#' 
+#' \strong{Graph sigsq:} Distribution of estimated parameter values for rate of evolution sigsq for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' \strong{Graph z0:} Distribution of estimated parameter values for z0 for each tree.
+#' Red vertical line represents the mean signal among all estimates. 
+#' Blue vertical line represents the median signal among all estimates. 
+#' 
+#' @importFrom grid unit 
+#' @importFrom stats plogis
+#' @importFrom stats reorder median sd
+#' @export
+sensi_plot.sensiTree.TraitEvol <- function(x, graphs="all", ...){
+  if(as.character(x$call[[1]])=="tree_discrete"){
+  q12_fig<-ggplot2::ggplot()+
+    geom_histogram(aes(x$sensi.estimates$q12),
+                   fill = "yellow",colour = "black", size = .2,
+                   alpha = .3)+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$q12)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$q12)),colour="blue")+
+    xlab("Estimated q12") +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black"))
+  q21_fig<-ggplot2::ggplot()+
+    geom_histogram(aes(x$sensi.estimates$q21),
+                   fill = "yellow",colour = "black", size = .2,
+                   alpha = .3)+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$q21)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$q21)),colour="blue")+
+    xlab("Estimated q21") +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black"))
+  aicc_fig<-ggplot2::ggplot()+
+    geom_histogram(aes(x$sensi.estimates$aicc),
+                   fill = "yellow",colour = "black", size = .2,
+                   alpha = .3)+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$aicc)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$aicc)),colour="blue")+
+    xlab("Estimated AICc") +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black"))
+  optpar_fig<-ggplot2::ggplot()+
+    geom_histogram(aes(x$sensi.estimates$optpar),
+                   fill = "yellow",colour = "black", size = .2,
+                   alpha = .3)+
+    geom_vline(aes(xintercept=mean(x$sensi.estimates$optpar)),colour="red")+
+    geom_vline(aes(xintercept=median(x$sensi.estimates$optpar)),colour="blue")+
+    xlab(paste("Estimated",x$optpar,"parameter",sep=" ")) +
+    ylab("Frequency") +
+    theme(axis.title = element_text(size = 12),
+          axis.text = element_text(size = 12),
+          panel.background = element_rect(fill = "white",
+                                          colour = "black"))
+  
+  if (graphs=="all"){
+    if(x$optpar=="none"){
+      suppressMessages(return(multiplot(q12_fig,q21_fig,aicc_fig, cols=2))) #When transformation = "none" was used, don't print the visualisation for the optimisation parameter
+    } else
+    suppressMessages(return(multiplot(q12_fig,q21_fig,aicc_fig,optpar_fig, cols=2)))
+  }
+  if (graphs=="q12")
+    suppressMessages(return(q12_fig))
+  if (graphs=="q21")
+    suppressMessages(return(q21_fig))
+  if (graphs=="aic")
+    suppressMessages(return(aicc_fig))
+  if (graphs=="optpar")
+    suppressMessages(return(optpar_fig))
+  } 
+  
+  if(as.character(x$call[[1]])=="tree_continuous"){
+    sigsq_fig<-ggplot2::ggplot()+
+      geom_histogram(aes(x$sensi.estimates$sigsq),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$sigsq)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$sigsq)),colour="blue")+
+      xlab("Estimated sigsq") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    z0_fig<-ggplot2::ggplot()+
+      geom_histogram(aes(x$sensi.estimates$z0),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$z0)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$z0)),colour="blue")+
+      xlab("Estimated z0") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    aicc_fig<-ggplot2::ggplot()+
+      geom_histogram(aes(x$sensi.estimates$aicc),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$aicc)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$aicc)),colour="blue")+
+      xlab("Estimated AICc") +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    optpar_fig<-ggplot2::ggplot()+
+      geom_histogram(aes(x$sensi.estimates$optpar),
+                     fill = "yellow",colour = "black", size = .2,
+                     alpha = .3)+
+      geom_vline(aes(xintercept=mean(x$sensi.estimates$optpar)),colour="red")+
+      geom_vline(aes(xintercept=median(x$sensi.estimates$optpar)),colour="blue")+
+      xlab(paste("Estimated",x$optpar,"parameter",sep=" ")) +
+      ylab("Frequency") +
+      theme(axis.title = element_text(size = 12),
+            axis.text = element_text(size = 12),
+            panel.background = element_rect(fill = "white",
+                                            colour = "black"))
+    
+    if (graphs=="all"){
+      if(x$optpar=="none"){
+        suppressMessages(return(multiplot(sigsq_fig,z0_fig,aicc_fig, cols=2))) #When transformation = "none" was used, don't print the visualisation for the optimisation parameter
+      } else
+        suppressMessages(return(multiplot(sigsq_fig,z0_fig,aicc_fig,optpar_fig, cols=2)))
+    }
+    if (graphs=="sigsq")
+      suppressMessages(return(sigsq_fig))
+    if (graphs=="z0")
+      suppressMessages(return(z0_fig))
+    if (graphs=="aic")
+      suppressMessages(return(aicc_fig))
+    if (graphs=="optpar")
+      suppressMessages(return(optpar_fig))
+  }
+  
+}

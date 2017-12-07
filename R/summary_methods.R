@@ -80,6 +80,167 @@ summary.sensiClade <- function(object, ...){
     res
 }
 
+### Summary method for class: sensiClade.TraitEvol:--------------------------------------
+
+#' @export
+summary.sensiClade.TraitEvol <- function(object, ...){
+  if(as.character(object$call[[1]])=="clade_discrete"){ #Check what type of TraitEvolution is evaluated
+  ### Permutation test:
+  ce <- object$sensi.estimates
+  nd <- object$null.dist
+  c <- levels(nd$clade)
+  
+  
+  stats.q12 <- data.frame("clade removed" = c, 
+                          "N.species" = ce$N.species,
+                          "q12" = numeric(length(c)),
+                          "DIFq12" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "m.null.q12" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  stats.q21 <- data.frame("clade removed" = c, 
+                          "N.species" = ce$N.species,
+                          "q21" = numeric(length(c)),
+                          "DIFq21" = numeric(length(c)),
+                          "change" = numeric(length(c)),
+                          "m.null.q21" = numeric(length(c)),
+                          "Pval.randomization" = numeric(length(c)))
+  aa <- 1
+  for(j in c) {
+    
+    nes <- nd[nd$clade == j, ] # null estimates
+    ces <- ce[ce$clade == j, ] # reduced model estimates
+    times <- nrow(nes)
+    
+    ### Permutation test q12:
+    if (ces$DIFq12 > 0){
+      p.q12 <- sum(nes$q12 >= ces$q12)/times
+    }
+    if (ces$DIFq12 < 0){
+      p.q12 <- sum(nes$q12 <= ces$q12)/times
+    }
+    
+    stats.q12[aa, -c(1:2)] <- data.frame(
+      q12 = ces$q12,
+      DIFq12 = ces$DIFq12,
+      ces$q12.perc,
+      m.null.q12 = mean((nes$q12)),
+      Pval.randomization = p.q12)
+    names(stats.q12)[5] <- "Change (%)"      
+    
+    ### Permutation test q21:
+    if (ces$DIFq21 > 0){
+      p.q21 <- sum(nes$q21 >= ces$q21)/times
+    }
+    if (ces$DIFq21 < 0){
+      p.q21 <- sum(nes$q21 <= ces$q21)/times
+    }
+    
+    stats.q21[aa, -c(1:2)] <- data.frame(
+      q21 = ces$q21,
+      DIFq21 = ces$DIFq21,
+      ces$q21.perc,
+      m.null.q21 = mean((nes$q21)),
+      Pval.randomization = p.q21)
+    
+    names(stats.q21)[5] <- "Change (%)"
+    
+    aa <- aa+1
+  }
+  
+  
+  ### Sort by % of change:
+  ord.q12 <- order(object$sensi.estimates$q12.perc, decreasing = TRUE)
+  
+  res <- list(stats.q12[ord.q12, ], stats.q21[ord.q12, ])
+  names(res) <- c("q12", "q21")
+  return(res)
+  }
+  #Check again what type of TraitEvolution is evaluated. If not discrete, it should be continuous. 
+    if(as.character(object$call[[1]])=="clade_continuous"){
+    ### Permutation test:
+    ce <- object$sensi.estimates
+    nd <- object$null.dist
+    c <- levels(nd$clade)
+    
+    
+    stats.sigsq <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "sigsq" = numeric(length(c)),
+                            "DIFsigsq" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "m.null.sigsq" = numeric(length(c)),
+                            "Pval.randomization" = numeric(length(c)))
+    stats.optpar <- data.frame("clade removed" = c, 
+                            "N.species" = ce$N.species,
+                            "optpar" = numeric(length(c)),
+                            "DIFoptpar" = numeric(length(c)),
+                            "change" = numeric(length(c)),
+                            "m.null.optpar" = numeric(length(c)),
+                            "Pval.randomization" = numeric(length(c)))
+    aa <- 1
+    for(j in c) {
+      
+      nes <- nd[nd$clade == j, ] # null estimates
+      ces <- ce[ce$clade == j, ] # reduced model estimates
+      times <- nrow(nes)
+      
+      ### Permutation test sigsq:
+      if (ces$DIFsigsq > 0){
+        p.sigsq <- sum(nes$sigsq >= ces$sigsq)/times
+      }
+      if (ces$DIFsigsq < 0){
+        p.sigsq <- sum(nes$sigsq <= ces$sigsq)/times
+      }
+      
+      stats.sigsq[aa, -c(1:2)] <- data.frame(
+        sigsq = ces$sigsq,
+        DIFsigsq = ces$DIFsigsq,
+        ces$sigsq.perc,
+        m.null.sigsq = mean((nes$sigsq)),
+        Pval.randomization = p.sigsq)
+      names(stats.sigsq)[5] <- "Change (%)"      
+      
+      if(object$optpar!="BM"){
+      ### Permutation test optpar:
+      if (ces$DIFoptpar > 0){
+        p.optpar <- sum(nes$optpar >= ces$optpar)/times
+      }
+      if (ces$DIFoptpar < 0){
+        p.optpar <- sum(nes$optpar <= ces$optpar)/times
+      }
+      
+      stats.optpar[aa, -c(1:2)] <- data.frame(
+        optpar = ces$optpar,
+        DIFoptpar = ces$DIFoptpar,
+        ces$optpar.perc,
+        m.null.optpar = mean((nes$optpar)),
+        Pval.randomization = p.optpar)
+      
+      names(stats.optpar)[5] <- "Change (%)"
+      }
+      
+      aa <- aa+1
+    }
+    
+    
+    ### Sort by % of change:
+    ord.sigsq <- order(object$sensi.estimates$sigsq.perc, decreasing = TRUE)
+    
+    if(object$optpar!="BM") {
+    res <- list(stats.sigsq[ord.sigsq, ], stats.optpar[ord.sigsq, ])
+    names(res) <- c("sigsq", "optpar")
+    return(res)
+    }
+    
+    if(object$optpar=="BM") {
+      res <- list(stats.sigsq[ord.sigsq, ])
+      names(res) <- c("sigsq")
+      return(res)
+    }
+  }
+}
+
 ### Summary method for class: sensiIntra_Clade:--------------------------------------
 
 #' @export
@@ -304,6 +465,58 @@ summary.sensiInflu <- function(object, ...){
     
 }
 
+### Summary method for class: sensiInflu.TraitEvol:--------------------------------------
+
+#' @export
+summary.sensiInflu.TraitEvol <- function(object, ...){
+  if(as.character(object$call[[1]])=="influ_discrete"){
+  sp.q12 <- object$influential.species$influ.sp.q12
+  rows.q12 <- match(sp.q12, object$sensi.estimates$species)
+  q12 <- object$sensi.estimates[rows.q12, c("species","q12","DIFq12","q12.perc")]
+  ord.q12 <- order(q12$q12.perc, 
+                        decreasing = TRUE)
+  q12 <- q12[ord.q12, ]
+  rownames(q12) <- NULL
+  colnames(q12) <- c("Species removed", "q12", "DIFq12", "Change(%)")
+  
+  sp.q21 <-object$influential.species$influ.sp.q21
+  rows.q21 <- match(sp.q21, object$sensi.estimates$species)
+  q21 <- object$sensi.estimates[rows.q21, c("species","q21","DIFq21","q21.perc")]
+  ord.q21 <- order(q21$q21.perc, 
+                     decreasing = TRUE)
+  q21 <- q21[ord.q21, ]
+  rownames(q21) <- NULL
+  colnames(q21) <- c("Species removed", "q21", "DIFq21", "Change(%)")
+  
+  res <- list("Influential species for q12" = sp.q12, "q12" = q12,
+              "Influential species for q21" = sp.q21, "q21" = q21)
+  return(res)
+  }
+  if(as.character(object$call[[1]])=="influ_continuous"){
+    sp.sigsq <- object$influential.species$influ.sp.sigsq
+    rows.sigsq <- match(sp.sigsq, object$sensi.estimates$species)
+    sigsq <- object$sensi.estimates[rows.sigsq, c("species","sigsq","DIFsigsq","sigsq.perc")]
+    ord.sigsq <- order(sigsq$sigsq.perc, 
+                     decreasing = TRUE)
+    sigsq <- sigsq[ord.sigsq, ]
+    rownames(sigsq) <- NULL
+    colnames(sigsq) <- c("Species removed", "sigsq", "DIFsigsq", "Change(%)")
+    
+    sp.optpar <-object$influential.species$influ.sp.optpar
+    rows.optpar <- match(sp.optpar, object$sensi.estimates$species)
+    optpar <- object$sensi.estimates[rows.optpar, c("species","optpar","DIFoptpar","optpar.perc")]
+    ord.optpar <- order(optpar$optpar.perc, 
+                     decreasing = TRUE)
+    optpar <- optpar[ord.optpar, ]
+    rownames(optpar) <- NULL
+    colnames(optpar) <- c("Species removed", "optpar", "DIFoptpar", "Change(%)")
+    
+    res <- list("Influential species for sigsq" = sp.sigsq, "sigsq" = sigsq,
+                "Influential species for optpar" = sp.optpar, "optpar" = optpar)
+    return(res)
+  }
+}
+
 ### Summary method for class: sensiIntra_Influ:--------------------------------------
 
 #' @export
@@ -382,6 +595,40 @@ summary.sensiSamp <- function(object, ...){
                   "see output$sensi.estimates to acess all simulations"))
     return(sig)
 }
+
+### Summary method for class: sensiSamp.TraitEvol:----------------------------------------
+
+#' @export
+summary.sensiSamp.TraitEvol <- function(object, ...){
+  simu <- nrow(object$sensi.estimates)
+  sig <- object$breaks.summary.tab
+  
+  if(as.character(object$call[[1]])=="samp_discrete"){ 
+  names(sig) <- c("% Species Removed", 
+                  "Mean q12 Change (%)",
+                  "Mean sDIFq12",
+                  "Median sDIFq12",
+                  "Mean q21 Change (%)",
+                  "Mean sDIFq21",
+                  "Median sDIFq21")
+  }
+  
+  if(as.character(object$call[[1]])=="samp_continuous"){ 
+    names(sig) <- c("% Species Removed", 
+                    "Mean sigsq Change (%)",
+                    "Mean sDIFsigsq",
+                    "Median sDIFsigsq",
+                    "Mean optpar Change (%)",
+                    "Mean sDIFoptpar",
+                    "Median sDIFoptpar")
+  }
+  
+  message(paste(simu, "simulations saved," ,
+                "see output$sensi.estimates to acess all simulations"))
+  return(sig)
+}
+
+
 
 
 ### Summary method for class: sensiTree_Samp:----------------------------------------
@@ -580,3 +827,24 @@ summary.intra.physig <- function(object, ...){
   names(res) <- c("Call", "Summary")
   return(res)
 }
+
+### METHODS for: diversification rate--------------------------------------------
+### Summary method for class: sensiTree.TraitEvol:--------------------------------------
+#' @export
+summary.sensiTree.TraitEvol <- function(object, ...){
+  res <- list(round(object$stats,4))
+  names(res) <- c("Summary")
+  return(res)
+}
+
+### METHODS for: diversification rate--------------------------------------------
+### tree.bd
+#' @export
+
+summary.tree.bd <- function(object, ...){
+  res <- list(object$call,
+              object$stats)
+  names(res) <- c("Call", "Summary")
+}  
+
+
