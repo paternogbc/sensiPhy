@@ -62,7 +62,7 @@
 #' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 #' adultMass_binary<-as.factor(as.factor(adultMass_binary))
 #' names(adultMass_binary)<-rownames(primates$data)
-#' #Model trait evolution accounting for phylogenetic uncertainty
+#' #Model trait evolution accounting for influential species
 #' influ_binary<-influ_discrete(data = adultMass_binary,phy = primates$phy[[1]],
 #' model = "SYM",transform = "none",cutoff = 2,n.cores = 2,track = TRUE)
 #' #Print summary statistics
