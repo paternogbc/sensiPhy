@@ -121,7 +121,7 @@ tree_continuous <- function(data,phy,n.tree=10,model,
         z0                  <- mod$opt$z0
         aicc                <- mod$opt$aicc
         
-        if (model == "none"){
+        if (model == "BM"){
           optpar <- NA
         }
         if (model == "OU"){
