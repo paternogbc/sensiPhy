@@ -1,7 +1,7 @@
 Package: sensiPhy
 Title: Sensitivity Analysis for Comparative Methods
-Version: 0.7.0
-Date: 2017-08-31
+Version: 0.8.0
+Date: 2017-12-7
 Authors@R: c(
     person("Gustavo","Paterno", email = "paternogbc@gmail.com", role = c("cre","aut")),
     person("Gijsbert", "Werner", email = "gijsbert.werner@zoo.ox.ac.uk", role = "aut"),

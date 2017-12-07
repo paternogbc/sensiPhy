@@ -1,3 +1,46 @@
+## sensiPhy 0.8.0
+
+#### Major additions
+`sensiPhy` now performs sensitivity analysis for a new class of methods which allows users to perform sensitivity analyses of both continuous and discrete (binary) macro-evolutionary models of trait evolution (e.g. Mkn models for binary traits, OU, BM, lambda etc. for continuous traits).
+
+`sensiPhy` nor performs sensitivity analysis of phylogenetic uncertainty for simple metrics of diversification and speciation rates (Magallon and Sanderson (2000) method) or speciation rate using bd.km (Kendall-Moran method)
+
+#### New functions (trait evolution)
+##### Influential species:
+* `influ_continuous()`: Performs sensitivity analysis of influential species for 
+ models of trait evolution (continuous characters)
+ 
+* `influ_discrete()`: Performs sensitivity analysis of influential species for 
+models of trait evolution (binary discrete characters)
+
+##### Influential clades:
+*  `clade_continuous()`: Performs sensitivity analysis of influential clades for models of trait evolution (continuous characters)
+
+*  `clade_discrete()`: Performs sensitivity analysis of influential clades for  for 
+models of trait evolution (binary discrete characters)
+
+##### Sampling size
+*  `samp_continuous()`: Performs sensitivity analysis of species sampling for models of trait evolution (continuous characters)
+
+*  `samp_discrete()`: Performs sensitivity analysis of species sampling for 
+models of trait evolution (binary discrete characters)
+
+##### Phylogenetic uncertainty
+*  `tree_continuous()`: Performs sensitivity analysis of phylogenetic uncertainty for models of trait evolution (continuous characters)
+
+*  `tree_discrete()`: Performs sensitivity analysis of phylogenetic uncertainty for 
+models of trait evolution (binary discrete characters)
+
+#### New functions (diversification rates)
+##### Phylogenetic uncertainty
+*  `tree_bd()`: Performs estimates of diversification rate evaluating uncertainty in trees topology.
+
+#### New functions (Diagnostic plots and stats)
+* `summary()` and `sensi_plot` methods were implemented (for all new functions) to provide a quick and intuitive  overview of results from sensitivite analysis. 
+
+#### Bug fix
+* Corrected progressbar bug when track=FALSE in physig functions
+
 ## sensiPhy 0.7.0
 #### Core changes
 `sensiPhy` now imports the package `phytools` 
@@ -10,7 +53,7 @@
 ##### Phylogenetic signal
 *  `influ_physig()`: Performs sensitivity analysis of influential species for phylogenetic signal estimate (k or lambda)
 *  `clade_physig()`: Performs sensitivity analysis of influential clades for phylogenetic signal estimate (k or lambda)
-*  `samp_physig()`: Performs sensitivity analysis of influential species for phylogenetic signal estimate (k or lambda)
+*  `samp_physig()`: Performs sensitivity analysis of species sampling for phylogenetic signal estimate (k or lambda)
 *  `tree_physig()`: Performs sensitivity analysis of phylogenetic signal estimate (k or lambda) accounting for phylogenetic uncertainty
 *  `intra_physig()`: Performs sensitivity analysis of phylogenetic signal estimate (k or lambda) accounting for intra-specific variation and measurement errors
 ##### Interactions for phylolm models
