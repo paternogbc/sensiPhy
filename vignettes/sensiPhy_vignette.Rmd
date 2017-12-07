@@ -23,6 +23,8 @@ sensiPhy functions use a common syntax that combines the type of uncertainty and
 - xxx_**phylm** (for linear regressions)
 - xxx_**phyglm** (for logistic regressions)
 - xxx_**physig** (for phylogenetic signal)
+* xxx_**continuous** (for continuous trait evolution)
+* xxx_**discrete** (for discrete trait evolution)
 
 where "xxx" can be one of the 5 sensiPhy methods (see Figure below):
 
@@ -41,6 +43,7 @@ knitr::include_graphics("sensiPhy_workflow_functions.tif")
 
 * **match_dataPhy**:  Match data and phylogeny based on model formula
 * **miss.phylo.d**: Calculate the phylogenetic signal for missing data
+* **tree.bd**: Tree diversification and speciation with phylogenetic uncertainty
 
 
 
@@ -77,7 +80,7 @@ sensi_plot(influ, graphs = 2)
 
 ##### 1.1.2. influ_physig(): Phylogenetic signal
 
-```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=6, fig.height=4} 
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=6.5, fig.height=4} 
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass)
 # Run sensitivity analysis:
@@ -93,11 +96,62 @@ influ$influential.species
 sensi_plot(influ)
 sensi_plot(influ2)
 ```
-```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=4, fig.height=4} 
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=4.5, fig.height=4} 
 # You can specify which graph to print:
 sensi_plot(influ, graphs = 1)
 sensi_plot(influ2, graphs = 1)
 ```
+
+##### 1.1.3. influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
+
+**Continuous characters**
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5} 
+# Load data:
+data("primates")
+# Model trait evolution accounting for influential species
+adultMass<-primates$data$adultMass
+names(adultMass)<-rownames(primates$data)
+# Model trait evolution accounting for influential species
+influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+model = "OU",cutoff = 2,n.cores = 2,track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(influ_cont)
+# Visual diagnostics
+sensi_plot(influ_cont)
+```
+
+Different evolutionary models from `fitContinuous` can be used: `BM`,`OU`,
+`EB`, `trend`, `lambda`, `kappa`, `delta` and `drift`.
+
+**Discrete characters**
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5} 
+# Load data:
+data("primates")
+
+# Create a binary trait factor 
+adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+adultMass_binary<-as.factor(as.factor(adultMass_binary))
+names(adultMass_binary)<-rownames(primates$data)
+
+# Model trait evolution accounting for influential species - symmetric model
+influ_binary <- influ_discrete(data = adultMass_binary, phy = primates$phy[[1]],
+model = "SYM", transform = "none", cutoff = 2, n.cores = 2, track = FALSE)
+
+# Print summary statistics for the transition rates, aic-values and 
+# (if applicable) optimisation parameter
+summary(influ_binary)
+
+# Visual diagnostics - in symmetrical model q12 and q21 are, as expected, 
+# exactly the same 
+sensi_plot(influ_binary)
+```
+
+Different character models from `fitDiscrete` can be fit by changing the `model` argument.
+These include `ER` (equal-rates), `SYM` (symmetric), `ARD` (all-rates-different) 
+and `meristic` (stepwise fashion). Similarly, all transformations to the phylogenetic tree 
+from `fitDiscrete` can be used: `none`, `EB`, `lambda`, `kappa` and `delta`.
+
 
 ### 1.2. Sensitivity analysis for influential clades
 
@@ -119,7 +173,7 @@ summary(clade)
 ```
 
 
-```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6} 
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=8, fig.height=5.5} 
 # Visual diagnostics for clade removal:
 sensi_plot(clade, "Cercopithecidae")
 ```
@@ -139,6 +193,50 @@ summary(clade)
 sensi_plot(clade, "Bovidae")
 sensi_plot(clade, "Sciuridae")
 ```
+
+
+##### 1.2.3 influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
+
+**Continuous characters**
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5}
+# Load data:
+data("primates")
+# Model trait evolution accounting for influential species
+adultMass<-primates$data$adultMass
+names(adultMass)<-rownames(primates$data)
+# Model trait evolution accounting for influential species
+influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
+model = "OU",cutoff = 2,n.cores = 2,track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(influ_cont)
+# Visual diagnostics
+sensi_plot(influ_cont)
+```
+
+**Discrete characters**
+```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5}
+# Load data:
+data("primates")
+
+# Create a binary trait factor 
+adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+adultMass_binary<-as.factor(as.factor(adultMass_binary))
+names(adultMass_binary)<-rownames(primates$data)
+
+# Model trait evolution accounting for influential species - symmetric model
+influ_binary <- influ_discrete(data = adultMass_binary, phy = primates$phy[[1]],
+model = "SYM", transform = "none", cutoff = 2, n.cores = 2, track = FALSE)
+
+# Print summary statistics for the transition rates, aic-values and 
+# (if applicable) optimisation parameter
+summary(influ_binary)
+
+# Visual diagnostics - in symmetrical model q12 and q21 are, as expected, 
+# exactly the same 
+sensi_plot(influ_binary)
+```
+
 
 
 ### 1.3. Sensitivity analysis for sample size
@@ -211,6 +309,47 @@ sensi_plot(samp, graphs = 1)
 ```
 
 
+### 1.3.3. samp_continuous() and samp_discrete: Trait Evolution Continous and Discrete Characters
+
+**Continuous characters**
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=4}
+# Load data:
+data("primates")
+
+# Model trait evolution
+adultMass<-primates$data$adultMass
+names(adultMass)<-rownames(primates$data)
+samp_cont<-samp_continuous(data = adultMass,phy = primates$phy[[1]],
+model = "OU",n.sim=25,breaks=seq(.05,.2,.05),n.cores = 2, track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(samp_cont)
+# Visual diagnostics
+sensi_plot(samp_cont)
+```
+
+**Discrete characters**
+``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=7}
+# Load data:
+data("primates")
+
+# Create a binary trait factor 
+adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+adultMass_binary<-as.factor(as.factor(adultMass_binary))
+names(adultMass_binary)<-rownames(primates$data)
+
+# Model trait evolution
+samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
+n.sim=25, breaks=seq(.1,.3,.1), model = "SYM", transform = "none",
+n.cores = 2,track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(samp_binary)
+# Visual diagnostics
+sensi_plot(samp_binary)
+```
+
+
 ## 2. Phylogenetic uncertainty
 The `tree` method performs sensitivity analysis to estimate the influence of 
 phylogenetic uncertainty on parameter estimates.
@@ -238,7 +377,7 @@ sensi_plot(tree)
 
 ### 2.2. tree_physig(): `tree` method for phylogenetic signal
 
-``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=4}
 # Load data:
 data(alien)
 # Logtransform data
@@ -251,16 +390,63 @@ summary(tree)
 sensi_plot(tree, graphs = 1)
 sensi_plot(tree, graphs = 2)
 ```
-``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=5}
+``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
 sensi_plot(tree) 
 ```
 
+
+### 2.3. tree_continuous() and tree_discrete: `tree` method for trait evolution of continous and discrete characters
+
+**Continuous characters**
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+# Load data:
+data("primates")
+# Model trait evolution accounting for phylogenetic uncertainty
+adultMass<-primates$data$adultMass
+names(adultMass)<-rownames(primates$data)
+tree_cont<-tree_continuous(data = adultMass,phy = primates$phy,
+model = "OU",n.tree=30,n.cores = 2,track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(tree_cont)
+``` {r eval=FALSE}
+# Plot only some parameters
+sensi_plot(tree_cont,graphs="sigsq")
+sensi_plot(tree_cont,graphs="optpar")
+```
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+## Visual diagnostics
+sensi_plot(tree_cont)
+```
+
+**Discrete characters**
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+# Load data:
+data("primates")
+# Create a binary trait factor 
+adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+adultMass_binary<-as.factor(as.factor(adultMass_binary))
+names(adultMass_binary)<-rownames(primates$data)
+# Model trait evolution accounting for phylogenetic uncertainty
+tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
+model = "ARD",transform = "none",n.tree = 30,n.cores = 2,track = FALSE)
+# Print summary statistics for the transitions rates, aic-values and (if applicable) 
+# optimisation parameter
+summary(tree_binary)
+``` {r eval=FALSE}
+## Visual diagnostics
+sensi_plot(tree_binary,graphs="q12")
+sensi_plot(tree_binary,graphs="q21")
+```
+``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
+sensi_plot(tree_binary)
+```
 
 
 ## 3. Data uncertainty
 The `intra` method performs Sensitivity analysis for intraspecific variation and measurement error
 
-### 3.1. tree_phylm(): `intra` method for phylogenetic linear regression
+### 3.1. intra_phylm(): `intra` method for phylogenetic linear regression
 
 Additional arguments:   
  __Vy:__ Name of the column containing the standard deviation or the standard 
@@ -293,7 +479,7 @@ sensi_plot(intra)
 ```
 
 
-### 3.2. tree_physig(): `intra` method for phylogenetic signal
+### 3.2. intra_physig(): `intra` method for phylogenetic signal
 
 Additional arguments:   
   __V__: Name of the column containing the standard deviation or the standard 
@@ -311,7 +497,7 @@ summary(intra)
 sensi_plot(intra, graphs = 1)
 sensi_plot(intra, graphs = 2)
 ```
-``` {r warning=FALSE, message=FALSE, fig.width=4, fig.height=4}
+``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
 sensi_plot(intra)
 ```
 
@@ -348,7 +534,7 @@ sensi_plot(tree_influ)
 
 #### 4.2. tree_clade_phylm(): `tree_clade` method for phylogenetic linear regression
 
-``` {r warning=FALSE, message=FALSE, fig.width=7, fig.height=5}
+``` {r warning=FALSE, message=FALSE, fig.width=7, fig.height=4}
 data(primates)
 # run analysis:
 clade_tree <- tree_clade_phylm(log(sexMaturity) ~ log(adultMass), 
@@ -372,7 +558,7 @@ sensi_plot(clade_tree, clade = "Cebidae")
 
 #### 4.3. tree_samp_phylm(): `tree_samp` method for phylogenetic linear regression
 
-``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=5}
+``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
 # Load data:
 data(alien)
 # Run analysis:
@@ -414,7 +600,7 @@ and that observations with missing values are removed.
 
 > This function uses all variables provided in the 'formula' to match data and phylogeny. To avoid cropping the full dataset, 'match_dataphy' searches for NA values only on variables provided by formula. Missing values on other variables, not included in 'formula', will not be removed from data.
 
-``` {r}
+``` {r warning=FALSE, message=FALSE}
 library(sensiPhy)
 # Load data:
 data(alien)
@@ -467,6 +653,39 @@ plot(homeNAsig)
 massNAsig <- miss.phylo.d(data, phy, binvar = adultMass)
 print(massNAsig)
 plot(massNAsig)
+```
+
+### 5.3. Diversification and speciation rates
+#### Background
+The funcion `tree_bd`estimates diversification and speciation rates evaluating uncertainty in tree topology.
+It estimates net diversification rate using `geiger::bd.ms` Magallon and Sanderson (2000) method
+or speciation rate using `geiger::bd.km` Kendall-Moran method for `n` trees, randomly picked from a `multiPhylo` file.
+
+#### Examples:
+*To estimate diversification rate with Magallon and Sanderson method*
+``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=4}
+library(sensiPhy)
+# Load data:
+data("primates")
+# Run analysis
+fit.ms <- tree_bd(phy = primates.phy, n.tree = 30, method = "ms")
+# Check results
+summary(fit.ms)
+# Plot data
+sensi_plot(fit.ms)
+```
+
+
+*To estimate speciation rate Kendall-Moran method*
+``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=4}
+# Load data:
+data("primates")
+# Run analysis
+fit.km <- tree_bd(phy = primates.phy, n.tree = 30, method = "km")
+# Check results
+summary(fit.km)
+# Plot data
+sensi_plot(fit.km)
 ```
 
 
