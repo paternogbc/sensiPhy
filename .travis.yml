@@ -21,3 +21,8 @@ notifications:
   email:
     on_success: change
     on_failure: change
+
+script: 
+  - |
+    travis_wait 20 R CMD build .
+    travis_wait 20 R CMD check sensiPhy*tar.gz
