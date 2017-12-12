@@ -44,7 +44,7 @@
 #' difference in estimates for q12 and q21. Species are ordered from most influential to 
 #' less influential and only include species with a standardised difference > \code{cutoff}.
 #' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21),,(percentual) difference 
-#' in parameter estimate compared to the full model (DIFq12, sigsq.q12, DIFq21, optpar.q21),  
+#' in parameter estimate compared to the full model (DIFq12, sigsq.q12,sDIFq12, DIFq21, optpar.q21,sDIFq21),  
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for each analysis with a species deleted.
 #' @author Gijsbert Werner & Gustavo Paterno
