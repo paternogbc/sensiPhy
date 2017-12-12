@@ -303,7 +303,7 @@ clade_continuous <- function(data, phy, model,
           #OUTPUT
           #full model estimates:
           param0 <- list(sigsq=sigsq.0,optpar=optpar.0,
-                         optpar=optpar.0,
+                         z0 <- mod.0$opt$z0,
                          aicc=aicc.0)
           
           #Generates output:
