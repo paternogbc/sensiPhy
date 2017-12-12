@@ -46,7 +46,8 @@
 #' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
 #' and where applicable \code{optpar}), root state \code{z0}, 
 #' AICc for the full model without deleted clades.
-#' @return \code{sensi.estimates}: Parameter estimates (sigsq and optpar), 
+#' @return \code{sensi.estimates}: Parameter estimates (sigsq and optpar), (percentual) difference 
+#' in parameter estimate compared to the full model (DIFsigsq, sigsq.perc, DIFoptpar, optpar.perc),
 #' AICc and z0 for each repeat with a clade removed.
 #' @return \code{null.dist}: A data frame with estimates for the null distributions
 #' for all clades analysed.

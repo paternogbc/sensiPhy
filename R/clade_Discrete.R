@@ -50,7 +50,8 @@
 #' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted clades.
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21),(percentual) difference 
+#' in parameter estimate compared to the full model (DIFq12, sigsq.q12, DIFq21, optpar.q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for each repeat with a clade removed.
 #' @return \code{null.dist}: A data frame with estimates for the null distributions
