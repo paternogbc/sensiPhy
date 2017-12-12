@@ -30,17 +30,15 @@
 #' @return \code{call}: The function call
 #' @return \code{data}: The original full data vector
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-#' \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
-#' root state \code{z0} and where applicable \code{optpar}), 
-#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for the full model without deleted species.
+#' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
+#' and where applicable \code{optpar}), root state \code{z0}, 
+#' AICc for the full model without deleted species.
 #' @return \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
 #' of species removal on percentage and absolute change parameter estimates. 
-#' @return \code{sensi.estimates}: Parameter estimates, 
-#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
-#' @return \code{N.tree}: Number of trees \code{n.tree} analysed
-#' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+#' @return \code{sensi.estimates}: Parameter estimates (sigsq and optpar),(percentual) difference 
+#' in parameter estimate compared to the full model (DIFsigsq, sigsq.perc,sDIFsigsq, 
+#' DIFoptpar, optpar.perc,sDIFoptpar), 
+#' AICc and z0 for each repeat with random species removed.
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @author Gijsbert Werner & Gustavo Paterno
 #' @seealso \code{\link[geiger]{fitContinuous}}

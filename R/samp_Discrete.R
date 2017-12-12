@@ -22,7 +22,7 @@
 #' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 #'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' Transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
 #' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 #' 
 #' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
@@ -39,11 +39,10 @@
 #' for the full model without deleted species.
 #' @return \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
 #' of species removal on percentage and absolute change in parameters q12 and q21. 
-#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+#' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21),(percentual) difference 
+#' in parameter estimate compared to the full model (DIFq12, sigsq.q12,sDIFq12, DIFq21, optpar.q21,sDIFq21),  
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
-#' @return \code{N.tree}: Number of trees \code{n.tree} analysed
-#' @return \code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+#' for each analysis with a species deleted.
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @author Gijsbert Werner & Gustavo Paterno
 #' @seealso \code{\link[geiger]{fitDiscrete}}
