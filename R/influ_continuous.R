@@ -14,8 +14,7 @@
 #' @details
 #' This function sequentially removes one species at a time,  
 #' fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
-#' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters.
+#' stores the results and calculates the effects on model parameters.
 #' 
 #' \code{influ_continuous} detects influential species based on the standardised
 #' difference in the rate parameter \code{sigsq} and the optimisation parameter \code{optpar} 

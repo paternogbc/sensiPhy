@@ -14,9 +14,9 @@
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
 #' This function sequentially removes one species at a time,  
-#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
-#' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-#' the effects on model parameters Currently, only binary discrete traits are supported.
+#' fits a model of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' stores the results and calculates the effects on model parameters. Currently, only 
+#' binary discrete traits are supported.
 #' 
 #' \code{influ_discrete} detects influential species based on the standardised
 #' difference in q12 or q21 when removing a given species compared
