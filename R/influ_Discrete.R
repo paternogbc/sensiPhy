@@ -26,7 +26,7 @@
 #' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 #'
-#' All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+#' Different transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
 #' \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 #' 
 #' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 

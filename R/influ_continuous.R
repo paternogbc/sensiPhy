@@ -23,7 +23,7 @@
 #' Species with a standardised difference above the value of 
 #' \code{cutoff} are identified as influential. 
 #'
-#' All evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+#' Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
 #' \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 #' 
 #' See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models. 
