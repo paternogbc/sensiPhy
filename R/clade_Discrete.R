@@ -21,7 +21,7 @@
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
 #' This function sequentially removes one clade at a time,
-#' fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+#' fits a model of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
 #' repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
 #' the effects on model parameters. Currently, only binary discrete traits are supported. 
 #' 
@@ -77,7 +77,7 @@
 #' summary(clade_disc)
 #' sensi_plot(clade_disc)
 #' sensi_plot(clade_disc, clade = "Cebidae", graph = "q12")
-#' #Change the evolutionary model, tree transformation or minimum numher of species per clade
+#' #Change the evolutionary model, tree transformation or minimum number of species per clade
 #' clade_disc_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],
 #' model="ARD",transform="kappa",
 #' trait.col = "adultMass_binary",clade.col="family",nsim=30,
