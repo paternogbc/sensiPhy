@@ -29,7 +29,7 @@ included in the leave-one-out deletion analysis. Default is \code{5}.}
 
 \item{n.sim}{Number of simulations for the randomization test.}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
 
 \item{n.cores}{number of cores to use. If 'NULL', number of cores is detected.}
 

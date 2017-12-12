@@ -14,7 +14,7 @@ influ_continuous(data, phy, model, bounds = list(), cutoff = 2,
 
 \item{model}{The evolutionary model (see Details).}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
 
 \item{cutoff}{The cut-off parameter for influential species (see Details).}
 

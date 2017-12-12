@@ -8,7 +8,7 @@
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
 #' @param cutoff The cut-off parameter for influential species (see Details). 
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}

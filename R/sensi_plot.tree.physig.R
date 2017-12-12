@@ -74,7 +74,7 @@ sensi_plot.tree.physig <- function(x, graphs="all", ...){
 #' \code{\link[sensiPhy]{intra_phylm}}
 #' @details For 'x' from \code{intra_physig}
 #' 
-#' Graphs 1: Distribution of estimated phylosgentic signal (lambda or K) for each simulation
+#' Graphs 1: Distribution of estimated phylogenetic signal (lambda or K) for each simulation
 #' Red vertical line represents the average signal among all estimates. 
 #'
 #' Graph 2: Distribution of p-values for the phylogenetic signal (K or lambda) 

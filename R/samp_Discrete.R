@@ -10,7 +10,7 @@
 #' @param model The Mkn model to use (see Details). 
 #' @param transform The evolutionary model to transform the tree (see Details). Default is \code{none}.
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
@@ -38,7 +38,7 @@
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted species.
 #' @return \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
-#' of species removal on percentage and absolute change in paramerters q12 and q21. 
+#' of species removal on percentage and absolute change in parameters q12 and q21. 
 #' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for each analysis with a different phylogenetic tree.

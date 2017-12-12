@@ -19,7 +19,7 @@ randomly in the multiPhylo file. If NULL, \code{n.tree} = 10}
 
 \item{transform}{The evolutionary model to transform the tree (see Details). Default is \code{none}.}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
 
 \item{n.cores}{number of cores to use. If 'NULL', number of cores is detected.}
 

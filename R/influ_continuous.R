@@ -7,7 +7,7 @@
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param model The evolutionary model (see Details). 
 #' @param cutoff The cut-off parameter for influential species (see Details). 
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}

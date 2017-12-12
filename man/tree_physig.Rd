@@ -17,7 +17,7 @@ in \code{phy}.}
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
 \item{n.tree}{Number of times to repeat the analysis with n different trees picked 
-randomly in the multiPhylo file. (If \code{n.tree} = "all", phylosgentic signal will be estimated
+randomly in the multiPhylo file. (If \code{n.tree} = "all", phylogenetic signal will be estimated
 among the all set of trees provided in \code{phy})}
 
 \item{method}{Method to compute signal: can be "K" or "lambda".}

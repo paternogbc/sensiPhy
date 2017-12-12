@@ -17,7 +17,7 @@ randomly in the multiPhylo file. If NULL, \code{n.tree} = 10}
 
 \item{model}{The evolutionary model (see Details).}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
 
 \item{n.cores}{number of cores to use. If 'NULL', number of cores is detected.}
 

@@ -10,7 +10,7 @@
 #' @param phy A phylogeny (class 'phylo') matching \code{data}.
 #' @param method Method to compute signal: can be "K" or "lambda".
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
-#' randomly in the multiPhylo file. (If \code{n.tree} = "all", phylosgentic signal will be estimated
+#' randomly in the multiPhylo file. (If \code{n.tree} = "all", phylogenetic signal will be estimated
 #' among the all set of trees provided in \code{phy})
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{phylosig}

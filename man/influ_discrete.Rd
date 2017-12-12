@@ -16,7 +16,7 @@ influ_discrete(data, phy, model, transform = "none", bounds = list(),
 
 \item{transform}{The evolutionary model to transform the tree (see Details). Default is \code{none}.}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
 
 \item{cutoff}{The cut-off parameter for influential species (see Details).}
 

@@ -20,7 +20,7 @@ in \code{phy}.}
 clades (a character vector with clade names).}
 
 \item{n.species}{Minimum number of species in a clade for the clade to be
-included in the leave-one-out deletion analyis. Default is \code{5}.}
+included in the leave-one-out deletion analysis. Default is \code{5}.}
 
 \item{n.sim}{Number of simulations for the randomization test.}
 

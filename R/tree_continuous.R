@@ -8,7 +8,7 @@
 #' @param n.tree Number of times to repeat the analysis with n different trees picked 
 #' randomly in the multiPhylo file. If NULL, \code{n.tree} = 10
 #' @param model The evolutionary model (see Details). 
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}

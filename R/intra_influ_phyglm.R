@@ -45,7 +45,7 @@
 #' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
 #' be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
 #' 
-#' Setting \code{n.intra} at high values can take a long time to exectue, since the total number of iterations equals \code{n.intra * nrow(data)}.
+#' Setting \code{n.intra} at high values can take a long time to execute, since the total number of iterations equals \code{n.intra * nrow(data)}.
 #' 
 #' @return The function \code{intra_influ_phylm} returns a list with the following
 #' components:

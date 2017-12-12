@@ -15,7 +15,7 @@
 #' @param n.species Minimum number of species in a clade for the clade to be
 #' included in the leave-one-out deletion analysis. Default is \code{5}.
 #' @param n.sim Number of simulations for the randomization test.
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}

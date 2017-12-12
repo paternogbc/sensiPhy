@@ -21,7 +21,7 @@ samp_discrete(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1), model,
 
 \item{transform}{The evolutionary model to transform the tree (see Details). Default is \code{none}.}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitDiscrete}}}
 
 \item{n.cores}{number of cores to use. If 'NULL', number of cores is detected.}
 
@@ -44,7 +44,7 @@ AICc and the optimised value of the phylogenetic transformation parameter (e.g. 
 for the full model without deleted species.
 
 \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
-of species removal on percentage and absolute change in paramerters q12 and q21.
+of species removal on percentage and absolute change in parameters q12 and q21.
 
 \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
 AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 

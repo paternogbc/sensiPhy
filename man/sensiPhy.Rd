@@ -6,18 +6,15 @@
 \alias{sensiPhy-package}
 \title{Sensitivity Analysis for Comparative Methods}
 \description{
-An implementation of sensitivity analysis for phylogenetic comparative 
-methods. The package is an umbrella of statistical and graphical methods that 
-estimate and report different types of uncertainty in PCM:  
-
-\bold{(i)} Species Sampling uncertainty (sample size; influential species and clades).
-
-\bold{(ii)} Phylogenetic uncertainty (different topologies and/or branch lengths).
-
-\bold{(iii)} Data uncertainty (intraspecific variation and measurement error).
+The functions implemented in \bold{sensiPhy} provide diagnostics for phylogenetic 
+generalized least squares by various simulations methods: data removal, 
+leave-one-out deletion, random sampling of phylogenies and data. 
+A graphical output with several plots for model diagnostic is provided 
+for each function in the package.
 }
 \section{Bug reports}{
  
+
 \url{https://github.com/paternogbc/sensiPhy/issues}.
 }
 
@@ -28,7 +25,7 @@ You can find instructions on how to contribute to \bold{sensiPhy} at
 this link: \url{https://github.com/paternogbc/sensiPhy/wiki/How-to-support-sensiPhy}
 
 A quick tutorial is available at this link: 
-\url{https://github.com/paternogbc/sensiPhy/wiki/Online-tutorial}
+\url{https://github.com/paternogbc/sensiPhy/wiki/Quick-tutorial}
 }
 
 \author{
