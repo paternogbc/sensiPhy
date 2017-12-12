@@ -75,7 +75,7 @@
 #' data("primates")
 #' #Model trait evolution accounting for phylogenetic uncertainty
 #' clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]], model="OU",
-#' trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+#' trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,n.cores = 2,track=TRUE)
 #' #Print summary statistics
 #' summary(clade_cont)
 #' sensi_plot(clade_cont,graph="all")
