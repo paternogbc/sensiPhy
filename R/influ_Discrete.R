@@ -39,13 +39,13 @@
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 #' @return \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for the full model without deleted species.
+#' for the full model.
 #' @return \code{influential_species}: List of influential species, based on standardised 
 #' difference in estimates for q12 and q21. Species are ordered from most influential to 
 #' less influential and only include species with a standardised difference > \code{cutoff}.
 #' @return \code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each analysis with a different phylogenetic tree.
+#' for each analysis with a species deleted.
 #' @author Gijsbert Werner & Gustavo Paterno
 #' @seealso \code{\link[geiger]{fitDiscrete}}
 #' @references 

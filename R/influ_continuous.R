@@ -34,16 +34,14 @@
 #' @return \code{cutoff}: The value selected for \code{cutoff}
 #' @return \code{data}: The original full data vector
 #' @return \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-#' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
-#' root state \code{z0} and where applicable \code{optpar}), 
-#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for the full model without deleted species.
+#' @return \code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
+#' and where applicable \code{optpar}), root state \code{z0}, 
+#' AICc for the full model without deleted species.
 #' @return \code{influential_species}: List of influential species, based on standardised 
 #' difference in estimates for sigsq and optpar. Species are ordered from most influential to 
 #' less influential and only include species with a standardised difference > \code{cutoff}.
-#' @return \code{sensi.estimates}: Parameter estimates, AICc and the optimised value of 
-#' the phylogenetic transformation parameter (e.g. \code{lambda}) for each analysis 
-#' with a different phylogenetic tree.
+#' @return \code{sensi.estimates}: Parameter estimates (sigsq and optpar), 
+#' AICc and z0 for each repeat with a species removed.
 #' @author Gijsbert Werner & Gustavo Paterno
 #' @seealso \code{\link[geiger]{fitContinuous}}
 #' @references 
