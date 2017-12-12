@@ -27,7 +27,7 @@
 #' 
 #' See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
 #' 
-#' Output can be visualised using \code{sensi_plot}. [Not yet!]
+#' Output can be visualised using \code{sensi_plot}.
 #'
 #' @return The function \code{tree_discrete} returns a list with the following
 #' components:

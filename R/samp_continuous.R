@@ -23,7 +23,7 @@
 #' 
 #' See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 #' 
-#' Output can be visualised using \code{sensi_plot}. [Not yet!]
+#' Output can be visualised using \code{sensi_plot}. 
 #'
 #' @return The function \code{tree_continuous} returns a list with the following
 #' components:
