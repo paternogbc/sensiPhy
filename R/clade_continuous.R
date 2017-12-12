@@ -47,9 +47,8 @@
 #' root state \code{z0} and where applicable \code{optpar}), 
 #' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
 #' for the full model without deleted clades.
-#' @return \code{sensi.estimates}: Parameter estimates, 
-#' AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-#' for each repeat with a clade removed.
+#' @return \code{sensi.estimates}: Parameter estimates (sigsq and optpar), 
+#' AICc and z0 for each repeat with a clade removed.
 #' @return \code{null.dist}: A data frame with estimates for the null distributions
 #' for all clades analysed.
 #' @return \code{errors}: Clades where deletion resulted in errors.
