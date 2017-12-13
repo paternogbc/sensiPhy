@@ -36,18 +36,18 @@ components:
 
 \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 
-\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
-root state \code{z0} and where applicable \code{optpar}), 
-AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for the full model without deleted species.
+\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
+and where applicable \code{optpar}), root state \code{z0}, 
+AICc for the full model without deleted species.
 
 \code{influential_species}: List of influential species, based on standardised 
 difference in estimates for sigsq and optpar. Species are ordered from most influential to 
 less influential and only include species with a standardised difference > \code{cutoff}.
 
-\code{sensi.estimates}: Parameter estimates, AICc and the optimised value of 
-the phylogenetic transformation parameter (e.g. \code{lambda}) for each analysis 
-with a different phylogenetic tree.
+\code{sensi.estimates}: Parameter estimates (sigsq and optpar),(percentual) difference 
+in parameter estimate compared to the full model (DIFsigsq, sigsq.perc,sDIFsigsq, 
+DIFoptpar, optpar.perc,sDIFoptpar), 
+AICc and z0 for each repeat with a species removed.
 }
 \description{
 Fits models for trait evolution of continuous characters, 
@@ -56,8 +56,7 @@ detecting influential species.
 \details{
 This function sequentially removes one species at a time,  
 fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
-repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-the effects on model parameters.
+stores the results and calculates the effects on model parameters.
 
 \code{influ_continuous} detects influential species based on the standardised
 difference in the rate parameter \code{sigsq} and the optimisation parameter \code{optpar} 
@@ -66,7 +65,7 @@ a given species compared to the full model including all species.
 Species with a standardised difference above the value of 
 \code{cutoff} are identified as influential. 
 
-All evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
+Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{BM},\code{OU},
 \code{EB}, \code{trend}, \code{lambda}, \code{kappa}, \code{delta} and \code{drift}.
 
 See \code{\link[geiger]{fitContinuous}} for more details on evolutionary models.

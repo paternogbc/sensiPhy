@@ -46,13 +46,10 @@ for the full model without deleted species.
 \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
 of species removal on percentage and absolute change in parameters q12 and q21.
 
-\code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+\code{sensi.estimates}: Parameter estimates (transition rates q12 and q21),(percentual) difference 
+in parameter estimate compared to the full model (DIFq12, sigsq.q12,sDIFq12, DIFq21, optpar.q21,sDIFq21),  
 AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for each analysis with a different phylogenetic tree.
-
-\code{N.tree}: Number of trees \code{n.tree} analysed
-
-\code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+for each analysis with a species deleted.
 
 \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 }
@@ -69,12 +66,12 @@ the effects on model parameters Currently, only binary discrete traits are suppo
 Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 
-All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+Transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
 \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 
 See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations. 
 
-Output can be visualised using \code{sensi_plot}. [Not yet!]
+Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 \dontshow{

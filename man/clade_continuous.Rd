@@ -42,14 +42,13 @@ components:
 
 \code{data}: The original full data frame.
 
-\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
-root state \code{z0} and where applicable \code{optpar}), 
-AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for the full model without deleted clades.
+\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
+and where applicable \code{optpar}), root state \code{z0}, 
+AICc for the full model without deleted clades.
 
-\code{sensi.estimates}: Parameter estimates, 
-AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for each repeat with a clade removed.
+\code{sensi.estimates}: Parameter estimates (sigsq and optpar), (percentual) difference 
+in parameter estimate compared to the full model (DIFsigsq, sigsq.perc, DIFoptpar, optpar.perc),
+AICc and z0 for each repeat with a clade removed.
 
 \code{null.dist}: A data frame with estimates for the null distributions
 for all clades analysed.
@@ -65,9 +64,9 @@ Fits models for trait evolution of continuous characters,
 detecting influential clades
 }
 \details{
-#' This function sequentially removes one clade at a time,
-fits different models of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
-repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
+This function sequentially removes one clade at a time,
+fits a model of continuous character evolution using \code{\link[geiger]{fitContinuous}}, 
+repeats this many times (controlled by \code{n.sim}), stores the results and calculates 
 the effects on model parameters Currently, only binary continuous traits are supported. 
 
 Additionally, to account for the influence of the number of species on each 
@@ -97,13 +96,13 @@ trait.col = "adultMass",clade.col="family",n.sim=1,n.species=20,n.cores = 2,trac
 data("primates")
 #Model trait evolution accounting for phylogenetic uncertainty
 clade_cont<-clade_continuous(data=primates$data,phy = primates$phy[[1]], model="OU",
-trait.col = "adultMass",clade.col="family",n.sim=1,n.species=10,n.cores = 2,track=TRUE)
+trait.col = "adultMass",clade.col="family",n.sim=30,n.species=10,n.cores = 2,track=TRUE)
 #Print summary statistics
 summary(clade_cont)
 sensi_plot(clade_cont,graph="all")
 sensi_plot(clade_cont,clade="Cercopithecidae",graph = "sigsq")
 sensi_plot(clade_cont,clade="Cercopithecidae",graph = "optpar")
-#Change the evolutionary model, tree transformation or minimum numher of species per clade
+#Change the evolutionary model, tree transformation or minimum number of species per clade
 clade_cont2<-clade_continuous(data=primates$data,phy = primates$phy[[1]],model="delta",
 trait.col = "adultMass",clade.col="family",n.sim=30,n.species=5,n.cores = 2,track=TRUE)
 summary(clade_cont2)

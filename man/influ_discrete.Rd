@@ -40,15 +40,16 @@ components:
 
 \code{full.model.estimates}: Parameter estimates (transition rates q12 and q21), 
 AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for the full model without deleted species.
+for the full model.
 
 \code{influential_species}: List of influential species, based on standardised 
 difference in estimates for q12 and q21. Species are ordered from most influential to 
 less influential and only include species with a standardised difference > \code{cutoff}.
 
-\code{sensi.estimates}: Parameter estimates (transition rates q12 and q21), 
+\code{sensi.estimates}: Parameter estimates (transition rates q12 and q21),,(percentual) difference 
+in parameter estimate compared to the full model (DIFq12, sigsq.q12,sDIFq12, DIFq21, optpar.q21,sDIFq21),  
 AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for each analysis with a different phylogenetic tree.
+for each analysis with a species deleted.
 }
 \description{
 Fits models for trait evolution of discrete (binary) characters, 
@@ -56,9 +57,9 @@ detecting influential species.
 }
 \details{
 This function sequentially removes one species at a time,  
-fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
-repeats this this many times (controlled by \code{n.sim}), stores the results and calculates 
-the effects on model parameters Currently, only binary discrete traits are supported.
+fits a model of discrete character evolution using \code{\link[geiger]{fitDiscrete}}, 
+stores the results and calculates the effects on model parameters. Currently, only 
+binary discrete traits are supported.
 
 \code{influ_discrete} detects influential species based on the standardised
 difference in q12 or q21 when removing a given species compared
@@ -68,7 +69,7 @@ above the value of \code{cutoff} are identified as influential.
 Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
 
-All transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
+Different transformations to the phylogenetic tree from \code{fitDiscrete} can be used, i.e. \code{none},
 \code{EB}, \code{lambda}, \code{kappa} and\code{delta}.
 
 See \code{\link[geiger]{fitDiscrete}} for more details on character models and tree transformations.

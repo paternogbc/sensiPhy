@@ -92,12 +92,12 @@ sensi_plot(tree_binary,graphs="q12")
 sensi_plot(tree_binary,graphs="q21")
 #Use a different evolutionary model or transformation.
 tree_binary_lambda<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-model = "SYM",transform = "lambda",n.tree = 10,n.cores = 2,track = TRUE)
+model = "SYM",transform = "lambda",n.tree = 30,n.cores = 2,track = TRUE)
 summary(tree_binary_lambda) #Using Pagel's Lambda
 sensi_plot(tree_binary_lambda)  
 #Symmetrical rates, with an Early Burst (EB) model of trait evolution
 tree_binary_SYM_EB<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-model = "SYM",transform = "EB",n.tree = 2,n.cores = 2,track = TRUE)
+model = "SYM",transform = "EB",n.tree = 30,n.cores = 2,track = TRUE)
 summary(tree_binary_SYM_EB)
 sensi_plot(tree_binary_SYM_EB) 
 sensi_plot(tree_binary_SYM_EB,graphs="optpar") 

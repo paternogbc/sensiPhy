@@ -35,21 +35,18 @@ components:
 \code{data}: The original full data vector
 
 \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
-\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}, 
-root state \code{z0} and where applicable \code{optpar}), 
-AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for the full model without deleted species.
+
+\code{full.model.estimates}: Parameter estimates (rate of evolution \code{sigsq}
+and where applicable \code{optpar}), root state \code{z0}, 
+AICc for the full model without deleted species.
 
 \code{break.summary.tab}: Summary per \code{break} of the mean and median effects 
 of species removal on percentage and absolute change parameter estimates.
 
-\code{sensi.estimates}: Parameter estimates, 
-AICc and the optimised value of the phylogenetic transformation parameter (e.g. \code{lambda}) 
-for each analysis with a different phylogenetic tree.
-
-\code{N.tree}: Number of trees \code{n.tree} analysed
-
-\code{stats}: Main statistics for model parameters, i.e. minimum, maximum, mean, median and sd-values
+\code{sensi.estimates}: Parameter estimates (sigsq and optpar),(percentual) difference 
+in parameter estimate compared to the full model (DIFsigsq, sigsq.perc,sDIFsigsq, 
+DIFoptpar, optpar.perc,sDIFoptpar), 
+AICc and z0 for each repeat with random species removed.
 
 \code{optpar}: Transformation parameter used (e.g. \code{lambda}, \code{kappa} etc.)
 }
@@ -68,7 +65,7 @@ Different evolutionary models from \code{fitContinuous} can be used, i.e. \code{
 
 See \code{\link[geiger]{fitContinuous}} for more details on character models and tree transformations. 
 
-Output can be visualised using \code{sensi_plot}. [Not yet!]
+Output can be visualised using \code{sensi_plot}.
 }
 \examples{
 \dontshow{
