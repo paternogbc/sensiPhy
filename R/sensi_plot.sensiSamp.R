@@ -284,6 +284,37 @@ optpar <- perc.sign.estimate <- percent_sp_removed <- perc.sign.intercept <- NUL
 }
 
 #####
+#' Graphical diagnostics for class 'sensiSamp.TraitEvol'
+#'
+#' \code{sensi_plot.sensiSamp.TraitEvol} Plot results from \code{samp_continuous} and
+#' \code{samp_discrete}
+#' @param x output from \code{samp_continuous} or \code{samp_continuous} 
+#' @param graphs choose which graph should be printed on the output ("all", 1,2,3 or 4)
+#' @param ... further arguments to methods
+#' @importFrom ggplot2 scale_x_continuous scale_colour_manual geom_hline 
+#' geom_bar scale_fill_manual scale_y_continuous geom_boxplot geom_line 
+#' @author Gustavo Paterno & Gijsbert Werner
+#' @seealso \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{samp_continuous}}
+#' \code{\link[sensiPhy]{samp_discrete}}
+#' @details For 'x' from samp_continuous or samp_discrete:
+#' 
+#' \strong{Graph 1:} Estimated q12 (discrete) or sigsq (discrete) for each simulation across  
+#' percentages of species removed. Colours represent percentage 
+#' of change in comparison with the full model (blue = lower than 5, orange = 
+#' between 5 and 10 and red = higher than 10).The red horizontal line represents 
+#' the original value from the full model (with all species). 
+#' 
+#' \strong{Graph 2:} The proportion of estimated  q12 (discrete) or sigsq (discrete) in each category 
+#' across the percentage of species removed.
+#' 
+#' \strong{Graph 3:} Estimated q21 for each simulation across the percentage of species removed  
+#' (only for \code{samp_discrete}).
+#' 
+#' \strong{Graph 4:} The percentage of significant q21 across the 
+#' percentage of species removed (only for \code{samp_discrete}).  
+#' 
+#' @export
+
 #' @export
 sensi_plot.sensiSamp.TraitEvol <- function(x, graphs = "all", ...){
   ### Nulling variables
