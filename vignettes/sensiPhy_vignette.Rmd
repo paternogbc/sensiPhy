@@ -36,7 +36,7 @@ where "xxx" can be one of the 5 sensiPhy methods (see Figure below):
 
 
 ```{r, out.width = "700px", echo=FALSE}
-knitr::include_graphics("sensiPhy_workflow_functions.tif")
+knitr::include_graphics("sensiPhy_workflow_functions.png")
 ```
 
 **Additional functions**
