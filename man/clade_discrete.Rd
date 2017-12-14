@@ -98,14 +98,14 @@ data("primates")
 #Create a binary trait factor 
 primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 clade_disc<-clade_discrete(data=primates$data,phy = primates$phy[[1]],model="SYM",
-trait.col = "adultMass_binary",clade.col="family",nsim=30,n.species=10,n.cores = 2)
+trait.col = "adultMass_binary",clade.col="family",n.sim=30,n.species=10,n.cores = 2)
 summary(clade_disc)
 sensi_plot(clade_disc)
 sensi_plot(clade_disc, clade = "Cebidae", graph = "q12")
 #Change the evolutionary model, tree transformation or minimum number of species per clade
 clade_disc_2<-clade_discrete(data=primates$data,phy = primates$phy[[1]],
 model="ARD",transform="kappa",
-trait.col = "adultMass_binary",clade.col="family",nsim=30,
+trait.col = "adultMass_binary",clade.col="family",n.sim=30,
 n.species=8,n.cores = 2)
 summary(clade_disc_2)
 sensi_plot(clade_disc_2)

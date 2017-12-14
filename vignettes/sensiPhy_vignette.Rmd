@@ -49,7 +49,7 @@ knitr::include_graphics("sensiPhy_workflow_functions.png")
 
 ## 1. Sampling uncertainty
 
-### 1.1. Sensitivity analysis for influential species
+### 1.1 Sensitivity analysis for influential species
 
 The `influ` method performs leave-one-out deletion analyis and detects influential species on parameter estimates.
 
@@ -102,7 +102,7 @@ sensi_plot(influ, graphs = 1)
 sensi_plot(influ2, graphs = 1)
 ```
 
-##### 1.1.3. influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
+##### 1.1.3 influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
 
 **Continuous characters**
 ```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5} 
@@ -157,7 +157,7 @@ from `fitDiscrete` can be used: `none`, `EB`, `lambda`, `kappa` and `delta`.
 
 The `clade` method can be used to estimate and test the influence of specific clades on parameter estimates.
 
-##### 1.2.1. clade_phylm(): Phylogenetic linear regression
+##### 1.2.1 clade_phylm(): Phylogenetic linear regression
 Additional arguments:
 **clade.col**: The name of a column in the provided data frame with clades specification (a character vector with clade names).
 **n.species**: Minimum number of species in the clade in order to include this clade in the leave-one-out deletion analysis. Default is 5.
@@ -195,23 +195,23 @@ sensi_plot(clade, "Sciuridae")
 ```
 
 
-##### 1.2.3 influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
+##### 1.2.3 clade_continuous() and clade_discrete: Trait Evolution Continous and Discrete Characters
 
 **Continuous characters**
 ```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5}
 # Load data:
 data("primates")
-# Model trait evolution accounting for influential species
-adultMass<-primates$data$adultMass
-names(adultMass)<-rownames(primates$data)
-# Model trait evolution accounting for influential species
-influ_cont<-influ_continuous(data = adultMass,phy = primates$phy[[1]],
-model = "OU",cutoff = 2,n.cores = 2,track = FALSE)
-# Print summary statistics for the transitions rates, aic-values and (if applicable) 
-# optimisation parameter
-summary(influ_cont)
+# Model trait evolution accounting for influential clades
+clade_cont <- clade_continuous(data=primates$data, phy = primates$phy[[1]], 
+model="OU", trait.col = "adultMass", clade.col="family", n.sim=30, n.species=10, 
+n.cores = 2, track=TRUE)
+
+# Check summary statistics for the transitions rates, aic-values and (if applicable) optimisation parameter
+summary(clade_cont)
 # Visual diagnostics
-sensi_plot(influ_cont)
+sensi_plot(clade_cont,graph="all")
+# Plot only one clade and one parameter
+sensi_plot(clade_cont,clade="Cebidae",graph = "optpar")
 ```
 
 **Discrete characters**
@@ -220,21 +220,16 @@ sensi_plot(influ_cont)
 data("primates")
 
 # Create a binary trait factor 
-adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-adultMass_binary<-as.factor(as.factor(adultMass_binary))
-names(adultMass_binary)<-rownames(primates$data)
-
-# Model trait evolution accounting for influential species - symmetric model
-influ_binary <- influ_discrete(data = adultMass_binary, phy = primates$phy[[1]],
-model = "SYM", transform = "none", cutoff = 2, n.cores = 2, track = FALSE)
-
-# Print summary statistics for the transition rates, aic-values and 
-# (if applicable) optimisation parameter
-summary(influ_binary)
-
-# Visual diagnostics - in symmetrical model q12 and q21 are, as expected, 
-# exactly the same 
-sensi_plot(influ_binary)
+primates$data$adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
+# Model trait evolution accounting for influential clades
+clade_disc <- clade_discrete(data=primates$data,phy = primates$phy[[1]],
+                             model="ARD",transform="kappa",
+                             trait.col = "adultMass_binary", clade.col = "family",
+                             n.sim = 30, n.species=8,n.cores = 2)
+# Check summary statistics:
+summary(clade_disc)
+# Visual diagnostics
+sensi_plot(clade_disc)
 ```
 
 
@@ -244,7 +239,7 @@ sensi_plot(influ_binary)
 The `samp` method performs analyses of sensitivity to species sampling by 
 randomly removing species from the dataset and detecting the effects on parameter estimates.
 
-### 1.3.1. samp_phylm: Phylogenetic Linear regression
+### 1.3.1 samp_phylm: Phylogenetic Linear regression
 
 * Additional arguments:   
 __breaks:__ A vector containing the percentages of species to remove  
@@ -281,7 +276,7 @@ sensi_plot(samp2, graphs = 1)
 sensi_plot(samp)
 ```
 
-### 1.3.2. samp_physig: Phylogenetic signal (k or lambda)
+### 1.3.2 samp_physig: Phylogenetic signal (k or lambda)
 
 * Additional arguments:   
   __trait.col:__ The name of a column in the provided data frame with trait to
@@ -309,7 +304,7 @@ sensi_plot(samp, graphs = 1)
 ```
 
 
-### 1.3.3. samp_continuous() and samp_discrete: Trait Evolution Continous and Discrete Characters
+### 1.3.3 samp_continuous() and samp_discrete: Trait Evolution Continous and Discrete Characters
 
 **Continuous characters**
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=4}
@@ -332,16 +327,14 @@ sensi_plot(samp_cont)
 ``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=7}
 # Load data:
 data("primates")
-
 # Create a binary trait factor 
 adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
 adultMass_binary<-as.factor(as.factor(adultMass_binary))
 names(adultMass_binary)<-rownames(primates$data)
-
 # Model trait evolution
-samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-n.sim=25, breaks=seq(.1,.3,.1), model = "SYM", transform = "none",
-n.cores = 2,track = FALSE)
+samp_binary <- samp_discrete(data = adultMass_binary,phy = primates$phy[[1]], n.sim=25,
+    breaks = seq(.1,.3,.1),model = "ARD", transform = "lambda", n.cores = 2,
+    track = TRUE)
 # Print summary statistics for the transitions rates, aic-values and (if applicable) 
 # optimisation parameter
 summary(samp_binary)
@@ -358,7 +351,7 @@ Additional arguments:
 __n.tree:__ Number of times to repeat the analysis with n different trees picked
 randomly in the multiPhylo file.
 
-### 2.1. tree_phylm: `tree` method for phylogenetic linear regression
+### 2.1 tree_phylm: `tree` method for phylogenetic linear regression
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
 # Load data
 data(alien)
@@ -375,7 +368,7 @@ sensi_plot(tree)
 ```
 
 
-### 2.2. tree_physig(): `tree` method for phylogenetic signal
+### 2.2 tree_physig(): `tree` method for phylogenetic signal
 
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=4}
 # Load data:
@@ -395,7 +388,7 @@ sensi_plot(tree)
 ```
 
 
-### 2.3. tree_continuous() and tree_discrete: `tree` method for trait evolution of continous and discrete characters
+### 2.3 tree_continuous() and tree_discrete: `tree` method for trait evolution of continous and discrete characters
 
 **Continuous characters**
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
@@ -446,7 +439,7 @@ sensi_plot(tree_binary)
 ## 3. Data uncertainty
 The `intra` method performs Sensitivity analysis for intraspecific variation and measurement error
 
-### 3.1. intra_phylm(): `intra` method for phylogenetic linear regression
+### 3.1 intra_phylm(): `intra` method for phylogenetic linear regression
 
 Additional arguments:   
  __Vy:__ Name of the column containing the standard deviation or the standard 
@@ -479,7 +472,7 @@ sensi_plot(intra)
 ```
 
 
-### 3.2. intra_physig(): `intra` method for phylogenetic signal
+### 3.2 intra_physig(): `intra` method for phylogenetic signal
 
 Additional arguments:   
   __V__: Name of the column containing the standard deviation or the standard 
@@ -511,7 +504,7 @@ The 'sensiPhy' package can perform sensitivity analysis by interacting multiple 
 Both `intra` and `tree` methods can be used together with all other uncertainties to evaluate the interaction between two types of uncertainty at the same time. 
 
 ### Examples:  
-#### 4.1. tree_influ_phylm(): `tree_influ` method for phylogenetic linear regression
+#### 4.1 tree_influ_phylm(): `tree_influ` method for phylogenetic linear regression
 
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
 data(alien)
@@ -532,7 +525,7 @@ sensi_plot(tree_influ)
 
 
 
-#### 4.2. tree_clade_phylm(): `tree_clade` method for phylogenetic linear regression
+#### 4.2 tree_clade_phylm(): `tree_clade` method for phylogenetic linear regression
 
 ``` {r warning=FALSE, message=FALSE, fig.width=7, fig.height=4}
 data(primates)
@@ -556,7 +549,7 @@ sensi_plot(clade_tree, clade = "Cebidae")
 
 
 
-#### 4.3. tree_samp_phylm(): `tree_samp` method for phylogenetic linear regression
+#### 4.3 tree_samp_phylm(): `tree_samp` method for phylogenetic linear regression
 
 ``` {r warning=FALSE, message=FALSE, fig.width=6, fig.height=4}
 # Load data:
@@ -576,7 +569,7 @@ sensi_plot(samp, graphs = 2)
 
 
 
-#### 4.4. tree_intra_phylm(): `tree_intra` method for phylogenetic linear regression
+#### 4.4 tree_intra_phylm(): `tree_intra` method for phylogenetic linear regression
 
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
 # Load data:
@@ -593,7 +586,7 @@ sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type =
 
 ## 5. Additional functions
 
-### 5.1. Combine data and phylogeny
+### 5.1 Combine data and phylogeny
 
 The funcion `match_dataphy` combines phylogeny and data to ensure that tips in phylogeny match data
 and that observations with missing values are removed.
@@ -622,7 +615,7 @@ plot(comp.data$phy)
 comp.data$dropped
 ```
 
-### 5.2. Phylogenetic signal for missing data
+### 5.2 Phylogenetic signal for missing data
 #### Background
 The supplementary function `miss.phylo.d` tests if there is a phylogenetic signal in missing data, using the D framework developed in Fritz & Purvis (2010). A phylogenetic signal in missing data can bias comparative analyses, because it means that absence of data points is not independent of the phylogeny. This function can help alert users to this problem, suggesting that more balanced data collection would be required.
 
@@ -655,7 +648,7 @@ print(massNAsig)
 plot(massNAsig)
 ```
 
-### 5.3. Diversification and speciation rates
+### 5.3 Diversification and speciation rates
 #### Background
 The funcion `tree_bd`estimates diversification and speciation rates evaluating uncertainty in tree topology.
 It estimates net diversification rate using `geiger::bd.ms` Magallon and Sanderson (2000) method
@@ -692,7 +685,7 @@ sensi_plot(fit.km)
 ## 6. How to support sensiPhy
 Thanks for you interest in contributing with `sensiPhy`. First you need to register at [Github](https://github.com/). You can help developing `sensiPhy` in different ways:
 
-### 6.1. Report bugs or errors
+### 6.1 Report bugs or errors
 
 If you have any problem running `sensiPhy` functions, please report the problem as a new [issue](https://github.com/paternogbc/sensiPhy/issues/new). To do this, folow the steps below:
 
@@ -701,7 +694,7 @@ If you have any problem running `sensiPhy` functions, please report the problem 
  * Write a small description about your problem/error
  * If possible, include a reproducible example using the R package [reprex](https://github.com/tidyverse/reprex/blob/master/README.md)
 
-### 6.2. Small changes in `sensiPhy` documentation
+### 6.2 Small changes in `sensiPhy` documentation
 
 If you find a typo on `sensiPhy` documentation or if you want to make a small change on any file, you can do it online. Search for the file you want to change at the [master branch](https://github.com/paternogbc/sensiPhy), then:
 
@@ -710,7 +703,7 @@ If you find a typo on `sensiPhy` documentation or if you want to make a small ch
  * Describe the changes you have made
  * Click `send a pull request`
 
-### 6.3. Contribute with code
+### 6.3 Contribute with code
 
 If you want to make a bigger contribution and help us with `sensiPhy` code:
 
@@ -724,7 +717,7 @@ If you want to make a bigger contribution and help us with `sensiPhy` code:
 
 If you need to ask something via email, send to [paternogbc@gmail.com](mailto:paternogbc@gmail.com)
 
-#### 6.5 Code of Conduct
+### 6.5 Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
 
 ## 7. How to cite sensiPhy
