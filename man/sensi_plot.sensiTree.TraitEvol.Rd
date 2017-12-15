@@ -23,32 +23,32 @@
 The following graphs are printed. 
 
 \strong{Graph aicc:} Distribution of estimated AICc-values across each tree.
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates. 
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates. 
 
 \strong{Graph optpar:} Distribution of estimated values for optimisation parameter specified using 'transform' (if applicable)
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates. 
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates. 
 
 Additionally, only for \code{tree_discrete} the function creates the following graphs. 
 
 \strong{Graph q12:} Distribution of estimated parameter values for transition rates q12 for each tree.
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates. 
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates. 
 
 \strong{Graph q21:} Distribution of estimated parameter values for transition rates q21 for each tree.
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates. 
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates. 
 
 While only for \code{tree_continuous} the function creates the following graphs. 
 
 \strong{Graph sigsq:} Distribution of estimated parameter values for rate of evolution sigsq for each tree.
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates. 
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates. 
 
 \strong{Graph z0:} Distribution of estimated parameter values for z0 for each tree.
-Red vertical line represents the mean signal among all estimates. 
-Blue vertical line represents the median signal among all estimates.
+Red vertical line represents the mean value among all estimates. 
+Blue vertical line represents the median value among all estimates.
 }
 \author{
 Gijsbert Werner
