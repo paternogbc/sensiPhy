@@ -5,12 +5,12 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{sensiPhy: R-package for sensitivity analysis in phylogenetic comparative methods}
-  %\VignetteEngine{knitr::rmarkdown_notangle}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache=TRUE)
+knitr::opts_chunk$set(eval = F)
 ```
 
 ##**Introduction to sensiPhy**
@@ -39,7 +39,7 @@ where "xxx" can be one of the 5 sensiPhy methods (see Figure below):
 **sensiPhy** workflow & functions
 
 
-```{r, out.width = "700px", echo=FALSE}
+```{r, out.width = "700px", echo=FALSE, eval=T}
 knitr::include_graphics("sensiPhy_workflow_functions.png")
 ```
 
@@ -723,19 +723,3 @@ If you need to ask something via email, send to [paternogbc@gmail.com](mailto:pa
 
 ### 6.5 Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
-
-## 7. How to cite sensiPhy
-To cite package ‘sensiPhy’ in publications use:
-
-  Gustavo Paterno, Gijsbert Werner and Caterina Penone (2016). sensiPhy: Sensitivity Analysis for
-  Comparative Methods. R package version 0.6.0. https://github.com/paternogbc/sensiPhy
-
-A BibTeX entry for LaTeX users is
-
-  @Manual{,  
-    title = {sensiPhy: Sensitivity Analysis for Comparative Methods},  
-    author = {Gustavo Paterno and Gijsbert Werner and Caterina Penone},  
-    year = {2016},  
-    note = {R package version 0.6.0},  
-    url = {https://github.com/paternogbc/sensiPhy},  
-  }  
