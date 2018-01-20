@@ -1,4 +1,4 @@
-#' Intraspecific variability - Phylogenetic Linear Regression
+#' Intraspecific variability - Phylogenetic signal
 #'
 #' Performs Phylogenetic signal estimates evaluating
 #' trait intraspecific variability
@@ -30,8 +30,6 @@
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
-#' Currently, this function can only implement simple linear models (i.e. \eqn{trait~
-#' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
 #' 
@@ -88,7 +86,7 @@
 
 intra_physig <- function(trait.col, data, phy,
                         V = NULL, n.intra = 100, distrib = "normal",
-                        method = "K", track = TRUE, ...){
+                        method = "K", track = TRUE){
   #Error check
   if(is.null(V)) stop("V must be defined")
   if(class(data) != "data.frame") stop("data must be class 'data.frame'")
@@ -125,7 +123,8 @@ intra_physig <- function(trait.col, data, phy,
     predV <- apply(full.data[,c(trait.col,V)],1,function(x)funr(x[1],x[2]))
     
     #model
-    mod.s    <- phytools::phylosig(tree = phy, x = predV, method = method, test = TRUE, ...)
+    mod.s    <- phytools::phylosig(tree = phy, x = predV, method = method, 
+                                   test = TRUE)
     estimate <- mod.s[[1]] 
     pval     <- mod.s$P
     
