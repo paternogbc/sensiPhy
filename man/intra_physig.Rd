@@ -2,10 +2,10 @@
 % Please edit documentation in R/intra_physig.R
 \name{intra_physig}
 \alias{intra_physig}
-\title{Intraspecific variability - Phylogenetic Linear Regression}
+\title{Intraspecific variability - Phylogenetic signal}
 \usage{
 intra_physig(trait.col, data, phy, V = NULL, n.intra = 100,
-  distrib = "normal", method = "K", track = TRUE, ...)
+  distrib = "normal", method = "K", track = TRUE)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 
@@ -64,8 +64,6 @@ package \code{Rmisc}.
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 
-Currently, this function can only implement simple linear models (i.e. \eqn{trait~
-predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
