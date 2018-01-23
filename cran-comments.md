@@ -1,7 +1,10 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-* Updated the package to v0.8.0 and included new features and functions. Please see 'NEWS.md' for details.
+Updated the package to v0.8.1 after:  
+  1. including two new sections in the Vignette  
+  2. correcting minor bugs in the package.   
+Please see 'NEWS.md' for details.
 
 ## Test environments
 * local deepin 15.5, R 3.4.1

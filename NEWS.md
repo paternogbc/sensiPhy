@@ -1,3 +1,16 @@
+## sensiPhy 0.8.1
+
+#### Additions:
+
+The vigentee now include two new sections:  
+1. Using sensiPhy to analyse results from other packages  
+2. How long does it take?  
+
+Also available at the online tutorial: https://github.com/paternogbc/sensiPhy/wiki
+
+#### Bug fix
+* Corrected issue #182: intra_physig problem with se argument.
+
 ## sensiPhy 0.8.0
 
 #### Major additions
