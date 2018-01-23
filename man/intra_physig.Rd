@@ -9,7 +9,7 @@ intra_physig(trait.col, data, phy, V = NULL, n.intra = 100,
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 
-to be analyzed  (e.g. "Body_mass").#' @param data Data frame containing species traits and species names as row names.}
+to be analyzed  (e.g. "Body_mass").}
 
 \item{data}{Data frame containing species traits with row names matching tips
 in \code{phy}.}
@@ -30,11 +30,9 @@ Warning: we recommend to use normal distribution with Vx or Vy = standard deviat
 \item{method}{Method to compute signal: can be "K" or "lambda".}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
-
-\item{...}{Further arguments to be passed to \code{phytools::physig}}
 }
 \value{
-The function \code{intra_phylm} returns a list with the following
+The function \code{intra_physig} returns a list with the following
 components:
 
 \code{Trait}: Column name of the trait analysed
@@ -58,14 +56,14 @@ This function estimates phylogenetic signal using \code{\link[phytools]{phylosig
 The analysis is repeated \code{n.intra} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
-package \code{Rmisc}.
-
-#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
-\code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
-\code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
-
+package \code{Rmisc}. 
 
 Output can be visualised using \code{sensi_plot}.
+}
+\note{
+The argument "se" from \code{\link[phytools]{phylosig}} is not available in this function. Use the 
+argument "V" instead with \code{\link{intra_physig}} to indicate the name of the column containing the standard 
+deviation or the standard error of the trait variable instead.
 }
 \examples{
 \dontrun{
@@ -106,7 +104,7 @@ Kamilar, J. M., & Cooper, N. (2013). Phylogenetic signal in primate behaviour,
  B: Biological Sciences, 368: 20120341.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+\code{\link[phytools]{phylosig}}, \code{\link{sensi_plot}}
 }
 \author{
 Caterina Penone & Pablo Ariel Martinez & Gustavo Paterno

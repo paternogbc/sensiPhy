@@ -4,7 +4,7 @@
 #' trait intraspecific variability
 #'
 #' @param trait.col The name of a column in the provided data frame with trait 
-#'  to be analyzed  (e.g. "Body_mass").#' @param data Data frame containing species traits and species names as row names.
+#'  to be analyzed  (e.g. "Body_mass").
 #' @param data Data frame containing species traits with row names matching tips
 #' in \code{phy}.
 #' @param phy A phylogeny (class 'phylo', see ?\code{ape}).
@@ -18,22 +18,20 @@
 #' Warning: we recommend to use normal distribution with Vx or Vy = standard deviation of the mean.
 #' @param method Method to compute signal: can be "K" or "lambda".
 #' @param track Print a report tracking function progress (default = TRUE)
-#' @param ... Further arguments to be passed to \code{phytools::physig}
 #' @details
 #' This function estimates phylogenetic signal using \code{\link[phytools]{phylosig}}.
 #' The analysis is repeated \code{n.intra} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
 #' To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
-#' package \code{Rmisc}.
+#' package \code{Rmisc}. 
 #' 
-#' #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
-#' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
-#' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
-#'
-#'
 #' Output can be visualised using \code{sensi_plot}.
 #' 
-#' @return The function \code{intra_phylm} returns a list with the following
+#' @note The argument "se" from \code{\link[phytools]{phylosig}} is not available in this function. Use the 
+#' argument "V" instead with \code{\link{intra_physig}} to indicate the name of the column containing the standard 
+#' deviation or the standard error of the trait variable instead. 
+#' 
+#' @return The function \code{intra_physig} returns a list with the following
 #' components:
 #' @return \code{Trait}: Column name of the trait analysed
 #' @return \code{data}: Original full dataset
@@ -43,7 +41,7 @@
 #' @return \code{stats}: Main statistics for signal estimate\code{CI_low} and \code{CI_high} are the lower 
 #' and upper limits of the 95% confidence interval.
 #' @author Caterina Penone & Pablo Ariel Martinez & Gustavo Paterno
-#' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+#' @seealso \code{\link[phytools]{phylosig}}, \code{\link{sensi_plot}}
 #' @references
 #' Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 #' Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 

@@ -70,6 +70,11 @@ calculates the effect of random species removal on phylogenetic signal estimates
 
 Output can be visualised using \code{sensi_plot}.
 }
+\note{
+The argument "se" from \code{\link[phytools]{phylosig}} is not available in this function. Use the 
+argument "V" instead with \code{\link{intra_physig}} to indicate the name of the column containing the standard 
+deviation or the standard error of the trait variable instead.
+}
 \examples{
 \dontrun{
 data(alien)

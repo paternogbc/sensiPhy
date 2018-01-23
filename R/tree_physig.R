@@ -19,7 +19,11 @@
 #' to n trees, randomly picked in a multiPhylo file.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#'
+#' 
+#' @note The argument "se" from \code{\link[phytools]{phylosig}} is not available in this function. Use the 
+#' argument "V" instead with \code{\link{intra_physig}} to indicate the name of the column containing the standard 
+#' deviation or the standard error of the trait variable instead. 
+#' 
 #' @return The function \code{tree_physig} returns a list with the following
 #' components:
 #' @return \code{Trait}: Column name of the trait analysed
