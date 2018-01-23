@@ -685,11 +685,165 @@ summary(fit.km)
 sensi_plot(fit.km)
 ```
 
+### 6. Using sensiPhy with other packages (caper, phytools, gls)
 
-## 6. How to support sensiPhy
+sensiPhy leverages comparative methods implemented in specific R packages:  
+1. `phylolm` for pgls regressions  
+2. `phytools` for phylogenetic signal estimates  
+3. `geiger` for macroevolutionary models (continuous and discrete trait evolution)  
+
+Nevertheless, users can still use sensiPhy to perform sensitivity analysis when they had performed their initial comparative analyses in another package. 
+
+For instance, if you have used `caper`, `phytools` or `gls` to fit your full models, you can still use `sensiPhy` to test the sensitivity of those models to multiple types of uncertainty. In order to do this, users will need to set arguments that mirror the specific parameters from their full analysis. For example, to compare results one needs to use the same evolutionary model in pgls (e.g “lambda”, “BM”, etc), or the same metric for phylogenetic signal tests (K or lambda). See below for some examples:
+
+#### 6.1 PGLS regression
+
+``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=4}
+### prepare dataset for caper pgls:
+library(caper)
+library(phytools)
+library(phylolm)
+library(sensiPhy)
+# selected variables from dataset:
+alien.data <- alien.data[c("gestaLen", "adultMass")]
+
+# create variable with species names:
+alien.data$sp <- rownames(alien.data)
+
+# caper
+# prepare comparative dataset:
+comp.dat <- comparative.data(data = alien.data, phy = alien.phy[[1]], 
+                             names.col = "sp")
+# check comparative dataset:
+print(comp.dat)
+
+### Run PGLS analysis (full model)
+# using caper (lambda)
+fit.caper.lam <- pgls(log(gestaLen)~ log(adultMass), comp.dat, lambda="ML")
+coef(fit.caper.lam)
+
+# using caper (delta)
+fit.caper.del <- pgls(log(gestaLen)~ log(adultMass), comp.dat, delta="ML")
+coef(fit.caper.del)
+
+# using phylolm (lambda)
+fit.phylo.lam <- phylolm(log(gestaLen)~ log(adultMass), comp.dat$data, comp.dat$phy,
+                 model = "lambda")
+coef(fit.phylo.lam)
+
+# using phylolm (del)
+fit.phylo.del <- phylolm(log(gestaLen)~ log(adultMass), comp.dat$data, comp.dat$phy,
+                         model = "delta")
+coef(fit.phylo.del)
+
+### run sensitivity analysis with sensiPhy (influential species):
+library(sensiPhy)
+# run analysis (lambda):
+lam <- influ_phylm(log(gestaLen) ~ log(adultMass), phy = comp.dat$phy, 
+                     data = comp.dat$data, model = "lambda")
+# check full model estimates and compare to initial estimates:
+lam$full.model.estimates
+# test for influential species:
+summary(lam)
+
+# run analysis (delta):
+del <- influ_phylm(log(gestaLen) ~ log(adultMass), phy = comp.dat$phy, 
+                     data = comp.dat$data, model = "delta")
+# check full model estimates and compare to initial estimates:
+del$full.model.estimates
+# test for influential species:
+summary(del)
+```
+
+#### 6.2 phylogenetic signal
+
+``` {r warning=FALSE, message=FALSE, fig.width=8, fig.height=4}
+
+# 2. phylogenetic signal:-------------------------------------------------------
+library(picante)
+library(phytools)
+library(sensiPhy)
+
+### Estimate phylogenetic signal:
+# using picante (K)
+phylosignal(log(comp.dat$data$adultMass), comp.dat$phy, reps = 1000)
+
+# using phytools (K):
+phytools::phylosig(x = log(comp.dat$data$adultMass), tree = comp.dat$phy, 
+                   nsim = 1000,
+                   method = "K", test = T)
+
+# using phytools (lambda):
+phytools::phylosig(x = log(comp.dat$data$adultMass), tree = comp.dat$phy, 
+                   nsim = 1000,
+                   method = "lambda", test = T)
+
+### run sensitivity analysis with sensiPhy (influential species):
+library(sensiPhy)
+# Load data:
+data(alien)
+# Logtransform data
+comp.dat$data$logMass <- log(comp.dat$data$adultMass) 
+
+# Run sensitivity analysis (K):
+influ.k <- influ_physig("logMass", data = comp.dat$data, phy = comp.dat$phy, 
+                      method = "K")
+# check full model estimates and compare to initial estimates:
+influ.k$full.data.estimates
+# check for influential species:
+summary(influ.k)
+
+# Run sensitivity analysis (lambda):
+influ.lam <- influ_physig("logMass", data = comp.dat$data, phy = comp.dat$phy, 
+                      method = "lambda")
+# check full model estimates and compare to initial estimates:
+influ.lam$full.data.estimates
+# check for influential species:
+summary(influ.lam)
+```
+
+### 7. How long does it take?
+
+Although most functions implemented in sensiPhy are reasonably fast (runtime less them 1 min), it is important to be aware that some functions might take a long time to run. This is more likely when analyzing models with a high number of species (>1000) or number of repetitions, and also when interacting two types of uncertainties (e.g. functions: `tree_clade` and `tree_samp`). To keep track of the time while running functions, we recommend users to set the argument `“track = TRUE”` which prints a progress bar and gives a good idea of how long the analysis will take before it finishes. As an indication, some examples of elapsed time on a standard desktop computer [Linux, Intel i7, 2.7GHz, 12GB ram] are presented below:
+
+**Analyses with single uncertainty**: `tree_phylm`
+
+function | N species | N trees | time 
+----|-----|-----|----
+tree_phylm| 100 | 30 | ~ 2 sec 
+tree_phylm| 100 | 100 | ~ 5 sec 
+
+**Analyses with single uncertainty**: `clade_phylm`
+
+function | N species | N sim | time 
+----|-----|-----|----
+clade_phylm| 100 | 100 | ~ 7 sec 
+clade_phylm| 100 | 300 | ~ 31 sec 
+clade_phylm| 100 | 500 | ~ 61 sec 
+
+**Analyses with single uncertainty**: `samp_phylm`
+
+function | N species | N sim | time 
+----|-----|-----|----
+samp_phylm| 100 | 100 | ~ 11 sec 
+samp_phylm| 100 | 300 | ~ 25 sec 
+samp_phylm| 100 | 500 | ~ 43 sec 
+samp_phylm| 500 | 100 | ~ 22 sec 
+samp_phylm| 1000 | 100 | ~ 35 sec 
+
+**Analyses with single uncertainty**: `influ_phylm`
+
+function | N species | time 
+----|-----|-----
+influ_phylm| 100 | ~ 4 sec 
+influ_phylm| 500 |  ~ 43 sec 
+influ_phylm| 1000 |  ~ 148 sec 
+ 
+ 
+## 8. How to support sensiPhy
 Thanks for you interest in contributing with `sensiPhy`. First you need to register at [Github](https://github.com/). You can help developing `sensiPhy` in different ways:
 
-### 6.1 Report bugs or errors
+### 8.1 Report bugs or errors
 
 If you have any problem running `sensiPhy` functions, please report the problem as a new [issue](https://github.com/paternogbc/sensiPhy/issues/new). To do this, folow the steps below:
 
@@ -698,7 +852,7 @@ If you have any problem running `sensiPhy` functions, please report the problem 
  * Write a small description about your problem/error
  * If possible, include a reproducible example using the R package [reprex](https://github.com/tidyverse/reprex/blob/master/README.md)
 
-### 6.2 Small changes in `sensiPhy` documentation
+### 8.2 Small changes in `sensiPhy` documentation
 
 If you find a typo on `sensiPhy` documentation or if you want to make a small change on any file, you can do it online. Search for the file you want to change at the [master branch](https://github.com/paternogbc/sensiPhy), then:
 
@@ -707,7 +861,7 @@ If you find a typo on `sensiPhy` documentation or if you want to make a small ch
  * Describe the changes you have made
  * Click `send a pull request`
 
-### 6.3 Contribute with code
+### 8.3 Contribute with code
 
 If you want to make a bigger contribution and help us with `sensiPhy` code:
 
@@ -717,9 +871,9 @@ If you want to make a bigger contribution and help us with `sensiPhy` code:
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
 
-### 6.4 New ideas or suggestions? 
+### 8.4 New ideas or suggestions? 
 
 If you need to ask something via email, send to [paternogbc@gmail.com](mailto:paternogbc@gmail.com)
 
-### 6.5 Code of Conduct
+### 8.5 Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
