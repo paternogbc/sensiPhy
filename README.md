@@ -4,7 +4,6 @@
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-green.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![Rdoc](http://www.rdocumentation.org/badges/version/sensiPhy)](http://www.rdocumentation.org/packages/sensiPhy)
 
-
 R-package for sensitivity analysis in phylogenetic comparative methods.
 
 ## Installation:
