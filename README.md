@@ -1,5 +1,6 @@
 <a href="http://imgur.com/BmDLe0C"><img src="http://i.imgur.com/BmDLe0Cm.jpg" title="source: imgur.com" /></a>  
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/sensiPhy)](http://cran.r-project.org/package=sensiPhy)
+[![downloads](http://cranlogs.r-pkg.org/badges/grand-total/sensiPhy?color=orange)](http://cranlogs.r-pkg.org/badges/grand-total/sensiPhy?color=orange)
 [![Travis-CI Build Status](https://travis-ci.org/paternogbc/sensiPhy.svg?branch=master)](https://travis-ci.org/paternogbc/sensiPhy)
 [![License](http://img.shields.io/badge/license-GPL%20%28%3E=%202%29-green.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)
 [![Rdoc](http://www.rdocumentation.org/badges/version/sensiPhy)](http://www.rdocumentation.org/packages/sensiPhy)
