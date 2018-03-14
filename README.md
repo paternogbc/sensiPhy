@@ -23,5 +23,10 @@ devtools::install_github("paternogbc/sensiPhy")
 
 Get started with [__sensiPhy__](https://github.com/paternogbc/sensiPhy/wiki/Online-tutorial)
 
+#### Publications
+* __Paterno, G. B., Penone, C. and Werner, G. D.A., 2018. sensiPhy: an R-package for sensitivity analysis in phylogenetic comparative methods. Methods Ecol Evol.__ doi:10.1111/2041-210X.12990. - 
+[LINK](http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12990/full)
+
 #### Code of Conduct
 Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its [terms](https://github.com/paternogbc/sensiPhy/blob/master/CODE_OF_CONDUCT.md).
+
