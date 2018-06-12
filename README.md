@@ -11,6 +11,7 @@ Currently the package is being updated on CRAN, please install Github version in
 
 Install development version from github: 
 ```{r}
+library(devtools)
 devtools::install_github("paternogbc/sensiPhy")
 ```
 
