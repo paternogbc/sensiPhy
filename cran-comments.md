@@ -7,8 +7,7 @@ Fixed issues request by CRAN (see below):
 to true, which turns using if() with conditions of length greater than
 one from a warning into an error."
 
-The package was archievied by CRAN because we were not able to fix the issues in time.
-The mantainers are sorry for the delay in fixing these issues but have now managed to fix all CRAN requests.
+The package (sensiPhy v0.8.1) was archievied by CRAN because we were not able to fix the above issues in time. The mantainers are really sorry for the delay in fixing these issues but we now believe we have managed to fix all CRAN requests.
 
 ## Test environments
 * local Ubuntu 17.10 R 3.4.1
@@ -24,6 +23,8 @@ Warning:
 CRAN repository db overrides:
   X-CRAN-Comment: Archived on 2018-06-01 as check problems were not
     corrected despite reminders.
+
+__R:__ The mantainers apologize for the delay in fixing the issues raised. We have now fixed all requests and ERRORs reported.
 
 NOTE:
 Possibly mis-spelled words in DESCRIPTION:
