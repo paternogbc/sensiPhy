@@ -1,23 +1,31 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-Updated the package to v0.8.1 after:  
-  1. including two new sections in the Vignette  
-  2. correcting minor bugs in the package.   
-Please see 'NEWS.md' for details.
+Fixed issues request by CRAN (see below):
+
+"These fail when checking with env var R_CHECK_LENGTH_1_CONDITION set
+to true, which turns using if() with conditions of length greater than
+one from a warning into an error."
+
+The package was archievied by CRAN because we were not able to fix the issues in time.
+The mantainers are sorry for the delay in fixing these issues but have now managed to fix all CRAN requests.
 
 ## Test environments
-* local deepin 15.5, R 3.4.1
-* local Windows10 Enterprise - version 1709, R version 3.4.1
-* local Apple x86_64-apple-darwin15.6.0, R version 3.4.1 
+* local Ubuntu 17.10 R 3.4.1
 * win-builder (devel and release)
 * travis Ubuntu 12.04.5 LTS 
 
 ## R CMD check results
-There were no ERRORs or WARNINGs. 
+There were no ERRORs. 
 
-There was 1 NOTE:
+There was 1 NOTE and 1 Warning:
 
+Warning:
+CRAN repository db overrides:
+  X-CRAN-Comment: Archived on 2018-06-01 as check problems were not
+    corrected despite reminders.
+
+NOTE:
 Possibly mis-spelled words in DESCRIPTION:
   PCM (13:56)
   clades (14:73)

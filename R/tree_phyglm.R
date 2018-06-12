@@ -128,12 +128,10 @@ tree_phyglm <- function(formula,data,phy,
   if(track==TRUE) on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=sensi.estimates, mean)
-  
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
+                          sd_tree=apply(sensi.estimates,2,stats::sd))
   
   statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
   statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)

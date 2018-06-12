@@ -125,7 +125,7 @@ intra_samp_phylm <- function(formula, data, phy, n.sim=10, n.intra = 3,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx and/or Vy")
   if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
+  if((model == "trend") && (sum(is.ultrametric(phy))>1)) 
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
 

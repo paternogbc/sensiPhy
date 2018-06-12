@@ -71,7 +71,7 @@ tree_phylm <- function(formula,data,phy,
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if ( (model == "trend") & (ape::is.ultrametric(phy)))
+  if ( (model == "trend") && (ape::is.ultrametric(phy)))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
 
@@ -142,12 +142,11 @@ tree_phylm <- function(formula,data,phy,
   if(track==TRUE) on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=sensi.estimates, mean)
-
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_tree=apply(mean_by_tree,2,stats::sd))[-1,]
+                          sd_tree=apply(sensi.estimates,2,stats::sd))
+  
   
   statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
   statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)

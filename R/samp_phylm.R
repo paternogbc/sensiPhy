@@ -99,7 +99,7 @@ if(class(phy) != "phylo")
     stop("phy must be class 'phylo'")
 if(length(breaks) < 2) 
     stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-if ( (model == "trend") & (ape::is.ultrametric(phy)))
+if ( (model == "trend") && (ape::is.ultrametric(phy)))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
 else
 
