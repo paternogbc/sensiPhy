@@ -186,12 +186,10 @@ intra_phyglm <- function(formula, data, phy,
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval<-stats::aggregate(.~n.intra, data=sensi.estimates, mean)
-  
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_intra=apply(mean_by_randomval,2,stats::sd))[-1,]
+                          sd_intra=apply(sensi.estimates,2,stats::sd))
   
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)

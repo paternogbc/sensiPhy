@@ -95,7 +95,7 @@ tree_influ_phylm <- function(formula, data, phy, n.tree = 2,
   if(class(formula)!="formula") stop("formula must be class 'formula'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
+  if((model == "trend") && (sum(is.ultrametric(phy))>1)) 
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
   

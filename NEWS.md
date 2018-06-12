@@ -1,3 +1,9 @@
+## sensiPhy 0.8.2
+#### Bug fix
+
+This new version fix all issues requested by CRAN.
+In all sensiPhy functions the use of if() with conditions of length greater than one was corrected to avoid Errors.
+
 ## sensiPhy 0.8.1
 
 #### Additions:

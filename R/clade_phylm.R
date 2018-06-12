@@ -94,7 +94,7 @@ clade_phylm <- function(formula, data, phy, model = "lambda", track = TRUE,
   if(missing(clade.col)) stop("clade.col not defined. Please, define the",
                               " column with clade names.")
   if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if ( (model == "trend") & (ape::is.ultrametric(phy)))
+  if ( (model == "trend") && (ape::is.ultrametric(phy)))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
   
