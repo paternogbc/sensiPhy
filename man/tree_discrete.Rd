@@ -64,17 +64,6 @@ See \code{\link[geiger]{fitDiscrete}} for more details on character models and t
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
-\dontshow{
-#Load data:
-data("primates")
-#Create a binary trait factor 
-adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-adultMass_binary<-as.factor(as.factor(adultMass_binary))
-names(adultMass_binary)<-rownames(primates$data)
-#Model trait evolution accounting for phylogenetic uncertainty
-tree_binary<-tree_discrete(data = adultMass_binary,phy = primates$phy,
-model = "ER",transform = "none",n.tree = 1,n.cores = 2,track = TRUE)
-}
 \dontrun{
 #Load data:
 data("primates")

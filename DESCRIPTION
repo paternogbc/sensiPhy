@@ -15,7 +15,7 @@ Description: An implementation of sensitivity analysis for phylogenetic comparat
  (ii) Phylogenetic uncertainty (different topologies and/or branch lengths).
  (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
-    R (>= 3.4.1),
+    R (>= 3.4.0),
     ape (>= 3.3),
     phylolm (>= 2.4),
     ggplot2 (>= 2.1.0)
