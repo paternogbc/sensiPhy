@@ -37,18 +37,18 @@ value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 without deleted species.
 
 \code{influential_species}: List of influential species, both
-based on standardised difference in interecept and in the slope of the
+based on standardised difference in intercept and in the slope of the
 regression. Species are ordered from most influential to less influential and
 only include species with a standardised difference > \code{cutoff}.
 
-\code{influ.model.estimates}: A data frame with all simulation
-estimates. Each row represents a deleted clade. #' Columns report the calculated
+\code{sensi.estimates}: A data frame with all simulation
+estimates. Each row represents a deleted clade. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the standardised
-difference (\code{sDFintercept}), the percentage of change in intercept compared
+intercept and full model intercept (\code{DIFintercept}), the standardised
+difference (\code{sDIFintercept}), the percentage of change in intercept compared
 to the full model (\code{intercept.perc}) and intercept p-value
 (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter
 (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) are
 reported.
@@ -58,7 +58,7 @@ reported.
 \code{errors}: Species where deletion resulted in errors.
 }
 \description{
-Performs leave-one-out deletion analyis for phylogenetic linear regression,
+Performs leave-one-out deletion analysis for phylogenetic linear regression,
 and detects influential species.
 }
 \details{
@@ -93,11 +93,8 @@ summary(influ)
 influ$influential.species
 # Visual diagnostics
 sensi_plot(influ)
-# You can specify which graph and parameter ("slope" or "intercept") to print: 
-sensi_plot(influ, param = "slope", graphs = 2)
-}
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
+# You can specify which graph and parameter ("estimate" or "intercept") to print: 
+sensi_plot(influ, param = "estimate", graphs = 2)
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
@@ -105,6 +102,8 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 }
 \seealso{
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phylm}},
-\code{\link{influ_phylm}},\code{\link{sensi_plot}}
+\code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

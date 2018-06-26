@@ -4,7 +4,7 @@
 \alias{tree_phylm}
 \title{Phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_phylm(formula, data, phy, times = 2, model = "lambda", track = TRUE,
+tree_phylm(formula, data, phy, n.tree = 2, model = "lambda", track = TRUE,
   ...)
 }
 \arguments{
@@ -14,9 +14,9 @@ tree_phylm(formula, data, phy, times = 2, model = "lambda", track = TRUE,
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{times}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{model}{The phylogenetic model to use (see Details). Default is \code{lambda}.}
 
@@ -32,7 +32,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 different phylogenetic tree.
 
@@ -70,16 +70,13 @@ class(alien$phy)
 alien$phy
 # run PGLS accounting for phylogenetic uncertain:
 tree <- tree_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy, 
-data = alien$data, times = 30)
+data = alien$data, n.tree = 30)
 # To check summary results:
 summary(tree)
 # Visual diagnostics
 sensi_plot(tree)
 # You can specify which graph to print: 
 sensi_plot(tree, graphs = 3)
-}
-\author{
-Caterina Penone & Pablo Ariel Martinez
 }
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
@@ -90,6 +87,8 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}, \code{\link{tree_phyglm}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}

@@ -14,8 +14,8 @@
 #' argument instead of transforming data in the formula directly (see also details below).
 #' @param x.transf Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 #' argument instead of transforming data in the formula directly (see also details below).
-#' @param times Number of times to repeat the analysis generating a random value for response and/or predictor variables.
-#' If NULL, \code{times} = 2
+#' @param n.intra Number of times to repeat the analysis generating a random value for response and/or predictor variables.
+#' If NULL, \code{n.intra} = 30
 #' @param distrib A character string indicating which distribution to use to generate a random value for the response 
 #' and/or predictor variables. Default is normal distribution: "normal" (function \code{\link{rnorm}}).
 #' Uniform distribution: "uniform" (\code{\link{runif}})
@@ -25,14 +25,12 @@
 #' @param ... Further arguments to be passed to \code{phylolm}
 #' @details
 #' This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phylolm}}.
-#' The regression is repeated \code{times} times. At each iteration the function generates a random value
+#' The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 #' for each row in the dataset using the standard deviation or errors supplied and assuming a normal or uniform distribution.
-#' To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
-#' Warning: when Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
-#' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-#' be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
-#'  
-#' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
+#' To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
+#' package \code{Rmisc}.
+#' 
+#' #' All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 #' \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 #' \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 #'
@@ -40,12 +38,17 @@
 #' predictor}). In the future we will implement more complex models.
 #'
 #' Output can be visualised using \code{sensi_plot}.
-#'
+#' 
+#' @section Warning:  
+#' When Vy or Vx exceed Y or X, respectively, negative (or null) values can be generated, this might cause problems
+#' for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+#' be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
+#'  
 #' @return The function \code{intra_phylm} returns a list with the following
 #' components:
 #' @return \code{formula}: The formula
 #' @return \code{data}: Original full dataset
-#' @return \code{model_results}: Coefficients, aic and the optimised
+#' @return \code{sensi.estimates}: Coefficients, aic and the optimised
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 #' @return \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
 #' @return \code{stats}: Main statistics for model parameters.\code{CI_low} and \code{CI_high} are the lower 
@@ -70,7 +73,7 @@
 #'data(alien)
 #'# run PGLS accounting for intraspecific variation:
 #'intra <- intra_phylm(gestaLen ~ adultMass, y.transf = log, x.transf = log, 
-#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", times = 30)
+#'phy = alien$phy[[1]], data = alien$data, Vy = "SD_gesta", n.intra = 30)
 #'# To check summary results:
 #'summary(intra)
 #'# Visual diagnostics
@@ -82,7 +85,7 @@
 intra_phylm <- function(formula, data, phy,
                         Vy = NULL, Vx = NULL,
                         y.transf = NULL, x.transf = NULL,
-                        times = 30, distrib = "normal",
+                        n.intra = 30, distrib = "normal",
                         model = "lambda", track = TRUE, ...){
   #Error check
   if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
@@ -93,11 +96,14 @@ intra_phylm <- function(formula, data, phy,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation 
                                  is provided for Vx and/or Vy")
+  if ( (model == "trend") & (ape::is.ultrametric(phy)))
+    stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
+  else
   
 
     
   #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy)
+  datphy <- match_dataphy(formula, data, phy, ...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
@@ -117,19 +123,19 @@ intra_phylm <- function(formula, data, phy,
   else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
   
   #Create the results data.frame
-  intra.model.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
+  sensi.estimates <- data.frame("n.intra" = numeric(),"intercept" = numeric(),
                                     "se.intercept" = numeric(), 
                                     "pval.intercept" = numeric(),
-                                    "slope" = numeric(),
-                                    "se.slope" = numeric(),
-                                    "pval.slope" = numeric(),"aic" = numeric(),
+                                    "estimate" = numeric(),
+                                    "se.estimate" = numeric(),
+                                    "pval.estimate" = numeric(),"aic" = numeric(),
                                     "optpar" = numeric())
   #Model calculation
   counter = 1
   errors <- NULL
   species.NA <- list()
-  pb <- utils::txtProgressBar(min = 0, max = times, style = 1)
-  for (i in 1:times) {
+  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+  for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
     if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
@@ -171,10 +177,10 @@ intra_phylm <- function(formula, data, phy,
     else{
       intercept            <- phylolm::summary.phylolm(mod)$coefficients[[1,1]]
       se.intercept         <- phylolm::summary.phylolm(mod)$coefficients[[1,2]]
-      slope                <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
-      se.slope             <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
+      estimate             <- phylolm::summary.phylolm(mod)$coefficients[[2,1]]
+      se.estimate          <- phylolm::summary.phylolm(mod)$coefficients[[2,2]]
       pval.intercept       <- phylolm::summary.phylolm(mod)$coefficients[[1,4]]
-      pval.slope           <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
+      pval.estimate        <- phylolm::summary.phylolm(mod)$coefficients[[2,4]]
       aic.mod              <- mod$aic
       n                    <- mod$n
 
@@ -187,30 +193,27 @@ intra_phylm <- function(formula, data, phy,
       if(track == TRUE) utils::setTxtProgressBar(pb, i)
       #write in a table
       estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               slope, se.slope, pval.slope, aic.mod, optpar,
+                               estimate, se.estimate, pval.estimate, aic.mod, optpar,
                                stringsAsFactors = F)
-      intra.model.estimates[counter, ]  <- estim.simu
+      sensi.estimates[counter, ]  <- estim.simu
       counter=counter+1
       
     }
   }
-  on.exit(close(pb))
+  if(track == TRUE) on.exit(close(pb))
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = intra.model.estimates,
-                                        mean)
+  statresults <- data.frame(min = apply(sensi.estimates, 2, min),
+                          max = apply(sensi.estimates, 2, max),
+                          mean = apply(sensi.estimates, 2, mean),
+                          sd_intra = apply(sensi.estimates, 2, stats::sd))[-1, ]
   
-  statresults <- data.frame(min = apply(intra.model.estimates, 2, min),
-                          max = apply(intra.model.estimates, 2, max),
-                          mean = apply(intra.model.estimates, 2, mean),
-                          sd_intra = apply(mean_by_randomval, 2, stats::sd))[-1, ]
-  
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = times-1) * statresults$sd_intra / sqrt(times)
+  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
-  nr <- times - nrow(intra.model.estimates)
+  nr <- n.intra - nrow(sensi.estimates)
   sp.pb <- unique(unlist(species.NA))
   if (length(sp.pb) >0) 
   warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
@@ -222,7 +225,7 @@ intra_phylm <- function(formula, data, phy,
               y.transf = y.transf, 
               x.transf = x.transf,
               data = full.data,
-              model_results = intra.model.estimates, N.obs = n,
+              sensi.estimates = sensi.estimates, N.obs = n,
               stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
               all.stats = statresults,sp.pb=sp.pb)
   class(res) <- "sensiIntra"

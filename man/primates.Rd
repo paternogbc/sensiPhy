@@ -16,8 +16,8 @@ data(primates)
 }
 \description{
 A comparative dataset containing traits for 95 Primates species 
-(primates$data) and a multiphylo object with 101 phylogenies matching the 
-data (primates$phy). Tip labels are the binomial species names and match 
+(primates.data) and a multiphylo object with 101 phylogenies matching the 
+data (primates.phy). Tip labels are the binomial species names and match 
 with data rownames. Data was taken from (Jones et al. 2009) and phylogenies from
 (Fritz et al 2009) and (Kuhn et al 2011).
 }
@@ -37,4 +37,3 @@ Fritz, Susanne A., Olaf RP Bininda-Emonds, and Andy Purvis. "Geographical variat
 of mammalian extinction risk: big is bad, but only in the tropics." Ecology letters 12.6 (2009): 538-549.
 }
 \keyword{datasets}
-

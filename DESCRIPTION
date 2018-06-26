@@ -1,26 +1,32 @@
 Package: sensiPhy
 Title: Sensitivity Analysis for Comparative Methods
-Version: 0.5.0.9000
-Date: 2016-07-18
+Version: 0.8.2
+Date: 2018-06-12
 Authors@R: c(
     person("Gustavo","Paterno", email = "paternogbc@gmail.com", role = c("cre","aut")),
     person("Gijsbert", "Werner", email = "gijsbert.werner@zoo.ox.ac.uk", role = "aut"),
-    person("Caterina", "Penone", email = "caterina.penone@gmail.com", role = "aut"))
+    person("Caterina", "Penone", email = "caterina.penone@gmail.com", role = "aut"),
+    person("Pablo", "Martinez", email = "pablo_sc82@hotmail.com", role = "ctb"))
 Maintainer: Gustavo Paterno <paternogbc@gmail.com>
-Description: An implementation of sensitivity analysis in phylogenetic regression models,
-    for both linear and logistic phylogenetic regressions. The package is an umbrella
-    of statistical and graphical methods that estimate and report different types of
-    uncertainty in PGLS models:
-    (i) Sampling uncertainty (sample size; influential species and clades).
-    (ii) Phylogenetic uncertainty.
-    (iii) Data uncertainty (intraspecific variation and measurement error).
+Description: An implementation of sensitivity analysis for phylogenetic comparative
+ methods. The package is an umbrella of statistical and graphical methods that 
+ estimate and report different types of uncertainty in PCM:
+ (i) Species Sampling uncertainty (sample size; influential species and clades).
+ (ii) Phylogenetic uncertainty (different topologies and/or branch lengths).
+ (iii) Data uncertainty (intraspecific variation and measurement error).
 Depends:
-    R (>= 3.1.0),
+    R (>= 3.4.0),
     ape (>= 3.3),
     phylolm (>= 2.4),
     ggplot2 (>= 2.1.0)
+Imports:
+    caper (>= 0.5.2),
+    phytools (>= 0.6),
+    geiger (>= 2.0)
 License: GPL-2
 URL: https://github.com/paternogbc/sensiPhy
 BugReports: https://github.com/paternogbc/sensiPhy/issues
 LazyData: true
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr

@@ -19,10 +19,14 @@ pantheria.d <- pantheria.d[, -1]
 
 ### Match data and phylogeny:
 tree.drop    <- drop.tip(pantheria.phy[[1]],rownames(pantheria.d))              
-pruned.trees <-lapply(pantheria.phy, drop.tip, tip = tree.drop$tip.label)
-class(pruned.trees)<-"multiPhylo"
+primates.phy <-lapply(pantheria.phy, drop.tip, tip = tree.drop$tip.label)
+class(primates.phy)<-"multiPhylo"
 
-### Create package datset:
-primates <- list(data = pantheria.d,
-              phy  = pruned.trees)
-devtools::use_data(primates, overwrite = TRUE)
+### Match data and Phy and remove missing data:
+primates <- sensiPhy::match_dataphy(family ~ 1,
+                                    data = primates.data, phy = primates.phy)
+primates.data <- primates$data
+primates.phy  <- primates$phy
+
+### save package dataset:
+devtools::use_data(primates, primates.data, primates.phy, overwrite = TRUE)

@@ -15,7 +15,16 @@ alien.data <- dplyr::select(alien.data,
                      SD_mass = SD_adult_body_mass_g,
                      SD_gesta = SD_gestation_length_d,
                      SD_range = SD_home_range_size_km2)
+
 alien <- list(data = alien.data,
               phy = alien.phy)
-devtools::use_data(alien, overwrite = TRUE)
+devtools::use_data(alien, alien.data, alien.phy, overwrite = TRUE)
 
+
+### Match data and Phy and remove missing data:
+alien      <- sensiPhy::match_dataphy(family ~ 1, data = alien.data, phy = alien.phy)
+alien.data <- alien$data
+alien.phy  <- alien$phy
+
+### save package dataset:
+devtools::use_data(alien, alien.data, alien.phy, overwrite = TRUE)

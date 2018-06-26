@@ -4,8 +4,8 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, times = 30, x.transf = NULL,
-  distrib = "uniform", btol = 50, track = TRUE, ...)
+intra_phyglm(formula, data, phy, Vx = NULL, n.intra = 30, x.transf = NULL,
+  distrib = "normal", btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}
@@ -17,8 +17,8 @@ intra_phyglm(formula, data, phy, Vx = NULL, times = 30, x.transf = NULL,
 \item{Vx}{Name of the column containing the standard deviation or the standard error of the predictor 
 variable. When information is not available for one taxon, the value can be 0 or \code{NA}}
 
-\item{times}{Number of times to repeat the analysis generating a random value for the predictor variable.
-If NULL, \code{times} = 2}
+\item{n.intra}{Number of times to repeat the analysis generating a random value for the predictor variable.
+If NULL, \code{n.intra} = 2}
 
 \item{x.transf}{Transformation for the predictor variable (e.g. \code{log} or \code{sqrt}). Please use this 
 argument instead of transforming data in the formula directly (see also details below).}
@@ -42,7 +42,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression.
 
 \code{N.obs}: Size of the dataset after matching it with tree tips and removing NA's.
@@ -62,12 +62,10 @@ intraspecific variability in predictor variables.
 }
 \details{
 This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}.
-The regression is repeated \code{times} times. At each iteration the function generates a random value
+The regression is repeated \code{n.intra} times. At each iteration the function generates a random value
 for each row in the dataset using the standard deviation or error supplied and assuming a normal or uniform distribution.
-To calculate means and se for your raw data, you can use the \code{\link[Rmisc]{summarySE}} function.
-Warning: when Vx exceeds X, negative (or null) values can be generated, this might cause problems
-for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
-be solved by increasing \code{times}, changing the transformation type and/or checking the target species in output$sp.pb.
+To calculate means and se for your raw data, you can use the \code{summarySE} function from the 
+package \code{Rmisc}.
 
 All phylogenetic models from \code{phyloglm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
@@ -78,6 +76,13 @@ predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
+\section{Warning}{
+  
+When Vx exceeds X negative (or null) values can be generated, this might cause problems
+for data transformation (e.g. log-transformation). In these cases, the function will skip the simulation. This problem can
+be solved by increasing \code{n.intra}, changing the transformation type and/or checking the target species in output$sp.pb.
+}
+
 \examples{
 # Simulate Data:
 set.seed(6987)
@@ -93,12 +98,9 @@ intra_glm <- intra_phyglm(y~x,Vx = "x_sd",data = dat,phy=phy,distrib = "normal")
 
 #Print summary of sensitivity analysis
 summary(intra_glm)
-head(intra_glm$model_results)
+head(intra_glm$sensi.estimates)
 #Visual output
 sensi_plot(intra_glm)
-}
-\author{
-Caterina Penone & Pablo Ariel Martinez
 }
 \references{
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
@@ -112,4 +114,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \seealso{
 \code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}

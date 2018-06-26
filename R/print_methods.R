@@ -1,18 +1,18 @@
-### Summary method for class: data.phy:-----------------------------------------
+### 0. Print method for class: data.phy:-----------------------------------------
 #' @importFrom utils str
 #' @export
 
-print.data.phy <- function (x, ...) 
+print.data.phy <- function(x, ...) 
 {
     cat("Comparative dataset of", nrow(x$data), "taxa with", 
         ncol(x$data), "variables", "\n")
-    if(class(x$phy) == "phylo"){
+    if (class(x$phy) == "phylo") {
         cat("-Phylogeny:", "\n")
         cat("   ", length(x$phy$tip.label), " tips, ", x$phy$Nnode, 
             " internal nodes\n  ", sep = "")
         utils::str(x$phy$tip.label)
     }
-    if(class(x$phy) == "multiPhylo"){
+    if (class(x$phy) == "multiPhylo") {
         cat("-Multiphylo: \n")
         print(x$phy)
     }
@@ -24,9 +24,10 @@ print.data.phy <- function (x, ...)
     }
 }  
 
-### Print method for class: sensiIntra:-----------------------------------------
+### 1. PRINT FOR PGLS--------------------------------------------------------------
+### sensiIntra:-----------------------------------------
 #' @export
-print.sensiIntra <- function (x, ...) 
+print.sensiIntra <- function(x, ...) 
 {
     cat("Sensitivity analysis for intraspecific variation\n")
     cat("Call:\n")
@@ -43,9 +44,9 @@ print.sensiIntra <- function (x, ...)
     
 }
 
-### Print method for class: sensiSamp:----------------------------------------
+### sensiSamp:----------------------------------------
 #' @export
-print.sensiSamp <- function (x, ...) 
+print.sensiSamp <- function(x, ...) 
 {
     cat("Sensitivity analysis for sampling uncertainty\n")
     cat("Call:\n")
@@ -56,22 +57,22 @@ print.sensiSamp <- function (x, ...)
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
-### Print method for class: sensiClade:----------------------------------------
+### sensiClade:----------------------------------------
 #' @export
-print.sensiClade <- function (x, ...) 
+print.sensiClade <- function(x, ...) 
 {
     cat("Sensitivity analysis of influential clades \n")
     cat("Call:\n")
     print(x$call)
     cat("\n")
     cat("Analyzed clades: ")
-    cat(x$clade.model.estimates$clade, sep = "; ",  "\n")
+    cat(x$sensi.estimates$clade, sep = "; ",  "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
-### Print method for class: sensiTree:-----------------------------------------
+### sensiTree:-----------------------------------------
 #' @export
-print.sensiTree <- function (x, ...) 
+print.sensiTree <- function(x, ...) 
 {
     cat("Sensitivity analysis for phylogenetic uncertainty \n")
     cat("Call:\n")
@@ -85,7 +86,7 @@ print.sensiTree <- function (x, ...)
 
 ### Print method for class: sensiInflu:-----------------------------------------
 #' @export
-print.sensiInflu <- function (x, ...) 
+print.sensiInflu <- function(x, ...) 
 {
     cat("Sensitivity analysis for influential species \n")
     cat("Call:\n")
@@ -94,4 +95,190 @@ print.sensiInflu <- function (x, ...)
     cat("Number of simulations:", nrow(x$influ.model.estimates), "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
     
+}
+
+### 2. PRINT PHYLOGENETIC SIGNAL------------------------------------------
+### clade.physig:---------------------------------------
+#' @export
+print.clade.physig <- function(x, ...) 
+{
+    cat("Sensitivity analysis of influential clades for Phylogenetic signal \n")
+    cat("\n")
+    cat("Call:\n")
+    print(x$call)
+    cat("\n")
+    cat("Number of randomizations: ")
+    cat(x$call$n.sim)
+    cat("\n")
+    cat("Clades analysed: ")
+    cat(x$sensi.estimates$clade)
+    cat(message("use summary(x) and sensi_plot(x) to check results"))
+    cat(message("use x$sensi.estimates to access sensitivity analysis data"))
+}
+
+### influ.physig:---------------------------------------
+#' @export
+print.influ.physig <- function(x, ...) 
+{
+  cat("Sensitivity analysis of influential species for Phylogenetic signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of species: ")
+  cat(nrow(x$data))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
+}
+
+### samp.physig:---------------------------------------
+#' @export
+print.samp.physig <- function(x, ...) 
+{
+  cat("Sensitivity analysis of sampling uncertainty for Phylogenetic Signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of randomizations: ")
+  cat(x$call$nsim)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$influ.physig.estimates to access sensitivity analysis data"))
+}
+
+### tree.physig:---------------------------------------
+#' @export
+print.tree.physig <- function(x, ...) 
+{
+  cat("Sensitivity analysis of phylogenetic uncertainty for Phylogenetic signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of trees evaluated: ")
+  cat(nrow(x$tree.physig.estimates))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$tree.physig.estimates to access sensitivity analysis data"))
+}
+
+### intra.physig:---------------------------------------
+#' @export
+print.intra.physig <- function(x, ...) 
+{
+  cat("Sensitivity analysis of intraspecific variability for Phylogenetic signal \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of simulations: ")
+  cat(nrow(x$intra.physig.estimates))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$tree.intra.estimates to access sensitivity analysis data"))
+}
+
+
+### 3. PRINT interaction PGLS------------------------------------------
+#' @export
+print.sensiTree_Clade <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:clade \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Analyzed clades: ")
+  cat(unique(x$sensi.estimates$clade), sep = "; ",  "\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_Clade <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:clade \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Analyzed clades: ")
+  cat(unique(x$sensi.estimates$clade), sep = "; ",  "\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiTree_Influ <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_Influ <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiTree_Samp <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:influ \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiTree_SampL <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between tree:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_Samp <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+#' @export
+print.sensiIntra_SampL <- function(x, ...) 
+{
+  cat("Sensitivity analysis for interaction between intra:samp \n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+}
+
+### 4. PRINT diversification ------------------------------------------
+### tree.physig:---------------------------------------
+#' @export
+print.tree.bd <- function(x, ...) 
+{
+  cat("Sensitivity analysis of net diversification rate \n")
+  cat("\n")
+  cat("Call:\n")
+  print(x$call)
+  cat("\n")
+  cat("Number of trees evaluated: ")
+  cat(nrow(x$tree.bd.estimates))
+  cat("\n")
+  cat(message("use summary(x) and sensi_plot(x) to check results"))
+  cat(message("use x$tree.bd.estimates to access sensitivity analysis data"))
 }

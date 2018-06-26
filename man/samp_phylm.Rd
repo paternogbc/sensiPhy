@@ -4,7 +4,7 @@
 \alias{samp_phylm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Linear Regression}
 \usage{
-samp_phylm(formula, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
+samp_phylm(formula, data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
   model = "lambda", track = TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -36,23 +36,23 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 the full model without deleted species.
 
-\code{samp.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 Columns report the calculated regression intercept (\code{intercept}),
-difference between simulation intercept and full model intercept (\code{DFintercept}),
+difference between simulation intercept and full model intercept (\code{DIFintercept}),
 the percentage of change in intercept compared to the full model (\code{intercept.perc})
 and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 used) are reported. Lastly we reported the standardised difference in intercept 
-(\code{sDFintercept}) and slope (\code{sDFslope}).
+(\code{sDIFintercept}) and slope (\code{sDIFestimate}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
-removed) this reports the percentage of statistically signficant (at p<0.05)
-intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+removed) this reports the percentage of statistically significant (at p<0.05)
+intercepts (\code{perc.sign.intercept}) over all repetitions as well as the
+percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 
 \code{data}: Original full dataset.
 #' @note Please be aware that dropping species may reduce power to detect 
@@ -69,7 +69,7 @@ linear regression.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic linear regression, fits a phylogenetic
 linear regression model without these species using \code{\link[phylolm]{phylolm}},
-repeats this many times (controlled by \code{times}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters.
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
@@ -86,19 +86,16 @@ Output can be visualised using \code{sensi_plot}.
 data(alien)
 # Run analysis:
 samp <- samp_phylm(log(gestaLen) ~ log(adultMass), phy = alien$phy[[1]], 
-data = alien$data, times = 10)
+data = alien$data, n.sim = 10)
 summary(samp)
-head(samp$samp.model.estimates)
+head(samp$sensi.estimates)
 # Visual diagnostics
 \dontrun{
 sensi_plot(samp)
-# You can specify which graph and parameter ("slope" or "intercept") to print: 
-sensi_plot(samp, graphs = 1, param = "slope")
+# You can specify which graph and parameter ("estimate" or "intercept") to print: 
+sensi_plot(samp, graphs = 1, param = "estimate")
 sensi_plot(samp, graphs = 2, param = "intercept")
 }
-}
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -112,4 +109,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phylolm}}, \code{\link{samp_phyglm}},
 \code{\link{influ_phylm}},\code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

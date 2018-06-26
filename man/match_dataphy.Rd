@@ -4,7 +4,7 @@
 \alias{match_dataphy}
 \title{Match data and phylogeny based on model formula}
 \usage{
-match_dataphy(formula, data, phy)
+match_dataphy(formula, data, phy, verbose = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -13,6 +13,11 @@ match_dataphy(formula, data, phy)
 in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo' or 'multiphylo')}
+
+\item{verbose}{Print the number of species that match data and phylogeny and warnings. We highly recommend to use the 
+default (verbose = T), but warning and information can be silenced for advanced use.}
+
+\item{...}{Further arguments to be passed to \code{match_dataphy}}
 }
 \value{
 The function \code{match_dataphy} returns a list with the following
@@ -38,21 +43,26 @@ with missing values are removed. This function uses variables provided in the
  has no NA in the variables included in `formula` and only rows that match phylogeny
  tips. Returned phy has only tips that match data}
  }
- Used internally in \code{\link{samp_phylm}},\code{\link{samp_phyglm}},\code{\link{clade_phylm}},
- \code{\link{clade_phyglm}},\code{\link{intra_phylm}},\code{\link{intra_phyglm}} and \code{\link{tree_phylm}}.
+ Used internally in \code{\link{samp_phylm}}, \code{\link{samp_phyglm}}, \code{\link{clade_phylm}},
+ \code{\link{clade_phyglm}}, \code{\link{intra_phylm}}, \code{\link{intra_phyglm}}, \code{\link{tree_phylm}},
+ \code{\link{tree_phyglm}} and all function analysing interactions.
  Users can also directly use this function to combine a phylogeny and a dataset.
 }
 \details{
 This function uses all variables provided in the `formula` to match
 data and phylogeny. To avoid cropping the full dataset, `match_dataphy` searches
 for NA values only on variables provided by formula. Missing values on 
-other variables, not included in `formula`, will not be removed from data. 
+other variables, not included in `formula`, will not be removed from data.
+If no species names are provided as row names in the dataset but the number of rows in the dataset
+is the same as the number of tips in the phylogeny, the function assumes that the dataset and the 
+phylogeny are in the same order.
 
-This ensures consistance between data and phylogeny only for the variables 
+This ensures consistency between data and phylogeny only for the variables 
 that are being used in the model (set by `formula`).
 
 If phy is a 'multiphylo' object, all phylogenies will be cropped
-to match data. The returned phyogeny will be a 'multiphylo' object.
+to match data. But the dataset order will only match the first tree provided.
+The returned phylogeny will be a 'multiphylo' object.
 }
 \note{
 If tips are removed from the phylogeny and data or if rows containing
@@ -65,17 +75,22 @@ always be reported by a message.
 data(alien)
 head(alien$data)
 # Match data and phy based on model formula:
-comp.data <- match_dataphy(gestaLen ~ adultMass, data = alien$data, alien$phy[[1]])
-comp.data2 <- match_dataphy(homeRange ~ adultMass, data = alien$data, alien$phy)
+comp.data <- match_dataphy(gestaLen ~ homeRange, data = alien$data, alien$phy[[1]])
 # Check data:
-comp.data$data
+head(comp.data$data)
 # Check phy:
 comp.data$phy
 # See species dropped from phy or data:
 comp.data$dropped
-}
-\author{
-Caterina Penone & Gustavo Paterno
+# Example2:
+# Match data and phy based on model formula:
+comp.data2 <- match_dataphy(gestaLen ~ adultMass, data = alien$data, alien$phy)
+# Check data (missing data on variables not included in the formula are preserved)
+head(comp.data2$data)
+# Check phy:
+comp.data2$phy
+# See species dropped from phy or data:
+comp.data2$dropped
 }
 \references{
 This function is largely inspired by the function \code{comparative.data} in caper package
@@ -83,4 +98,6 @@ David Orme, Rob Freckleton, Gavin Thomas, Thomas Petzoldt, Susanne Fritz, Nick I
 (2013). caper: Comparative Analyses of Phylogenetics and Evolution in R. R package version 0.5.2.
 http://CRAN.R-project.org/package=caper
 }
-
+\author{
+Caterina Penone & Gustavo Paterno
+}

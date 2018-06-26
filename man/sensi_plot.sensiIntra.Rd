@@ -22,17 +22,16 @@
 For 'x' from \code{tree_phylm}, \code{tree_phyglm},
 \code{intra_phylm} or \code{intra_phyglm}:
 
-Graphs 1 and 2: Distribution of estimated slopes and intercepts for each tree (for \code{tree_phylm}) or 
+\strong{Graphs 1 and 2:} Distribution of estimated slopes (estimates) and intercepts for each tree (for \code{tree_phylm}) or 
 value generated within a given interval (\code{intra_phylm})
-Red vertical line represents the mean slope or intercept for all models. 
+Red vertical line represents the mean estimate or intercept for all models. 
 
-Graph 3: Scatterplot with mean regression (black line) and standard deviation of the regression (blue dotted lines).
-}
-\author{
-Caterina Penone and Gustavo Paterno
+\strong{Graph 3:} Scatterplot with mean regression (black line) and standard deviation of the regression (red dotted lines).
 }
 \seealso{
 \code{\link[ggplot2]{ggplot}}, \code{\link[sensiPhy]{tree_phylm}}
 \code{\link[sensiPhy]{intra_phylm}}
 }
-
+\author{
+Caterina Penone and Gustavo Paterno
+}

@@ -5,7 +5,7 @@
 \title{Influential clade detection - Phylogenetic Linear Regression}
 \usage{
 clade_phylm(formula, data, phy, model = "lambda", track = TRUE, clade.col,
-  n.species = 5, ...)
+  n.species = 5, n.sim = 100, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -19,11 +19,13 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analysis. Default is \code{5}.}
+
+\item{n.sim}{Number of simulations for the randomization test.}
 
 \item{...}{Further arguments to be passed to \code{phylolm}}
 }
@@ -37,20 +39,25 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 without deleted species.
 
-\code{clade.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a deleted clade. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the percentage of change
+intercept and full model intercept (\code{DIFintercept}), the percentage of change
 in intercept compared to the full model (\code{intercept.perc}) and intercept
 p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter 
 (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model used) 
 are reported.
 
+\code{null.dist}: A data frame with estimates for the null distributions
+for all clades analysed.
+
 \code{data}: Original full dataset.
 
 \code{errors}: Clades where deletion resulted in errors.
+
+\code{clade.col}: Which column was used to specify the clades?
 }
 \description{
 Estimate the impact on model estimates of phylogenetic linear regression after 
@@ -59,16 +66,24 @@ removing clades from the analysis.
 \details{
 This function sequentially removes one clade at a time, fits a phylogenetic
 linear regression model using \code{\link[phylolm]{phylolm}} and stores the
-results. The impact of of a specific clade on model estimates is calculated by the
+results. The impact of of a specific clade on model estimates is calculated by a
 comparison between the full model (with all species) and the model without 
 the species belonging to a clade.
+
+Additionally, to account for the influence of the number of species on each 
+clade (clade sample size), this function also estimates a null distribution
+expected for the number of species in a given clade. This is done by fitting
+ models without the same number of species as in the given clade. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
 
 All phylogenetic models from \code{phylolm} can be used, i.e. \code{BM},
 \code{OUfixedRoot}, \code{OUrandomRoot}, \code{lambda}, \code{kappa},
 \code{delta}, \code{EB} and \code{trend}. See ?\code{phylolm} for details.
 
 \code{clade_phylm} detects influential clades based on
-difference in intercept and/or slope when removing a given clade compared
+difference in intercept and/or estimate when removing a given clade compared
 to the full model including all species.
 
 Currently, this function can only implement simple linear models (i.e. 
@@ -77,11 +92,12 @@ Currently, this function can only implement simple linear models (i.e.
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Load data:
 data(primates)
 # run analysis:
 clade <- clade_phylm(log(sexMaturity) ~ log(adultMass), 
-phy = primates$phy[[1]], data = primates$data, clade.col = "family")
+phy = primates$phy[[1]], data = primates$data, n.sim = 30, clade.col = "family")
 # To check summary results and most influential clades:
 summary(clade)
 # Visual diagnostics for clade removal:
@@ -90,16 +106,16 @@ sensi_plot(clade)
 sensi_plot(clade, "Cercopithecidae")
 sensi_plot(clade, "Cebidae")
 }
-\author{
-Gustavo Paterno
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phyglm}},
- \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
-\code{\link{sensi_plot}}
+\code{\link[phylolm]{phylolm}}, \code{\link[sensiPhy]{samp_phylm}},
+ \code{\link{influ_phylm}}, \code{\link{sensi_plot}},
+\code{\link{sensi_plot}},\code{\link{clade_phyglm}},
 }
-
+\author{
+Gustavo Paterno
+}

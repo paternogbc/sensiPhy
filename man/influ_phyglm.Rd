@@ -21,7 +21,7 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{...}{Further arguments to be passed to \code{phylolm}}
+\item{...}{Further arguments to be passed to \code{phyloglm}}
 }
 \value{
 The function \code{influ_phyglm} returns a list with the following
@@ -36,18 +36,18 @@ value of the phylogenetic parameter (i.e. \code{alpha}) for the full model
 without deleted species.
 
 \code{influential_species}: List of influential species, both
-based on standardised difference in interecept and in the slope of the
+based on standardised difference in intercept and in the slope of the
 regression. Species are ordered from most influential to less influential and
 only include species with a standardised difference > \code{cutoff}.
 
-\code{influ.model.estimates}: A data frame with all simulation
-estimates. Each row represents a deleted clade. #' Columns report the calculated
+\code{sensi.estimates}: A data frame with all simulation
+estimates. Each row represents a deleted clade. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the standardised
-difference (\code{sDFintercept}), the percentage of change in intercept compared
+intercept and full model intercept (\code{DIFintercept}), the standardised
+difference (\code{sDIFintercept}), the percentage of change in intercept compared
 to the full model (\code{intercept.perc}) and intercept p-value
 (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter
 (i.e. \code{alpha}) are reported.
 
@@ -56,7 +56,7 @@ the optimised value (\code{optpar}) of the phylogenetic parameter
 \code{errors}: Species where deletion resulted in errors.
 }
 \description{
-Performs leave-one-out deletion analyis for phylogenetic logistic regression,
+Performs leave-one-out deletion analysis for phylogenetic logistic regression,
 and detects influential species.
 }
 \details{
@@ -73,8 +73,8 @@ to the full model including all species. Species with a standardised difference
 above the value of \code{cutoff} are identified as influential. The default
 value for the cutoff is 2 standardised differences change.
 
-Currently, this function can only implement simple models (i.e. 
-\eqn{y = a + bx}). In the future we will implement more complex models.
+Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
+predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
@@ -93,9 +93,6 @@ summary(influ)
 # Visual diagnostics for clade removal:
 sensi_plot(influ)
 }
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
-}
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
@@ -104,4 +101,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phyglm}},
 \code{\link{influ_phylm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

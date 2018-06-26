@@ -2,10 +2,11 @@
 % Please edit documentation in R/clade_phyglm.R
 \name{clade_phyglm}
 \alias{clade_phyglm}
-\title{Influential clade detection - Phylogenetic Logistic Regression}
+\title{Estimate the impact on model estimates of phylogenetic logistic regression after 
+removing clades from the analysis.}
 \usage{
 clade_phyglm(formula, data, phy, btol = 50, track = TRUE, clade.col,
-  n.species = 5, ...)
+  n.species = 5, n.sim = 100, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -19,11 +20,13 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{clade.col}{The name of a column in the provided data frame with clades 
-specification (a character vector with clade names).}
+\item{clade.col}{The column in the provided data frame which specifies the
+clades (a character vector with clade names).}
 
-\item{n.species}{Minimum number of species in the clade in order to include
-this clade in the leave-one-out deletion analyis. Default is \code{5}.}
+\item{n.species}{Minimum number of species in a clade for the clade to be
+included in the leave-one-out deletion analysis. Default is \code{5}.}
+
+\item{n.sim}{Number of simulations for the randomization test.}
 
 \item{...}{Further arguments to be passed to \code{phyloglm}}
 }
@@ -37,38 +40,66 @@ components:
 value of the phylogenetic parameter (e.g. \code{alpha}) for the full model
 without deleted species.
 
-\code{clade.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a deleted clade. Columns report the calculated
 regression intercept (\code{intercept}), difference between simulation
-intercept and full model intercept (\code{DFintercept}), the percentage of change
+intercept and full model intercept (\code{DIFintercept}), the percentage of change
 in intercept compared to the full model (\code{intercept.perc}) and intercept
 p-value (\code{pval.intercept}). All these parameters are also reported for the regression
-slope (\code{DFslope} etc.). Additionally, model aic value (\code{AIC}) and
+slope (\code{DIFestimate} etc.). Additionally, model aic value (\code{AIC}) and
 the optimised value (\code{optpar}) of the phylogenetic parameter are
 reported.
+
+\code{null.dist}: A data frame with estimates for the null distributions
+for all clades analysed.
 
 \code{data}: Original full dataset.
 
 \code{errors}: Clades where deletion resulted in errors.
+
+\code{clade.col}: Which column was used to specify the clades?
 }
 \description{
 Estimate the impact on model estimates of phylogenetic logistic regression after 
 removing clades from the analysis.
 }
 \details{
-Currently only logistic regression using the "logistic_MPLE"-method from
+This function sequentially removes one clade at a time, fits a phylogenetic
+logistic regression model using \code{\link[phylolm]{phyloglm}} and stores the
+results. The impact of of a specific clade on model estimates is calculated by a
+comparison between the full model (with all species) and the model without 
+the species belonging to a clade.
+
+To account for the influence of the number of species on each 
+clade (clade sample size), this function also estimates a null distribution
+expected for the number of species in a given clade. This is done by fitting
+ models without the same number of species as in the given clade. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
+
+Currently, only logistic regression using the "logistic_MPLE"-method from
 \code{phyloglm} is implemented.
 
 \code{clade_phyglm} detects influential clades based on
-difference in intercept and/or slope when removing a given clade compared
+difference in intercept and/or estimate when removing a given clade compared
 to the full model including all species.
 
-Currently, this function can only implement simple linear models (i.e. 
-\eqn{y = a + bx}). In the future we will implement more complex models.
+Additionally, to account for the influence of the number of species on each 
+clade (clade sample size), this function also estimates a null distribution 
+expected for the number of species in a given clade. This is done by fitting
+models without the same number of species in the given clade. 
+ The number of simulations to be performed is set by 'n.sim'. To test if the 
+ clade influence differs from the null expectation for a clade of that size, 
+ a randomization test can be performed using 'summary(x)'. 
+
+Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
+predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
 }
 \examples{
+\dontrun{
 # Simulate Data:
 set.seed(6987)
 phy = rtree(150)
@@ -78,7 +109,7 @@ y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 cla <- rep(c("A","B","C","D","E"), each = 30)
 dat = data.frame(y, x, cla)
 # Run sensitivity analysis:
-clade <- clade_phyglm(y ~ x, phy = phy, data = dat, clade.col = "cla")
+clade <- clade_phyglm(y ~ x, phy = phy, data = dat, n.sim = 30, clade.col = "cla")
 # To check summary results and most influential clades:
 summary(clade)
 # Visual diagnostics for clade removal:
@@ -88,8 +119,6 @@ sensi_plot(clade, "B")
 sensi_plot(clade, "C")
 sensi_plot(clade, "D") #The clade with the largest effect on slope and intercept
 }
-\author{
-Gustavo Paterno & Gijsbert Werner
 }
 \references{
 Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for 
@@ -99,4 +128,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phyloglm}}, \code{\link[sensiPhy]{clade_phylm}},
  \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert Werner
+}

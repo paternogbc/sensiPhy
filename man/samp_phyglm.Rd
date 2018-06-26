@@ -4,7 +4,7 @@
 \alias{samp_phyglm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Logistic Regression}
 \usage{
-samp_phyglm(formula, data, phy, times = 30, breaks = seq(0.1, 0.5, 0.1),
+samp_phyglm(formula, data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
   btol = 50, track = TRUE, ...)
 }
 \arguments{
@@ -15,7 +15,7 @@ in \code{phy}.}
 
 \item{phy}{A phylogeny (class 'phylo') matching \code{data}.}
 
-\item{times}{The number of times species are randomly deleted for each
+\item{n.sim}{The number of times species are randomly deleted for each
 \code{break}.}
 
 \item{breaks}{A vector containing the percentages of species to remove.}
@@ -24,7 +24,7 @@ in \code{phy}.}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 
-\item{...}{Further arguments to be passed to \code{phylolm}}
+\item{...}{Further arguments to be passed to \code{phyloglm}}
 }
 \value{
 The function \code{samp_phylm} returns a list with the following
@@ -36,23 +36,23 @@ components:
 value of the phylogenetic parameter (e.g. \code{lambda} or \code{kappa}) for
 the full model without deleted species.
 
-\code{samp.model.estimates}: A data frame with all simulation
+\code{sensi.estimates}: A data frame with all simulation
 estimates. Each row represents a model rerun with a given number of species
 \code{n.remov} removed, representing \code{n.percent} of the full dataset.
 Columns report the calculated regression intercept (\code{intercept}),
-difference between simulation intercept and full model intercept (\code{DFintercept}),
+difference between simulation intercept and full model intercept (\code{DIFintercept}),
 the percentage of change in intercept compared to the full model (\code{intercept.perc})
 and intercept p-value (\code{pval.intercept}). All these parameters are also reported
-for the regression slope (\code{DFslope} etc.). Additionally, model aic value
+for the regression slope (\code{DIFestimate} etc.). Additionally, model aic value
 (\code{AIC}) and the optimised value (\code{optpar}) of the phylogenetic
 parameter (e.g. \code{kappa} or \code{lambda}, depending on the phylogenetic model
 used) are reported. Lastly we reported the standardised difference in intercept 
-(\code{sDFintercept}) and slope (\code{sDFslope}).
+(\code{sDIFintercept}) and slope (\code{sDIFestimate}).
 
 \code{sign.analysis} For each break (i.e. each percentage of species
-removed) this reports the percentage of statistically signficant (at p<0.05)
-intercepts (\code{perc.sign.intercept}) over all repititions as well as the
-percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.slope}).
+removed) this reports the percentage of statistically significant (at p<0.05)
+intercepts (\code{perc.sign.intercept}) over all repetitions as well as the
+percentage of statisticaly significant (at p<0.05) slopes (\code{perc.sign.estimate}).
 
 \code{data}: Original full dataset.
 }
@@ -65,13 +65,13 @@ logistic regression.
 This function randomly removes a given percentage of species (controlled by
 \code{breaks}) from the full phylogenetic logistic regression, fits a phylogenetic
 logistic regression model without these species using \code{\link[phylolm]{phyloglm}},
-repeats this many times (controlled by \code{times}), stores the results and
+repeats this many times (controlled by \code{n.sim}), stores the results and
 calculates the effects on model parameters.
 
 Only logistic regression using the "logistic_MPLE"-method from
 \code{phyloglm} is implemented.
 
-Currently, this function can only implement simple linear models (i.e. \eqn{trait~
+Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
 predictor}). In the future we will implement more complex models.
 
 Output can be visualised using \code{sensi_plot}.
@@ -91,16 +91,13 @@ X = cbind(rep(1,100),x)
 y = rbinTrait(n=1,phy=phy, beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-samp <- samp_phyglm(y ~ x, data = dat, phy = phy, times = 10) 
+samp <- samp_phyglm(y ~ x, data = dat, phy = phy, n.sim = 10) 
 # To check summary results and most influential species:
 summary(samp)
 \dontrun{
 # Visual diagnostics for clade removal:
 sensi_plot(samp)
 }
-}
-\author{
-Gustavo Paterno & Gijsbert D.A. Werner
 }
 \references{
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
@@ -114,4 +111,6 @@ Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-
 \code{\link[phylolm]{phyloglm}}, \code{\link{samp_phylm}},
 \code{\link{influ_phyglm}}, \code{\link{sensi_plot}}
 }
-
+\author{
+Gustavo Paterno & Gijsbert D.A. Werner
+}

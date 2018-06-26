@@ -4,7 +4,7 @@
 \alias{tree_phyglm}
 \title{Phylogenetic uncertainty - Phylogenetic Logistic Regression}
 \usage{
-tree_phyglm(formula, data, phy, times = 2, btol = 50, track = TRUE, ...)
+tree_phyglm(formula, data, phy, n.tree = 2, btol = 50, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}
@@ -13,9 +13,9 @@ tree_phyglm(formula, data, phy, times = 2, btol = 50, track = TRUE, ...)
 
 \item{phy}{A phylogeny (class 'multiPhylo', see ?\code{ape}).}
 
-\item{times}{Number of times to repeat the analysis with n different trees picked 
+\item{n.tree}{Number of times to repeat the analysis with n different trees picked 
 randomly in the multiPhylo file.
-If NULL, \code{times} = 2}
+If NULL, \code{n.tree} = 2}
 
 \item{btol}{Bound on searching space. For details see \code{phyloglm}.}
 
@@ -31,7 +31,7 @@ components:
 
 \code{data}: Original full dataset
 
-\code{model_results}: Coefficients, aic and the optimised
+\code{sensi.estimates}: Coefficients, aic and the optimised
 value of the phylogenetic parameter (e.g. \code{lambda}) for each regression with a 
 different phylogenetic tree.
 
@@ -49,7 +49,7 @@ Performs Phylogenetic logistic regression evaluating
 uncertainty in trees topology.
 }
 \details{
-This function fits a phylogenetic linear regression model using \code{\link[phylolm]{phyloglm}}
+This function fits a phylogenetic logistic regression model using \code{\link[phylolm]{phyloglm}}
 to n trees, randomly picked in a multiPhylo file.
 
 Currently, this function can only implement simple logistic models (i.e. \eqn{trait~
@@ -66,14 +66,11 @@ X = cbind(rep(1,150),x)
 y = rbinTrait(n=1,phy=mphy[[1]], beta=c(-1,0.5), alpha=.7 ,X=X)
 dat = data.frame(y, x)
 # Run sensitivity analysis:
-tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, times = 30)
+tree <- tree_phyglm(y ~ x, data = dat, phy = mphy, n.tree = 30)
 # summary results:
 summary(tree)
 # Visual diagnostics for phylogenetic uncertainty:
 sensi_plot(tree)
-}
-\author{
-Caterina Penone & Pablo Ariel Martinez
 }
 \references{
 Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
@@ -84,6 +81,8 @@ Ho, L. S. T. and Ane, C. 2014. "A linear-time algorithm for
 Gaussian and non-Gaussian trait evolution models". Systematic Biology 63(3):397-408.
 }
 \seealso{
-\code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}}
+\code{\link[phylolm]{phyloglm}}, \code{\link{sensi_plot}},\code{\link{tree_phylm}}
 }
-
+\author{
+Caterina Penone & Pablo Ariel Martinez
+}
