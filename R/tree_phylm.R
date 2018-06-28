@@ -71,7 +71,7 @@ tree_phylm <- function(formula,data,phy,
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if ( (model == "trend") && (ape::is.ultrametric(phy)))
+  if ( (model == "trend") && (sum(ape::is.ultrametric(phy))>1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
 
