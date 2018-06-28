@@ -55,6 +55,8 @@
 #' @examples 
 #'# Load data:
 #'data(alien)
+#'alien.data<-alien$data
+#'alien.phy<-alien$phy
 #'# Logtransform data
 #'alien.data$logMass <- log(alien.data$adultMass) 
 #'# Run sensitivity analysis:
@@ -107,11 +109,9 @@ tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", trac
     
     if(track==TRUE) on.exit(close(pb))
     #calculate mean and sd for each parameter
-    #mean_by_tree <- stats::aggregate(. ~ n.tree, data = tree.physig.estimates, mean)
-    
-    statresults <- data.frame(min = apply(tree.physig.estimates, 2, min),
-                              max = apply(tree.physig.estimates, 2, max),
-                              mean = apply(tree.physig.estimates, 2, mean),
+    statresults <- data.frame(min = apply(tree.physig.estimates, 2, stats::min),
+                              max = apply(tree.physig.estimates, 2, stats::max),
+                              mean = apply(tree.physig.estimates, 2, stats::mean),
                               sd_tree = apply(tree.physig.estimates, 2, stats::sd))[-1, ]
     
     statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)

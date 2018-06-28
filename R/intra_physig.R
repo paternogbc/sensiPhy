@@ -62,6 +62,8 @@
 #' @examples 
 #' \dontrun{
 #'data(alien)
+#'alien.data<-alien$data
+#'alien.phy<-alien$phy
 #'# Run sensitivity analysis:
 #'intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
 #'                      data = alien.data, phy = alien.phy[[1]])
@@ -135,9 +137,9 @@ intra_physig <- function(trait.col, data, phy,
     }
   if(track==TRUE) on.exit(close(pb))
   
-  statresults <- data.frame(min = apply(intra.physig.estimates, 2, min),
-                            max = apply(intra.physig.estimates, 2, max),
-                            mean = apply(intra.physig.estimates, 2, mean),
+  statresults <- data.frame(min = apply(intra.physig.estimates, 2, stats::min),
+                            max = apply(intra.physig.estimates, 2, stats::max),
+                            mean = apply(intra.physig.estimates, 2, stats::mean),
                             sd_intra = apply(intra.physig.estimates, 2, stats::sd))[-1, ]
   
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
