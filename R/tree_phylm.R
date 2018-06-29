@@ -142,9 +142,9 @@ tree_phylm <- function(formula,data,phy,
   if(track==TRUE) on.exit(close(pb))
   #calculate mean and sd for each parameter
   #variation due to tree choice
-  statresults<-data.frame(min=apply(sensi.estimates,2,stats::min),
-                          max=apply(sensi.estimates,2,stats::max),
-                          mean=apply(sensi.estimates,2,stats::mean),
+  statresults<-data.frame(min=apply(sensi.estimates,2,min),
+                          max=apply(sensi.estimates,2,max),
+                          mean=apply(sensi.estimates,2,mean),
                           sd_tree=apply(sensi.estimates,2,stats::sd))[-1, ]
   
   

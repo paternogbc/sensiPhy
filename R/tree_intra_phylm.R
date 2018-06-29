@@ -161,24 +161,24 @@ tree_intra_phylm <- function(formula, data, phy,
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = mod_results,stats::mean)
+  mean_by_randomval <- stats::aggregate(.~n.intra, data = mod_results,mean)
   
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=mod_results, stats::mean)
+  mean_by_tree<-stats::aggregate(.~n.tree, data=mod_results, mean)
   
-  statresults <- data.frame(min.all = apply(mod_results, 2, stats::min),
-                            max.all = apply(mod_results, 2, stats::max),
-                            mean.all = apply(mod_results, 2, stats::mean),
+  statresults <- data.frame(min.all = apply(mod_results, 2, min),
+                            max.all = apply(mod_results, 2, max),
+                            mean.all = apply(mod_results, 2, mean),
                             sd_all = apply(mod_results, 2, stats::sd),
                             
-                            min.intra = apply(mean_by_randomval, 2, stats::min),
-                            max.intra = apply(mean_by_randomval, 2, stats::max),
-                            mean.intra = apply(mean_by_randomval, 2, stats::mean),
+                            min.intra = apply(mean_by_randomval, 2, min),
+                            max.intra = apply(mean_by_randomval, 2, max),
+                            mean.intra = apply(mean_by_randomval, 2, mean),
                             sd_intra = apply(mean_by_randomval, 2, stats::sd),
                             
-                            min.tree = apply(mean_by_tree, 2, stats::min),
-                            max.tree = apply(mean_by_tree, 2, stats::max),
-                            mean.tree = apply(mean_by_tree, 2, stats::mean),
+                            min.tree = apply(mean_by_tree, 2, min),
+                            max.tree = apply(mean_by_tree, 2, max),
+                            mean.tree = apply(mean_by_tree, 2, mean),
                             sd_tree = apply(mean_by_tree, 2, stats::sd))[-(1:2), ]
   
   statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
