@@ -106,7 +106,7 @@ tree_intra_phylm <- function(formula, data, phy,
     stop("Please use arguments y.transf or x.transf for data transformation")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
   if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
-  if ((model == "trend") && (ape::is.ultrametric(phy)))
+  if ((model == "trend") && (sum(ape::is.ultrametric(phy))>1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
   

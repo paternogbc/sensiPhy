@@ -131,7 +131,7 @@ tree_phyglm <- function(formula,data,phy,
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_tree=apply(sensi.estimates,2,stats::sd))
+                          sd_tree=apply(sensi.estimates,2,stats::sd))[-1, ]
   
   statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
   statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)

@@ -69,6 +69,8 @@
 #'  B: Biological Sciences, 368: 20120341.
 #' @examples 
 #'data(alien)
+#'alien.data<-alien$data
+#'alien.phy<-alien$phy
 #'# Logtransform data
 #'alien.data$logMass <- log(alien.data$adultMass) 
 #'# Run sensitivity analysis:

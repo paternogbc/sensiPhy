@@ -71,7 +71,7 @@ tree_phylm <- function(formula,data,phy,
   if(class(data)!="data.frame") stop("data must be class 'data.frame'")
   if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
   if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if ( (model == "trend") && (ape::is.ultrametric(phy)))
+  if ( (model == "trend") && (sum(ape::is.ultrametric(phy))>1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
 
@@ -145,7 +145,7 @@ tree_phylm <- function(formula,data,phy,
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_tree=apply(sensi.estimates,2,stats::sd))
+                          sd_tree=apply(sensi.estimates,2,stats::sd))[-1, ]
   
   
   statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)

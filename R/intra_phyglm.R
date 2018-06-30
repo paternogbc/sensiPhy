@@ -189,7 +189,7 @@ intra_phyglm <- function(formula, data, phy,
   statresults<-data.frame(min=apply(sensi.estimates,2,min),
                           max=apply(sensi.estimates,2,max),
                           mean=apply(sensi.estimates,2,mean),
-                          sd_intra=apply(sensi.estimates,2,stats::sd))
+                          sd_intra=apply(sensi.estimates,2,stats::sd))[-1, ]
   
   statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
   statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
