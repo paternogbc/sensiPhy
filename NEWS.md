@@ -1,3 +1,9 @@
+## sensiPhy 0.8.3
+#### Bug fix
+
+This new version fix a small bug with functions for phylogenetic uncertainty (tree_xxx).
+Minor typos were also fixed.
+
 ## sensiPhy 0.8.2
 #### Bug fix
 

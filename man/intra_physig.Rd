@@ -68,6 +68,8 @@ deviation or the standard error of the trait variable instead.
 \examples{
 \dontrun{
 data(alien)
+alien.data<-alien$data
+alien.phy<-alien$phy
 # Run sensitivity analysis:
 intra <- intra_physig(trait.col = "gestaLen", V = "SD_gesta" ,
                      data = alien.data, phy = alien.phy[[1]])

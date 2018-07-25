@@ -60,6 +60,8 @@ deviation or the standard error of the trait variable instead.
 \examples{
 # Load data:
 data(alien)
+alien.data<-alien$data
+alien.phy<-alien$phy
 # Logtransform data
 alien.data$logMass <- log(alien.data$adultMass) 
 # Run sensitivity analysis:
