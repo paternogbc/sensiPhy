@@ -21,3 +21,5 @@ Possibly mis-spelled words in DESCRIPTION:
   topologies (15:43)
   
 _R:_ These words are not misspeled.
+
+* Some examples use multiple cores but not more than 2.
