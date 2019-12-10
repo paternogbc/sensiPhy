@@ -96,6 +96,7 @@ effect of species removal on p-values. Please also consult standardised differen
 in the (summary) output.
 }
 \examples{
+\dontrun{
 # Simulate Data:
 set.seed(6987)
 mphy = rmtree(100, N = 30)
@@ -109,6 +110,7 @@ summary(tree_samp)
 sensi_plot(tree_samp)
 sensi_plot(tree_samp, graphs = 1)
 sensi_plot(tree_samp, graphs = 2)
+}
 }
 \references{
 Paterno, G. B., Penone, C. Werner, G. D. A. 

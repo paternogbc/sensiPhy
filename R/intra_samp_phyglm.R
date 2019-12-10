@@ -93,6 +93,7 @@
 #' @import ape phylolm
 #' 
 #' @examples
+#' \dontrun{
 #' set.seed(6987)
 #' phy = rtree(100)
 #' x = rTrait(n=1,phy=phy,parameters=list(ancestral.state=2,optimal.value=2,sigma2=1,alpha=1))
@@ -107,6 +108,7 @@
 #'                                Vx = "z", distrib="normal", x.transf=NULL)
 #' summary(intra_samp)
 #' sensi_plot(intra_samp)
+#' }
 
 #' @export
 

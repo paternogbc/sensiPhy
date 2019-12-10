@@ -1,12 +1,13 @@
 ## Resubmission
 This is a resubmission. In this version we have:
 
-Updated the package to version 0.8.4 and fixed minor bugs and typos (see NEWS.md).
+Updated the package to version 0.8.4 and fixed minor bugs and typos to adjust the package code to R 4.0 devel (see NEWS.md).
 
 ## Test environments
 * local Manjaro 18.04 R 3.6.0
-* win-builder (devel and release)
+* win-builder (release)
 * travis Ubuntu 12.04.5 LTS 
+* rhub
 
 ## R CMD check results
 There were no ERRORs or WARNINGs. 
