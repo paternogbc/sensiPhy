@@ -80,103 +80,135 @@
 #' }
 #' @export
 
-tree_continuous <- function(data,phy,n.tree=10,model,
-                          bounds = list(),
-                          n.cores = NULL,track=TRUE,...){
+
+tree_continuous <- function(data,
+                            phy,
+                            n.tree = 10,
+                            model,
+                            bounds = list(),
+                            n.cores = NULL,
+                            track = TRUE,
+                            ...) {
   #Error check
-  if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
-  if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  #if ((model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
-  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+  if (is.null(model))
+    stop("model must be specified, e.g. 'OU' or 'lambda'")
+  if (!inherits(data, "numeric") |
+      is.null(names(data)))
+    stop("data must supplied as a numeric vector with species as names")
+  if (!inherits(phy, "multiPhylo"))
+    stop("phy must be class 'multiPhylo'")
+  if (length(phy) < n.tree)
+    stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if (model == "white")
+    stop("the white-noise (non-phylogenetic) model is not allowed")
   else
-
-  #Matching tree and phylogeny using utils.R
-  full.data<-data
-  phy<-phy
-
+    
+    #Matching tree and phylogeny using utils.R
+    full.data <- data
+  phy <- phy
+  
   # If the class of tree is multiphylo pick n=n.tree random trees
-  trees<-sample(length(phy),n.tree,replace=F)
-
+  trees <- sample(length(phy), n.tree, replace = F)
+  
   #Create the results data.frame
-  sensi.estimates<-data.frame("n.tree"=numeric(),"sigsq"=numeric(),"optpar"=numeric(),
-                              "z0"=numeric(),"aicc"=numeric()) 
+  sensi.estimates <-
+    data.frame(
+      "n.tree" = numeric(),
+      "sigsq" = numeric(),
+      "optpar" = numeric(),
+      "z0" = numeric(),
+      "aicc" = numeric()
+    )
   
   #Model calculation
-  counter=1
+  counter = 1
   errors <- NULL
-  c.data<-list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
-  for (j in trees){
-      
-      #Match data order to tip order
-      full.data <- full.data[phy[[j]]$tip.label]
+  c.data <- list()
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+  for (j in trees) {
+    #Match data order to tip order
+    full.data <- full.data[phy[[j]]$tip.label]
     
-      #phylolm model
-      mod = try(geiger::fitContinuous(phy = phy[[j]],dat = full.data,model = model,
-                                    bounds = bounds,ncores = n.cores,...),FALSE)
-
-      if(isTRUE(class(mod)=="try-error")) {
-        error <- j
-        names(error) <- rownames(c.data$full.data)[j]
-        errors <- c(errors,error)
-        next }
-      
-      else{
-        sigsq               <- mod$opt$sigsq
-        z0                  <- mod$opt$z0
-        aicc                <- mod$opt$aicc
-        
-        if (model == "BM"){
-          optpar <- NA
-        }
-        if (model == "OU"){
-          optpar        <- mod$opt$alpha
-        }
-        if (model == "EB"){
-          optpar               <- mod$opt$a
-        }
-        if (model == "trend"){
-          optpar               <- mod$opt$slope
-        }
-        if (model == "lambda"){
-          optpar               <- mod$opt$lambda
-        }
-        if (model == "kappa"){
-          optpar               <- mod$opt$kappa
-        }
-        if (model == "delta"){
-          optpar               <- mod$opt$delta
-        }
-        if (model == "drift"){
-          optpar              <- mod$opt$drift
-        }
-        
-        if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-        
-        #write in a table
-        estim.simu <- data.frame(j, sigsq, optpar, z0, aicc,
-                                 stringsAsFactors = F)
-        sensi.estimates[counter, ]  <- estim.simu
-        counter=counter+1
-        
-      }
+    #phylolm model
+    mod = try(geiger::fitContinuous(
+      phy = phy[[j]],
+      dat = full.data,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    ),
+    FALSE)
+    
+    if (isTRUE(class(mod) == "try-error")) {
+      error <- j
+      names(error) <- rownames(c.data$full.data)[j]
+      errors <- c(errors, error)
+      next
     }
-  if(track==TRUE) on.exit(close(pb))
+    
+    else{
+      sigsq               <- mod$opt$sigsq
+      z0                  <- mod$opt$z0
+      aicc                <- mod$opt$aicc
+      
+      if (model == "BM") {
+        optpar <- NA
+      }
+      if (model == "OU") {
+        optpar        <- mod$opt$alpha
+      }
+      if (model == "EB") {
+        optpar               <- mod$opt$a
+      }
+      if (model == "trend") {
+        optpar               <- mod$opt$slope
+      }
+      if (model == "lambda") {
+        optpar               <- mod$opt$lambda
+      }
+      if (model == "kappa") {
+        optpar               <- mod$opt$kappa
+      }
+      if (model == "delta") {
+        optpar               <- mod$opt$delta
+      }
+      if (model == "drift") {
+        optpar              <- mod$opt$drift
+      }
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      
+      #write in a table
+      estim.simu <- data.frame(j, sigsq, optpar, z0, aicc,
+                               stringsAsFactors = F)
+      sensi.estimates[counter,]  <- estim.simu
+      counter = counter + 1
+      
+    }
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
   #calculate mean and sd for each parameter
-
-  statresults<-data.frame(min=apply(sensi.estimates,2,min),
-                          max=apply(sensi.estimates,2,max),
-                          mean=apply(sensi.estimates,2,mean),
-                          median=apply(sensi.estimates,2,median),
-                          sd=apply(sensi.estimates,2,sd))[-1,]
+  
+  statresults <- data.frame(
+    min = apply(sensi.estimates, 2, min),
+    max = apply(sensi.estimates, 2, max),
+    mean = apply(sensi.estimates, 2, mean),
+    median = apply(sensi.estimates, 2, median),
+    sd = apply(sensi.estimates, 2, sd)
+  )[-1, ]
   #Output
-  res <- list(   call = match.call(),
-                 data=full.data,
-                 sensi.estimates=sensi.estimates,N.tree=n.tree,
-                 stats = statresults[c(1:4),],
-                 optpar = model)
+  res <- list(
+    call = match.call(),
+    data = full.data,
+    sensi.estimates = sensi.estimates,
+    N.tree = n.tree,
+    stats = statresults[c(1:4), ],
+    optpar = model
+  )
   class(res) <- "sensiTree.TraitEvol"
   return(res)
 }

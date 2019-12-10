@@ -4,8 +4,7 @@
 \alias{sensi_plot.sensiClade.TraitEvol}
 \title{Graphical diagnostics for class 'sensiClade.TraitEvol'}
 \usage{
-\method{sensi_plot}{sensiClade.TraitEvol}(x, clade = NULL,
-  graph = "all", ...)
+\method{sensi_plot}{sensiClade.TraitEvol}(x, clade = NULL, graph = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{clade_discrete} or \code{clade_continuous}}

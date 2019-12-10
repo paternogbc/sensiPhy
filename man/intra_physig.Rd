@@ -4,8 +4,16 @@
 \alias{intra_physig}
 \title{Intraspecific variability - Phylogenetic signal}
 \usage{
-intra_physig(trait.col, data, phy, V = NULL, n.intra = 100,
-  distrib = "normal", method = "K", track = TRUE)
+intra_physig(
+  trait.col,
+  data,
+  phy,
+  V = NULL,
+  n.intra = 100,
+  distrib = "normal",
+  method = "K",
+  track = TRUE
+)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 

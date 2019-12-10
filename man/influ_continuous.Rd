@@ -2,10 +2,18 @@
 % Please edit documentation in R/influ_continuous.R
 \name{influ_continuous}
 \alias{influ_continuous}
-\title{Influential Species Detection - Trait Evolution Continous Characters}
+\title{Influential Species Detection - Trait Evolution Continuous Characters}
 \usage{
-influ_continuous(data, phy, model, bounds = list(), cutoff = 2,
-  n.cores = NULL, track = TRUE, ...)
+influ_continuous(
+  data,
+  phy,
+  model,
+  bounds = list(),
+  cutoff = 2,
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single continuous trait, with names matching tips in \code{phy}.}

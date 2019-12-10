@@ -4,9 +4,18 @@
 \alias{intra_phyglm}
 \title{Intraspecific variability - Phylogenetic Logistic Regression}
 \usage{
-intra_phyglm(formula, data, phy, Vx = NULL, n.intra = 30,
-  x.transf = NULL, distrib = "normal", btol = 50, track = TRUE,
-  ...)
+intra_phyglm(
+  formula,
+  data,
+  phy,
+  Vx = NULL,
+  n.intra = 30,
+  x.transf = NULL,
+  distrib = "normal",
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}

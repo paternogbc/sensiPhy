@@ -123,115 +123,186 @@
 #' @export
 
 
-intra_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5,
-                              n.sim = 100, n.intra = 2,
-                              Vx = NULL, distrib = "normal",
-                              x.transf = NULL,btol = 50, track = TRUE,...) {
-  
-  # Error checking:
-  if(is.null(Vx)) stop("Vx must be defined")
-  if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-  if(missing(clade.col)) stop("clade.col not defined. Please, define the column with clade names.")
-  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-    stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-  
-  #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy,...)
-  phy <- data_phy$phy
-  full.data <- data_phy$data
-  if (is.na(match(clade.col, names(full.data)))) {
-    stop("Names column '", clade.col, "' not found in data frame'")
+
+intra_clade_phyglm <-
+  function(formula,
+           data,
+           phy,
+           clade.col,
+           n.species = 5,
+           n.sim = 100,
+           n.intra = 2,
+           Vx = NULL,
+           distrib = "normal",
+           x.transf = NULL,
+           btol = 50,
+           track = TRUE,
+           ...) {
+    # Error checking:
+    if (is.null(Vx))
+      stop("Vx must be defined")
+    if (!inherits(data, "data.frame"))
+      stop("data must be class 'data.frame'")
+    if (missing(clade.col))
+      stop("clade.col not defined. Please, define the column with clade names.")
+    if (!inherits(phy, "phylo"))
+      stop("phy must be class 'phylo'")
+    if (!inherits(formula, "formula"))
+      stop("formula must be class 'formula'")
+    if (formula[[2]] != all.vars(formula)[1] ||
+        formula[[3]] != all.vars(formula)[2])
+      stop("Please use argument x.transf for data transformation")
+    if (distrib == "normal")
+      warning ("distrib=normal: make sure that standard deviation is provided for Vx")
+    
+    #Match data and phy
+    data_phy <- match_dataphy(formula, data, phy, ...)
+    phy <- data_phy$phy
+    full.data <- data_phy$data
+    if (is.na(match(clade.col, names(full.data)))) {
+      stop("Names column '", clade.col, "' not found in data frame'")
+    }
+    
+    resp1 <- all.vars(formula)[1]
+    if (length(all.vars(formula)) > 2) {
+      resp2 <- all.vars(formula)[2]
+    }
+    pred <- all.vars(formula)[length(all.vars(formula))]
+    
+    if (!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
+      full.data[is.na(full.data[, Vx]), Vx] <- 0
+    }
+    
+    #Function to pick a random value in the interval
+    if (distrib == "normal")
+      funr <- function(a, b) {
+        stats::rnorm(1, a, b)
+      }
+    else
+      funr <- function(a, b) {
+        stats::runif(1, a - b, a + b)
+      }
+    
+    #Identify CLADES to use and their sample size
+    wc <- table(full.data[, clade.col]) > n.species
+    uc <- table(full.data[, clade.col])[wc]
+    
+    if (length(uc) == 0)
+      stop(
+        paste(
+          "There is no clade with more than ",
+          n.species,
+          " species. Change 'n.species' to fix this
+                                  problem",
+          sep = ""
+        )
+      )
+    
+    #List to store information
+    intra.clade <- list()
+    
+    #Start clade loop here
+    errors <- NULL
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+    counter = 1
+    
+    for (j in 1:n.intra) {
+      ##Set predictor variable
+      #Vx is not provided or is not numeric, do not pick random value
+      if (!inherits(full.data[, pred], c("numeric", "integer")) ||
+          is.null(Vx)) {
+        full.data$predV <- full.data[, pred]
+      }
+      
+      #choose a random value in [mean-se,mean+se] if Vx is provided
+      if (!is.null(Vx) && is.null(dim(Vx)))
+      {
+        full.data$predV <-
+          apply(full.data[, c(pred, Vx)], 1, function(x)
+            funr(x[1], x[2]))
+      }
+      
+      full.data$resp1 <-
+        full.data[, resp1] #try to improve this in future
+      if (length(all.vars(formula)) > 2) {
+        full.data$resp2 <- full.data[, resp2]
+      }
+      
+      #transform Vx if x.transf is provided
+      if (!is.null(x.transf))
+      {
+        suppressWarnings (full.data$predV <- x.transf(full.data$predV))
+      }
+      
+      if (length(all.vars(formula)) > 2) {
+        intra.clade[[j]] <-
+          clade_phyglm(
+            cbind(resp1, resp2) ~ predV,
+            data = full.data,
+            phy = phy,
+            method = "logistic_MPLE",
+            clade.col = clade.col,
+            n.species = n.species,
+            n.sim = n.sim,
+            track = FALSE,
+            verbose = FALSE,
+            ...
+          )
+      }
+      else
+        intra.clade[[j]] <-
+        clade_phyglm(
+          resp1 ~ predV,
+          data = full.data,
+          phy = phy,
+          method = "logistic_MPLE",
+          clade.col = clade.col,
+          n.species = n.species,
+          n.sim = n.sim,
+          track = FALSE,
+          verbose = FALSE,
+          ...
+        )
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      counter = counter + 1
+    }
+    
+    if (track == TRUE)
+      close(pb)
+    names(intra.clade) <- 1:n.intra
+    
+    # Merge lists into data.frames between iterations:
+    full.estimates  <-
+      suppressWarnings(recombine(intra.clade, slot1 = 3, slot2 = 1))
+    clade.estimates <- recombine(intra.clade, slot1 = 4)
+    clade.estimates$info <- NULL
+    null.dist       <- recombine(intra.clade, slot1 = 5)
+    null.dist$info <- NULL
+    
+    #Generates output:
+    res <- list(
+      call = match.call(),
+      formula = formula,
+      full.model.estimates = full.estimates,
+      sensi.estimates = clade.estimates,
+      null.dist = null.dist,
+      data = full.data,
+      errors = errors,
+      clade.col = clade.col
+    )
+    
+    class(res) <- "sensiIntra_Clade"
+    
+    ### Warnings:
+    if (length(res$errors) > 0) {
+      warning("Some clades deletion presented errors, please check: output$errors")
+    }
+    else {
+      res$errors <- "No errors found."
+    }
+    return(res)
   }
-  
-  resp1<-all.vars(formula)[1]
-  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
-  pred<-all.vars(formula)[length(all.vars(formula))]
-  
-  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
-    full.data[is.na(full.data[,Vx]), Vx] <- 0}
-  
-  #Function to pick a random value in the interval
-  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}  
-  
-  #Identify CLADES to use and their sample size 
-  all.clades <- levels(full.data[ ,clade.col])
-  wc <- table(full.data[ ,clade.col]) > n.species
-  uc <- table(full.data[ , clade.col])[wc]
-  
-  if (length(uc) == 0) stop(paste("There is no clade with more than ",
-                                  n.species," species. Change 'n.species' to fix this
-                                  problem",sep=""))
-  
-  #List to store information
-  intra.clade <- list()
-  
-  #Start clade loop here
-  errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
-  counter = 1
-  
-  for (j in 1:n.intra){
-    
-    ##Set predictor variable
-    #Vx is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
-    
-    #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx) && is.null(dim(Vx)))
-    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
-    
-    full.data$resp1<-full.data[,resp1] #try to improve this in future
-    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
-    
-    #transform Vx if x.transf is provided
-    if(!is.null(x.transf)) 
-    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
-    
-    if(length(all.vars(formula))>2) {
-    intra.clade[[j]] <- clade_phyglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy, method="logistic_MPLE",
-                                    clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
-                                    track = FALSE, verbose = FALSE,...)}
-    else 
-    intra.clade[[j]] <- clade_phyglm(resp1~predV, data = full.data, phy=phy, method="logistic_MPLE",
-                                    clade.col=clade.col, n.species=n.species, n.sim=n.sim, 
-                                    track = FALSE, verbose = FALSE,...)
-    
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + 1
-  }
-  
-  if(track==TRUE) close(pb)
-  names(intra.clade) <- 1:n.intra
-  
-  # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(intra.clade, slot1 = 3, slot2 = 1))
-  clade.estimates <- recombine(intra.clade, slot1 = 4)
-  clade.estimates$info <- NULL
-  null.dist       <- recombine(intra.clade, slot1 = 5)
-  null.dist$info <- NULL
-  
-  #Generates output:
-  res <- list(call = match.call(),
-              formula = formula,
-              full.model.estimates = full.estimates,
-              sensi.estimates = clade.estimates,
-              null.dist = null.dist, 
-              data = full.data,
-              errors = errors,
-              clade.col = clade.col)
-  
-  class(res) <- "sensiIntra_Clade"
-  
-  ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some clades deletion presented errors, please check: output$errors")}
-  else {
-    res$errors <- "No errors found."
-  }
-  return(res)
-}
 

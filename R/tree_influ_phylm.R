@@ -43,7 +43,7 @@
 #' value of the phylogenetic parameter (e.g. \code{lambda}) for the full model
 #' without deleted species.
 #' @return \code{influential_species}: List of influential species, both
-#' based on standardised difference in interecept and in the slope of the
+#' based on standardised difference in intercept and in the slope of the
 #' regression. Species are ordered from most influential to less influential and
 #' only include species with a standardised difference > \code{cutoff}.
 #' @return \code{sensi.estimates}: A data frame with all simulation
@@ -94,86 +94,116 @@
 #' @export
 
 
-tree_influ_phylm <- function(formula, data, phy, n.tree = 2, 
-                                         cutoff = 2, model = "lambda", track = TRUE,...) {
-  
+tree_influ_phylm <- function(formula,
+                             data,
+                             phy,
+                             n.tree = 2,
+                             cutoff = 2,
+                             model = "lambda",
+                             track = TRUE,
+                             ...) {
   # Error checking:
-  if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if((model == "trend") && (sum(is.ultrametric(phy))>1)) 
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (!inherits(formula, "formula"))
+    stop("formula must be class 'formula'")
+  if (!inherits(phy, "multiPhylo"))
+    stop("phy must be class 'multiPhylo'")
+  if (length(phy) < n.tree)
+    stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if ((model == "trend") && (sum(is.ultrametric(phy)) > 1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
-  
-  #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy, ...)
+    
+    #Match data and phy
+    data_phy <- match_dataphy(formula, data, phy, ...)
   phy <- data_phy$phy
   full.data <- data_phy$data
-
+  
   # If the class of tree is multiphylo pick n=n.tree random trees
-  trees<-sample(length(phy),n.tree,replace=F)
+  trees <- sample(length(phy), n.tree, replace = F)
   
   
   #List to store information
   tree.influ <- list ()
-  N  <- nrow(full.data)
   
   #Start tree loop here
-  errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   counter = 1
   
-  for (j in trees){
+  for (j in trees) {
     #Match data order to tip order
-    full.data <- full.data[phy[[j]]$tip.label,]
+    full.data <- full.data[phy[[j]]$tip.label, ]
     
     #Select tree
     tree <- phy[[j]]
     
-    tree.influ[[counter]] <- influ_phylm(formula, data = full.data, phy=tree, 
-                                   model, cutoff, track = FALSE, verbose = FALSE, ...)
+    tree.influ[[counter]] <-
+      influ_phylm(
+        formula,
+        data = full.data,
+        phy = tree,
+        model,
+        cutoff,
+        track = FALSE,
+        verbose = FALSE,
+        ...
+      )
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    if (track == TRUE)
+      utils::setTxtProgressBar(pb, counter)
     counter = counter + 1
   }
   
-  if(track==TRUE) close(pb)
+  if (track == TRUE)
+    close(pb)
   names(tree.influ) <- trees
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
+  full.estimates  <-
+    suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
   
   #influ species slope
-  influ.sp.estimate <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <-
+    (lapply(tree.influ, function(x)
+      x$influential.species$influ.sp.estimate))
   influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
   names(influ.sp.estimate) <- "influ.sp.estimate"
-  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
-
+  influ.sp.estimate$tree <- row.names(influ.sp.estimate)
+  
   #influ species intercept
-  influ.sp.intercept <- (lapply(tree.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <-
+    (lapply(tree.influ, function(x)
+      x$influential.species$influ.sp.intercept))
   influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
   names(influ.sp.intercept) <- "influ.sp.intercept"
-  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
-
+  influ.sp.intercept$tree <- row.names(influ.sp.intercept)
+  
   #influ.estimates
   influ.estimates <- recombine(tree.influ, slot1 = 6)
   influ.estimates$info <- NULL
-
+  
   #Generates output:
-  res <- list(call = match.call(),
-              cutoff=cutoff,
-              formula = formula,
-              full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
-              sensi.estimates = influ.estimates,
-              data = full.data)
+  res <- list(
+    call = match.call(),
+    cutoff = cutoff,
+    formula = formula,
+    full.model.estimates = full.estimates,
+    influential.species = list(
+      influ.sp.estimate = influ.sp.estimate,
+      influ.sp.intercept = influ.sp.intercept
+    ),
+    sensi.estimates = influ.estimates,
+    data = full.data
+  )
   
   
   class(res) <- "sensiTree_Influ"
   ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
+  if (length(res$errors) > 0) {
+    warning("Some species deletion presented errors, please check: output$errors")
+  }
   else {
     res$errors <- "No errors found."
   }

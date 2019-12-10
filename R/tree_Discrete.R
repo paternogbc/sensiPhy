@@ -15,7 +15,7 @@
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitDiscrete}}
 #' @details
 #' This function fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}
-#' to n trees, randomly picked in a multiPhylo file. Currenlty, only binary discrete traits are supported
+#' to n trees, randomly picked in a multiPhylo file. Currently, only binary discrete traits are supported
 #'
 #' Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 #' \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 
@@ -82,94 +82,128 @@
 #' }
 #' @export
 
-tree_discrete <- function(data,phy,n.tree=10,model,
-                          transform = "none",bounds = list(),
-                          n.cores = NULL,track=TRUE,...){
+tree_discrete <- function(data,
+                          phy,
+                          n.tree = 10,
+                          model,
+                          transform = "none",
+                          bounds = list(),
+                          n.cores = NULL,
+                          track = TRUE,
+                          ...) {
   #Error check
-  if(is.null(model)) stop("model must be specified (e.g. 'ARD' or 'SYM'")
-  if(class(data)!="factor") stop("data must supplied as a factor with species as names. Consider as.factor()")
-  if(length(levels(data))>2) stop("discrete data can have maximal two levels")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if(transform=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
+  if (is.null(model))
+    stop("model must be specified (e.g. 'ARD' or 'SYM'")
+  if (!inherits(data, "factor"))
+    stop("data must supplied as a factor with species as names. Consider as.factor()")
+  if (length(levels(data)) > 2)
+    stop("discrete data can have maximal two levels")
+  if (!inherits(phy, "multiPhylo"))
+    stop("phy must be class 'multiPhylo'")
+  if (length(phy) < n.tree)
+    stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if (transform == "white")
+    stop("the white-noise (non-phylogenetic) model is not allowed")
   else
-
-  
-  #Matching tree and phylogeny using utils.R
-  full.data<-data
-  phy<-phy
-
-  # If the class of tree is multiphylo pick n=n.tree random trees
-  trees<-sample(length(phy),n.tree,replace=F)
-
-  #Create the results data.frame
-  sensi.estimates<-data.frame("n.tree"=numeric(),"q12"=numeric(),"q21"=numeric(),
-                              "aicc"=numeric(),"optpar"=numeric()) 
-  #Model calculation
-  counter=1
-  errors <- NULL
-  c.data<-list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
-  for (j in trees){
-      
-      #Match data order to tip order
-      full.data <- full.data[phy[[j]]$tip.label]
     
-      #phylolm model
-      mod = try(geiger::fitDiscrete(phy = phy[[j]],dat = full.data,model = model,transform = transform,
-                                    bounds = bounds,ncores = n.cores,...),FALSE)
-
-      if(isTRUE(class(mod)=="try-error")) {
-        error <- j
-        names(error) <- rownames(c.data$full.data)[j]
-        errors <- c(errors,error)
-        next }
-      
-      else{
-        q12           <- mod$opt$q12
-        q21           <- mod$opt$q21
-        aicc          <- mod$opt$aicc
-
-        if (transform == "none"){
-          optpar <- NA
-        }
-        if (transform == "EB"){
-          optpar               <- mod$opt$a
-        }
-        if (transform == "lambda"){
-          optpar               <- mod$opt$lambda
-        }
-        if (transform == "kappa"){
-          optpar               <- mod$opt$kappa
-        }
-        if (transform == "delta"){
-          optpar               <- mod$opt$delta
-        }
-        
-        if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-        
-        #write in a table
-        estim.simu <- data.frame(j, q12, q21, aicc, optpar,
-                                 stringsAsFactors = F)
-        sensi.estimates[counter, ]  <- estim.simu
-        counter=counter+1
-        
-      }
+    
+    #Matching tree and phylogeny using utils.R
+    full.data <- data
+  phy <- phy
+  
+  # If the class of tree is multiphylo pick n=n.tree random trees
+  trees <- sample(length(phy), n.tree, replace = F)
+  
+  #Create the results data.frame
+  sensi.estimates <-
+    data.frame(
+      "n.tree" = numeric(),
+      "q12" = numeric(),
+      "q21" = numeric(),
+      "aicc" = numeric(),
+      "optpar" = numeric()
+    )
+  #Model calculation
+  counter = 1
+  errors <- NULL
+  c.data <- list()
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+  for (j in trees) {
+    #Match data order to tip order
+    full.data <- full.data[phy[[j]]$tip.label]
+    
+    #phylolm model
+    mod = try(geiger::fitDiscrete(
+      phy = phy[[j]],
+      dat = full.data,
+      model = model,
+      transform = transform,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    ),
+    FALSE)
+    
+    if (isTRUE(class(mod) == "try-error")) {
+      error <- j
+      names(error) <- rownames(c.data$full.data)[j]
+      errors <- c(errors, error)
+      next
     }
-  if(track==TRUE) on.exit(close(pb))
+    
+    else{
+      q12           <- mod$opt$q12
+      q21           <- mod$opt$q21
+      aicc          <- mod$opt$aicc
+      
+      if (transform == "none") {
+        optpar <- NA
+      }
+      if (transform == "EB") {
+        optpar               <- mod$opt$a
+      }
+      if (transform == "lambda") {
+        optpar               <- mod$opt$lambda
+      }
+      if (transform == "kappa") {
+        optpar               <- mod$opt$kappa
+      }
+      if (transform == "delta") {
+        optpar               <- mod$opt$delta
+      }
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      
+      #write in a table
+      estim.simu <- data.frame(j, q12, q21, aicc, optpar,
+                               stringsAsFactors = F)
+      sensi.estimates[counter,]  <- estim.simu
+      counter = counter + 1
+      
+    }
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
   #calculate mean and sd for each parameter
-
-  statresults<-data.frame(min=apply(sensi.estimates,2,min),
-                          max=apply(sensi.estimates,2,max),
-                          mean=apply(sensi.estimates,2,mean),
-                          median=apply(sensi.estimates,2,median),
-                          sd=apply(sensi.estimates,2,sd))[-1,]
+  
+  statresults <- data.frame(
+    min = apply(sensi.estimates, 2, min),
+    max = apply(sensi.estimates, 2, max),
+    mean = apply(sensi.estimates, 2, mean),
+    median = apply(sensi.estimates, 2, median),
+    sd = apply(sensi.estimates, 2, sd)
+  )[-1, ]
   #Output
-  res <- list(   call = match.call(),
-                 data=full.data,
-                 sensi.estimates=sensi.estimates,N.tree=n.tree,
-                 stats = statresults[c(1:4),],
-                 optpar = transform)
+  res <- list(
+    call = match.call(),
+    data = full.data,
+    sensi.estimates = sensi.estimates,
+    N.tree = n.tree,
+    stats = statresults[c(1:4), ],
+    optpar = transform
+  )
   class(res) <- "sensiTree.TraitEvol"
   return(res)
 }

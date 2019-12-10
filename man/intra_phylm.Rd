@@ -4,9 +4,20 @@
 \alias{intra_phylm}
 \title{Intraspecific variability - Phylogenetic Linear Regression}
 \usage{
-intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
-  y.transf = NULL, x.transf = NULL, n.intra = 30,
-  distrib = "normal", model = "lambda", track = TRUE, ...)
+intra_phylm(
+  formula,
+  data,
+  phy,
+  Vy = NULL,
+  Vx = NULL,
+  y.transf = NULL,
+  x.transf = NULL,
+  n.intra = 30,
+  distrib = "normal",
+  model = "lambda",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}

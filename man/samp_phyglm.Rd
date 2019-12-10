@@ -4,8 +4,16 @@
 \alias{samp_phyglm}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic Logistic Regression}
 \usage{
-samp_phyglm(formula, data, phy, n.sim = 30, breaks = seq(0.1, 0.5,
-  0.1), btol = 50, track = TRUE, ...)
+samp_phyglm(
+  formula,
+  data,
+  phy,
+  n.sim = 30,
+  breaks = seq(0.1, 0.5, 0.1),
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

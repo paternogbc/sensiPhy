@@ -4,8 +4,17 @@
 \alias{influ_discrete}
 \title{Influential Species Detection - Trait Evolution Discrete Characters}
 \usage{
-influ_discrete(data, phy, model, transform = "none", bounds = list(),
-  cutoff = 2, n.cores = NULL, track = TRUE, ...)
+influ_discrete(
+  data,
+  phy,
+  model,
+  transform = "none",
+  bounds = list(),
+  cutoff = 2,
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single binary trait, with names matching tips in \code{phy}.}

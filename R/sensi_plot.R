@@ -32,7 +32,7 @@
 #'  \item{tree_physig:  \code{\link[sensiPhy]{sensi_plot.tree.physig}}}
 #'  \item{intra_physig:  \code{\link[sensiPhy]{sensi_plot.intra.physig}}}
 #'  
-#'  \strong{trait evolution (continous & discrete characters):}
+#'  \strong{trait evolution (continuous & discrete characters):}
 #'  \item{clade_continuous & _discrete \code{\link[sensiPhy]{sensi_plot.sensiClade.TraitEvol}}}
 #'  \item{influ_continuous & _discrete \code{\link[sensiPhy]{sensi_plot.sensiInflu.TraitEvol}}}
 #'  \item{tree_continuous & _discrete \code{\link[sensiPhy]{sensi_plot.sensiTree.TraitEvol}}}

@@ -99,235 +99,310 @@
 #' }
 #' @export
 
-clade_continuous <- function(data, phy, model,
-                           trait.col,clade.col,n.species = 5, n.sim = 20,
-                           bounds = list(),n.cores = NULL,track=TRUE, ...) {
-          # Error checking:
-          if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
-          if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-          if(missing(clade.col)) stop("clade.col not defined. Please, define the",
-                                      " column with clade names.")
-          if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-          if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
-          if ( model == "drift" & ape::is.ultrametric(phy)) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
-          if(length(which(!phy$tip.label %in% rownames(data)))>0) stop("not all tips are present in data, prune tree")
-          if(length(which(!rownames(data) %in% phy$tip.label))>0) stop("not all data species are present in tree, remove superfluous data points")
-          else
-            
-            #Calculates the full model, extracts model parameters
-            full.data<-data
-            phy <- phy
-          if (is.na(match(clade.col, names(full.data)))) {
-            stop("Names column '", clade.col, "' not found in data frame'")
-          }
-          
-          # Identify CLADES to use and their sample size 
-          all.clades <- levels(full.data[ ,clade.col])
-          wc <- table(full.data[ ,clade.col]) > n.species
-          uc <- table(full.data[ , clade.col])[wc]
-          
-          #k <- names(which(table(full.data[,clade.col]) > n.species ))
-          if (length(uc) == 0) stop(paste("There is no clade with more than ",
-                                          n.species," species. Change 'n.species' to fix this
-                                          problem",sep=""))
-          
-          # FULL MODEL PARAMETERS:
-          trait_vec_full<-full.data[,trait.col]
-          names(trait_vec_full)<-rownames(full.data)
-          
-          N                   <- nrow(full.data)
-          mod.0               <- geiger::fitContinuous(phy = phy,dat = trait_vec_full,
-                                                     model = model,
-                                                     bounds = bounds,ncores = n.cores,...)
-          sigsq.0               <- mod.0$opt$sigsq
-          z0.0                  <- mod.0$opt$z0
-          aicc.0              <- mod.0$opt$aicc
-          if (model == "BM"){
-            optpar.0 <- NA
-          }
-          if (model == "OU"){
-            optpar.0        <- mod.0$opt$alpha
-          }
-          if (model == "EB"){
-            optpar.0               <- mod.0$opt$a
-          }
-          if (model == "trend"){
-            optpar.0               <- mod.0$opt$slope
-          }
-          if (model == "lambda"){
-            optpar.0               <- mod.0$opt$lambda
-          }
-          if (model == "kappa"){
-            optpar.0               <- mod.0$opt$kappa
-          }
-          if (model == "delta"){
-            optpar.0               <- mod.0$opt$delta
-          }
-          if (model == "drift"){
-            optpar.0               <- mod.0$opt$drift
-          }
-          
-          #Create dataframe to store estmates for each clade
-          sensi.estimates<-data.frame("clade" =I(as.character()),"N.species" = numeric(),
-                                      "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
-                                      "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
-                                      "z0"=numeric(),
-                                      "aicc"=numeric()) 
-          
-          # Create dataframe store simulations (null distribution)
-          null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
-                                  "sigsq"= numeric(length(uc)*n.sim),
-                                  "DIFsigsq"= numeric(length(uc)*n.sim),
-                                  "optpar" = numeric(length(uc)*n.sim),
-                                  "DIFoptpar" = numeric(length(uc)*n.sim))
-
-          ### START LOOP between CLADES:
-          # counters:
-          aa <- 1; bb <- 1
-          errors <- NULL
-          
-          if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
-                                                      style = 3)
-          for (A in names(uc)){
-            
-            ### Number of species in clade A
-            cN  <- as.numeric(uc[names(uc) == A])
-            
-            ### Fit reduced model (without clade)
-            crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
-            crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
-            crop.trait_vec<-crop.data[,trait.col]
-            names(crop.trait_vec)<-rownames(crop.data)
-            mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
-                                          model = model,
-                                          bounds = bounds,ncores = n.cores,...),TRUE)
-            sigsq               <- mod$opt$sigsq
-            z0                  <- mod$opt$z0
-            aicc              <- mod$opt$aicc
-            DIFsigsq            <- sigsq - sigsq.0
-            sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
-                                         digits = 1)
-            if (model == "BM"){
-              optpar <- NA
-            }
-            if (model == "OU"){
-              optpar        <- mod$opt$alpha
-            }
-            if (model == "EB"){
-              optpar               <- mod$opt$a
-            }
-            if (model == "trend"){
-              optpar               <- mod$opt$slope
-            }
-            if (model == "lambda"){
-              optpar               <- mod$opt$lambda
-            }
-            if (model == "kappa"){
-              optpar               <- mod$opt$kappa
-            }
-            if (model == "delta"){
-              optpar               <- mod$opt$delta
-            }
-            if (model == "drift"){
-              optpar              <- mod$opt$drift
-            }
-            
-            DIFoptpar            <- optpar - optpar.0
-            optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
-                                        digits = 1)
-            
-            # Store reduced model parameters: 
-            estim.simu <- data.frame(A, cN,
-                                     sigsq, DIFsigsq,sigsq.perc,
-                                     optpar,DIFoptpar,optpar.perc,
-                                     z0,
-                                     aicc,
-                                     stringsAsFactors = F)
-            sensi.estimates[aa, ]  <- estim.simu
-            
-            ### START LOOP FOR NULL DIST:
-            # number of species in clade A:
-            for (i in 1:n.sim) {
-              exclude <- sample(1:N, cN)
-              crop.data <- full.data[-exclude,]
-              crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,rownames(crop.data)))
-              crop.trait_vec<-crop.data[,trait.col]
-              names(crop.trait_vec)<-rownames(crop.data)
-              mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.trait_vec,
-                                            model = model,
-                                            bounds = bounds,ncores = n.cores,...),TRUE)
-              
-              if(isTRUE(class(mod)=="try-error")) {
-                error <- i
-                names(error) <- rownames(full.data$data)[i]
-                errors <- c(errors,error)
-                next }
-              else 
-              sigsq               <- mod$opt$sigsq
-              aicc              <- mod$opt$aicc
-              DIFsigsq            <- sigsq - sigsq.0
-              if (model == "BM"){
-                optpar <- NA
-              }
-              if (model == "OU"){
-                optpar        <- mod$opt$alpha
-              }
-              if (model == "EB"){
-                optpar               <- mod$opt$a
-              }
-              if (model == "trend"){
-                optpar               <- mod$opt$slope
-              }
-              if (model == "lambda"){
-                optpar               <- mod$opt$lambda
-              }
-              if (model == "kappa"){
-                optpar               <- mod$opt$kappa
-              }
-              if (model == "delta"){
-                optpar               <- mod$opt$delta
-              }
-              if (model == "drift"){
-                optpar              <- mod$opt$drift
-              }
-              
-              DIFoptpar            <- optpar - optpar.0
-              
-              null.dist[bb, ] <- data.frame(clade = as.character(A), 
-                                            sigsq,
-                                            DIFsigsq,
-                                            optpar,
-                                            DIFoptpar)
-              
-              if(track==TRUE) utils::setTxtProgressBar(pb, bb)
-              bb <- bb + 1
-            }
-            aa <- aa + 1
-          }
-          if(track==TRUE) on.exit(close(pb))
-          
-          #OUTPUT
-          #full model estimates:
-          param0 <- list(sigsq=sigsq.0,optpar=optpar.0,
-                         z0 <- mod.0$opt$z0,
-                         aicc=aicc.0)
-          
-          #Generates output:
-          res <- list(   call = match.call(),
-                         data = full.data,
-                         full.model.estimates = param0,
-                         sensi.estimates=sensi.estimates,
-                         null.dist = null.dist,
-                         errors = errors,
-                         optpar = model,
-                         clade.col = clade.col)
-          class(res) <- "sensiClade.TraitEvol"
-          ### Warnings:
-          if (length(res$errors) >0){
-            warning("Some clades deletion presented errors, please check: output$errors")}
-          else {
-            res$errors <- "No errors found."
-          }
-          return(res)
+clade_continuous <- function(data,
+                             phy,
+                             model,
+                             trait.col,
+                             clade.col,
+                             n.species = 5,
+                             n.sim = 20,
+                             bounds = list(),
+                             n.cores = NULL,
+                             track = TRUE,
+                             ...) {
+  # Error checking:
+  if (is.null(model))
+    stop("model must be specified, e.g. 'OU' or 'lambda'")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (missing(clade.col))
+    stop("clade.col not defined. Please, define the",
+         " column with clade names.")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (model == "white")
+    stop("the white-noise (non-phylogenetic) model is not allowed")
+  if (model == "drift" &
+      ape::is.ultrametric(phy))
+    stop(
+      "A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details"
+    )
+  if (length(which(!phy$tip.label %in% rownames(data))) > 0)
+    stop("not all tips are present in data, prune tree")
+  if (length(which(!rownames(data) %in% phy$tip.label)) > 0)
+    stop("not all data species are present in tree, remove superfluous data points")
+  else
+    
+    #Calculates the full model, extracts model parameters
+    full.data <- data
+  phy <- phy
+  if (is.na(match(clade.col, names(full.data)))) {
+    stop("Names column '", clade.col, "' not found in data frame'")
+  }
+  
+  # Identify CLADES to use and their sample size
+  wc <- table(full.data[, clade.col]) > n.species
+  uc <- table(full.data[, clade.col])[wc]
+  
+  #k <- names(which(table(full.data[,clade.col]) > n.species ))
+  if (length(uc) == 0)
+    stop(
+      paste(
+        "There is no clade with more than ",
+        n.species,
+        " species. Change 'n.species' to fix this
+                                          problem",
+        sep = ""
+      )
+    )
+  
+  # FULL MODEL PARAMETERS:
+  trait_vec_full <- full.data[, trait.col]
+  names(trait_vec_full) <- rownames(full.data)
+  
+  N                   <- nrow(full.data)
+  mod.0               <-
+    geiger::fitContinuous(
+      phy = phy,
+      dat = trait_vec_full,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    )
+  sigsq.0               <- mod.0$opt$sigsq
+  aicc.0              <- mod.0$opt$aicc
+  if (model == "BM") {
+    optpar.0 <- NA
+  }
+  if (model == "OU") {
+    optpar.0        <- mod.0$opt$alpha
+  }
+  if (model == "EB") {
+    optpar.0               <- mod.0$opt$a
+  }
+  if (model == "trend") {
+    optpar.0               <- mod.0$opt$slope
+  }
+  if (model == "lambda") {
+    optpar.0               <- mod.0$opt$lambda
+  }
+  if (model == "kappa") {
+    optpar.0               <- mod.0$opt$kappa
+  }
+  if (model == "delta") {
+    optpar.0               <- mod.0$opt$delta
+  }
+  if (model == "drift") {
+    optpar.0               <- mod.0$opt$drift
+  }
+  
+  #Create dataframe to store estmates for each clade
+  sensi.estimates <-
+    data.frame(
+      "clade" = I(as.character()),
+      "N.species" = numeric(),
+      "sigsq" = numeric(),
+      "DIFsigsq" = numeric(),
+      "sigsq.perc" = numeric(),
+      "optpar" = numeric(),
+      "DIFoptpar" = numeric(),
+      "optpar.perc" = numeric(),
+      "z0" = numeric(),
+      "aicc" = numeric()
+    )
+  
+  # Create dataframe store simulations (null distribution)
+  null.dist <-
+    data.frame(
+      "clade" = rep(names(uc), each = n.sim),
+      "sigsq" = numeric(length(uc) * n.sim),
+      "DIFsigsq" = numeric(length(uc) * n.sim),
+      "optpar" = numeric(length(uc) * n.sim),
+      "DIFoptpar" = numeric(length(uc) * n.sim)
+    )
+  
+  ### START LOOP between CLADES:
+  # counters:
+  aa <- 1
+  bb <- 1
+  errors <- NULL
+  
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0,
+                                max = length(uc) * n.sim,
+                                style = 3)
+  for (A in names(uc)) {
+    ### Number of species in clade A
+    cN  <- as.numeric(uc[names(uc) == A])
+    
+    ### Fit reduced model (without clade)
+    crop.data <- full.data[!full.data[, clade.col] %in% A, ]
+    crop.phy <-
+      ape::drop.tip(phy, setdiff(phy$tip.label, rownames(crop.data)))
+    crop.trait_vec <- crop.data[, trait.col]
+    names(crop.trait_vec) <- rownames(crop.data)
+    mod = try(geiger::fitContinuous(
+      phy = crop.phy,
+      dat = crop.trait_vec,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    ),
+    TRUE)
+    sigsq               <- mod$opt$sigsq
+    z0                  <- mod$opt$z0
+    aicc              <- mod$opt$aicc
+    DIFsigsq            <- sigsq - sigsq.0
+    sigsq.perc          <-
+      round((abs(DIFsigsq / sigsq.0)) * 100,
+            digits = 1)
+    if (model == "BM") {
+      optpar <- NA
     }
+    if (model == "OU") {
+      optpar        <- mod$opt$alpha
+    }
+    if (model == "EB") {
+      optpar               <- mod$opt$a
+    }
+    if (model == "trend") {
+      optpar               <- mod$opt$slope
+    }
+    if (model == "lambda") {
+      optpar               <- mod$opt$lambda
+    }
+    if (model == "kappa") {
+      optpar               <- mod$opt$kappa
+    }
+    if (model == "delta") {
+      optpar               <- mod$opt$delta
+    }
+    if (model == "drift") {
+      optpar              <- mod$opt$drift
+    }
+    
+    DIFoptpar            <- optpar - optpar.0
+    optpar.perc        <-
+      round((abs(DIFoptpar / optpar.0)) * 100,
+            digits = 1)
+    
+    # Store reduced model parameters:
+    estim.simu <- data.frame(
+      A,
+      cN,
+      sigsq,
+      DIFsigsq,
+      sigsq.perc,
+      optpar,
+      DIFoptpar,
+      optpar.perc,
+      z0,
+      aicc,
+      stringsAsFactors = F
+    )
+    sensi.estimates[aa,]  <- estim.simu
+    
+    ### START LOOP FOR NULL DIST:
+    # number of species in clade A:
+    for (i in 1:n.sim) {
+      exclude <- sample(1:N, cN)
+      crop.data <- full.data[-exclude, ]
+      crop.phy <-
+        ape::drop.tip(phy, setdiff(phy$tip.label, rownames(crop.data)))
+      crop.trait_vec <- crop.data[, trait.col]
+      names(crop.trait_vec) <- rownames(crop.data)
+      mod = try(geiger::fitContinuous(
+        phy = crop.phy,
+        dat = crop.trait_vec,
+        model = model,
+        bounds = bounds,
+        ncores = n.cores,
+        ...
+      ),
+      TRUE)
+      
+      if (isTRUE(class(mod) == "try-error")) {
+        error <- i
+        names(error) <- rownames(full.data$data)[i]
+        errors <- c(errors, error)
+        next
+      }
+      else
+        sigsq               <- mod$opt$sigsq
+      aicc              <- mod$opt$aicc
+      DIFsigsq            <- sigsq - sigsq.0
+      if (model == "BM") {
+        optpar <- NA
+      }
+      if (model == "OU") {
+        optpar        <- mod$opt$alpha
+      }
+      if (model == "EB") {
+        optpar               <- mod$opt$a
+      }
+      if (model == "trend") {
+        optpar               <- mod$opt$slope
+      }
+      if (model == "lambda") {
+        optpar               <- mod$opt$lambda
+      }
+      if (model == "kappa") {
+        optpar               <- mod$opt$kappa
+      }
+      if (model == "delta") {
+        optpar               <- mod$opt$delta
+      }
+      if (model == "drift") {
+        optpar              <- mod$opt$drift
+      }
+      
+      DIFoptpar            <- optpar - optpar.0
+      
+      null.dist[bb,] <- data.frame(clade = as.character(A),
+                                   sigsq,
+                                   DIFsigsq,
+                                   optpar,
+                                   DIFoptpar)
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, bb)
+      bb <- bb + 1
+    }
+    aa <- aa + 1
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
+  
+  #OUTPUT
+  #full model estimates:
+  param0 <- list(
+    sigsq = sigsq.0,
+    optpar = optpar.0,
+    z0 <- mod.0$opt$z0,
+    aicc = aicc.0
+  )
+  
+  #Generates output:
+  res <- list(
+    call = match.call(),
+    data = full.data,
+    full.model.estimates = param0,
+    sensi.estimates = sensi.estimates,
+    null.dist = null.dist,
+    errors = errors,
+    optpar = model,
+    clade.col = clade.col
+  )
+  class(res) <- "sensiClade.TraitEvol"
+  ### Warnings:
+  if (length(res$errors) > 0) {
+    warning("Some clades deletion presented errors, please check: output$errors")
+  }
+  else {
+    res$errors <- "No errors found."
+  }
+  return(res)
+}
         

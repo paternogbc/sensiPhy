@@ -23,7 +23,7 @@
 #' graph. 
 #' 
 #' \strong{Graph 3:} Distribution of standardized difference in slope or intercept. Red 
-#' colour indicates inbfluential species (with a standardised difference above 
+#' colour indicates influential species (with a standardised difference above 
 #' the value of \code{cutoff}).
 #' 
 #' \strong{Graph 4:} Distribution of the percentage of change in slope or intercept.

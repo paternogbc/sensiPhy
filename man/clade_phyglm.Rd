@@ -5,8 +5,17 @@
 \title{Estimate the impact on model estimates of phylogenetic logistic regression after 
 removing clades from the analysis.}
 \usage{
-clade_phyglm(formula, data, phy, btol = 50, track = TRUE, clade.col,
-  n.species = 5, n.sim = 100, ...)
+clade_phyglm(
+  formula,
+  data,
+  phy,
+  btol = 50,
+  track = TRUE,
+  clade.col,
+  n.species = 5,
+  n.sim = 100,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

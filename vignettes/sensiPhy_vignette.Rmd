@@ -55,7 +55,7 @@ knitr::include_graphics("sensiPhy_workflow_functions.png")
 
 ### 1.1 Sensitivity analysis for influential species
 
-The `influ` method performs leave-one-out deletion analyis and detects influential species on parameter estimates.
+The `influ` method performs leave-one-out deletion analysis and detects influential species on parameter estimates.
 
 ##### 1.1.1 influ_phylm(): Phylogenetic linear regression
 
@@ -106,7 +106,7 @@ sensi_plot(influ, graphs = 1)
 sensi_plot(influ2, graphs = 1)
 ```
 
-##### 1.1.3 influ_continuous() and influ_discrete: Trait Evolution Continous and Discrete Characters
+##### 1.1.3 influ_continuous() and influ_discrete: Trait Evolution Continuous and Discrete Characters
 
 **Continuous characters**
 ```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5} 
@@ -199,7 +199,7 @@ sensi_plot(clade, "Sciuridae")
 ```
 
 
-##### 1.2.3 clade_continuous() and clade_discrete: Trait Evolution Continous and Discrete Characters
+##### 1.2.3 clade_continuous() and clade_discrete: Trait Evolution Continuous and Discrete Characters
 
 **Continuous characters**
 ```{r echo=TRUE, warning=FALSE, message=FALSE, fig.width=7.5, fig.height=5.5}
@@ -308,7 +308,7 @@ sensi_plot(samp, graphs = 1)
 ```
 
 
-### 1.3.3 samp_continuous() and samp_discrete: Trait Evolution Continous and Discrete Characters
+### 1.3.3 samp_continuous() and samp_discrete: Trait Evolution Continuous and Discrete Characters
 
 **Continuous characters**
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=4}
@@ -392,7 +392,7 @@ sensi_plot(tree)
 ```
 
 
-### 2.3 tree_continuous() and tree_discrete: `tree` method for trait evolution of continous and discrete characters
+### 2.3 tree_continuous() and tree_discrete: `tree` method for trait evolution of continuous and discrete characters
 
 **Continuous characters**
 ``` {r warning=FALSE, message=FALSE, fig.width=7.5, fig.height=6}
@@ -592,7 +592,7 @@ sensi_plot(intra.tree, uncer.type = "all") #or uncer.type = "tree", uncer.type =
 
 ### 5.1 Combine data and phylogeny
 
-The funcion `match_dataphy` combines phylogeny and data to ensure that tips in phylogeny match data
+The function `match_dataphy` combines phylogeny and data to ensure that tips in phylogeny match data
 and that observations with missing values are removed.
 
 > This function uses all variables provided in the 'formula' to match data and phylogeny. To avoid cropping the full dataset, 'match_dataphy' searches for NA values only on variables provided by formula. Missing values on other variables, not included in 'formula', will not be removed from data.
@@ -845,7 +845,7 @@ Thanks for you interest in contributing with `sensiPhy`. First you need to regis
 
 ### 8.1 Report bugs or errors
 
-If you have any problem running `sensiPhy` functions, please report the problem as a new [issue](https://github.com/paternogbc/sensiPhy/issues/new). To do this, folow the steps below:
+If you have any problem running `sensiPhy` functions, please report the problem as a new [issue](https://github.com/paternogbc/sensiPhy/issues/new). To do this, follow the steps below:
 
  * Create a new [issue](https://github.com/paternogbc/sensiPhy/issues/new)
  * Name this issue as "BUG: function_name

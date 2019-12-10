@@ -91,20 +91,33 @@
 #' @export
 
 
-intra_physig <- function(trait.col, data, phy,
-                        V = NULL, n.intra = 100, distrib = "normal",
-                        method = "K", track = TRUE){
+intra_physig <- function(trait.col,
+                         data,
+                         phy,
+                         V = NULL,
+                         n.intra = 100,
+                         distrib = "normal",
+                         method = "K",
+                         track = TRUE) {
   #Error check
-  if(is.null(V)) stop("V must be defined")
-  if(class(data) != "data.frame") stop("data must be class 'data.frame'")
-  if(distrib == "normal") message (paste("distrib = normal: make sure that standard deviation", 
-                                   "is provided for V", sep = " "))
-  if(!inherits(phy,"phylo"))
+  if (is.null(V))
+    stop("V must be defined")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (distrib == "normal")
+    message (
+      paste(
+        "distrib = normal: make sure that standard deviation",
+        "is provided for V",
+        sep = " "
+      )
+    )
+  if (!inherits(phy, "phylo"))
     stop("tree should be an object of class \"phylo\".")
-  if(!inherits(trait.col,"character")) 
+  if (!inherits(trait.col, "character"))
     stop("trait.col should be an object of class \"character\".")
   
-  # Check match between data and phy 
+  # Check match between data and phy
   datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
   full.data <- datphy$data
   phy <- datphy$phy
@@ -112,55 +125,80 @@ intra_physig <- function(trait.col, data, phy,
   names(trait)  <- phy$tip.label
   N <- nrow(full.data)
   
-  if(!is.null(V) && sum(is.na(full.data[, V])) != 0) {
-    full.data[is.na(full.data[, V]), V] <- 0}
+  if (!is.null(V) && sum(is.na(full.data[, V])) != 0) {
+    full.data[is.na(full.data[, V]), V] <- 0
+  }
   
   #Function to pick a random value in the interval
-  if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
+  if (distrib == "normal")
+    funr <- function(a, b) {
+      stats::rnorm(1, a, b)
+    }
+  else
+    funr <- function(a, b) {
+      stats::runif(1, a - b, a + b)
+    }
   
   #Create the results data.frame
-  intra.physig.estimates <- data.frame("n.intra" = numeric(),"estimate" = numeric(),
-                                      "pval" = numeric())
+  intra.physig.estimates <-
+    data.frame("n.intra" = numeric(),
+               "estimate" = numeric(),
+               "pval" = numeric())
   counter = 1
-  if(track == TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   for (i in 1:n.intra) {
-
     #choose a random value in [mean-se,mean+se] if Vx is provided
-    predV <- apply(full.data[,c(trait.col,V)],1,function(x)funr(x[1],x[2]))
+    predV <-
+      apply(full.data[, c(trait.col, V)], 1, function(x)
+        funr(x[1], x[2]))
     
     #model
-    mod.s    <- phytools::phylosig(tree = phy, x = predV, method = method, 
-                                   test = TRUE)
-    estimate <- mod.s[[1]] 
+    mod.s    <-
+      phytools::phylosig(
+        tree = phy,
+        x = predV,
+        method = method,
+        test = TRUE
+      )
+    estimate <- mod.s[[1]]
     pval     <- mod.s$P
     
-    if(track == TRUE) (utils::setTxtProgressBar(pb, i))
+    if (track == TRUE)
+      (utils::setTxtProgressBar(pb, i))
     #write in a table
     estim.simu <- data.frame(i, estimate, pval)
-    intra.physig.estimates[counter, ]  <- estim.simu
+    intra.physig.estimates[counter,]  <- estim.simu
     counter = counter + 1
-      
-    }
-  if(track==TRUE) on.exit(close(pb))
+    
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
   
-  statresults <- data.frame(min = apply(intra.physig.estimates, 2, min),
-                            max = apply(intra.physig.estimates, 2, max),
-                            mean = apply(intra.physig.estimates, 2, mean),
-                            sd_intra = apply(intra.physig.estimates, 2, stats::sd))[-1, ]
+  statresults <-
+    data.frame(
+      min = apply(intra.physig.estimates, 2, min),
+      max = apply(intra.physig.estimates, 2, max),
+      mean = apply(intra.physig.estimates, 2, mean),
+      sd_intra = apply(intra.physig.estimates, 2, stats::sd)
+    )[-1,]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_low  <-
+    statresults$mean - stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <-
+    statresults$mean + stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
   
-  stats <- round(statresults[c(1:2),c(3,5,6,1,2)],digits=5)
+  stats <- round(statresults[c(1:2), c(3, 5, 6, 1, 2)], digits = 5)
   
   cl <- match.call()
-  res <- list(   call = cl,
-                 Trait = trait.col,
-                 intra.physig.estimates = intra.physig.estimates,
-                 N.obs = N,
-                 stats = stats,
-                 data = full.data)
+  res <- list(
+    call = cl,
+    Trait = trait.col,
+    intra.physig.estimates = intra.physig.estimates,
+    N.obs = N,
+    stats = stats,
+    data = full.data
+  )
   class(res) <- "intra.physig"
   return(res)
 }

@@ -122,116 +122,185 @@
 #' @export
 
 
-intra_influ_phyglm <- function(formula, data, phy,
-                         Vx=NULL, n.intra = 30,
-                         x.transf = NULL,
-                         distrib="normal", cutoff =2, 
-                         btol=50, track=TRUE,...){
+intra_influ_phyglm <- function(formula,
+                               data,
+                               phy,
+                               Vx = NULL,
+                               n.intra = 30,
+                               x.transf = NULL,
+                               distrib = "normal",
+                               cutoff = 2,
+                               btol = 50,
+                               track = TRUE,
+                               ...) {
   #Error check
-  if(is.null(Vx)) stop("Vx must be defined")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
-  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
+  if (is.null(Vx))
+    stop("Vx must be defined")
+  if (!inherits(formula, "formula"))
+    stop("formula must be class 'formula'")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (formula[[2]] != all.vars(formula)[1] ||
+      formula[[3]] != all.vars(formula)[2])
     stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-
+  if (distrib == "normal")
+    warning ("distrib=normal: make sure that standard deviation is provided for Vx")
+  
   #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy)
-  full.data<-datphy[[1]]
-  phy<-datphy[[2]]
+  datphy <- match_dataphy(formula, data, phy)
+  full.data <- datphy[[1]]
+  phy <- datphy[[2]]
   
-  resp1<-all.vars(formula)[1]
-  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
-  pred<-all.vars(formula)[length(all.vars(formula))]
+  resp1 <- all.vars(formula)[1]
+  if (length(all.vars(formula)) > 2) {
+    resp2 <- all.vars(formula)[2]
+  }
+  pred <- all.vars(formula)[length(all.vars(formula))]
   
-  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
-    full.data[is.na(full.data[,Vx]), Vx] <- 0}
+  if (!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
+    full.data[is.na(full.data[, Vx]), Vx] <- 0
+  }
   
   #Function to pick a random value in the interval
-  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
+  if (distrib == "normal")
+    funr <- function(a, b) {
+      stats::rnorm(1, a, b)
+    }
+  else
+    funr <- function(a, b) {
+      stats::runif(1, a - b, a + b)
+    }
   
   #Start intra loop here
   intra.influ <- list ()
   species.NA <- list()
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   counter = 1
   
   for (i in 1:n.intra) {
-    
     ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
+    if (!inherits(full.data[, pred], c("numeric", "integer")) ||
+        is.null(Vx)) {
+      full.data$predV <- full.data[, pred]
+    }
     
     #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx) && is.null(dim(Vx)))
-    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    if (!is.null(Vx) && is.null(dim(Vx)))
+    {
+      full.data$predV <-
+        apply(full.data[, c(pred, Vx)], 1, function(x)
+          funr(x[1], x[2]))
+    }
     
-    full.data$resp1<-full.data[,resp1] #try to improve this in future
-    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
+    full.data$resp1 <-
+      full.data[, resp1] #try to improve this in future
+    if (length(all.vars(formula)) > 2) {
+      full.data$resp2 <- full.data[, resp2]
+    }
     
     #transform Vx if x.transf is provided
-    if(!is.null(x.transf)) 
-    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    if (!is.null(x.transf))
+    {
+      suppressWarnings (full.data$predV <- x.transf(full.data$predV))
+    }
     
     #skip iteration if there are NA's in the dataset
-    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
-    if(sum(is.na(full.data[,"predV"]))>0) next
+    species.NA[[i]] <-
+      rownames(full.data[with(full.data, is.na(predV)), ])
+    if (sum(is.na(full.data[, "predV"])) > 0)
+      next
     
     #model
     #Run the model
-    if(length(all.vars(formula))>2) {
-      intra.influ[[i]] <- influ_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy,method="logistic_MPLE", 
-                                       cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE,...)
-    } else intra.influ[[i]] <- influ_phyglm(resp1~predV, data = full.data, phy=phy,method="logistic_MPLE", 
-                                    cutoff=cutoff, btol=btol, track = FALSE, verbose = FALSE,...)
+    if (length(all.vars(formula)) > 2) {
+      intra.influ[[i]] <-
+        influ_phyglm(
+          cbind(resp1, resp2) ~ predV,
+          data = full.data,
+          phy = phy,
+          method = "logistic_MPLE",
+          cutoff = cutoff,
+          btol = btol,
+          track = FALSE,
+          verbose = FALSE,
+          ...
+        )
+    } else
+      intra.influ[[i]] <-
+      influ_phyglm(
+        resp1 ~ predV,
+        data = full.data,
+        phy = phy,
+        method = "logistic_MPLE",
+        cutoff = cutoff,
+        btol = btol,
+        track = FALSE,
+        verbose = FALSE,
+        ...
+      )
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    if (track == TRUE)
+      utils::setTxtProgressBar(pb, counter)
     counter = counter + 1
   }
   
-  if(track==TRUE) close(pb)
-  names(intra.influ)<-1:n.intra
+  if (track == TRUE)
+    close(pb)
+  names(intra.influ) <- 1:n.intra
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 3, slot2 = 1))
+  full.estimates  <-
+    suppressWarnings(recombine(intra.influ, slot1 = 3, slot2 = 1))
   
   #influ species slope
-  influ.sp.estimate <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <-
+    (lapply(intra.influ, function(x)
+      x$influential.species$influ.sp.estimate))
   influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
   names(influ.sp.estimate) <- "influ.sp.estimate"
-  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
+  influ.sp.estimate$tree <- row.names(influ.sp.estimate)
   
   #influ species intercept
-  influ.sp.intercept <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <-
+    (lapply(intra.influ, function(x)
+      x$influential.species$influ.sp.intercept))
   influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
   names(influ.sp.intercept) <- "influ.sp.intercept"
-  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+  influ.sp.intercept$tree <- row.names(influ.sp.intercept)
   
   #influ.estimates
   influ.estimates <- recombine(intra.influ, slot1 = 5)
   influ.estimates$info <- NULL
   
   #Generates output:
-  res <- list(call = match.call(),
-              cutoff=cutoff,
-              formula = formula,
-              full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
-              sensi.estimates = influ.estimates,
-              data = full.data)
+  res <- list(
+    call = match.call(),
+    cutoff = cutoff,
+    formula = formula,
+    full.model.estimates = full.estimates,
+    influential.species = list(
+      influ.sp.estimate = influ.sp.estimate,
+      influ.sp.intercept = influ.sp.intercept
+    ),
+    sensi.estimates = influ.estimates,
+    data = full.data
+  )
   
-  class(res) <- c("sensiIntra_Influ","sensiIntra_InfluL")
+  class(res) <- c("sensiIntra_Influ", "sensiIntra_InfluL")
   ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
+  if (length(res$errors) > 0) {
+    warning("Some species deletion presented errors, please check: output$errors")
+  }
   else {
     res$errors <- "No errors found."
   }
   
   return(res)
 }
-    
+
     

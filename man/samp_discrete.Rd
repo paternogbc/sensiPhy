@@ -4,9 +4,18 @@
 \alias{samp_discrete}
 \title{Species Sampling uncertainty - Trait Evolution Discrete Characters}
 \usage{
-samp_discrete(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
-  model, transform = "none", bounds = list(), n.cores = NULL,
-  track = TRUE, ...)
+samp_discrete(
+  data,
+  phy,
+  n.sim = 30,
+  breaks = seq(0.1, 0.5, 0.1),
+  model,
+  transform = "none",
+  bounds = list(),
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single binary trait, with names matching tips in \code{phy}.}

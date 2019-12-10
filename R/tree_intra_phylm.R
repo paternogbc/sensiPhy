@@ -97,130 +97,204 @@
 #' @export
 
 
-tree_intra_phylm <- function(formula, data, phy,
-                                         Vy = NULL, Vx = NULL,
-                                         y.transf = NULL, x.transf = NULL,
-                                         n.intra = 10, n.tree = 2, 
-                                         distrib = "normal", model = "lambda", 
-                                         track = TRUE, ...){
-  
+tree_intra_phylm <- function(formula,
+                             data,
+                             phy,
+                             Vy = NULL,
+                             Vx = NULL,
+                             y.transf = NULL,
+                             x.transf = NULL,
+                             n.intra = 10,
+                             n.tree = 2,
+                             distrib = "normal",
+                             model = "lambda",
+                             track = TRUE,
+                             ...) {
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
-  if(class(formula) != "formula") stop("formula must be class 'formula'")
-  if(class(data) != "data.frame") stop("data must be class 'data.frame'")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
+  if (is.null(Vx) & is.null(Vy))
+    stop("Vx or Vy must be defined")
+  if (!inherits(formula, "formula"))
+    stop("formula must be class 'formula'")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (!inherits(phy, "multiPhylo"))
+    stop("phy must be class 'multiPhylo'")
+  if (formula[[2]] != all.vars(formula)[1] ||
+      formula[[3]] != all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if(distrib == "normal") warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
-  if ((model == "trend") && (sum(ape::is.ultrametric(phy))>1))
+  if (length(phy) < n.tree)
+    stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+  if (distrib == "normal")
+    warning ("distrib = normal: make sure that standard deviation is provided for Vx and/or Vy")
+  if ((model == "trend") && (sum(ape::is.ultrametric(phy)) > 1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
-  
-  #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy,...)
+    
+    #Matching tree and phylogeny using utils.R
+    datphy <- match_dataphy(formula, data, phy, ...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
   # If the class of tree is multiphylo pick n=n.tree random trees
-  trees<-sample(length(phy),n.tree,replace=F)
+  trees <- sample(length(phy), n.tree, replace = F)
   
   #Model calculation
-  errors <- NULL
   tree.intra <- list()
-  species.NA <- list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
   counter = 1
-
-  for (j in trees) {
-
-      
-      #Match data order to tip order
-      full.data <- full.data[phy[[j]]$tip.label,]
-      
-      #Select tree
-      tree <- phy[[j]]
-      
-      #model (remove warnings about standard deviation in intra)
-      withCallingHandlers(
-        tree.intra[[counter]] <- intra_phylm(formula=formula,data=full.data,phy=tree,
-                                             Vx, Vy, y.transf, x.transf, n.intra=n.intra,
-                                             distrib, model, track=F, verbose=F),
-                                
-        warning=function(w){
-        if (grepl("make sure that standard deviation", w$message))
-        invokeRestart("muffleWarning")
-        } ) 
-
-
-      if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-      counter = counter + 1
-        
-      }
   
-  if(track==TRUE) close(pb)
+  for (j in trees) {
+    #Match data order to tip order
+    full.data <- full.data[phy[[j]]$tip.label, ]
+    
+    #Select tree
+    tree <- phy[[j]]
+    
+    #model (remove warnings about standard deviation in intra)
+    withCallingHandlers(
+      tree.intra[[counter]] <-
+        intra_phylm(
+          formula = formula,
+          data = full.data,
+          phy = tree,
+          Vx,
+          Vy,
+          y.transf,
+          x.transf,
+          n.intra = n.intra,
+          distrib,
+          model,
+          track = F,
+          verbose = F
+        ),
+      
+      warning = function(w) {
+        if (grepl("make sure that standard deviation", w$message))
+          invokeRestart("muffleWarning")
+      }
+    )
+    
+    
+    if (track == TRUE)
+      utils::setTxtProgressBar(pb, counter)
+    counter = counter + 1
+    
+  }
+  
+  if (track == TRUE)
+    close(pb)
   names(tree.intra) <- trees
   
   mod_results <- recombine(tree.intra, slot1 = 6)
   mod_results$info <- NULL
-  names(mod_results)[1]<-"n.tree"
+  names(mod_results)[1] <- "n.tree"
   mod_results$n.tree <- as.numeric(mod_results$n.tree)
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  mean_by_randomval <- stats::aggregate(.~n.intra, data = mod_results,mean)
+  mean_by_randomval <-
+    stats::aggregate(. ~ n.intra, data = mod_results, mean)
   
   #variation due to tree choice
-  mean_by_tree<-stats::aggregate(.~n.tree, data=mod_results, mean)
+  mean_by_tree <- stats::aggregate(. ~ n.tree, data = mod_results, mean)
   
-  statresults <- data.frame(min.all = apply(mod_results, 2, min),
-                            max.all = apply(mod_results, 2, max),
-                            mean.all = apply(mod_results, 2, mean),
-                            sd_all = apply(mod_results, 2, stats::sd),
-                            
-                            min.intra = apply(mean_by_randomval, 2, min),
-                            max.intra = apply(mean_by_randomval, 2, max),
-                            mean.intra = apply(mean_by_randomval, 2, mean),
-                            sd_intra = apply(mean_by_randomval, 2, stats::sd),
-                            
-                            min.tree = apply(mean_by_tree, 2, min),
-                            max.tree = apply(mean_by_tree, 2, max),
-                            mean.tree = apply(mean_by_tree, 2, mean),
-                            sd_tree = apply(mean_by_tree, 2, stats::sd))[-(1:2), ]
+  statresults <- data.frame(
+    min.all = apply(mod_results, 2, min),
+    max.all = apply(mod_results, 2, max),
+    mean.all = apply(mod_results, 2, mean),
+    sd_all = apply(mod_results, 2, stats::sd),
+    
+    min.intra = apply(mean_by_randomval, 2, min),
+    max.intra = apply(mean_by_randomval, 2, max),
+    mean.intra = apply(mean_by_randomval, 2, mean),
+    sd_intra = apply(mean_by_randomval, 2, stats::sd),
+    
+    min.tree = apply(mean_by_tree, 2, min),
+    max.tree = apply(mean_by_tree, 2, max),
+    mean.tree = apply(mean_by_tree, 2, mean),
+    sd_tree = apply(mean_by_tree, 2, stats::sd)
+  )[-(1:2),]
   
-  statresults$CI_low_all    <- statresults$mean.all - stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
-  statresults$CI_low_intra  <- statresults$mean.intra - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  statresults$CI_low_tree   <- statresults$mean.tree - stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
+  statresults$CI_low_all    <-
+    statresults$mean.all - stats::qt(0.975, df = n.intra * n.tree - 1) * statresults$sd_all / sqrt(n.intra *
+                                                                                                     n.tree)
+  statresults$CI_low_intra  <-
+    statresults$mean.intra - stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_low_tree   <-
+    statresults$mean.tree - stats::qt(0.975, df = n.tree - 1) * statresults$sd_intra / sqrt(n.tree)
   
-  statresults$CI_high_all    <- statresults$mean.all + stats::qt(0.975, df = n.intra*n.tree-1) * statresults$sd_all / sqrt(n.intra*n.tree)
-  statresults$CI_high_intra  <- statresults$mean.intra + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  statresults$CI_high_tree   <- statresults$mean.tree + stats::qt(0.975, df = n.tree-1) * statresults$sd_intra / sqrt(n.tree)
+  statresults$CI_high_all    <-
+    statresults$mean.all + stats::qt(0.975, df = n.intra * n.tree - 1) * statresults$sd_all / sqrt(n.intra *
+                                                                                                     n.tree)
+  statresults$CI_high_intra  <-
+    statresults$mean.intra + stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high_tree   <-
+    statresults$mean.tree + stats::qt(0.975, df = n.tree - 1) * statresults$sd_intra / sqrt(n.tree)
   
   #reoder to later match sensi_plot for the single functions
-  statresults <- statresults[,c("min.all","max.all","mean.all","sd_all","CI_low_all","CI_high_all",
-                                "min.intra","max.intra","mean.intra","sd_intra","CI_low_intra","CI_high_intra",
-                                "min.tree","max.tree","mean.tree","sd_tree","CI_low_tree","CI_high_tree")]
+  statresults <-
+    statresults[, c(
+      "min.all",
+      "max.all",
+      "mean.all",
+      "sd_all",
+      "CI_low_all",
+      "CI_high_all",
+      "min.intra",
+      "max.intra",
+      "mean.intra",
+      "sd_intra",
+      "CI_low_intra",
+      "CI_high_intra",
+      "min.tree",
+      "max.tree",
+      "mean.tree",
+      "sd_tree",
+      "CI_low_tree",
+      "CI_high_tree"
+    )]
   
   
   #species with transformation problems
-  nr <- n.tree*n.intra - nrow(mod_results)
-  sp.pb <- unique(unlist(lapply(tree.intra,function(x) x$sp.pb)))
-
-  if (length(sp.pb) >0) 
-    warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
-                   for x.transf or y.transf and check output$sp.pb",sep=" "))
+  nr <- n.tree * n.intra - nrow(mod_results)
+  sp.pb <- unique(unlist(lapply(tree.intra, function(x)
+    x$sp.pb)))
+  
+  if (length(sp.pb) > 0)
+    warning (
+      paste(
+        "in",
+        nr,
+        "simulations, data transformations generated NAs, please consider using another function
+                   for x.transf or y.transf and check output$sp.pb",
+        sep = " "
+      )
+    )
   
   
-  res <- list(call = match.call(),
-              formula = formula,
-              y.transf = y.transf, 
-              x.transf = x.transf,
-              data = full.data,
-              sensi.estimates = mod_results, N.obs = tree.intra[[1]]$N.obs,
-              stats = round(statresults[c(1:6),c("mean.all","CI_low_all","CI_high_all",
-                                                 "mean.intra","CI_low_intra","CI_high_intra",
-                                                 "mean.tree","CI_low_tree","CI_high_tree")],digits=3),
-              all.stats = statresults,sp.pb=sp.pb)
+  res <- list(
+    call = match.call(),
+    formula = formula,
+    y.transf = y.transf,
+    x.transf = x.transf,
+    data = full.data,
+    sensi.estimates = mod_results,
+    N.obs = tree.intra[[1]]$N.obs,
+    stats = round(statresults[c(1:6), c(
+      "mean.all",
+      "CI_low_all",
+      "CI_high_all",
+      "mean.intra",
+      "CI_low_intra",
+      "CI_high_intra",
+      "mean.tree",
+      "CI_low_tree",
+      "CI_high_tree"
+    )], digits = 3),
+    all.stats = statresults,
+    sp.pb = sp.pb
+  )
   class(res) <- "sensiTree_Intra"
   return(res)
 }

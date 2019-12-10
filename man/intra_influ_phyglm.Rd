@@ -4,9 +4,19 @@
 \alias{intra_influ_phyglm}
 \title{Interaction between intraspecific variability and influential species - Phylogenetic Logistic Regression}
 \usage{
-intra_influ_phyglm(formula, data, phy, Vx = NULL, n.intra = 30,
-  x.transf = NULL, distrib = "normal", cutoff = 2, btol = 50,
-  track = TRUE, ...)
+intra_influ_phyglm(
+  formula,
+  data,
+  phy,
+  Vx = NULL,
+  n.intra = 30,
+  x.transf = NULL,
+  distrib = "normal",
+  cutoff = 2,
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula:  \code{response~predictor}.}

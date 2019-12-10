@@ -4,9 +4,20 @@
 \alias{intra_samp_phyglm}
 \title{Interaction between intraspecific variability and species sampling - Phylogenetic Logistic Regression}
 \usage{
-intra_samp_phyglm(formula, data, phy, n.sim = 10, n.intra = 3,
-  breaks = seq(0.1, 0.5, 0.1), btol = 50, Vx = NULL,
-  distrib = "normal", x.transf = NULL, track = TRUE, ...)
+intra_samp_phyglm(
+  formula,
+  data,
+  phy,
+  n.sim = 10,
+  n.intra = 3,
+  breaks = seq(0.1, 0.5, 0.1),
+  btol = 50,
+  Vx = NULL,
+  distrib = "normal",
+  x.transf = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

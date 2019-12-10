@@ -4,8 +4,16 @@
 \alias{tree_continuous}
 \title{Phylogenetic uncertainty - Trait Evolution Continuous Characters}
 \usage{
-tree_continuous(data, phy, n.tree = 10, model, bounds = list(),
-  n.cores = NULL, track = TRUE, ...)
+tree_continuous(
+  data,
+  phy,
+  n.tree = 10,
+  model,
+  bounds = list(),
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single continuous trait, with names matching tips in \code{phy}.}

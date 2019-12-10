@@ -4,8 +4,17 @@
 \alias{samp_continuous}
 \title{Species Sampling uncertainty - Trait Evolution Continuous Characters}
 \usage{
-samp_continuous(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
-  model, n.cores = NULL, bounds = list(), track = TRUE, ...)
+samp_continuous(
+  data,
+  phy,
+  n.sim = 30,
+  breaks = seq(0.1, 0.5, 0.1),
+  model,
+  n.cores = NULL,
+  bounds = list(),
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single binary trait, with names matching tips in \code{phy}.}
@@ -20,7 +29,7 @@ samp_continuous(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
 
 \item{n.cores}{number of cores to use. If 'NULL', number of cores is detected.}
 
-\item{bounds}{settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
+\item{bounds}{settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}}
 
 \item{track}{Print a report tracking function progress (default = TRUE)}
 

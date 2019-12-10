@@ -4,8 +4,7 @@
 \alias{tree_phylm}
 \title{Phylogenetic uncertainty - Phylogenetic Linear Regression}
 \usage{
-tree_phylm(formula, data, phy, n.tree = 2, model = "lambda",
-  track = TRUE, ...)
+tree_phylm(formula, data, phy, n.tree = 2, model = "lambda", track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}

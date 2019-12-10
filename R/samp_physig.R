@@ -109,16 +109,22 @@
 #'sensi_plot(samp, graphs = 2)
 #'}
 #' @export
-samp_physig <- function(trait.col, data , phy, n.sim = 30,
-                        breaks=seq(.1,.5,.1), method = "K", track = TRUE, ...){
+samp_physig <- function(trait.col,
+                        data ,
+                        phy,
+                        n.sim = 30,
+                        breaks = seq(.1, .5, .1),
+                        method = "K",
+                        track = TRUE,
+                        ...) {
   ### data prep------
   # Basic error checking:
-  if(class(phy) != "phylo") 
+  if (!inherits(phy, "phylo"))
     stop("phy must be class 'phylo'")
-  if(length(breaks) < 2) 
+  if (length(breaks) < 2)
     stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   
-  # Check match between data and phy 
+  # Check match between data and phy
   data_phy <- match_dataphy(get(trait.col) ~ 1, data, phy)
   full.data <- data_phy$data
   phy <- data_phy$phy
@@ -127,66 +133,89 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   N             <- nrow(full.data)
   
   # FULL MODEL PARAMETERS:
-  mod.0     <- phytools::phylosig(x = trait, tree = phy, method = method, test = TRUE, ...)
+  mod.0     <-
+    phytools::phylosig(
+      x = trait,
+      tree = phy,
+      method = method,
+      test = TRUE,
+      ...
+    )
   
   #Creates empty data frame to store model outputs
   samp.physig.estimates <-
-    data.frame("n.remov" = numeric(), "n.percent"= numeric(),
-               "estimate"= numeric(),"DF"= numeric(),
-               "perc"= numeric(),"pval"=numeric())
+    data.frame(
+      "n.remov" = numeric(),
+      "n.percent" = numeric(),
+      "estimate" = numeric(),
+      "DF" = numeric(),
+      "perc" = numeric(),
+      "pval" = numeric()
+    )
   
   #Loops over breaks, remove percentage of species determined by 'breaks
   #and repeat determined by 'n.sim'.
   counter <- 1
-  limit <- sort(round( (breaks) * nrow(full.data),digits=0))
+  limit <- sort(round((breaks) * nrow(full.data), digits = 0))
   NL <- length(breaks) * n.sim
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
   
   
   ##### Loop----
-  for (i in limit){
-    for (j in 1:n.sim){
-      
-      exclude <- sample(1:N,i)
-      crop.data <- full.data[-exclude,]
-      crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
+  for (i in limit) {
+    for (j in 1:n.sim) {
+      exclude <- sample(1:N, i)
+      crop.data <- full.data[-exclude, ]
+      crop.phy <-  ape::drop.tip(phy, phy$tip.label[exclude])
       crop.trait <- crop.data[, trait.col]
       names(crop.trait) <- crop.phy$tip.label
       
       ### Reduced data estimate
-      mod.s     <- phytools::phylosig(x = crop.trait, tree = crop.phy, method = method, 
-                                      test = TRUE, ...)
+      mod.s     <-
+        phytools::phylosig(
+          x = crop.trait,
+          tree = crop.phy,
+          method = method,
+          test = TRUE,
+          ...
+        )
       
       ### Metrics:
       estimate  <- mod.s[[1]]
       DF        <- mod.s[[1]] - mod.0[[1]]
-      perc      <- round((abs(DF/mod.0[[1]]))*100,digits=1)
+      perc      <- round((abs(DF / mod.0[[1]])) * 100, digits = 1)
       pval    <- mod.s$P
-     
+      
       
       n.remov <- i
-      n.percent <- round( (n.remov / N) * 100,digits = 0)
+      n.percent <- round((n.remov / N) * 100, digits = 0)
       #rep <- j
       
-      if(track == TRUE) (
-        utils::setTxtProgressBar(pb, counter))
+      if (track == TRUE)
+        (utils::setTxtProgressBar(pb, counter))
       # Stores values for each simulation
-      estim.simu <- data.frame(n.remov, n.percent, estimate, 
-                               DF, perc,
-                               pval, stringsAsFactors = F)
-      samp.physig.estimates[counter, ]  <- estim.simu
+      estim.simu <- data.frame(n.remov,
+                               n.percent,
+                               estimate,
+                               DF,
+                               perc,
+                               pval,
+                               stringsAsFactors = F)
+      samp.physig.estimates[counter,]  <- estim.simu
       counter <- counter + 1
     }
   }
   
-  if(track==TRUE) on.exit(close(pb))
+  if (track == TRUE)
+    on.exit(close(pb))
   
   #Calculates Standardized DFestimate
-  sDF <- samp.physig.estimates$DF/
+  sDF <- samp.physig.estimates$DF /
     stats::sd(samp.physig.estimates$DF)
   
   samp.physig.estimates$sDF <- sDF
-  samp.physig.estimates <- samp.physig.estimates[, c(1,2,3,4,7,5,6)]
+  samp.physig.estimates <- samp.physig.estimates[, c(1, 2, 3, 4, 7, 5, 6)]
   #colnames(samp.physig.estimates)[3] <- method
   
   res                 <- samp.physig.estimates
@@ -194,15 +223,18 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   breaks              <- unique(res$n.percent)
   
   ### Significance Table
-    sign                <- res$pval > .05
-    res$sign            <- sign
-    perc.sign           <- 1-(with(res,tapply(sign, n.remov, sum))) / n.sim
-    mean.sDF            <- with(res,tapply(sDF,n.remov,mean))
-    mean.perc           <- with(res,tapply(perc,n.remov,mean))
-    perc.sign.tab       <- data.frame(percent_sp_removed=breaks,
-                                      perc.sign = as.numeric(perc.sign),
-                                      mean.perc = as.numeric(mean.perc),
-                                      mean.sDF = as.numeric(mean.sDF))
+  sign                <- res$pval > .05
+  res$sign            <- sign
+  perc.sign           <-
+    1 - (with(res, tapply(sign, n.remov, sum))) / n.sim
+  mean.sDF            <- with(res, tapply(sDF, n.remov, mean))
+  mean.perc           <- with(res, tapply(perc, n.remov, mean))
+  perc.sign.tab       <- data.frame(
+    percent_sp_removed = breaks,
+    perc.sign = as.numeric(perc.sign),
+    mean.perc = as.numeric(mean.perc),
+    mean.sDF = as.numeric(mean.sDF)
+  )
   
   #Creates a list with full model estimates:
   param0 <- list(estimate = mod.0[[1]],
@@ -210,14 +242,16 @@ samp_physig <- function(trait.col, data , phy, n.sim = 30,
   names(param0)[1] = method
   
   #Generates output:
-  res <- list(call = match.call(),
-              Trait = trait.col,
-              full.data.estimates = param0,
-              sensi.estimates = samp.physig.estimates,
-              sign.analysis = perc.sign.tab,
-              data = full.data,
-              phy = phy)
+  res <- list(
+    call = match.call(),
+    Trait = trait.col,
+    full.data.estimates = param0,
+    sensi.estimates = samp.physig.estimates,
+    sign.analysis = perc.sign.tab,
+    data = full.data,
+    phy = phy
+  )
   class(res) <- "samp.physig"
   return(res)
-}  
+}
 

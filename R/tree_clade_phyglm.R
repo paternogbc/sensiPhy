@@ -121,89 +121,126 @@
 #'}
 #' @export
 
-tree_clade_phyglm <- function(formula, data, phy, clade.col, n.species = 5, 
-                                         n.sim = 100, n.tree = 2, btol=50, track = TRUE,...) {
-  # Error checking:
-  if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-  if(missing(clade.col)) stop("clade.col not defined. Please, define the",
-                              " column with clade names.")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  
-  #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy, ...)
-  phy <- data_phy$phy
-  full.data <- data_phy$data
-  if (is.na(match(clade.col, names(full.data)))) {
-    stop("Names column '", clade.col, "' not found in data frame'")
+tree_clade_phyglm <-
+  function(formula,
+           data,
+           phy,
+           clade.col,
+           n.species = 5,
+           n.sim = 100,
+           n.tree = 2,
+           btol = 50,
+           track = TRUE,
+           ...) {
+    # Error checking:
+    if (!inherits(data, "data.frame"))
+      stop("data must be class 'data.frame'")
+    if (missing(clade.col))
+      stop("clade.col not defined. Please, define the",
+           " column with clade names.")
+    if (!inherits(formula, "formula"))
+      stop("formula must be class 'formula'")
+    if (!inherits(phy, "multiPhylo"))
+      stop("phy must be class 'multiPhylo'")
+    if (length(phy) < n.tree)
+      stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+    
+    #Match data and phy
+    data_phy <- match_dataphy(formula, data, phy, ...)
+    phy <- data_phy$phy
+    full.data <- data_phy$data
+    if (is.na(match(clade.col, names(full.data)))) {
+      stop("Names column '", clade.col, "' not found in data frame'")
+    }
+    
+    
+    # If the class of tree is multiphylo pick n=times random trees
+    trees <- sample(length(phy), n.tree, replace = F)
+    
+    
+    # Identify CLADES to use and their sample size
+    wc <- table(full.data[, clade.col]) > n.species
+    uc <- table(full.data[, clade.col])[wc]
+    
+    if (length(uc) == 0)
+      stop(
+        paste(
+          "There is no clade with more than ",
+          n.species,
+          " species. Change 'n.species' to fix this
+                                  problem",
+          sep = ""
+        )
+      )
+    
+    #List to store information
+    tree.clade <- list ()
+    
+    #Start tree loop here
+    errors <- NULL
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+    counter = 1
+    
+    for (j in trees) {
+      #Match data order to tip order
+      full.data <- full.data[phy[[j]]$tip.label, ]
+      
+      #Select tree
+      tree <- phy[[j]]
+      
+      tree.clade[[counter]] <-
+        clade_phyglm(
+          formula,
+          data = full.data,
+          phy = tree,
+          btol,
+          track = FALSE,
+          clade.col,
+          n.species,
+          n.sim,
+          verbose = FALSE,
+          ...
+        )
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      counter = counter + 1
+    }
+    
+    if (track == TRUE)
+      close(pb)
+    names(tree.clade) <- trees
+    
+    # Merge lists into data.frames between iterations:
+    full.estimates  <-
+      suppressWarnings(recombine(tree.clade, slot1 = 3, slot2 = 1))
+    clade.estimates <- recombine(tree.clade, slot1 = 4)
+    clade.estimates$info <- NULL
+    null.dist       <- recombine(tree.clade, slot1 = 5)
+    null.dist$info <- NULL
+    
+    #Generate output:
+    res <- list(
+      call = match.call(),
+      formula = formula,
+      full.model.estimates = full.estimates,
+      sensi.estimates = clade.estimates,
+      null.dist = null.dist,
+      data = full.data,
+      errors = errors,
+      clade.col = clade.col
+    )
+    
+    class(res) <- c("sensiTree_Clade", "sensiTree_CladeL")
+    
+    ### Warnings:
+    if (length(res$errors) > 0) {
+      warning("Some clades deletion presented errors, please check: output$errors")
+    }
+    else {
+      res$errors <- "No errors found."
+    }
+    return(res)
   }
-  
-  
-  # If the class of tree is multiphylo pick n=times random trees
-  trees<-sample(length(phy),n.tree,replace=F)
-  
-  
-  # Identify CLADES to use and their sample size 
-  all.clades <- levels(full.data[ ,clade.col])
-  wc <- table(full.data[ ,clade.col]) > n.species
-  uc <- table(full.data[ , clade.col])[wc]
-  
-  if (length(uc) == 0) stop(paste("There is no clade with more than ",
-                                  n.species," species. Change 'n.species' to fix this
-                                  problem",sep=""))
-  
-  #List to store information
-  tree.clade <- list ()
-  
-  #Start tree loop here
-  errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
-  counter = 1
-  
-  for (j in trees){
-    
-    #Match data order to tip order
-    full.data <- full.data[phy[[j]]$tip.label,]
-    
-    #Select tree
-    tree <- phy[[j]]
-    
-    tree.clade[[counter]] <- clade_phyglm(formula, data=full.data, phy=tree, btol, track = FALSE,
-                                   clade.col, n.species, n.sim, verbose = FALSE, ...)
-    
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + 1
-  }
-  
-  if(track==TRUE) close(pb)
-  names(tree.clade) <- trees
-  
-  # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(tree.clade, slot1 = 3, slot2 = 1))
-  clade.estimates <- recombine(tree.clade, slot1 = 4)
-  clade.estimates$info <- NULL
-  null.dist       <- recombine(tree.clade, slot1 = 5)
-  null.dist$info <- NULL
-  
-  #Generate output:
-  res <- list(call = match.call(),
-              formula = formula,
-              full.model.estimates = full.estimates,
-              sensi.estimates = clade.estimates,
-              null.dist = null.dist, 
-              data = full.data,
-              errors = errors,
-              clade.col = clade.col)
-  
-  class(res) <- c("sensiTree_Clade","sensiTree_CladeL")
-  
-  ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some clades deletion presented errors, please check: output$errors")}
-  else {
-    res$errors <- "No errors found."
-  }
-  return(res)
-}
 

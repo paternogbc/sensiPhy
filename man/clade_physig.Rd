@@ -4,8 +4,17 @@
 \alias{clade_physig}
 \title{Influential clade detection - Phylogenetic signal}
 \usage{
-clade_physig(trait.col, data, phy, clade.col, n.species = 5,
-  n.sim = 100, method = "K", track = TRUE, ...)
+clade_physig(
+  trait.col,
+  data,
+  phy,
+  clade.col,
+  n.species = 5,
+  n.sim = 100,
+  method = "K",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 

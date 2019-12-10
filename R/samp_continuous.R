@@ -8,7 +8,7 @@
 #' @param n.sim The number of times species are randomly deleted for each \code{break}.
 #' @param breaks A vector containing the percentages of species to remove.
 #' @param model The evolutionary model (see Details). 
-#' @param bounds settings to contstrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
+#' @param bounds settings to constrain parameter estimates. See \code{\link[geiger]{fitContinuous}}
 #' @param n.cores number of cores to use. If 'NULL', number of cores is detected.
 #' @param track Print a report tracking function progress (default = TRUE)
 #' @param ... Further arguments to be passed to \code{\link[geiger]{fitContinuous}}
@@ -92,177 +92,238 @@
 #' }
 #' @export
 
-samp_continuous <- function(data,phy,n.sim=30,
-                          breaks=seq(.1,.5,.1),
-                          model,n.cores = NULL,
-                          bounds=list(),track=TRUE,...){
-  
+samp_continuous <- function(data,
+                            phy,
+                            n.sim = 30,
+                            breaks = seq(.1, .5, .1),
+                            model,
+                            n.cores = NULL,
+                            bounds = list(),
+                            track = TRUE,
+                            ...) {
   #Error check
-  if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
-  if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
-  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
-  if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
-  if(length(breaks) < 2) 
+  if (is.null(model))
+    stop("model must be specified, e.g. 'OU' or 'lambda'")
+  if (!inherits(data, "numeric") |
+      is.null(names(data)))
+    stop("data must supplied as a numeric vector with species as names")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (model == "white")
+    stop("the white-noise (non-phylogenetic) model is not allowed")
+  if ((model == "drift") &
+      (ape::is.ultrametric(phy)))
+    stop(
+      "A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details"
+    )
+  if (length(breaks) < 2)
     stop("Please include more than one break, e.g. breaks=c(.3,.5)")
   else
-
+    
     #Matching tree and phylogeny
-    full.data<-data
-    phy<-phy
-    
-    #Calculates the full model, extracts model parameters
-    N                   <- length(full.data)
-    mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
-                                               model = model,
-                                               bounds = bounds,ncores = n.cores,...)
-    sigsq.0               <- mod.0$opt$sigsq
-    z0.0                  <- mod.0$opt$z0
-    aicc.0              <- mod.0$opt$aicc
-    if (model == "BM"){
-      optpar.0 <- NA
-    }
-    if (model == "OU"){
-      optpar.0        <- mod.0$opt$alpha
-    }
-    if (model == "EB"){
-      optpar.0               <- mod.0$opt$a
-    }
-    if (model == "trend"){
-      optpar.0               <- mod.0$opt$slope
-    }
-    if (model == "lambda"){
-      optpar.0               <- mod.0$opt$lambda
-    }
-    if (model == "kappa"){
-      optpar.0               <- mod.0$opt$kappa
-    }
-    if (model == "delta"){
-      optpar.0               <- mod.0$opt$delta
-    }
-    if (model == "drift"){
-      optpar.0               <- mod.0$opt$drift
-    }
-    
-    #Creates empty data frame to store model outputs
-    sensi.estimates<-data.frame("n.remov" = numeric(), "n.percent"= numeric(),
-                                "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
-                                "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
-                                "z0"=numeric(),
-                                "aicc"=numeric())
-        
-        #Loops over breaks, remove percentage of species determined by 'breaks
-        #and repeat determined by 'n.sim'.
-        counter <- 1
-        limit <- sort(round( (breaks) * length(full.data),digits=0))
-        NL <- length(breaks) * n.sim
-        if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
-        for (i in limit){
-            for (j in 1:n.sim){
-              #Prep simulation data
-                exclude <- sample(1:N,i)
-                crop.data <- full.data[-exclude]
-                crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
-              #Run the model
-                mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
-                                              model = model,
-                                              bounds = bounds,ncores = n.cores,...),TRUE)
-                if(isTRUE(class(mod) == "try-error")) {next}
-                else {
-                  sigsq               <- mod$opt$sigsq
-                  z0                  <- mod$opt$z0
-                  aicc              <- mod$opt$aicc
-                  DIFsigsq            <- sigsq - sigsq.0
-                  sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
-                                               digits = 1)
-                  if (model == "BM"){
-                    optpar <- NA
-                  }
-                  if (model == "OU"){
-                    optpar        <- mod$opt$alpha
-                  }
-                  if (model == "EB"){
-                    optpar               <- mod$opt$a
-                  }
-                  if (model == "trend"){
-                    optpar               <- mod$opt$slope
-                  }
-                  if (model == "lambda"){
-                    optpar               <- mod$opt$lambda
-                  }
-                  if (model == "kappa"){
-                    optpar               <- mod$opt$kappa
-                  }
-                  if (model == "delta"){
-                    optpar               <- mod$opt$delta
-                  }
-                  if (model == "drift"){
-                    optpar              <- mod$opt$drift
-                  }
-                  DIFoptpar            <- optpar - optpar.0
-                  optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
-                                              digits = 1)
-                  
-                n.remov <- i
-                n.percent <- round( (n.remov / N) * 100,digits = 0)
-                #rep <- j
-                
-                if(track == TRUE) (utils::setTxtProgressBar(pb, counter))
-                # Store reduced model parameters: 
-                estim.simu <- data.frame(n.remov, n.percent,
-                                         sigsq, DIFsigsq,sigsq.perc,
-                                         optpar,DIFoptpar,optpar.perc,
-                                         z0,
-                                         aicc,
-                                         stringsAsFactors = F)
-                sensi.estimates[counter, ]  <- estim.simu
-                counter <- counter + 1
-                }
-            }
+    full.data <- data
+  phy <- phy
+  
+  #Calculates the full model, extracts model parameters
+  N                   <- length(full.data)
+  mod.0               <-
+    geiger::fitContinuous(
+      phy = phy,
+      dat = full.data,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    )
+  sigsq.0               <- mod.0$opt$sigsq
+  z0.0                  <- mod.0$opt$z0
+  aicc.0              <- mod.0$opt$aicc
+  if (model == "BM") {
+    optpar.0 <- NA
+  }
+  if (model == "OU") {
+    optpar.0        <- mod.0$opt$alpha
+  }
+  if (model == "EB") {
+    optpar.0               <- mod.0$opt$a
+  }
+  if (model == "trend") {
+    optpar.0               <- mod.0$opt$slope
+  }
+  if (model == "lambda") {
+    optpar.0               <- mod.0$opt$lambda
+  }
+  if (model == "kappa") {
+    optpar.0               <- mod.0$opt$kappa
+  }
+  if (model == "delta") {
+    optpar.0               <- mod.0$opt$delta
+  }
+  if (model == "drift") {
+    optpar.0               <- mod.0$opt$drift
+  }
+  
+  #Creates empty data frame to store model outputs
+  sensi.estimates <-
+    data.frame(
+      "n.remov" = numeric(),
+      "n.percent" = numeric(),
+      "sigsq" = numeric(),
+      "DIFsigsq" = numeric(),
+      "sigsq.perc" = numeric(),
+      "optpar" = numeric(),
+      "DIFoptpar" = numeric(),
+      "optpar.perc" = numeric(),
+      "z0" = numeric(),
+      "aicc" = numeric()
+    )
+  
+  #Loops over breaks, remove percentage of species determined by 'breaks
+  #and repeat determined by 'n.sim'.
+  counter <- 1
+  limit <- sort(round((breaks) * length(full.data), digits = 0))
+  NL <- length(breaks) * n.sim
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = NL, style = 3)
+  for (i in limit) {
+    for (j in 1:n.sim) {
+      #Prep simulation data
+      exclude <- sample(1:N, i)
+      crop.data <- full.data[-exclude]
+      crop.phy <-
+        ape::drop.tip(phy, setdiff(phy$tip.label, names(crop.data)))
+      #Run the model
+      mod = try(geiger::fitContinuous(
+        phy = crop.phy,
+        dat = crop.data,
+        model = model,
+        bounds = bounds,
+        ncores = n.cores,
+        ...
+      ),
+      TRUE)
+      if (isTRUE(class(mod) == "try-error")) {
+        next
+      }
+      else {
+        sigsq               <- mod$opt$sigsq
+        z0                  <- mod$opt$z0
+        aicc              <- mod$opt$aicc
+        DIFsigsq            <- sigsq - sigsq.0
+        sigsq.perc          <-
+          round((abs(DIFsigsq / sigsq.0)) * 100,
+                digits = 1)
+        if (model == "BM") {
+          optpar <- NA
         }
-        if(track==TRUE) on.exit(close(pb))
-                
-        #Calculates Standardized DFs
-        sDIFsigsq <- sensi.estimates$DIFsigsq/
-          stats::sd(sensi.estimates$DIFsigsq)
-        sDIFoptpar     <- sensi.estimates$DIFoptpar/
-          stats::sd(sensi.estimates$DIFoptpar)
-        
-        sensi.estimates$sDIFsigsq     <- sDIFsigsq
-        sensi.estimates$sDIFoptpar    <- sDIFoptpar
-        
-        #Calculates stats
-        res                 <- sensi.estimates
-        n.sim               <- table(res$n.remov)
-        breaks              <- unique(res$n.percent)
-        mean.sDIFsigsq   <- with(res,tapply(sDIFsigsq,n.remov,mean))
-        mean.sDIFoptpar  <- with(res,tapply(sDIFoptpar,n.remov,mean))
-        mean.perc.optpar <- with(res,tapply(optpar.perc,n.remov,mean))
-        mean.perc.sigsq  <- with(res,tapply(sigsq.perc,n.remov,mean))
-        median.sDIFsigsq   <- with(res,tapply(sDIFsigsq,n.remov,median))
-        median.sDIFoptpar  <- with(res,tapply(sDIFoptpar,n.remov,median))
-        breaks.summary.tab       <- data.frame(percent_sp_removed=breaks,
-                                          mean.perc.sigsq = as.numeric(mean.perc.sigsq),
-                                          mean.sDIFsigsq = as.numeric(mean.sDIFsigsq),
-                                          median.sDIFsigsq = as.numeric(median.sDIFsigsq),
-                                          mean.perc.optpar = as.numeric(mean.perc.optpar),
-                                          mean.sDIFoptpar = as.numeric(mean.sDIFoptpar),
-                                          median.sDIFoptpar = as.numeric(median.sDIFoptpar))
-        
-        #Creates a list with full model estimates:
-        param0 <- list(sigsq=sigsq.0,optpar=optpar.0,
-                       z0=z0.0,
-                       aicc=aicc.0)
-        
-        #Generates output:
-        res <- list(   call = match.call(),
-                       data = full.data,
-                       optpar = model,
-                       full.model.estimates = param0,
-                       breaks.summary.tab = breaks.summary.tab,
-                       sensi.estimates=sensi.estimates)
-        
-        class(res) <- "sensiSamp.TraitEvol"
-        return(res)
-        
+        if (model == "OU") {
+          optpar        <- mod$opt$alpha
         }
+        if (model == "EB") {
+          optpar               <- mod$opt$a
+        }
+        if (model == "trend") {
+          optpar               <- mod$opt$slope
+        }
+        if (model == "lambda") {
+          optpar               <- mod$opt$lambda
+        }
+        if (model == "kappa") {
+          optpar               <- mod$opt$kappa
+        }
+        if (model == "delta") {
+          optpar               <- mod$opt$delta
+        }
+        if (model == "drift") {
+          optpar              <- mod$opt$drift
+        }
+        DIFoptpar            <- optpar - optpar.0
+        optpar.perc        <-
+          round((abs(DIFoptpar / optpar.0)) * 100,
+                digits = 1)
+        
+        n.remov <- i
+        n.percent <- round((n.remov / N) * 100, digits = 0)
+        #rep <- j
+        
+        if (track == TRUE)
+          (utils::setTxtProgressBar(pb, counter))
+        # Store reduced model parameters:
+        estim.simu <- data.frame(
+          n.remov,
+          n.percent,
+          sigsq,
+          DIFsigsq,
+          sigsq.perc,
+          optpar,
+          DIFoptpar,
+          optpar.perc,
+          z0,
+          aicc,
+          stringsAsFactors = F
+        )
+        sensi.estimates[counter,]  <- estim.simu
+        counter <- counter + 1
+      }
+    }
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
+  
+  #Calculates Standardized DFs
+  sDIFsigsq <- sensi.estimates$DIFsigsq /
+    stats::sd(sensi.estimates$DIFsigsq)
+  sDIFoptpar     <- sensi.estimates$DIFoptpar /
+    stats::sd(sensi.estimates$DIFoptpar)
+  
+  sensi.estimates$sDIFsigsq     <- sDIFsigsq
+  sensi.estimates$sDIFoptpar    <- sDIFoptpar
+  
+  #Calculates stats
+  res                 <- sensi.estimates
+  n.sim               <- table(res$n.remov)
+  breaks              <- unique(res$n.percent)
+  mean.sDIFsigsq   <- with(res, tapply(sDIFsigsq, n.remov, mean))
+  mean.sDIFoptpar  <-
+    with(res, tapply(sDIFoptpar, n.remov, mean))
+  mean.perc.optpar <-
+    with(res, tapply(optpar.perc, n.remov, mean))
+  mean.perc.sigsq  <-
+    with(res, tapply(sigsq.perc, n.remov, mean))
+  median.sDIFsigsq   <-
+    with(res, tapply(sDIFsigsq, n.remov, median))
+  median.sDIFoptpar  <-
+    with(res, tapply(sDIFoptpar, n.remov, median))
+  breaks.summary.tab       <-
+    data.frame(
+      percent_sp_removed = breaks,
+      mean.perc.sigsq = as.numeric(mean.perc.sigsq),
+      mean.sDIFsigsq = as.numeric(mean.sDIFsigsq),
+      median.sDIFsigsq = as.numeric(median.sDIFsigsq),
+      mean.perc.optpar = as.numeric(mean.perc.optpar),
+      mean.sDIFoptpar = as.numeric(mean.sDIFoptpar),
+      median.sDIFoptpar = as.numeric(median.sDIFoptpar)
+    )
+  
+  #Creates a list with full model estimates:
+  param0 <- list(
+    sigsq = sigsq.0,
+    optpar = optpar.0,
+    z0 = z0.0,
+    aicc = aicc.0
+  )
+  
+  #Generates output:
+  res <- list(
+    call = match.call(),
+    data = full.data,
+    optpar = model,
+    full.model.estimates = param0,
+    breaks.summary.tab = breaks.summary.tab,
+    sensi.estimates = sensi.estimates
+  )
+  
+  class(res) <- "sensiSamp.TraitEvol"
+  return(res)
+  
+}

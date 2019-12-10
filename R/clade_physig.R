@@ -87,122 +87,165 @@
 #'sensi_plot(clade, "Sciuridae")
 #' @export
 
-clade_physig <- function(trait.col, data, phy, clade.col, n.species = 5, n.sim = 100, method = "K",  track = TRUE, ...) {
-  # Error checking:
-  if(missing(clade.col)) stop("clade.col not defined. Please, define the",
-                              " column with clade names.")
-  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  
-  #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
-  full.data <- datphy$data
-  phy <- datphy$phy
-  trait     <- full.data[[trait.col]]
-  names(trait)  <- phy$tip.label
-  N <- nrow(full.data)
-  
-  if (is.na(match(clade.col, names(full.data)))) {
-    stop("Names column '", clade.col, "' not found in data frame'")
-  }
-  
-  # Identify CLADES to use and their sample size 
-  all.clades <- levels(full.data[ ,clade.col])
-  wc <- table(full.data[ ,clade.col]) > n.species
-  uc <- table(full.data[ , clade.col])[wc]
-  
-  if (length(uc) == 0) stop(paste("There is no clade with more than ",
-                                  n.species," species. Change 'n.species' to fix this
-                                  problem",sep=""))
-  
-  ### Fit full data model
-  mod.0     <- phytools::phylosig(x = trait, tree = phy, method = method, test = TRUE)
-  e.0 <- mod.0[[1]]  
-  p.0 <- mod.0$P
-  
-  #Create dataframe to store estmates for each clade
-  sensi.clade <-
-    data.frame("clade" =I(as.character()), 
-               "N.species" = numeric(),"estimate"=numeric(),
-               "DF"=numeric(),"perc"=numeric(),
-               "pval"=numeric())
-  
-  # Create dataframe store simulations (null distribution)
-  null.dist <- data.frame("clade" = rep(names(uc), each = n.sim),
-                          "estimate"= numeric(length(uc)*n.sim),
-                          "DF"=numeric(length(uc)*n.sim))
-  
-  ### START LOOP between CLADES:
-  # counters:
-  aa <- 1; bb <- 1
 
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = length(uc)*n.sim,
-                              style = 3)
-  for (A in names(uc)){
-    ### Number of species in clade A
-    cN  <- as.numeric(uc[names(uc) == A])
+clade_physig <-
+  function(trait.col,
+           data,
+           phy,
+           clade.col,
+           n.species = 5,
+           n.sim = 100,
+           method = "K",
+           track = TRUE,
+           ...) {
+    # Error checking:
+    if (missing(clade.col))
+      stop("clade.col not defined. Please, define the",
+           " column with clade names.")
+    if (!inherits(phy, "phylo"))
+      stop("phy must be class 'phylo'")
     
-    ### Fit reduced model (without clade)
-    crop.data <- full.data[!full.data[ ,clade.col] %in% A,]
-    crop.sp <-   which(full.data[ ,clade.col] %in% A)
-    crop.phy <-  ape::drop.tip(phy,phy$tip.label[crop.sp])
-    crop.trait <- crop.data[, trait.col]
-    names(crop.trait) <- crop.phy$tip.label
+    #Matching tree and phylogeny using utils.R
+    datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
+    full.data <- datphy$data
+    phy <- datphy$phy
+    trait     <- full.data[[trait.col]]
+    names(trait)  <- phy$tip.label
+    N <- nrow(full.data)
     
-    mod.s = phytools::phylosig(x = crop.trait, crop.phy, method = method, test = TRUE)
-                               
-    ### Raw differance
-    DF              <- mod.s[[1]] - e.0
-    ### Percentage of differance
-    perc           <- round((abs(DF/e.0))*100,digits=1)
-    ### Pvalues
-    pval           <- mod.s$P
+    if (is.na(match(clade.col, names(full.data)))) {
+      stop("Names column '", clade.col, "' not found in data frame'")
+    }
     
-    # Store reduced model parameters: 
-    estim.simu <- data.frame(A, cN, mod.s[[1]], DF, perc,
-                             pval,
-                             stringsAsFactors = F)
-    sensi.clade[aa, ]  <- estim.simu
+    # Identify CLADES to use and their sample size
+    wc <- table(full.data[, clade.col]) > n.species
+    uc <- table(full.data[, clade.col])[wc]
     
-    ### START LOOP FOR NULL DIST:
-    # number of species in clade A:
-    for (i in 1:n.sim) {
-      exclude <- sample(1:N, cN)
-      crop.data <- full.data[-exclude,]
-      crop.phy <-  ape::drop.tip(phy,phy$tip.label[exclude])
+    if (length(uc) == 0)
+      stop(
+        paste(
+          "There is no clade with more than ",
+          n.species,
+          " species. Change 'n.species' to fix this
+                                  problem",
+          sep = ""
+        )
+      )
+    
+    ### Fit full data model
+    mod.0     <-
+      phytools::phylosig(
+        x = trait,
+        tree = phy,
+        method = method,
+        test = TRUE
+      )
+    e.0 <- mod.0[[1]]
+    p.0 <- mod.0$P
+    
+    #Create dataframe to store estmates for each clade
+    sensi.clade <-
+      data.frame(
+        "clade" = I(as.character()),
+        "N.species" = numeric(),
+        "estimate" = numeric(),
+        "DF" = numeric(),
+        "perc" = numeric(),
+        "pval" = numeric()
+      )
+    
+    # Create dataframe store simulations (null distribution)
+    null.dist <- data.frame(
+      "clade" = rep(names(uc), each = n.sim),
+      "estimate" = numeric(length(uc) * n.sim),
+      "DF" = numeric(length(uc) * n.sim)
+    )
+    
+    ### START LOOP between CLADES:
+    # counters:
+    aa <- 1
+    bb <- 1
+    
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0,
+                                  max = length(uc) * n.sim,
+                                  style = 3)
+    for (A in names(uc)) {
+      ### Number of species in clade A
+      cN  <- as.numeric(uc[names(uc) == A])
+      
+      ### Fit reduced model (without clade)
+      crop.data <- full.data[!full.data[, clade.col] %in% A, ]
+      crop.sp <-   which(full.data[, clade.col] %in% A)
+      crop.phy <-  ape::drop.tip(phy, phy$tip.label[crop.sp])
       crop.trait <- crop.data[, trait.col]
       names(crop.trait) <- crop.phy$tip.label
       
-      mod.s = phytools::phylosig(x = crop.trait, crop.phy, method = method, test = FALSE)
+      mod.s = phytools::phylosig(x = crop.trait,
+                                 crop.phy,
+                                 method = method,
+                                 test = TRUE)
       
       ### Raw differance
       DF              <- mod.s[[1]] - e.0
       ### Percentage of differance
-      perc           <- round((abs(DF/e.0))*100,digits=1)
+      perc           <- round((abs(DF / e.0)) * 100, digits = 1)
+      ### Pvalues
+      pval           <- mod.s$P
       
-      null.dist[bb, ]  <- data.frame(clade = as.character(A), 
-                                     estimate = mod.s[[1]], DF)
-                                     
+      # Store reduced model parameters:
+      estim.simu <- data.frame(A, cN, mod.s[[1]], DF, perc,
+                               pval,
+                               stringsAsFactors = F)
+      sensi.clade[aa,]  <- estim.simu
       
-      if(track==TRUE) (utils::setTxtProgressBar(pb, bb))
-      bb <- bb + 1
+      ### START LOOP FOR NULL DIST:
+      # number of species in clade A:
+      for (i in 1:n.sim) {
+        exclude <- sample(1:N, cN)
+        crop.data <- full.data[-exclude, ]
+        crop.phy <-  ape::drop.tip(phy, phy$tip.label[exclude])
+        crop.trait <- crop.data[, trait.col]
+        names(crop.trait) <- crop.phy$tip.label
+        
+        mod.s = phytools::phylosig(x = crop.trait,
+                                   crop.phy,
+                                   method = method,
+                                   test = FALSE)
+        
+        ### Raw differance
+        DF              <- mod.s[[1]] - e.0
+        ### Percentage of differance
+        perc           <- round((abs(DF / e.0)) * 100, digits = 1)
+        
+        null.dist[bb,]  <- data.frame(clade = as.character(A),
+                                      estimate = mod.s[[1]], DF)
+        
+        
+        if (track == TRUE)
+          (utils::setTxtProgressBar(pb, bb))
+        bb <- bb + 1
+      }
+      aa <- aa + 1
     }
-    aa <- aa + 1
+    if (track == TRUE)
+      on.exit(close(pb))
+    
+    #OUTPUT
+    #full model estimates:
+    param0 <- data.frame(estimate = e.0,
+                         Pval = p.0)
+    
+    #Generates output:
+    res <- list(
+      call = match.call(),
+      trait = trait.col,
+      method = method,
+      full.data.estimates = param0,
+      sensi.estimates = sensi.clade,
+      null.dist = null.dist,
+      data = full.data
+    )
+    class(res) <- "clade.physig"
+    return(res)
   }
-  if(track==TRUE) on.exit(close(pb))
-  
-  #OUTPUT
-  #full model estimates:
-  param0 <- data.frame(estimate = e.0,
-                 Pval = p.0)
-  
-  #Generates output:
-  res <- list(call = match.call(),
-              trait = trait.col,
-              method = method,
-              full.data.estimates = param0,
-              sensi.estimates = sensi.clade,
-              null.dist = null.dist,
-              data = full.data)
-  class(res) <- "clade.physig"
-  return(res)
-}

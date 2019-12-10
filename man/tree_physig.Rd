@@ -4,8 +4,15 @@
 \alias{tree_physig}
 \title{Phylogenetic uncertainty - Phylogenetic signal}
 \usage{
-tree_physig(trait.col, data, phy, n.tree = "all", method = "K",
-  track = TRUE, ...)
+tree_physig(
+  trait.col,
+  data,
+  phy,
+  n.tree = "all",
+  method = "K",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 

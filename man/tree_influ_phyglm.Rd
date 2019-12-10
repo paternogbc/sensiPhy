@@ -4,8 +4,16 @@
 \alias{tree_influ_phyglm}
 \title{Interaction between phylogenetic uncertainty and influential species detection - Phylogenetic Logistic Regression}
 \usage{
-tree_influ_phyglm(formula, data, phy, n.tree = 2, cutoff = 2,
-  btol = 50, track = TRUE, ...)
+tree_influ_phyglm(
+  formula,
+  data,
+  phy,
+  n.tree = 2,
+  cutoff = 2,
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

@@ -53,7 +53,7 @@ print.sensiSamp <- function(x, ...)
     print(x$call)
     cat("\n")
     cat("Breaks: ", x$sign.analysis$percent_sp_removed, "\n")
-    cat("Number of simulations: ", nrow(x$samp.model.estimates), "\n")
+    cat("Number of simulations: ", nrow(x$sensi.estimates), "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
 }
 
@@ -92,7 +92,7 @@ print.sensiInflu <- function(x, ...)
     cat("Call:\n")
     print(x$call)
     cat("\n")
-    cat("Number of simulations:", nrow(x$influ.model.estimates), "\n")
+    cat("Number of simulations:", nrow(x$sensi.estimates), "\n")
     cat(message("use summary(x) and sensi_plot(x) to check results"))
     
 }

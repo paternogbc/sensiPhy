@@ -4,8 +4,19 @@
 \alias{clade_continuous}
 \title{Influential Clade Detection - Trait Evolution Continuous Characters}
 \usage{
-clade_continuous(data, phy, model, trait.col, clade.col, n.species = 5,
-  n.sim = 20, bounds = list(), n.cores = NULL, track = TRUE, ...)
+clade_continuous(
+  data,
+  phy,
+  model,
+  trait.col,
+  clade.col,
+  n.species = 5,
+  n.sim = 20,
+  bounds = list(),
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data frame containing species traits with row names matching tips

@@ -4,9 +4,21 @@
 \alias{tree_intra_phylm}
 \title{Interaction between phylogenetic uncertainty and intraspecific variability  - Phylogenetic Linear Regression}
 \usage{
-tree_intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
-  y.transf = NULL, x.transf = NULL, n.intra = 10, n.tree = 2,
-  distrib = "normal", model = "lambda", track = TRUE, ...)
+tree_intra_phylm(
+  formula,
+  data,
+  phy,
+  Vy = NULL,
+  Vx = NULL,
+  y.transf = NULL,
+  x.transf = NULL,
+  n.intra = 10,
+  n.tree = 2,
+  distrib = "normal",
+  model = "lambda",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}

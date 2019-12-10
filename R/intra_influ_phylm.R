@@ -115,42 +115,63 @@
 #' }
 #' @export
 
-intra_influ_phylm <- function(formula, data, phy,
-                        Vy = NULL, Vx = NULL,
-                        y.transf = NULL, x.transf = NULL,
-                        n.intra = 10, distrib = "normal",
-                        model = "lambda", cutoff=2,
-                        track = TRUE, ...){
+intra_influ_phylm <- function(formula,
+                              data,
+                              phy,
+                              Vy = NULL,
+                              Vx = NULL,
+                              y.transf = NULL,
+                              x.transf = NULL,
+                              n.intra = 10,
+                              distrib = "normal",
+                              model = "lambda",
+                              cutoff = 2,
+                              track = TRUE,
+                              ...) {
   #Error check
-  if(is.null(Vx) & is.null(Vy)) stop("Vx or Vy must be defined")
-  if(class(formula) != "formula") stop("formula must be class 'formula'")
-  if(class(data) != "data.frame") stop("data must be class 'data.frame'")
-  if(class(phy) != "phylo") stop("phy must be class 'phylo'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
+  if (is.null(Vx) & is.null(Vy))
+    stop("Vx or Vy must be defined")
+  if (!inherits(formula, "formula"))
+    stop("formula must be class 'formula'")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (formula[[2]] != all.vars(formula)[1] ||
+      formula[[3]] != all.vars(formula)[2])
     stop("Please use arguments y.transf or x.transf for data transformation")
-  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx and/or Vy")
-  if((model == "trend") & (sum(is.ultrametric(phy))>1)) 
+  if (distrib == "normal")
+    warning ("distrib=normal: make sure that standard deviation is provided for Vx and/or Vy")
+  if ((model == "trend") & (sum(is.ultrametric(phy)) > 1))
     stop("Trend is unidentifiable for ultrametric trees., see ?phylolm for details")
   else
     
-  
-  #Matching tree and phylogeny using utils.R
-  datphy <- match_dataphy(formula, data, phy,...)
+    
+    #Matching tree and phylogeny using utils.R
+    datphy <- match_dataphy(formula, data, phy, ...)
   full.data <- datphy[[1]]
   phy <- datphy[[2]]
   
   resp <- all.vars(formula)[1]
   pred <- all.vars(formula)[2]
   
-  if(!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
-    full.data[is.na(full.data[, Vy]), Vy] <- 0}
+  if (!is.null(Vy) && sum(is.na(full.data[, Vy])) != 0) {
+    full.data[is.na(full.data[, Vy]), Vy] <- 0
+  }
   
-  if(!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
-    full.data[is.na(full.data[, Vx]), Vx] <- 0}
+  if (!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
+    full.data[is.na(full.data[, Vx]), Vx] <- 0
+  }
   
   #Function to pick a random value in the interval
-  if (distrib == "normal") funr <- function(a,b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1, a - b, a + b)}
+  if (distrib == "normal")
+    funr <- function(a, b) {
+      stats::rnorm(1, a, b)
+    }
+  else
+    funr <- function(a, b) {
+      stats::runif(1, a - b, a + b)
+    }
   
   #List to store information
   intra.influ <- list ()
@@ -159,84 +180,128 @@ intra_influ_phylm <- function(formula, data, phy,
   #Start intra loop here
   species.NA <- list()
   errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   counter = 1
-
+  
   for (i in 1:n.intra) {
     ##Set response and predictor variables
     #Vy is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,resp], c("numeric","integer")) || is.null(Vy)) 
-    {full.data$respV <- stats::model.frame(formula, data = full.data)[,1]}
+    if (!inherits(full.data[, resp], c("numeric", "integer")) ||
+        is.null(Vy))
+    {
+      full.data$respV <-
+        stats::model.frame(formula, data = full.data)[, 1]
+    }
     
     #choose a random value in [mean-se,mean+se] if Vy is provided
     if (!is.null(Vy))
-    {full.data$respV <- apply(full.data[,c(resp,Vy)],1,function(x)funr(x[1],x[2]))}
+    {
+      full.data$respV <-
+        apply(full.data[, c(resp, Vy)], 1, function(x)
+          funr(x[1], x[2]))
+    }
     
     #Vx is not provided or is not numeric, do not pick random value
-    if (!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx))
-    {full.data$predV <- stats::model.frame(formula, data = full.data)[,2]}
+    if (!inherits(full.data[, pred], c("numeric", "integer")) ||
+        is.null(Vx))
+    {
+      full.data$predV <-
+        stats::model.frame(formula, data = full.data)[, 2]
+    }
     
     #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx))
-    {full.data$predV <- apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    if (!is.null(Vx))
+    {
+      full.data$predV <-
+        apply(full.data[, c(pred, Vx)], 1, function(x)
+          funr(x[1], x[2]))
+    }
     
     #transform Vy and/or Vx if x.transf and/or y.transf are provided
-    if(!is.null(y.transf)) 
-    {suppressWarnings (full.data$respV <- y.transf(full.data$respV))}
+    if (!is.null(y.transf))
+    {
+      suppressWarnings (full.data$respV <- y.transf(full.data$respV))
+    }
     
-    if(!is.null(x.transf)) 
-    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    if (!is.null(x.transf))
+    {
+      suppressWarnings (full.data$predV <- x.transf(full.data$predV))
+    }
     
     #skip iteration if there are NA's in the dataset
-    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV) | is.na(respV)),])
-    if(sum(is.na(full.data[,c("respV","predV")])>0)) next
+    species.NA[[i]] <-
+      rownames(full.data[with(full.data, is.na(predV) | is.na(respV)), ])
+    if (sum(is.na(full.data[, c("respV", "predV")]) > 0))
+      next
     
     #Run the model
-    intra.influ[[i]] <- influ_phylm(respV~predV, data = full.data, phy=phy, 
-                                   model, cutoff, track = FALSE, verbose = FALSE)
+    intra.influ[[i]] <-
+      influ_phylm(
+        respV ~ predV,
+        data = full.data,
+        phy = phy,
+        model,
+        cutoff,
+        track = FALSE,
+        verbose = FALSE
+      )
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
+    if (track == TRUE)
+      utils::setTxtProgressBar(pb, counter)
     counter = counter + 1
   }
   
-  names(intra.influ)<-1:n.intra
+  names(intra.influ) <- 1:n.intra
   
-  if(track==TRUE) close(pb)
+  if (track == TRUE)
+    close(pb)
   
   # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(intra.influ, slot1 = 4, slot2 = 1))
+  full.estimates  <-
+    suppressWarnings(recombine(intra.influ, slot1 = 4, slot2 = 1))
   
   #influ species slope
-  influ.sp.estimate <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.estimate))
+  influ.sp.estimate <-
+    (lapply(intra.influ, function(x)
+      x$influential.species$influ.sp.estimate))
   influ.sp.estimate <- as.data.frame(as.matrix(influ.sp.estimate))
   names(influ.sp.estimate) <- "influ.sp.estimate"
-  influ.sp.estimate$tree<-row.names(influ.sp.estimate)
+  influ.sp.estimate$tree <- row.names(influ.sp.estimate)
   
   #influ species intercept
-  influ.sp.intercept <- (lapply(intra.influ,function(x) x$influential.species$influ.sp.intercept))
+  influ.sp.intercept <-
+    (lapply(intra.influ, function(x)
+      x$influential.species$influ.sp.intercept))
   influ.sp.intercept <- as.data.frame(as.matrix(influ.sp.intercept))
   names(influ.sp.intercept) <- "influ.sp.intercept"
-  influ.sp.intercept$tree<-row.names(influ.sp.intercept)
+  influ.sp.intercept$tree <- row.names(influ.sp.intercept)
   
   #influ.estimates
   influ.estimates <- recombine(intra.influ, slot1 = 6)
   influ.estimates$info <- NULL
   
   #Generates output:
-  res <- list(call = match.call(),
-              cutoff=cutoff,
-              formula = formula,
-              full.model.estimates = full.estimates,
-              influential.species = list(influ.sp.estimate=influ.sp.estimate,influ.sp.intercept=influ.sp.intercept),
-              sensi.estimates = influ.estimates,
-              data = full.data)
-
+  res <- list(
+    call = match.call(),
+    cutoff = cutoff,
+    formula = formula,
+    full.model.estimates = full.estimates,
+    influential.species = list(
+      influ.sp.estimate = influ.sp.estimate,
+      influ.sp.intercept = influ.sp.intercept
+    ),
+    sensi.estimates = influ.estimates,
+    data = full.data
+  )
+  
   
   class(res) <- "sensiIntra_Influ"
   
   ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
+  if (length(res$errors) > 0) {
+    warning("Some species deletion presented errors, please check: output$errors")
+  }
   else {
     res$errors <- "No errors found."
   }

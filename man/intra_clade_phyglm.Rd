@@ -4,9 +4,21 @@
 \alias{intra_clade_phyglm}
 \title{Interaction between intraspecific variability and influential clade detection - Phylogenetic Logistic Regression}
 \usage{
-intra_clade_phyglm(formula, data, phy, clade.col, n.species = 5,
-  n.sim = 100, n.intra = 2, Vx = NULL, distrib = "normal",
-  x.transf = NULL, btol = 50, track = TRUE, ...)
+intra_clade_phyglm(
+  formula,
+  data,
+  phy,
+  clade.col,
+  n.species = 5,
+  n.sim = 100,
+  n.intra = 2,
+  Vx = NULL,
+  distrib = "normal",
+  x.transf = NULL,
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

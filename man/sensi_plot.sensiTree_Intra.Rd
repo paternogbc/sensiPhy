@@ -4,15 +4,14 @@
 \alias{sensi_plot.sensiTree_Intra}
 \title{Graphical diagnostics for class 'sensiIntra_Tree'}
 \usage{
-\method{sensi_plot}{sensiTree_Intra}(x, graphs = "all",
-  uncer.type = "all", ...)
+\method{sensi_plot}{sensiTree_Intra}(x, graphs = "all", uncer.type = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{tree_intra_phylm}, \code{tree_intra_phyglm}}
 
 \item{graphs}{choose which graph should be printed in the output ("all", 1, 2 or 3)}
 
-\item{uncer.type}{chosse which uncertainty type should be printed ("all", "intra", "tree")}
+\item{uncer.type}{choose which uncertainty type should be printed ("all", "intra", "tree")}
 
 \item{...}{further arguments to methods}
 }

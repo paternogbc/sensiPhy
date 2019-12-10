@@ -4,8 +4,7 @@
 \alias{sensi_plot.sensiSamp}
 \title{Graphical diagnostics for class 'sensiSamp'}
 \usage{
-\method{sensi_plot}{sensiSamp}(x, graphs = "all", param = "estimate",
-  ...)
+\method{sensi_plot}{sensiSamp}(x, graphs = "all", param = "estimate", ...)
 }
 \arguments{
 \item{x}{output from \code{samp_phylm}}

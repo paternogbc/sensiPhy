@@ -92,74 +92,95 @@
 #'sensi_plot(tree_samp, graphs = 2)
 #' @export
 
-tree_samp_phyglm <- function(formula, data, phy, n.sim = 30, n.tree = 2, 
-                             breaks=seq(.1, .5, .1), btol = 50, track = TRUE,...) {
-  
-  # Error checking:
-  if(!is.data.frame(data)) stop("data must be class 'data.frame'")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<n.tree) stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-  
-  #Match data and phy
-  data_phy <- match_dataphy(formula, data, phy, ...)
-  phy <- data_phy$phy
-  full.data <- data_phy$data
-
-  # If the class of tree is multiphylo pick n=n.tree random trees
-  trees<-sample(length(phy),n.tree,replace=F)
-  
-  
-  #List to store information
-  tree.influ <- list ()
-  
-  #Start tree loop here
-  errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
-  counter = 1
-  
-  for (j in trees){
-    #Match data order to tip order
-    full.data <- full.data[phy[[j]]$tip.label,]
+tree_samp_phyglm <-
+  function(formula,
+           data,
+           phy,
+           n.sim = 30,
+           n.tree = 2,
+           breaks = seq(.1, .5, .1),
+           btol = 50,
+           track = TRUE,
+           ...) {
+    # Error checking:
+    if (!inherits(data, "data.frame"))
+      stop("data must be class 'data.frame'")
+    if (!inherits(formula, "formula"))
+      stop("formula must be class 'formula'")
+    if (!inherits(phy, "multiPhylo"))
+      stop("phy must be class 'multiPhylo'")
+    if (length(phy) < n.tree)
+      stop("'times' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+    if (length(breaks) < 2)
+      stop("Please include more than one break, e.g. breaks=c(.3,.5)")
     
-    #Select tree
-    tree <- phy[[j]]
+    #Match data and phy
+    data_phy <- match_dataphy(formula, data, phy, ...)
+    phy <- data_phy$phy
+    full.data <- data_phy$data
     
-    tree.influ[[counter]] <- samp_phyglm(formula, data = full.data, phy=tree, n.sim = n.sim,
-                                    breaks=breaks, btol = btol, track = FALSE, verbose = FALSE, ...)
+    # If the class of tree is multiphylo pick n=n.tree random trees
+    trees <- sample(length(phy), n.tree, replace = F)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + 1
+    
+    #List to store information
+    tree.influ <- list ()
+    
+    #Start tree loop here
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+    counter = 1
+    
+    for (j in trees) {
+      #Match data order to tip order
+      full.data <- full.data[phy[[j]]$tip.label, ]
+      
+      #Select tree
+      tree <- phy[[j]]
+      
+      tree.influ[[counter]] <-
+        samp_phyglm(
+          formula,
+          data = full.data,
+          phy = tree,
+          n.sim = n.sim,
+          breaks = breaks,
+          btol = btol,
+          track = FALSE,
+          verbose = FALSE,
+          ...
+        )
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      counter = counter + 1
+    }
+    
+    if (track == TRUE)
+      close(pb)
+    names(tree.influ) <- trees
+    
+    # Merge lists into data.frames between iterations:
+    full.estimates  <-
+      suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
+    influ.estimates <- recombine(tree.influ, slot1 = 5)
+    influ.estimates$info <- NULL
+    perc.sign <- recombine(tree.influ, slot1 = 6)
+    perc.sign$info <- NULL
+    
+    
+    #Generates output:
+    res <- list(
+      call = match.call(),
+      model = "logistic_MPLE",
+      formula = formula,
+      full.model.estimates = full.estimates,
+      sensi.estimates = influ.estimates,
+      sign.analysis = perc.sign,
+      data = full.data
+    )
+    
+    
+    class(res) <- c("sensiTree_Samp", "sensiTree_SampL")
+    return(res)
   }
-  
-  if(track==TRUE) close(pb)
-  names(tree.influ) <- trees
-  
-  # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(tree.influ, slot1 = 4, slot2 = 1))
-  influ.estimates <- recombine(tree.influ, slot1 = 5)
-  influ.estimates$info <- NULL
-  perc.sign <- recombine(tree.influ, slot1 = 6)
-  perc.sign$info <- NULL
-  
-  
-  #Generates output:
-  res <- list(call = match.call(),
-              model = "logistic_MPLE",
-              formula = formula,
-              full.model.estimates = full.estimates,
-              sensi.estimates = influ.estimates,
-              sign.analysis = perc.sign,
-              data = full.data)
-  
-  
-  class(res) <- c("sensiTree_Samp","sensiTree_SampL")
-  ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
-  else {
-    res$errors <- "No errors found."
-  }
-  return(res)
-}

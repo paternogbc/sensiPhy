@@ -4,8 +4,7 @@
 \alias{sensi_plot.sensiTree_Clade}
 \title{Graphical diagnostics for class 'sensiTree_Clade'}
 \usage{
-\method{sensi_plot}{sensiTree_Clade}(x, clade = NULL, graphs = "all",
-  ...)
+\method{sensi_plot}{sensiTree_Clade}(x, clade = NULL, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{tree_clade_phylm} or \code{tree_clade_phyglm}}

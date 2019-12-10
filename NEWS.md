@@ -1,3 +1,14 @@
+# sensiPhy __v0.8.4__ (10 Dec 2019)
+
+## BUG FIXES
+
+1. This new version adjusts sensiPhy code for R 4.0.0 release.
+In all sensiPhy functions the use of class(.) == was replaced by inherits(., *).
+
+## NOTES
+
+1. Updated sensiPhy citation reference.
+
 ## sensiPhy 0.8.3
 #### Bug fix
 

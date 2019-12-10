@@ -4,8 +4,7 @@
 \alias{influ_physig}
 \title{Influential species detection - Phylogenetic signal}
 \usage{
-influ_physig(trait.col, data, phy, method = "K", cutoff = 2,
-  track = TRUE, ...)
+influ_physig(trait.col, data, phy, method = "K", cutoff = 2, track = TRUE, ...)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 

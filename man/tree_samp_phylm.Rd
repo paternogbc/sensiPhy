@@ -4,8 +4,17 @@
 \alias{tree_samp_phylm}
 \title{Interaction between phylogenetic uncertainty and sensitivity to species sampling - Phylogenetic Linear Regression}
 \usage{
-tree_samp_phylm(formula, data, phy, n.sim = 30, n.tree = 2,
-  breaks = seq(0.1, 0.5, 0.1), model = "lambda", track = TRUE, ...)
+tree_samp_phylm(
+  formula,
+  data,
+  phy,
+  n.sim = 30,
+  n.tree = 2,
+  breaks = seq(0.1, 0.5, 0.1),
+  model = "lambda",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

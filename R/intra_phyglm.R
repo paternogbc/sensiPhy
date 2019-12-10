@@ -92,129 +92,224 @@
 #' @export
 
 
-intra_phyglm <- function(formula, data, phy,
-                          Vx=NULL, n.intra = 30,
-                          x.transf = NULL,
-                          distrib="normal", btol=50, track=TRUE,...){
+intra_phyglm <- function(formula,
+                         data,
+                         phy,
+                         Vx = NULL,
+                         n.intra = 30,
+                         x.transf = NULL,
+                         distrib = "normal",
+                         btol = 50,
+                         track = TRUE,
+                         ...) {
   #Error check
-  if(is.null(Vx)) stop("Vx must be defined")
-  if(class(formula)!="formula") stop("formula must be class 'formula'")
-  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
-  if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-     stop("Please use argument x.transf for data transformation")
-  if(distrib=="normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-
+  if (is.null(Vx))
+    stop("Vx must be defined")
+  if (!inherits(formula, "formula"))
+    stop("formula must be class 'formula'")
+  if (!inherits(data, "data.frame"))
+    stop("data must be class 'data.frame'")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (formula[[2]] != all.vars(formula)[1] ||
+      formula[[3]] != all.vars(formula)[2])
+    stop("Please use argument x.transf for data transformation")
+  if (distrib == "normal")
+    warning ("distrib=normal: make sure that standard deviation is provided for Vx")
+  
   #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy,...)
-  full.data<-datphy[[1]]
-  phy<-datphy[[2]]
+  datphy <- match_dataphy(formula, data, phy, ...)
+  full.data <- datphy[[1]]
+  phy <- datphy[[2]]
   
-  resp1<-all.vars(formula)[1]
-  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
-  pred<-all.vars(formula)[length(all.vars(formula))]
+  resp1 <- all.vars(formula)[1]
+  if (length(all.vars(formula)) > 2) {
+    resp2 <- all.vars(formula)[2]
+  }
+  pred <- all.vars(formula)[length(all.vars(formula))]
   
-  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
-    full.data[is.na(full.data[,Vx]), Vx] <- 0}
+  if (!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
+    full.data[is.na(full.data[, Vx]), Vx] <- 0
+  }
   
   #Function to pick a random value in the interval
-  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
+  if (distrib == "normal")
+    funr <- function(a, b) {
+      stats::rnorm(1, a, b)
+    }
+  else
+    funr <- function(a, b) {
+      stats::runif(1, a - b, a + b)
+    }
   
   
   #Create the results data.frame
-  sensi.estimates<-data.frame("n.intra"=numeric(),"intercept"=numeric(),"se.intercept"=numeric(),
-                                    "pval.intercept"=numeric(),"estimate"=numeric(),"se.estimate"=numeric(),
-                                    "pval.estimate"=numeric(),"aic"=numeric(),"optpar"=numeric())
+  sensi.estimates <-
+    data.frame(
+      "n.intra" = numeric(),
+      "intercept" = numeric(),
+      "se.intercept" = numeric(),
+      "pval.intercept" = numeric(),
+      "estimate" = numeric(),
+      "se.estimate" = numeric(),
+      "pval.estimate" = numeric(),
+      "aic" = numeric(),
+      "optpar" = numeric()
+    )
   
-
+  
   #Model calculation
-  counter=1
+  counter = 1
   errors <- NULL
   species.NA <- list()
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
   for (i in 1:n.intra) {
-    
     ##Set predictor variable
     #Vx is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
-
-    #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx) && is.null(dim(Vx)))
-    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    if (!inherits(full.data[, pred], c("numeric", "integer")) ||
+        is.null(Vx)) {
+      full.data$predV <- full.data[, pred]
+    }
     
-    full.data$resp1<-full.data[,resp1] #try to improve this in future
-    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
+    #choose a random value in [mean-se,mean+se] if Vx is provided
+    if (!is.null(Vx) && is.null(dim(Vx)))
+    {
+      full.data$predV <-
+        apply(full.data[, c(pred, Vx)], 1, function(x)
+          funr(x[1], x[2]))
+    }
+    
+    full.data$resp1 <-
+      full.data[, resp1] #try to improve this in future
+    if (length(all.vars(formula)) > 2) {
+      full.data$resp2 <- full.data[, resp2]
+    }
     
     #transform Vx if x.transf is provided
-    if(!is.null(x.transf)) 
-    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    if (!is.null(x.transf))
+    {
+      suppressWarnings (full.data$predV <- x.transf(full.data$predV))
+    }
     
     #skip iteration if there are NA's in the dataset
-    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
-    if(sum(is.na(full.data[,"predV"])>0)) next
-  
+    species.NA[[i]] <-
+      rownames(full.data[with(full.data, is.na(predV)), ])
+    if (sum(is.na(full.data[, "predV"]) > 0))
+      next
+    
     #model
-    if(length(all.vars(formula))>2){mod = try(phylolm::phyloglm(cbind(resp1,resp2)~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)}
+    if (length(all.vars(formula)) > 2) {
+      mod = try(phylolm::phyloglm(
+        cbind(resp1, resp2) ~ predV,
+        data = full.data,
+        phy = phy,
+        method = "logistic_MPLE",
+        btol = btol
+      ),
+      FALSE)
+    }
     else
-    mod = try(phylolm::phyloglm(resp1~predV, data=full.data, phy=phy,method="logistic_MPLE",btol=btol),FALSE)
-
-    if(isTRUE(class(mod)=="try-error")) {
+      mod = try(phylolm::phyloglm(
+        resp1  ~  predV,
+        data  =  full.data,
+        phy  =  phy,
+        method  =  "logistic_MPLE",
+        btol  =  btol
+      )
+      ,
+      FALSE)
+    
+    if (isTRUE(class(mod) == "try-error")) {
       error <- i
-      errors <- c(errors,error)
-      next }
+      errors <- c(errors, error)
+      next
+    }
     
     
     else{
-      intercept            <- phylolm::summary.phyloglm(mod)$coefficients[[1,1]]
-      se.intercept         <- phylolm::summary.phyloglm(mod)$coefficients[[1,2]]
-      estimate             <- phylolm::summary.phyloglm(mod)$coefficients[[2,1]]
-      se.estimate          <- phylolm::summary.phyloglm(mod)$coefficients[[2,2]]
-      pval.intercept       <- phylolm::summary.phyloglm(mod)$coefficients[[1,4]]
-      pval.estimate        <- phylolm::summary.phyloglm(mod)$coefficients[[2,4]]
+      intercept            <-
+        phylolm::summary.phyloglm(mod)$coefficients[[1, 1]]
+      se.intercept         <-
+        phylolm::summary.phyloglm(mod)$coefficients[[1, 2]]
+      estimate             <-
+        phylolm::summary.phyloglm(mod)$coefficients[[2, 1]]
+      se.estimate          <-
+        phylolm::summary.phyloglm(mod)$coefficients[[2, 2]]
+      pval.intercept       <-
+        phylolm::summary.phyloglm(mod)$coefficients[[1, 4]]
+      pval.estimate        <-
+        phylolm::summary.phyloglm(mod)$coefficients[[2, 4]]
       aic.mod              <- mod$aic
       n                    <- mod$n
       #d                   <- mod$d
       optpar               <- mod$alpha
-
       
-      if(track==TRUE) utils::setTxtProgressBar(pb, i)
-
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, i)
+      
       #write in a table
-      estim.simu <- data.frame(i, intercept, se.intercept, pval.intercept,
-                               estimate, se.estimate, pval.estimate, aic.mod, optpar,
-                               stringsAsFactors = F)
-      sensi.estimates[counter, ]  <- estim.simu
-      counter=counter+1
+      estim.simu <-
+        data.frame(
+          i,
+          intercept,
+          se.intercept,
+          pval.intercept,
+          estimate,
+          se.estimate,
+          pval.estimate,
+          aic.mod,
+          optpar,
+          stringsAsFactors = F
+        )
+      sensi.estimates[counter,]  <- estim.simu
+      counter = counter + 1
       
     }
   }
-  if(track==TRUE) on.exit(close(pb))
+  if (track == TRUE)
+    on.exit(close(pb))
   
   #calculate mean and sd for each parameter
   #variation due to intraspecific variability
-  statresults<-data.frame(min=apply(sensi.estimates,2,min),
-                          max=apply(sensi.estimates,2,max),
-                          mean=apply(sensi.estimates,2,mean),
-                          sd_intra=apply(sensi.estimates,2,stats::sd))[-1, ]
+  statresults <- data.frame(
+    min = apply(sensi.estimates, 2, min),
+    max = apply(sensi.estimates, 2, max),
+    mean = apply(sensi.estimates, 2, mean),
+    sd_intra = apply(sensi.estimates, 2, stats::sd)
+  )[-1,]
   
-  statresults$CI_low  <- statresults$mean - stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
-  statresults$CI_high <- statresults$mean + stats::qt(0.975, df = n.intra-1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_low  <-
+    statresults$mean - stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
+  statresults$CI_high <-
+    statresults$mean + stats::qt(0.975, df = n.intra - 1) * statresults$sd_intra / sqrt(n.intra)
   
   #species with transformation problems
   nr <- n.intra - nrow(sensi.estimates)
   sp.pb <- unique(unlist(species.NA))
-  if (length(sp.pb) >0) 
-    warning (paste("in", nr,"simulations, data transformations generated NAs, please consider using another function
-  for x.transf and check output$sp.pb",sep=" "))
+  if (length(sp.pb) > 0)
+    warning (
+      paste(
+        "in",
+        nr,
+        "simulations, data transformations generated NAs, please consider using another function
+  for x.transf and check output$sp.pb",
+        sep = " "
+      )
+    )
   
-  res <- list(call = match.call(),
-              formula=formula,
-              data=full.data,
-              sensi.estimates=sensi.estimates,N.obs=n,
-              stats = round(statresults[c(1:6),c(3,5,6)],digits=3),
-              all.stats = statresults,sp.pb=sp.pb)
-  class(res) <- c("sensiIntra","sensiIntraL")
+  res <- list(
+    call = match.call(),
+    formula = formula,
+    data = full.data,
+    sensi.estimates = sensi.estimates,
+    N.obs = n,
+    stats = round(statresults[c(1:6), c(3, 5, 6)], digits = 3),
+    all.stats = statresults,
+    sp.pb = sp.pb
+  )
+  class(res) <- c("sensiIntra", "sensiIntraL")
   return(res)
 }
 

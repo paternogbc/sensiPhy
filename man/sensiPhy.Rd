@@ -3,7 +3,6 @@
 \docType{package}
 \name{sensiPhy}
 \alias{sensiPhy}
-\alias{sensiPhy-package}
 \title{Sensitivity Analysis for Comparative Methods}
 \description{
 An implementation of sensitivity analysis for phylogenetic comparative

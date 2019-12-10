@@ -4,10 +4,21 @@
 \alias{intra_influ_phylm}
 \title{Interaction between intraspecific variability and influential species - Phylogenetic Linear Regression}
 \usage{
-intra_influ_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
-  y.transf = NULL, x.transf = NULL, n.intra = 10,
-  distrib = "normal", model = "lambda", cutoff = 2, track = TRUE,
-  ...)
+intra_influ_phylm(
+  formula,
+  data,
+  phy,
+  Vy = NULL,
+  Vx = NULL,
+  y.transf = NULL,
+  x.transf = NULL,
+  n.intra = 10,
+  distrib = "normal",
+  model = "lambda",
+  cutoff = 2,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula:  \code{response~predictor}.}

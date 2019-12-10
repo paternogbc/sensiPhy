@@ -4,8 +4,17 @@
 \alias{tree_discrete}
 \title{Phylogenetic uncertainty - Trait Evolution Discrete Characters}
 \usage{
-tree_discrete(data, phy, n.tree = 10, model, transform = "none",
-  bounds = list(), n.cores = NULL, track = TRUE, ...)
+tree_discrete(
+  data,
+  phy,
+  n.tree = 10,
+  model,
+  transform = "none",
+  bounds = list(),
+  n.cores = NULL,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{Data vector for a single binary trait, with names matching tips in \code{phy}.}
@@ -51,7 +60,7 @@ evaluating phylogenetic uncertainty.
 }
 \details{
 This function fits different models of discrete character evolution using \code{\link[geiger]{fitDiscrete}}
-to n trees, randomly picked in a multiPhylo file. Currenlty, only binary discrete traits are supported
+to n trees, randomly picked in a multiPhylo file. Currently, only binary discrete traits are supported
 
 Different character model from \code{fitDiscrete} can be used, including \code{ER} (equal-rates), 
 \code{SYM} (symmetric), \code{ARD} (all-rates-different) and \code{meristic} (stepwise fashion). 

@@ -4,8 +4,7 @@
 \alias{influ_phyglm}
 \title{Influential species detection - Phylogenetic Logistic Regression}
 \usage{
-influ_phyglm(formula, data, phy, btol = 50, cutoff = 2, track = TRUE,
-  ...)
+influ_phyglm(formula, data, phy, btol = 50, cutoff = 2, track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula}

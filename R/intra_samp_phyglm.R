@@ -111,108 +111,173 @@
 #' @export
 
 
-intra_samp_phyglm <- function(formula, data, phy, n.sim=10, n.intra = 3,
-                             breaks=seq(.1,.5,.1), btol = 50,
-                             Vx = NULL, distrib = "normal", x.transf = NULL, 
-                             track=TRUE,...) { 
-  
-  #Error check
-  if(is.null(Vx)) stop("Vx must be defined")
-  if(class(formula) != "formula") stop("formula must be class 'formula'")
-  if(class(data) != "data.frame") stop("data must be class 'data.frame'")
-  if(class(phy) != "phylo") stop("phy must be class 'phylo'")
-  if(formula[[2]]!=all.vars(formula)[1] || formula[[3]]!=all.vars(formula)[2])
-    stop("Please use argument x.transf for data transformation")
-  if(distrib == "normal") warning ("distrib=normal: make sure that standard deviation is provided for Vx")
-  if(length(breaks) < 2) stop("Please include more than one break, e.g. breaks=c(.3,.5)")
-
-  #Matching tree and phylogeny using utils.R
-  datphy<-match_dataphy(formula,data,phy, ...)
-  full.data<-datphy[[1]]
-  phy<-datphy[[2]]
-  
-  resp1<-all.vars(formula)[1]
-  if(length(all.vars(formula))>2){resp2<-all.vars(formula)[2]}
-  pred<-all.vars(formula)[length(all.vars(formula))]
-  
-  if(!is.null(Vx) && sum(is.na(full.data[,Vx]))!=0){
-    full.data[is.na(full.data[,Vx]), Vx] <- 0}
-  
-  #Function to pick a random value in the interval
-  if (distrib=="normal") funr <- function(a, b) {stats::rnorm(1,a,b)}
-  else  funr <- function(a,b) {stats::runif(1,a-b,a+b)}
-  
-  
-  #List to store information
-  intra.samp <- list()
-  species.NA <- list()
-  
-  #Start intra loop here
-  errors <- NULL
-  if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
-  counter = 1
-  
-  for (i in 1:n.intra) {
-    ##Set predictor variable
-    #Vx is not provided or is not numeric, do not pick random value
-    if(!inherits(full.data[,pred], c("numeric","integer")) || is.null(Vx)) {full.data$predV<-full.data[,pred]}
+intra_samp_phyglm <-
+  function(formula,
+           data,
+           phy,
+           n.sim = 10,
+           n.intra = 3,
+           breaks = seq(.1, .5, .1),
+           btol = 50,
+           Vx = NULL,
+           distrib = "normal",
+           x.transf = NULL,
+           track = TRUE,
+           ...) {
+    #Error check
+    if (is.null(Vx))
+      stop("Vx must be defined")
+    if (!inherits(formula, "formula"))
+      stop("formula must be class 'formula'")
+    if (!inherits(data, "data.frame"))
+      stop("data must be class 'data.frame'")
+    if (!inherits(phy, "phylo"))
+      stop("phy must be class 'phylo'")
+    if (formula[[2]] != all.vars(formula)[1] ||
+        formula[[3]] != all.vars(formula)[2])
+      stop("Please use argument x.transf for data transformation")
+    if (distrib == "normal")
+      warning ("distrib=normal: make sure that standard deviation is provided for Vx")
+    if (length(breaks) < 2)
+      stop("Please include more than one break, e.g. breaks=c(.3,.5)")
     
-    #choose a random value in [mean-se,mean+se] if Vx is provided
-    if(!is.null(Vx) && is.null(dim(Vx)))
-    {full.data$predV<-apply(full.data[,c(pred,Vx)],1,function(x)funr(x[1],x[2]))}
+    #Matching tree and phylogeny using utils.R
+    datphy <- match_dataphy(formula, data, phy, ...)
+    full.data <- datphy[[1]]
+    phy <- datphy[[2]]
     
-    full.data$resp1<-full.data[,resp1] #try to improve this in future
-    if(length(all.vars(formula))>2){full.data$resp2<-full.data[,resp2]}
+    resp1 <- all.vars(formula)[1]
+    if (length(all.vars(formula)) > 2) {
+      resp2 <- all.vars(formula)[2]
+    }
+    pred <- all.vars(formula)[length(all.vars(formula))]
     
-    #transform Vx if x.transf is provided
-    if(!is.null(x.transf)) 
-    {suppressWarnings (full.data$predV <- x.transf(full.data$predV))}
+    if (!is.null(Vx) && sum(is.na(full.data[, Vx])) != 0) {
+      full.data[is.na(full.data[, Vx]), Vx] <- 0
+    }
     
-    #skip iteration if there are NA's in the dataset
-    species.NA[[i]]<-rownames(full.data[with(full.data,is.na(predV)),])
-    if(sum(is.na(full.data[,"predV"])>0)) next
+    #Function to pick a random value in the interval
+    if (distrib == "normal")
+      funr <- function(a, b) {
+        stats::rnorm(1, a, b)
+      }
+    else
+      funr <- function(a, b) {
+        stats::runif(1, a - b, a + b)
+      }
     
-    #Run the model
-    if(length(all.vars(formula))>2) {
-      intra.samp[[i]] <- samp_phyglm(cbind(resp1,resp2)~predV, data = full.data, phy=phy, n.sim = n.sim,
-                                     breaks=breaks, btol=btol, method="logistic_MPLE",
-                                     track = FALSE, verbose = FALSE,...)
-    } else 
-      intra.samp[[i]] <- samp_phyglm(resp1~predV, data = full.data, phy=phy, n.sim = n.sim,
-                                     breaks=breaks, btol=btol, method="logistic_MPLE",
-                                     track = FALSE, verbose = FALSE,...)
     
-    if(track==TRUE) utils::setTxtProgressBar(pb, counter)
-    counter = counter + 1
+    #List to store information
+    intra.samp <- list()
+    species.NA <- list()
+    
+    #Start intra loop here
+    errors <- NULL
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0, max = n.intra, style = 3)
+    counter = 1
+    
+    for (i in 1:n.intra) {
+      ##Set predictor variable
+      #Vx is not provided or is not numeric, do not pick random value
+      if (!inherits(full.data[, pred], c("numeric", "integer")) ||
+          is.null(Vx)) {
+        full.data$predV <- full.data[, pred]
+      }
+      
+      #choose a random value in [mean-se,mean+se] if Vx is provided
+      if (!is.null(Vx) && is.null(dim(Vx)))
+      {
+        full.data$predV <-
+          apply(full.data[, c(pred, Vx)], 1, function(x)
+            funr(x[1], x[2]))
+      }
+      
+      full.data$resp1 <-
+        full.data[, resp1] #try to improve this in future
+      if (length(all.vars(formula)) > 2) {
+        full.data$resp2 <- full.data[, resp2]
+      }
+      
+      #transform Vx if x.transf is provided
+      if (!is.null(x.transf))
+      {
+        suppressWarnings (full.data$predV <- x.transf(full.data$predV))
+      }
+      
+      #skip iteration if there are NA's in the dataset
+      species.NA[[i]] <-
+        rownames(full.data[with(full.data, is.na(predV)), ])
+      if (sum(is.na(full.data[, "predV"]) > 0))
+        next
+      
+      #Run the model
+      if (length(all.vars(formula)) > 2) {
+        intra.samp[[i]] <-
+          samp_phyglm(
+            cbind(resp1, resp2) ~ predV,
+            data = full.data,
+            phy = phy,
+            n.sim = n.sim,
+            breaks = breaks,
+            btol = btol,
+            method = "logistic_MPLE",
+            track = FALSE,
+            verbose = FALSE,
+            ...
+          )
+      } else
+        intra.samp[[i]] <-
+        samp_phyglm(
+          resp1 ~ predV,
+          data = full.data,
+          phy = phy,
+          n.sim = n.sim,
+          breaks = breaks,
+          btol = btol,
+          method = "logistic_MPLE",
+          track = FALSE,
+          verbose = FALSE,
+          ...
+        )
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, counter)
+      counter = counter + 1
+    }
+    
+    if (track == TRUE)
+      close(pb)
+    names(intra.samp) <- 1:n.intra
+    
+    # Merge lists into data.frames between iterations:
+    full.estimates  <-
+      suppressWarnings(recombine(intra.samp, slot1 = 4, slot2 = 1))
+    influ.estimates <- recombine(intra.samp, slot1 = 5)
+    influ.estimates$info <- NULL
+    perc.sign <- recombine(intra.samp, slot1 = 6)
+    perc.sign$info <- NULL
+    
+    #Generates output:
+    res <- list(
+      call = match.call(),
+      model = "logistic_MPLE",
+      formula = formula,
+      full.model.estimates = full.estimates,
+      sensi.estimates = influ.estimates,
+      sign.analysis = perc.sign,
+      data = full.data
+    )
+    
+    
+    class(res) <- "sensiIntra_Samp"
+    ### Warnings:
+    if (length(res$errors) > 0) {
+      warning("Some species deletion presented errors, please check: output$errors")
+    }
+    else {
+      res$errors <- "No errors found."
+    }
+    return(res)
   }
-  
-  if(track==TRUE) close(pb)
-  names(intra.samp)<-1:n.intra
-  
-  # Merge lists into data.frames between iterations:
-  full.estimates  <- suppressWarnings(recombine(intra.samp, slot1 = 4, slot2 = 1))
-  influ.estimates <- recombine(intra.samp, slot1 = 5)
-  influ.estimates$info <- NULL
-  perc.sign <- recombine(intra.samp, slot1 = 6)
-  perc.sign$info <- NULL
-  
-  #Generates output:
-  res <- list(call = match.call(),
-              model = "logistic_MPLE",
-              formula = formula,
-              full.model.estimates = full.estimates,
-              sensi.estimates = influ.estimates,
-              sign.analysis = perc.sign,
-              data = full.data)
-  
-  
-  class(res) <- "sensiIntra_Samp"
-  ### Warnings:
-  if (length(res$errors) >0){
-    warning("Some species deletion presented errors, please check: output$errors")}
-  else {
-    res$errors <- "No errors found."
-  }
-  return(res)
-}
 

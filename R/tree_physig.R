@@ -74,66 +74,93 @@
 #'sensi_plot(tree, graphs = 1)
 #'sensi_plot(tree, graphs = 2)
 #' @export
-tree_physig <- function(trait.col, data, phy, n.tree = "all", method = "K", track = TRUE, ...){
-
-  #Error check
-  if (n.tree == "all") n.tree <- length(phy)
-  if(class(data)!="data.frame") stop("data must be class 'data.frame'")
-  if(class(phy)!="multiPhylo") stop("phy must be class 'multiPhylo'")
-  if(length(phy)<n.tree) stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
-  
-  # Check match between data and phy 
-  datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
-  full.data <- datphy$data
-  phy <- datphy$phy
-  trait     <- full.data[[trait.col]]
-  names(trait)  <- phy[[1]]$tip.label
-  N <- nrow(full.data)
-  
-  
+tree_physig <-
+  function(trait.col,
+           data,
+           phy,
+           n.tree = "all",
+           method = "K",
+           track = TRUE,
+           ...) {
+    #Error check
+    if (n.tree == "all")
+      n.tree <- length(phy)
+    if (!inherits(data, "data.frame"))
+      stop("data must be class 'data.frame'")
+    if (!inherits(phy, "multiPhylo"))
+      stop("phy must be class 'multiPhylo'")
+    if (length(phy) < n.tree)
+      stop("'n.tree' must be smaller (or equal) than the number of trees in the 'multiPhylo' object")
+    
+    # Check match between data and phy
+    datphy <- match_dataphy(get(trait.col) ~ 1, data, phy)
+    full.data <- datphy$data
+    phy <- datphy$phy
+    trait     <- full.data[[trait.col]]
+    names(trait)  <- phy[[1]]$tip.label
+    N <- nrow(full.data)
+    
+    
     # Pick n=n.tree random trees or all
     trees <- sample(length(phy), n.tree, replace = F)
     #Create the results data.frame
-    tree.physig.estimates <- data.frame("n.tree" = numeric(), "estimate" = numeric(),
-                                        "pval" = numeric())
+    tree.physig.estimates <-
+      data.frame("n.tree" = numeric(),
+                 "estimate" = numeric(),
+                 "pval" = numeric())
     
     #Model calculation
     counter = 1
-    if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
-    for (j in trees){
-      
-      mod.s    <- phytools::phylosig(tree = phy[[j]], x = trait, method = method, test = TRUE, ...)
+    if (track == TRUE)
+      pb <- utils::txtProgressBar(min = 0, max = n.tree, style = 3)
+    for (j in trees) {
+      mod.s    <-
+        phytools::phylosig(
+          tree = phy[[j]],
+          x = trait,
+          method = method,
+          test = TRUE,
+          ...
+        )
       estimate <- mod.s[[1]]
       pval     <- mod.s$P
       
-      if(track==TRUE) (utils::setTxtProgressBar(pb, counter))
+      if (track == TRUE)
+        (utils::setTxtProgressBar(pb, counter))
       #write in a table
       estim.simu <- data.frame(j, estimate, pval)
-      tree.physig.estimates[counter, ]  <- estim.simu
+      tree.physig.estimates[counter,]  <- estim.simu
       counter = counter + 1
       
     }
     
-    if(track==TRUE) on.exit(close(pb))
+    if (track == TRUE)
+      on.exit(close(pb))
     #calculate mean and sd for each parameter
-    statresults <- data.frame(min = apply(tree.physig.estimates, 2, min),
-                              max = apply(tree.physig.estimates, 2, max),
-                              mean = apply(tree.physig.estimates, 2, mean),
-                              sd_tree = apply(tree.physig.estimates, 2, stats::sd))[-1, ]
+    statresults <-
+      data.frame(
+        min = apply(tree.physig.estimates, 2, min),
+        max = apply(tree.physig.estimates, 2, max),
+        mean = apply(tree.physig.estimates, 2, mean),
+        sd_tree = apply(tree.physig.estimates, 2, stats::sd)
+      )[-1,]
     
-    statresults$CI_low  <- statresults$mean - qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
-    statresults$CI_high <- statresults$mean + qt(0.975, df = n.tree-1) * statresults$sd_tree / sqrt(n.tree)
+    statresults$CI_low  <-
+      statresults$mean - qt(0.975, df = n.tree - 1) * statresults$sd_tree / sqrt(n.tree)
+    statresults$CI_high <-
+      statresults$mean + qt(0.975, df = n.tree - 1) * statresults$sd_tree / sqrt(n.tree)
     
-    stats <- round(statresults[c(1:2),c(3,5,6,1,2)],digits=5)
+    stats <- round(statresults[c(1:2), c(3, 5, 6, 1, 2)], digits = 5)
     
     cl <- match.call()
-    res <- list(   call = cl,
-                   Trait = trait.col,
-                   tree.physig.estimates = tree.physig.estimates,
-                   N.obs = N,
-                   stats = stats,
-                   data = full.data)
+    res <- list(
+      call = cl,
+      Trait = trait.col,
+      tree.physig.estimates = tree.physig.estimates,
+      N.obs = N,
+      stats = stats,
+      data = full.data
+    )
     class(res) <- "tree.physig"
     return(res)
   }
-

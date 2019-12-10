@@ -4,9 +4,19 @@
 \alias{tree_intra_phyglm}
 \title{Interaction between phylogenetic uncertainty and intraspecific variability - Phylogenetic logistic Regression}
 \usage{
-tree_intra_phyglm(formula, data, phy, Vx = NULL, x.transf = NULL,
-  n.intra = 10, n.tree = 2, distrib = "normal", track = TRUE,
-  btol = 50, ...)
+tree_intra_phyglm(
+  formula,
+  data,
+  phy,
+  Vx = NULL,
+  x.transf = NULL,
+  n.intra = 10,
+  n.tree = 2,
+  distrib = "normal",
+  track = TRUE,
+  btol = 50,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}

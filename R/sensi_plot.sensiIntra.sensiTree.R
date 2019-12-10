@@ -170,7 +170,7 @@ sensi_plot.sensiTree <- function(x, graphs = "all", ...){
 #' \code{tree_intra_phylm} and \code{tree_intra_phyglm}
 #' @param x output from \code{tree_intra_phylm}, \code{tree_intra_phyglm}
 #' @param graphs choose which graph should be printed in the output ("all", 1, 2 or 3)
-#' @param uncer.type chosse which uncertainty type should be printed ("all", "intra", "tree")
+#' @param uncer.type choose which uncertainty type should be printed ("all", "intra", "tree")
 #' @param ... further arguments to methods
 #' @importFrom ggplot2 scale_color_manual geom_histogram geom_abline geom_density 
 #' geom_vline xlab geom_point theme

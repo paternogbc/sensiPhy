@@ -4,8 +4,18 @@
 \alias{tree_clade_phyglm}
 \title{Interaction between phylogenetic uncertainty and influential clade detection - Phylogenetic Logistic Regression}
 \usage{
-tree_clade_phyglm(formula, data, phy, clade.col, n.species = 5,
-  n.sim = 100, n.tree = 2, btol = 50, track = TRUE, ...)
+tree_clade_phyglm(
+  formula,
+  data,
+  phy,
+  clade.col,
+  n.species = 5,
+  n.sim = 100,
+  n.tree = 2,
+  btol = 50,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

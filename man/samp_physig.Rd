@@ -4,8 +4,16 @@
 \alias{samp_physig}
 \title{Sensitivity Analysis Species Sampling  - Phylogenetic signal}
 \usage{
-samp_physig(trait.col, data, phy, n.sim = 30, breaks = seq(0.1, 0.5,
-  0.1), method = "K", track = TRUE, ...)
+samp_physig(
+  trait.col,
+  data,
+  phy,
+  n.sim = 30,
+  breaks = seq(0.1, 0.5, 0.1),
+  method = "K",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 

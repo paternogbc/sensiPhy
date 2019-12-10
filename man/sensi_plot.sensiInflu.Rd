@@ -4,8 +4,7 @@
 \alias{sensi_plot.sensiInflu}
 \title{Graphical diagnostics for class 'sensiInflu'}
 \usage{
-\method{sensi_plot}{sensiInflu}(x, graphs = "all", param = "estimate",
-  ...)
+\method{sensi_plot}{sensiInflu}(x, graphs = "all", param = "estimate", ...)
 }
 \arguments{
 \item{x}{output from \code{influ_phylm}}
@@ -33,7 +32,7 @@ The names of the most influential species (sDF > cutoff) are ploted in the
 graph. 
 
 \strong{Graph 3:} Distribution of standardized difference in slope or intercept. Red 
-colour indicates inbfluential species (with a standardised difference above 
+colour indicates influential species (with a standardised difference above 
 the value of \code{cutoff}).
 
 \strong{Graph 4:} Distribution of the percentage of change in slope or intercept.

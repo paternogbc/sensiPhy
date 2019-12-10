@@ -1,4 +1,4 @@
-#' Influential Species Detection - Trait Evolution Continous Characters
+#' Influential Species Detection - Trait Evolution Continuous Characters
 #'
 #' Fits models for trait evolution of continuous characters, 
 #' detecting influential species. 
@@ -84,197 +84,250 @@
 #' }
 #' @export
 
-influ_continuous <- function(data,phy,model,
-                           bounds = list(),
-                           cutoff=2,n.cores = NULL,track=TRUE,...){
-  
-            #Error check
-            if(is.null(model)) stop("model must be specified, e.g. 'OU' or 'lambda'")
-            if(class(data)!="numeric" | is.null(names(data))) stop("data must supplied as a numeric vector with species as names")
-            if(class(phy)!="phylo") stop("phy must be class 'phylo'")
-            if(model=="white") stop("the white-noise (non-phylogenetic) model is not allowed")
-            if ( (model == "drift") & (ape::is.ultrametric(phy))) stop("A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details")
-            else
-              
-            #Matching tree
-            full.data<-data
-            phy<-phy
-            
-            #Calculates the full model, extracts model parameters
-            N                   <- length(full.data)
-            mod.0               <- geiger::fitContinuous(phy = phy,dat = full.data,
-                                                       model = model,
-                                                       bounds = bounds,ncores = n.cores,...)
-            sigsq.0               <- mod.0$opt$sigsq
-            z0.0                  <- mod.0$opt$z0
-            aicc.0              <- mod.0$opt$aicc
-            if (model == "BM"){
-              optpar.0 <- NA
-            }
-            if (model == "OU"){
-              optpar.0        <- mod.0$opt$alpha
-            }
-            if (model == "EB"){
-              optpar.0               <- mod.0$opt$a
-            }
-            if (model == "trend"){
-              optpar.0               <- mod.0$opt$slope
-            }
-            if (model == "lambda"){
-              optpar.0               <- mod.0$opt$lambda
-            }
-            if (model == "kappa"){
-              optpar.0               <- mod.0$opt$kappa
-            }
-            if (model == "delta"){
-              optpar.0               <- mod.0$opt$delta
-            }
-            if (model == "drift"){
-              optpar.0               <- mod.0$opt$drift
-            }
-            
-            #Creates empty data frame to store model outputs
-            sensi.estimates<-data.frame("species" =numeric(),
-                                        "sigsq"=numeric(),"DIFsigsq"= numeric(),"sigsq.perc"= numeric(),
-                                        "optpar"=numeric(),"DIFoptpar"=numeric(),"optpar.perc"=numeric(),
-                                        "z0"=numeric(),
-                                        "aicc"=numeric()) 
-            
-            #Loops over all species, and removes each one individually
-            counter <- 1
-            errors <- NULL
-            if(track==TRUE) pb <- utils::txtProgressBar(min = 0, max = N, style = 3)
-            for (i in 1:N){
-              
-              crop.data <- full.data[c(1:N)[-i]]
-              crop.phy <-  ape::drop.tip(phy,setdiff(phy$tip.label,names(crop.data)))
-              
-              mod = try(geiger::fitContinuous(phy = crop.phy,dat = crop.data,
-                                            model = model,
-                                            bounds = bounds,ncores = n.cores,...),TRUE)
-              if(isTRUE(class(mod)=="try-error")) {
-                error <- i
-                names(error) <- rownames(full.data$data)[i]
-                errors <- c(errors,error)
-                next }
-              else { 
-              sp                   <- phy$tip.label[i]
-              sigsq               <- mod$opt$sigsq
-              z0                  <- mod$opt$z0
-              aicc              <- mod$opt$aicc
-              DIFsigsq            <- sigsq - sigsq.0
-              sigsq.perc          <- round((abs(DIFsigsq / sigsq.0)) * 100,
-                                         digits = 1)
-              aicc              <- mod$opt$aicc
-              if (model == "BM"){
-                optpar <- NA
-              }
-              if (model == "OU"){
-                optpar        <- mod$opt$alpha
-              }
-              if (model == "EB"){
-                optpar               <- mod$opt$a
-              }
-              if (model == "trend"){
-                optpar               <- mod$opt$slope
-              }
-              if (model == "lambda"){
-                optpar               <- mod$opt$lambda
-              }
-              if (model == "kappa"){
-                optpar               <- mod$opt$kappa
-              }
-              if (model == "delta"){
-                optpar               <- mod$opt$delta
-              }
-              if (model == "drift"){
-                optpar              <- mod$opt$drift
-              }
-              
-              DIFoptpar            <- optpar - optpar.0
-              optpar.perc        <- round((abs(DIFoptpar / optpar.0)) * 100,
-                                           digits = 1)
-              
-              if(track==TRUE) utils::setTxtProgressBar(pb, i)
-              # Stores values for each simulation
-              # Store reduced model parameters: 
-              estim.simu <- data.frame(sp, 
-                                       sigsq, DIFsigsq,sigsq.perc,
-                                       optpar,DIFoptpar,optpar.perc,
-                                       z0,
-                                       aicc,
-                                       stringsAsFactors = F)
-              sensi.estimates[counter, ]  <- estim.simu
-              counter=counter+1
-              }
-            }
-            if(track==TRUE) on.exit(close(pb))
-            
-            #Calculates Standardized DFbeta and DIFq12
-            sDIFsigsq <- sensi.estimates$DIFsigsq/
-              stats::sd(sensi.estimates$DIFsigsq)
-            sensi.estimates$sDIFsigsq     <- sDIFsigsq
-            
-            if(model =="BM"){
-                sDIFoptpar<-NA
-            }
-            if(model !="BM"){
-              if((stats::sd(sensi.estimates$DIFoptpar))==0) {
-                sDIFoptpar<-NA
-              }
-              else{
-              sDIFoptpar     <- sensi.estimates$DIFoptpar/
-                stats::sd(sensi.estimates$DIFoptpar)
-                sensi.estimates$sDIFoptpar     <- sDIFoptpar
-              }
-            }
-            #Creates a list with full model estimates:
-            #full model estimates:
-            param0 <- list(sigsq=sigsq.0,
-                           optpar=optpar.0,
-                           z0=z0.0,
-                           aicc=aicc.0)
-            
-            #Identifies influencital species (sDF > cutoff) and orders by influence
-            reorder.on.sigsq         <-sensi.estimates[order(abs(
-              sensi.estimates$sDIFsigsq),decreasing=T),c("species","sDIFsigsq")]
-            influ.sp.sigsq           <-as.character(reorder.on.sigsq$species[abs(
-              reorder.on.sigsq$sDIFsigsq)>cutoff])
 
-            if(model=="BM"){
-              influ.sp.optpar<-"No optpar calculated for BM-model. Influential species not calculated"
-            } 
-            if(model!="BM"){
-              if((stats::sd(sensi.estimates$DIFoptpar))==0) {
-                influ.sp.optpar<-"No variation in optpar. Influential species not calculated"
-              }
-              else {
-                reorder.on.optpar     <-sensi.estimates[order(abs(
-                  sensi.estimates$sDIFoptpar),decreasing=T),c("species","sDIFoptpar")]
-                influ.sp.optpar       <-as.character(reorder.on.optpar$species[abs(
-                  reorder.on.optpar$sDIFoptpar)>cutoff])
-              }
-            }
-            
-            #Generates output:
-            res <- list(   call = match.call(),
-                           cutoff=cutoff,
-                           data = full.data,
-                           optpar = model,
-                           full.model.estimates = param0,
-                           influential.species= list(influ.sp.sigsq=influ.sp.sigsq,
-                                                     influ.sp.optpar=influ.sp.optpar),
-                           sensi.estimates=sensi.estimates,
-                           errors = errors)
-            class(res) <- "sensiInflu.TraitEvol"
-            ### Warnings:
-            if (length(res$errors) >0){
-              warning("Some species deletion presented errors, please check: output$errors")}
-            else {
-              res$errors <- "No errors found."
-            }
-            
-            return(res)
-            
-          }
-          
+influ_continuous <- function(data,
+                             phy,
+                             model,
+                             bounds = list(),
+                             cutoff = 2,
+                             n.cores = NULL,
+                             track = TRUE,
+                             ...) {
+  #Error check
+  if (is.null(model))
+    stop("model must be specified, e.g. 'OU' or 'lambda'")
+  if (!inherits(data, "numeric") |
+      is.null(names(data)))
+    stop("data must supplied as a numeric vector with species as names")
+  if (!inherits(phy, "phylo"))
+    stop("phy must be class 'phylo'")
+  if (model == "white")
+    stop("the white-noise (non-phylogenetic) model is not allowed")
+  if ((model == "drift") &
+      (ape::is.ultrametric(phy)))
+    stop(
+      "A drift model is unidentifiable for ultrametric trees., see ?fitContinuous for details"
+    )
+  else
+    
+    #Matching tree
+    full.data <- data
+  phy <- phy
+  
+  #Calculates the full model, extracts model parameters
+  N                   <- length(full.data)
+  mod.0               <-
+    geiger::fitContinuous(
+      phy = phy,
+      dat = full.data,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    )
+  sigsq.0               <- mod.0$opt$sigsq
+  z0.0                  <- mod.0$opt$z0
+  aicc.0              <- mod.0$opt$aicc
+  if (model == "BM") {
+    optpar.0 <- NA
+  }
+  if (model == "OU") {
+    optpar.0        <- mod.0$opt$alpha
+  }
+  if (model == "EB") {
+    optpar.0               <- mod.0$opt$a
+  }
+  if (model == "trend") {
+    optpar.0               <- mod.0$opt$slope
+  }
+  if (model == "lambda") {
+    optpar.0               <- mod.0$opt$lambda
+  }
+  if (model == "kappa") {
+    optpar.0               <- mod.0$opt$kappa
+  }
+  if (model == "delta") {
+    optpar.0               <- mod.0$opt$delta
+  }
+  if (model == "drift") {
+    optpar.0               <- mod.0$opt$drift
+  }
+  
+  #Creates empty data frame to store model outputs
+  sensi.estimates <- data.frame(
+    "species" = numeric(),
+    "sigsq" = numeric(),
+    "DIFsigsq" = numeric(),
+    "sigsq.perc" = numeric(),
+    "optpar" = numeric(),
+    "DIFoptpar" = numeric(),
+    "optpar.perc" = numeric(),
+    "z0" = numeric(),
+    "aicc" = numeric()
+  )
+  
+  #Loops over all species, and removes each one individually
+  counter <- 1
+  errors <- NULL
+  if (track == TRUE)
+    pb <- utils::txtProgressBar(min = 0, max = N, style = 3)
+  for (i in 1:N) {
+    crop.data <- full.data[c(1:N)[-i]]
+    crop.phy <-
+      ape::drop.tip(phy, setdiff(phy$tip.label, names(crop.data)))
+    
+    mod = try(geiger::fitContinuous(
+      phy = crop.phy,
+      dat = crop.data,
+      model = model,
+      bounds = bounds,
+      ncores = n.cores,
+      ...
+    ),
+    TRUE)
+    if (isTRUE(class(mod) == "try-error")) {
+      error <- i
+      names(error) <- rownames(full.data$data)[i]
+      errors <- c(errors, error)
+      next
+    }
+    else {
+      sp                   <- phy$tip.label[i]
+      sigsq               <- mod$opt$sigsq
+      z0                  <- mod$opt$z0
+      aicc              <- mod$opt$aicc
+      DIFsigsq            <- sigsq - sigsq.0
+      sigsq.perc          <-
+        round((abs(DIFsigsq / sigsq.0)) * 100,
+              digits = 1)
+      aicc              <- mod$opt$aicc
+      if (model == "BM") {
+        optpar <- NA
+      }
+      if (model == "OU") {
+        optpar        <- mod$opt$alpha
+      }
+      if (model == "EB") {
+        optpar               <- mod$opt$a
+      }
+      if (model == "trend") {
+        optpar               <- mod$opt$slope
+      }
+      if (model == "lambda") {
+        optpar               <- mod$opt$lambda
+      }
+      if (model == "kappa") {
+        optpar               <- mod$opt$kappa
+      }
+      if (model == "delta") {
+        optpar               <- mod$opt$delta
+      }
+      if (model == "drift") {
+        optpar              <- mod$opt$drift
+      }
+      
+      DIFoptpar            <- optpar - optpar.0
+      optpar.perc        <-
+        round((abs(DIFoptpar / optpar.0)) * 100,
+              digits = 1)
+      
+      if (track == TRUE)
+        utils::setTxtProgressBar(pb, i)
+      # Stores values for each simulation
+      # Store reduced model parameters:
+      estim.simu <- data.frame(
+        sp,
+        sigsq,
+        DIFsigsq,
+        sigsq.perc,
+        optpar,
+        DIFoptpar,
+        optpar.perc,
+        z0,
+        aicc,
+        stringsAsFactors = F
+      )
+      sensi.estimates[counter,]  <- estim.simu
+      counter = counter + 1
+    }
+  }
+  if (track == TRUE)
+    on.exit(close(pb))
+  
+  #Calculates Standardized DFbeta and DIFq12
+  sDIFsigsq <- sensi.estimates$DIFsigsq /
+    stats::sd(sensi.estimates$DIFsigsq)
+  sensi.estimates$sDIFsigsq     <- sDIFsigsq
+  
+  if (model == "BM") {
+    sDIFoptpar <- NA
+  }
+  if (model != "BM") {
+    if ((stats::sd(sensi.estimates$DIFoptpar)) == 0) {
+      sDIFoptpar <- NA
+    }
+    else{
+      sDIFoptpar     <- sensi.estimates$DIFoptpar /
+        stats::sd(sensi.estimates$DIFoptpar)
+      sensi.estimates$sDIFoptpar     <- sDIFoptpar
+    }
+  }
+  #Creates a list with full model estimates:
+  #full model estimates:
+  param0 <- list(
+    sigsq = sigsq.0,
+    optpar = optpar.0,
+    z0 = z0.0,
+    aicc = aicc.0
+  )
+  
+  #Identifies influencital species (sDF > cutoff) and orders by influence
+  reorder.on.sigsq         <- sensi.estimates[order(abs(sensi.estimates$sDIFsigsq), decreasing =
+                                                      T), c("species", "sDIFsigsq")]
+  influ.sp.sigsq           <-
+    as.character(reorder.on.sigsq$species[abs(reorder.on.sigsq$sDIFsigsq) >
+                                            cutoff])
+  
+  if (model == "BM") {
+    influ.sp.optpar <-
+      "No optpar calculated for BM-model. Influential species not calculated"
+  }
+  if (model != "BM") {
+    if ((stats::sd(sensi.estimates$DIFoptpar)) == 0) {
+      influ.sp.optpar <-
+        "No variation in optpar. Influential species not calculated"
+    }
+    else {
+      reorder.on.optpar     <- sensi.estimates[order(abs(sensi.estimates$sDIFoptpar), decreasing =
+                                                       T), c("species", "sDIFoptpar")]
+      influ.sp.optpar       <-
+        as.character(reorder.on.optpar$species[abs(reorder.on.optpar$sDIFoptpar) >
+                                                 cutoff])
+    }
+  }
+  
+  #Generates output:
+  res <- list(
+    call = match.call(),
+    cutoff = cutoff,
+    data = full.data,
+    optpar = model,
+    full.model.estimates = param0,
+    influential.species = list(influ.sp.sigsq = influ.sp.sigsq,
+                               influ.sp.optpar = influ.sp.optpar),
+    sensi.estimates = sensi.estimates,
+    errors = errors
+  )
+  class(res) <- "sensiInflu.TraitEvol"
+  ### Warnings:
+  if (length(res$errors) > 0) {
+    warning("Some species deletion presented errors, please check: output$errors")
+  }
+  else {
+    res$errors <- "No errors found."
+  }
+  
+  return(res)
+  
+}
+

@@ -4,8 +4,7 @@
 \alias{sensi_plot.sensiIntra_Clade}
 \title{Graphical diagnostics for class 'sensiIntra_Clade'}
 \usage{
-\method{sensi_plot}{sensiIntra_Clade}(x, clade = NULL, graphs = "all",
-  ...)
+\method{sensi_plot}{sensiIntra_Clade}(x, clade = NULL, graphs = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{intra_clade_phylm} or \code{intra_clade_phyglm}}

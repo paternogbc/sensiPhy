@@ -4,8 +4,15 @@
 \alias{influ_phylm}
 \title{Influential species detection - Phylogenetic Linear Regression}
 \usage{
-influ_phylm(formula, data, phy, model = "lambda", cutoff = 2,
-  track = TRUE, ...)
+influ_phylm(
+  formula,
+  data,
+  phy,
+  model = "lambda",
+  cutoff = 2,
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}

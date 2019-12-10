@@ -4,10 +4,23 @@
 \alias{intra_clade_phylm}
 \title{Interaction between intraspecific variability and influential clade detection - Phylogenetic Linear Regression}
 \usage{
-intra_clade_phylm(formula, data, phy, clade.col, n.species = 5,
-  n.sim = 100, n.intra = 2, Vy = NULL, Vx = NULL,
-  distrib = "normal", y.transf = NULL, x.transf = NULL,
-  model = "lambda", track = TRUE, ...)
+intra_clade_phylm(
+  formula,
+  data,
+  phy,
+  clade.col,
+  n.species = 5,
+  n.sim = 100,
+  n.intra = 2,
+  Vy = NULL,
+  Vx = NULL,
+  distrib = "normal",
+  y.transf = NULL,
+  x.transf = NULL,
+  model = "lambda",
+  track = TRUE,
+  ...
+)
 }
 \arguments{
 \item{formula}{The model formula}
