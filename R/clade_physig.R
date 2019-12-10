@@ -57,6 +57,12 @@
 #' \code{\link{clade_phylm}},\code{\link{sensi_plot}}
 #' @references 
 #' 
+#' Paterno, G. B., Penone, C. Werner, G. D. A. 
+#' \href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+#' An r-package for sensitivity analysis in phylogenetic 
+#' comparative methods.} Methods in Ecology and Evolution 
+#' 2018, 9(6):1461-1467
+#' 
 #' Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 
 #' Testing for phylogenetic signal in comparative data: 
 #' Behavioral traits are more labile. Evolution, 57, 717-745.

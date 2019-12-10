@@ -60,7 +60,14 @@
 #' 
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}
-#' @references
+#' @references 
+#' 
+#' Paterno, G. B., Penone, C. Werner, G. D. A. 
+#' \href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+#' An r-package for sensitivity analysis in phylogenetic 
+#' comparative methods.} Methods in Ecology and Evolution 
+#' 2018, 9(6):1461-1467
+#'
 #' Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 #' Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 
 #' fishes is related to body size and depth range. Molecular Phylogenetics and 

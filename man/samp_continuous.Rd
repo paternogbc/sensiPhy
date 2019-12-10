@@ -4,8 +4,8 @@
 \alias{samp_continuous}
 \title{Species Sampling uncertainty - Trait Evolution Continuous Characters}
 \usage{
-samp_continuous(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1), model,
-  n.cores = NULL, bounds = list(), track = TRUE, ...)
+samp_continuous(data, phy, n.sim = 30, breaks = seq(0.1, 0.5, 0.1),
+  model, n.cores = NULL, bounds = list(), track = TRUE, ...)
 }
 \arguments{
 \item{data}{Data vector for a single binary trait, with names matching tips in \code{phy}.}
@@ -101,6 +101,12 @@ summary(samp_cont3)
 }
 }
 \references{
+Paterno, G. B., Penone, C. Werner, G. D. A. 
+\href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+An r-package for sensitivity analysis in phylogenetic 
+comparative methods.} Methods in Ecology and Evolution 
+2018, 9(6):1461-1467
+
 Yang Z. 2006. Computational Molecular Evolution. Oxford University Press: Oxford. 
 
 Harmon Luke J, Jason T Weir, Chad D Brock, Richard E Glor, and Wendell Challenger. 2008.

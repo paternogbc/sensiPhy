@@ -41,6 +41,13 @@
 #' @author Caterina Penone & Pablo Ariel Martinez
 #' @seealso \code{\link[phylolm]{phylolm}}, \code{\link{sensi_plot}}, \code{\link{tree_phyglm}}
 #' @references 
+#' 
+#' Paterno, G. B., Penone, C. Werner, G. D. A. 
+#' \href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+#' An r-package for sensitivity analysis in phylogenetic 
+#' comparative methods.} Methods in Ecology and Evolution 
+#' 2018, 9(6):1461-1467
+#'
 #' Donoghue, M.J. & Ackerly, D.D. (1996). Phylogenetic Uncertainties and 
 #' Sensitivity Analyses in Comparative Biology. Philosophical Transactions:
 #'  Biological Sciences, pp. 1241-1249.

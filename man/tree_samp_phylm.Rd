@@ -114,6 +114,12 @@ sensi_plot(samp, graphs = 2)
 }
 }
 \references{
+Paterno, G. B., Penone, C. Werner, G. D. A. 
+\href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+An r-package for sensitivity analysis in phylogenetic 
+comparative methods.} Methods in Ecology and Evolution 
+2018, 9(6):1461-1467
+
 Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014).
 A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation
 in angiosperms. Nature Communications, 5, 4087.

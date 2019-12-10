@@ -19,6 +19,14 @@
 #' 
 #' A quick tutorial is available at this link: 
 #' \url{https://github.com/paternogbc/sensiPhy/wiki}
+#' @references 
+#' 
+#' Paterno, G. B., Penone, C. Werner, G. D. A. 
+#' \href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+#' An r-package for sensitivity analysis in phylogenetic 
+#' comparative methods.} Methods in Ecology and Evolution 
+#' 2018, 9(6):1461-1467.  
+#'
 #' @docType package
 NULL
 

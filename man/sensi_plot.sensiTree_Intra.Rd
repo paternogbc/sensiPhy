@@ -4,8 +4,8 @@
 \alias{sensi_plot.sensiTree_Intra}
 \title{Graphical diagnostics for class 'sensiIntra_Tree'}
 \usage{
-\method{sensi_plot}{sensiTree_Intra}(x, graphs = "all", uncer.type = "all",
-  ...)
+\method{sensi_plot}{sensiTree_Intra}(x, graphs = "all",
+  uncer.type = "all", ...)
 }
 \arguments{
 \item{x}{output from \code{tree_intra_phylm}, \code{tree_intra_phyglm}}

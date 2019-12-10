@@ -57,6 +57,12 @@ print(massNAsig)
 plot(massNAsig)
 }
 \references{
+Paterno, G. B., Penone, C. Werner, G. D. A. 
+\href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+An r-package for sensitivity analysis in phylogenetic 
+comparative methods.} Methods in Ecology and Evolution 
+2018, 9(6):1461-1467
+
 Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of 
 phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042-1051.
 
@@ -65,5 +71,5 @@ caper: Comparative Analyses of Phylogenetics and Evolution in R. R package versi
 https://CRAN.R-project.org/package=caper
 }
 \author{
-Caterina Penone &..
+Caterina Penone & Gustavo Paterno
 }

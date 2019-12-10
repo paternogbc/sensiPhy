@@ -4,7 +4,8 @@
 \alias{sensi_plot.sensiInflu}
 \title{Graphical diagnostics for class 'sensiInflu'}
 \usage{
-\method{sensi_plot}{sensiInflu}(x, graphs = "all", param = "estimate", ...)
+\method{sensi_plot}{sensiInflu}(x, graphs = "all", param = "estimate",
+  ...)
 }
 \arguments{
 \item{x}{output from \code{influ_phylm}}

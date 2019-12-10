@@ -4,9 +4,9 @@
 \alias{intra_phylm}
 \title{Intraspecific variability - Phylogenetic Linear Regression}
 \usage{
-intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL, y.transf = NULL,
-  x.transf = NULL, n.intra = 30, distrib = "normal", model = "lambda",
-  track = TRUE, ...)
+intra_phylm(formula, data, phy, Vy = NULL, Vx = NULL,
+  y.transf = NULL, x.transf = NULL, n.intra = 30,
+  distrib = "normal", model = "lambda", track = TRUE, ...)
 }
 \arguments{
 \item{formula}{The model formula: \code{response~predictor}.}
@@ -103,6 +103,12 @@ sensi_plot(intra)
 
 }
 \references{
+Paterno, G. B., Penone, C. Werner, G. D. A. 
+\href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+An r-package for sensitivity analysis in phylogenetic 
+comparative methods.} Methods in Ecology and Evolution 
+2018, 9(6):1461-1467
+
 Martinez, P. a., Zurano, J.P., Amado, T.F., Penone, C., Betancur-R, R., 
 Bidau, C.J. & Jacobina, U.P. (2015). Chromosomal diversity in tropical reef 
 fishes is related to body size and depth range. Molecular Phylogenetics and 

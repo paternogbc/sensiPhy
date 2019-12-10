@@ -4,8 +4,8 @@
 \alias{influ_physig}
 \title{Influential species detection - Phylogenetic signal}
 \usage{
-influ_physig(trait.col, data, phy, method = "K", cutoff = 2, track = TRUE,
-  ...)
+influ_physig(trait.col, data, phy, method = "K", cutoff = 2,
+  track = TRUE, ...)
 }
 \arguments{
 \item{trait.col}{The name of a column in the provided data frame with trait 
@@ -106,6 +106,12 @@ sensi_plot(influ, graphs = 2)
 }
 }
 \references{
+Paterno, G. B., Penone, C. Werner, G. D. A. 
+\href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+An r-package for sensitivity analysis in phylogenetic 
+comparative methods.} Methods in Ecology and Evolution 
+2018, 9(6):1461-1467
+
 Blomberg, S. P., T. Garland Jr., A. R. Ives (2003) 
 Testing for phylogenetic signal in comparative data: 
 Behavioral traits are more labile. Evolution, 57, 717-745.

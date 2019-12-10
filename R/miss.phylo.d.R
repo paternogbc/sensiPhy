@@ -28,8 +28,15 @@
 #' @return \code{Pval0}: A p value, giving the result of testing whether D is significantly different from zero
 #' The function also prints the percentage of missing data per variable in the dataset.
 
-#' @author Caterina Penone &..
+#' @author Caterina Penone & Gustavo Paterno
 #' @references 
+#' 
+#' Paterno, G. B., Penone, C. Werner, G. D. A. 
+#' \href{http://doi.wiley.com/10.1111/2041-210X.12990}{sensiPhy: 
+#' An r-package for sensitivity analysis in phylogenetic 
+#' comparative methods.} Methods in Ecology and Evolution 
+#' 2018, 9(6):1461-1467
+#'
 #' Fritz, S. A. and Purvis, A. (2010). Selectivity in mammalian extinction risk and threat types: a new measure of 
 #' phylogenetic signal strength in binary traits. Conservation Biology, 24(4):1042-1051.
 #' 
