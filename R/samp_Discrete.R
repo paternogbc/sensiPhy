@@ -62,17 +62,6 @@
 #' Werner, G.D.A., Cornwell, W.K., Sprent, J.I., Kattge, J. & Kiers, E.T. (2014). 
 #' A single evolutionary innovation drives the deep evolution of symbiotic N2-fixation in angiosperms. Nature Communications, 5, 4087.
 #' @examples 
-#' \dontshow{
-#' #Load data:
-#' data("primates")
-#' #Create a binary trait factor 
-#' adultMass_binary<-ifelse(primates$data$adultMass > 7350, "big", "small")
-#' adultMass_binary<-as.factor(as.factor(adultMass_binary))
-#' names(adultMass_binary)<-rownames(primates$data)
-#' #Model trait evolution accounting for phylogenetic uncertainty
-#' samp_binary<-samp_discrete(data = adultMass_binary,phy = primates$phy[[1]],
-#' n.sim=1,breaks=c(.1,.2),model = "SYM",transform = "none",n.cores = 2,track = TRUE)
-#' }
 #' \dontrun{
 #' #Load data:
 #' data("primates")

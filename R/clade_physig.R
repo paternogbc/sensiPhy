@@ -151,14 +151,16 @@ clade_physig <-
         "estimate" = numeric(),
         "DF" = numeric(),
         "perc" = numeric(),
-        "pval" = numeric()
+        "pval" = numeric(), 
+        stringsAsFactors = FALSE
       )
     
     # Create dataframe store simulations (null distribution)
     null.dist <- data.frame(
       "clade" = rep(names(uc), each = n.sim),
       "estimate" = numeric(length(uc) * n.sim),
-      "DF" = numeric(length(uc) * n.sim)
+      "DF" = numeric(length(uc) * n.sim),
+      stringsAsFactors = FALSE
     )
     
     ### START LOOP between CLADES:
@@ -196,7 +198,7 @@ clade_physig <-
       # Store reduced model parameters:
       estim.simu <- data.frame(A, cN, mod.s[[1]], DF, perc,
                                pval,
-                               stringsAsFactors = F)
+                               stringsAsFactors = FALSE)
       sensi.clade[aa,]  <- estim.simu
       
       ### START LOOP FOR NULL DIST:
@@ -219,7 +221,8 @@ clade_physig <-
         perc           <- round((abs(DF / e.0)) * 100, digits = 1)
         
         null.dist[bb,]  <- data.frame(clade = as.character(A),
-                                      estimate = mod.s[[1]], DF)
+                                      estimate = mod.s[[1]], DF, 
+                                      stringsAsFactors = FALSE)
         
         
         if (track == TRUE)
@@ -234,7 +237,8 @@ clade_physig <-
     #OUTPUT
     #full model estimates:
     param0 <- data.frame(estimate = e.0,
-                         Pval = p.0)
+                         Pval = p.0, 
+                         stringsAsFactors = FALSE)
     
     #Generates output:
     res <- list(

@@ -1,3 +1,10 @@
+# sensiPhy __v0.8.5__ (2020-03-31)
+
+## Improvements:
+
+1. This new version further adjusts sensiPhy code for R 4.0.0 release. All functions that call `data.frame()` were adjusted to work with stringsAsFactors = FALSE or 
+stringsAsFactors = TRUE. 
+
 # sensiPhy __v0.8.4__ (10 Dec 2019)
 
 ## BUG FIXES

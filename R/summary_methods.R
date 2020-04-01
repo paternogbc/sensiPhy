@@ -248,29 +248,29 @@ summary.sensiIntra_Clade <- function(object, ...){
   ### Permutation test:
   ce <- object$sensi.estimates
   nd <- object$null.dist
-  c <- levels(nd$clade)
+  cc  <- unique(nd$clade)
   it <- unique(nd$iteration)
   
   
-  stats.slo <- data.frame("clade removed" = rep(c,each=length(it)), 
-                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
-                          "estimate" = numeric(length(c)),
-                          "DIFestimate" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "Pval" = numeric(length(c)),
-                          "m.null.estimate" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
-  stats.int <- data.frame("clade removed" = rep(c,each=length(it)), 
-                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
-                          "intercept" = numeric(length(c)),
-                          "DIFintercept" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "Pval" = numeric(length(c)),
-                          "m.null.intercept" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
+  stats.slo <- data.frame("clade removed" = rep(cc,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(cc)],each=length(it)),
+                          "estimate" = numeric(length(cc)),
+                          "DIFestimate" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "Pval" = numeric(length(cc)),
+                          "m.null.estimate" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
+  stats.int <- data.frame("clade removed" = rep(cc, each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(cc)],each=length(it)),
+                          "intercept" = numeric(length(cc)),
+                          "DIFintercept" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "Pval" = numeric(length(cc)),
+                          "m.null.intercept" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
   aa <- 1
   
-  for(j in c) {
+  for(j in cc) {
     for(i in 1:length(it)){
       
       nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
@@ -347,29 +347,29 @@ summary.sensiTree_Clade <- function(object, ...){
   ### Permutation test:
   ce <- object$sensi.estimates
   nd <- object$null.dist
-  c <- levels(nd$clade)
+  cc  <- unique(nd$clade)
   it <- unique(nd$iteration)
   
   
-  stats.slo <- data.frame("clade removed" = rep(c,each=length(it)), 
-                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
-                          "estimate" = numeric(length(c)),
-                          "DIFestimate" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "Pval" = numeric(length(c)),
-                          "m.null.estimate" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
-  stats.int <- data.frame("clade removed" = rep(c,each=length(it)), 
-                          "N.species" = rep(ce$N.species[1:length(c)],each=length(it)),
-                          "intercept" = numeric(length(c)),
-                          "DIFintercept" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "Pval" = numeric(length(c)),
-                          "m.null.intercept" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
+  stats.slo <- data.frame("clade removed" = rep(cc,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(cc)],each=length(it)),
+                          "estimate" = numeric(length(cc)),
+                          "DIFestimate" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "Pval" = numeric(length(cc)),
+                          "m.null.estimate" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
+  stats.int <- data.frame("clade removed" = rep(cc,each=length(it)), 
+                          "N.species" = rep(ce$N.species[1:length(cc)],each=length(it)),
+                          "intercept" = numeric(length(cc)),
+                          "DIFintercept" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "Pval" = numeric(length(cc)),
+                          "m.null.intercept" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
   aa <- 1
   
-  for(j in c) {
+  for(j in cc) {
     for(i in 1:length(it)){
       
       nes <- nd[nd$clade == j & nd$iteration == it[i], ] # null estimates
@@ -738,20 +738,20 @@ summary.influ.physig <- function(object, ...){
 summary.clade.physig <- function(object, ...){
   ce <- object$sensi.estimates
   nd <- object$null.dist
-  c <- levels(nd$clade)
+  cc <- unique(nd$clade)
   
   method <- object$method
   
-  stats <- data.frame("clade removed" = c, 
+  stats <- data.frame("clade removed" = cc, 
                       "N.species" = ce$N.species,
-                      "estimate" = numeric(length(c)),
-                      "DIF.est" = numeric(length(c)),
-                      "change" = numeric(length(c)),
-                      "Pval" = numeric(length(c)),
-                      "m.null.estimate" = numeric(length(c)),
-                      "Pval.randomization" = numeric(length(c)))
+                      "estimate" = numeric(length(cc)),
+                      "DIF.est" = numeric(length(cc)),
+                      "change" = numeric(length(cc)),
+                      "Pval" = numeric(length(cc)),
+                      "m.null.estimate" = numeric(length(cc)),
+                      "Pval.randomization" = numeric(length(cc)))
   aa <- 1
-  for(j in c) {
+  for(j in cc) {
     nes <- nd[nd$clade == j, ] # null estimates
     ces <- ce[ce$clade == j, ] # reduced model estimates
     times <- nrow(nes)
