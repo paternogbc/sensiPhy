@@ -12,6 +12,7 @@ before_install:
   - Rscript -e 'install.packages("scales", repos = "http://cran.rstudio.com")'
   - Rscript -e 'install.packages("ggplot2", repos = "http://cran.rstudio.com")'
   - Rscript -e 'install.packages("knitr", repos = "http://cran.rstudio.com")'
+  - R -e 'install.packages("rgdal", repos=c("http://R-Forge.R-project.org", "http://cran.rstudio.com"))'
 
 addons:
   apt:
