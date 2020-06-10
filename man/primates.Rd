@@ -4,13 +4,17 @@
 \name{primates}
 \alias{primates}
 \title{Primates dataset: Example dataset for the package sensiPhy}
-\format{A data frame with 95 rows and 3 variables:
+\format{
+A data frame with 95 rows and 3 variables:
 \itemize{
   \item family: Taxonomic family
   \item adultMass: Mean adult body mass (g)
   \item sexMaturity: Age when individuals are first physically capable of reproducing (days)
   \item homeRange: Mean home range (km)
-  }}
+  }
+
+A multiphylo containing 101 trees for 95 primate species.
+}
 \usage{
 data(primates)
 }

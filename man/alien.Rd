@@ -4,7 +4,8 @@
 \name{alien}
 \alias{alien}
 \title{Alien Mammals dataset: Example dataset for the package sensiPhy}
-\format{A data frame with 94 rows and 7 variables:
+\format{
+A data frame with 94 rows and 7 variables:
 \itemize{
   \item family: Taxonomic family
   \item adultMass: Mean adult body mass (g)
@@ -13,7 +14,10 @@
   \item SE_mass: Standard deviation (intraspecific) for mean adult body mass (g)
   \item SE_gesta: Standard deviation (intraspecific) for mean gestation length (days)
   \item SE_range: Standard deviation (intraspecific) for mean home range (km)
-  }}
+  }
+
+A multiphylo containing 101 trees for 94 mammal species.
+}
 \usage{
 data(alien)
 }

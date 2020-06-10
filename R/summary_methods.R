@@ -7,27 +7,27 @@ summary.sensiClade <- function(object, ...){
     ### Permutation test:
     ce <- object$sensi.estimates
     nd <- object$null.dist
-    c <- levels(nd$clade)
+    cc <- unique(nd$clade)
     
     
-    stats.slo <- data.frame("clade removed" = c, 
+    stats.slo <- data.frame("clade removed" = cc, 
                             "N.species" = ce$N.species,
-                            "estimate" = numeric(length(c)),
-                            "DIFestimate" = numeric(length(c)),
-                            "change" = numeric(length(c)),
-                            "Pval" = numeric(length(c)),
-                            "m.null.estimate" = numeric(length(c)),
-                            "Pval.randomization" = numeric(length(c)))
-    stats.int <- data.frame("clade removed" = c, 
+                            "estimate" = numeric(length(cc)),
+                            "DIFestimate" = numeric(length(cc)),
+                            "change" = numeric(length(cc)),
+                            "Pval" = numeric(length(cc)),
+                            "m.null.estimate" = numeric(length(cc)),
+                            "Pval.randomization" = numeric(length(cc)))
+    stats.int <- data.frame("clade removed" = cc, 
                             "N.species" = ce$N.species,
-                            "intercept" = numeric(length(c)),
-                            "DIFintercept" = numeric(length(c)),
-                            "change" = numeric(length(c)),
-                            "Pval" = numeric(length(c)),
-                            "m.null.intercept" = numeric(length(c)),
-                            "Pval.randomization" = numeric(length(c)))
+                            "intercept" = numeric(length(cc)),
+                            "DIFintercept" = numeric(length(cc)),
+                            "change" = numeric(length(cc)),
+                            "Pval" = numeric(length(cc)),
+                            "m.null.intercept" = numeric(length(cc)),
+                            "Pval.randomization" = numeric(length(cc)))
     aa <- 1
-    for(j in c) {
+    for(j in cc) {
       
       nes <- nd[nd$clade == j, ] # null estimates
       ces <- ce[ce$clade == j, ] # reduced model estimates
@@ -88,25 +88,25 @@ summary.sensiClade.TraitEvol <- function(object, ...){
   ### Permutation test:
   ce <- object$sensi.estimates
   nd <- object$null.dist
-  c <- levels(nd$clade)
+  cc <- unique(nd$clade)
   
   
-  stats.q12 <- data.frame("clade removed" = c, 
+  stats.q12 <- data.frame("clade removed" = cc, 
                           "N.species" = ce$N.species,
-                          "q12" = numeric(length(c)),
-                          "DIFq12" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "m.null.q12" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
-  stats.q21 <- data.frame("clade removed" = c, 
+                          "q12" = numeric(length(cc)),
+                          "DIFq12" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "m.null.q12" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
+  stats.q21 <- data.frame("clade removed" = cc, 
                           "N.species" = ce$N.species,
-                          "q21" = numeric(length(c)),
-                          "DIFq21" = numeric(length(c)),
-                          "change" = numeric(length(c)),
-                          "m.null.q21" = numeric(length(c)),
-                          "Pval.randomization" = numeric(length(c)))
+                          "q21" = numeric(length(cc)),
+                          "DIFq21" = numeric(length(cc)),
+                          "change" = numeric(length(cc)),
+                          "m.null.q21" = numeric(length(cc)),
+                          "Pval.randomization" = numeric(length(cc)))
   aa <- 1
-  for(j in c) {
+  for(j in cc) {
     
     nes <- nd[nd$clade == j, ] # null estimates
     ces <- ce[ce$clade == j, ] # reduced model estimates
@@ -161,25 +161,25 @@ summary.sensiClade.TraitEvol <- function(object, ...){
     ### Permutation test:
     ce <- object$sensi.estimates
     nd <- object$null.dist
-    c <- levels(nd$clade)
+    cc <- unique(nd$clade)
     
     
-    stats.sigsq <- data.frame("clade removed" = c, 
+    stats.sigsq <- data.frame("clade removed" = cc, 
                             "N.species" = ce$N.species,
-                            "sigsq" = numeric(length(c)),
-                            "DIFsigsq" = numeric(length(c)),
-                            "change" = numeric(length(c)),
-                            "m.null.sigsq" = numeric(length(c)),
-                            "Pval.randomization" = numeric(length(c)))
-    stats.optpar <- data.frame("clade removed" = c, 
+                            "sigsq" = numeric(length(cc)),
+                            "DIFsigsq" = numeric(length(cc)),
+                            "change" = numeric(length(cc)),
+                            "m.null.sigsq" = numeric(length(cc)),
+                            "Pval.randomization" = numeric(length(cc)))
+    stats.optpar <- data.frame("clade removed" = cc, 
                             "N.species" = ce$N.species,
-                            "optpar" = numeric(length(c)),
-                            "DIFoptpar" = numeric(length(c)),
-                            "change" = numeric(length(c)),
-                            "m.null.optpar" = numeric(length(c)),
-                            "Pval.randomization" = numeric(length(c)))
+                            "optpar" = numeric(length(cc)),
+                            "DIFoptpar" = numeric(length(cc)),
+                            "change" = numeric(length(cc)),
+                            "m.null.optpar" = numeric(length(cc)),
+                            "Pval.randomization" = numeric(length(cc)))
     aa <- 1
-    for(j in c) {
+    for(j in cc) {
       
       nes <- nd[nd$clade == j, ] # null estimates
       ces <- ce[ce$clade == j, ] # reduced model estimates
